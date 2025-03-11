@@ -1,101 +1,81 @@
-# Using Modules
+# Modules
 
-## Importing remote modules
-
-The [Standard library](https://deno.land/std@0.219.0) and most third-party modules are distributed on HTTPS URLs.
+## Using Node's built-in modules
 
 ```ts
-import { assertEquals } from "https://deno.land/std@0.219.0/assert/mod.ts";
+import * as os from "node:os";
+console.log(os.cpus());
+```
 
-Deno.test("sayHello function", () => {
-  const grace: Person = {
-    lastName: "Hopper",
-    firstName: "Grace",
-  };
+To load built-in types for Node, you must add a types reference directive to the `@types/node` package:
 
-  assertEquals("Hello, Grace!", sayHello(grace));
-});
+```ts
+/// <reference types="npm:@types/node" />
 ```
 
 
-## Using Node.js APIs and npm packages
+## Importing third party modules
 
-You can use Node and npm modules in your code by using either `node:` or `npm:` specifier when importing Node built-ins or npm modules:
-
+NPM:
 ```ts
-import express from "npm:express@4";
+import * as emoji from "npm:node-emoji";
 
-const app = express();
-
-app.get("/", (request, response) => {
-  response.send("Hello from Express!");
-});
-
-app.listen(3000);
+console.log(emoji.emojify(`:sauropod: :heart:  npm`));
 ```
 
+JSR:
 ```ts
-import { readFileSync } from "node:fs";
-
-console.log(readFileSync("deno.json", { encoding: "utf8" }));
+import { camelCase } from "jsr:@luca/cases@1.0.0";
 ```
 
-
-## Standard Library
-
-Deno provides a set of [standard modules](https://deno.land/std@0.220.1?doc=) that are audited by the core team.
-
-Standard library is not yet stable.
-
-We strongly suggest to always use imports with pinned version of standard library to avoid unintended changes:
-
+HTTPS:
 ```ts
-// imports from v0.220.0 of std, never changes
-import { copy } from "https://deno.land/std@0.220.0/fs/copy.ts";
+import { pascalCase } from "https://deno.land/x/case/mod.ts";
+```
+
+Some packages do not ship with types but you can specify their types when importing them with the `@ts-types` directive:
+```ts
+// @ts-types="npm:@types/express@^4.17"
+import express from "npm:express@^4.17";
 ```
 
 
-## Import maps
+## Import map
 
-Node and npm use `package.json` and the `node_modules` folder to resolve package location. 
+Typing out the module name with the full version specifier can become tedious when importing them in multiple files.
 
-Deno use Import maps:
+You can configure Deno to use import map:
 
 ```json title="deno.json"
 {
   "imports": {
-    "lodash": "https://esm.sh/lodash@4.17.21"
+    "@luca/cases": "jsr:@luca/cases@^1.0.0",
+    "cowsay": "npm:cowsay@^1.6.0",
+    "cases": "https://deno.land/x/case/mod.ts"
   }
 }
 ```
 
-### Define Import maps for NPM modules
+With remapped specifiers, the code looks cleaner:
+```ts title="main.ts"
+import { camelCase } from "@luca/cases";
+import { say } from "cowsay";
+import { pascalCase } from "cases";
+```
+
+
+## node_modules
+
+Deno resolve npm packages to a central global npm cache, instead of using a `node_modules` folder in your projects.
+
+By default, Deno will not create a `node_modules` directory when you use the `deno run` command
+
+You can configure Deno to create a `node_modules` directory in the current working directory:
+
 ```json title="deno.json"
 {
-  "imports": {
-    "lodash": "npm:lodash@^4.17"
-  }
+  "nodeModulesDir": "auto"
 }
 ```
 
-```ts
-import lodash from "lodash";
-```
-
-### Using project root for absolute imports
-```json title="deno.json"
-{
-  "imports": {
-    "/": "./",
-    "./": "./"
-  }
-}
-```
-
-```tsx
-import { MyUtil } from "/util.ts";
-```
-
-### Overriding imports
-
-For more details, see the [official doc](https://docs.deno.com/runtime/manual/basics/import_maps#overriding-imports).
+If you have a `package.json` file in your project directory, Deno uses the local `node_modules` directory .

@@ -1,0 +1,59 @@
+# CLI commands
+
+## Apply
+
+Create or update objects defined in YAML file:
+```sh
+kubectl apply -f pod.yml -f deployment.yml
+```
+
+
+## Pod
+
+List all Pods:
+```sh
+kubectl get pods
+```
+
+Describle Pod:
+```sh
+kubectl describe pod nginx-pod
+```
+
+Delete Pod:
+```sh
+kubectl delete pod NAME
+```
+
+
+## Deployment
+
+List all deployments:
+```sh
+kubectl get deployments
+```
+
+Delete deployment:
+```sh
+kubectl delete deployment NAME
+```
+
+## Node
+
+List all the nodes in cluster:
+```sh
+kubectl get nodes
+```
+
+
+## Context
+
+List all the contexts defined in your kubeconfig file:
+```sh
+kubectl config get-contexts
+```
+
+Switch the current Kubernetes context:
+```sh
+kubectl config use-context my-context
+```

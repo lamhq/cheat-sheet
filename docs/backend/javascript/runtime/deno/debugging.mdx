@@ -1,0 +1,23 @@
+# Debugging
+
+## Overview
+
+You can use Chrome DevTools or VSCode to debug Deno programs (which support V8 Inspector Protocol).
+
+To activate debugging capabilities run Deno with one of the following flags:
+
+- `--inspect` allows attaching the debugger at any point in time,
+- `--inspect-wait` will wait for debugger to attach and start executing code,
+- `--inspect-brk` will wait for the debugger to attach and will pause execution on the first line of code.
+
+```sh
+deno run --inspect main.ts
+```
+
+
+## VS Code set up
+
+You can generate a launch configuration by:
+1. going to `Run and Debug` panel
+2. clicking `create a launch.json file`
+3. selecting `Deno` option.

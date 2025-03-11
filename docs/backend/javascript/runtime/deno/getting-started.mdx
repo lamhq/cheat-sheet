@@ -1,26 +1,38 @@
 # Getting Started
 
-## Install Deno (macOS)
+## Installation
 
-Using Homebrew:
+Install Deno on macOS using Homebrew:
 ```sh
 brew install deno
 ```
 
 
-## Create a web server
+## Create a Deno project
 
-Create a TypeScript file:
-```ts title="server.ts"
-Deno.serve((_request: Request) => {
-  return new Response("Hello, world!");
-});
-```
-
-Start your server:
+Generate a new project:
 ```sh
-deno run --allow-net server.ts
+deno init my_project
 ```
 
-Explanations:
-- `Request`, `Response` types are from the [`fetch` API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API).
+This will create a new directory called `my_project` with the following structure:
+
+```
+my_project
+├── deno.json
+├── main_test.ts
+└── main.ts
+```
+- `deno.json` file is created to configure your project
+- `main.ts` file is where you'll write your application code
+- `main_test.ts` file is where you can write tests
+
+Run your project:
+```sh
+deno main.ts
+```
+
+Run your tests:
+```sh
+deno test
+```

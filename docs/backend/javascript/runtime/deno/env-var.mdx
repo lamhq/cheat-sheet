@@ -16,21 +16,24 @@ console.log(Deno.env.has("FIREBASE_AUTH_DOMAIN")); // true
 
 You can also put environment variables in a `.env` file and retrieve them using `dotenv` in the standard library.
 
-```ts
-import { load } from "https://deno.land/std@0.220.0/dotenv/mod.ts";
-
-const env = await load();
-const password = env["PASSWORD"];
-
-console.log(password);
-// "Geheimnis"
+```sh title=".env"
+GREETING="Hello, world."
 ```
 
-```sh title=".env"
-PASSWORD=Geheimnis
+```ts
+import "jsr:@std/dotenv/load";
+
+console.log(Deno.env.get("GREETING")); // "Hello, world."
+```
+
+
+## Set a variable when running a command 
+
+```sh
+MY_VAR="my value" deno run main.ts
 ```
 
 
 ## Special environment variables
 
-See [pre-defined environment variables](https://docs.deno.com/runtime/manual/basics/env_variables#special-environment-variables).
+See [special environment variables](https://docs.deno.com/runtime/reference/env_variables/#special-environment-variables).
