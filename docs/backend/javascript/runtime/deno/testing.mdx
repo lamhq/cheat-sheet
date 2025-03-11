@@ -46,9 +46,16 @@ Deno.test("database operations", async (t) => {
 
 ## Running Tests
 
+To run your tests, use the `deno test` subcommand.
+
+If run without a file name or directory name, all tests in the current directory (recursively) that match the glob `{*_,*.,}test.{ts, tsx, mts, js, mjs, jsx}` will be executed.
+
 ```sh
 # Run all tests in the current directory and all sub-directories
 deno test
+
+# Run all tests and watch
+deno test --watch
 
 # Run all tests in the util directory
 deno test util/
@@ -66,6 +73,7 @@ deno test my_test.ts -- -e --foo --bar
 # for the final test above to pass
 deno test --allow-read my_test.ts
 ```
+
 
 ### Filtering
 

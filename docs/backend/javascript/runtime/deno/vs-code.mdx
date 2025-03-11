@@ -16,6 +16,12 @@ This command will add `"deno.enable": true` to the workspace configuration (your
 By enabling the *Deno: Lint* setting in the settings
 panel (or `deno.lint` if editing settings in JSON) the editor should start to display lint "warnings" in your code.
 
+```json title=".vscode/settings.json"
+{
+  "deno.lint": true
+}
+```
+
 
 ## Formatting
 
@@ -23,6 +29,7 @@ Deno formatter should be specified in VS Code workspace settings:
 
 ```json title=".vscode/settings.json"
 {
-  "editor.defaultFormatter": "denoland.vscode-deno"`
+  "editor.defaultFormatter": "denoland.vscode-deno",
+  "editor.formatOnSave": true
 }
 ```
