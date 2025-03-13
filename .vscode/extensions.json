@@ -6,6 +6,7 @@
 	"recommendations": [
 		"hediet.vscode-drawio",
 		"bierner.markdown-preview-github-styles",
-		"yzhang.markdown-all-in-one"
+		"yzhang.markdown-all-in-one",
+		"spmeesseman.vscode-taskexplorer"
 	],
 }

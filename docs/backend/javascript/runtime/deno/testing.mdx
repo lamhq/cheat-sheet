@@ -5,6 +5,53 @@ Deno provides a built-in test runner in both JavaScript and TypeScript without n
 
 ## Writing Tests
 
+### Default format
+
+```ts
+import { assertEquals } from "jsr:@std/assert";
+
+Deno.test("simple test", () => {
+  const x = 1 + 2;
+  assertEquals(x, 3);
+});
+
+import { delay } from "jsr:@std/async";
+
+Deno.test("async test", async () => {
+  const x = 1 + 2;
+  await delay(100);
+  assertEquals(x, 3);
+});
+
+Deno.test({
+  name: "read file test",
+  permissions: { read: true },
+  fn: () => {
+    const data = Deno.readTextFileSync("./somefile.txt");
+    assertEquals(data, "expected content");
+  },
+});
+```
+
+Deno also supports test steps, which allow you to break down tests into smaller, manageable parts.
+
+This is useful for setup and teardown operations within a test.
+
+```ts
+Deno.test("database operations", async (t) => {
+  using db = await openDatabase();
+  await t.step("insert user", async () => {
+    // Insert user logic
+  });
+  await t.step("insert book", async () => {
+    // Insert book logic
+  });
+});
+```
+
+### BDD format
+
+
 ```ts
 import { describe, it } from "jsr:@std/testing/bdd";
 import { expect } from "jsr:@std/expect";
@@ -24,24 +71,6 @@ describe("add function", () => {
 ```
 
 Check out the [documentation on JSR](https://jsr.io/@std/testing/doc/bdd/~) for more information on these functions and hooks.
-
-
-
-### Splitting Tests
-
-Break down tests into smaller, manageable parts, called test steps:
-
-```ts
-Deno.test("database operations", async (t) => {
-  using db = await openDatabase();
-  await t.step("insert user", async () => {
-    // Insert user logic
-  });
-  await t.step("insert book", async () => {
-    // Insert book logic
-  });
-});
-```
 
 
 ## Running Tests

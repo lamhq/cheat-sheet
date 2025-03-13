@@ -5,8 +5,7 @@
 	"scripts": {
 		"dev": "rspress dev --port 5002",
 		"build": "rspress build",
-		"preview": "rspress preview --port 5002",
-		"nextra": "next -p 5003"
+		"preview": "rspress preview --port 5002"
 	},
 	"dependencies": {
 		"next": "^14.0.4",

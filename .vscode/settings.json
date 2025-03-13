@@ -1,9 +1,12 @@
 {
+  "explorer.sortOrder": "mixed",
   "editor.insertSpaces": true,
   "editor.tabSize": 2,
   "editor.tabCompletion": "onlySnippets",
   "editor.snippetSuggestions": "top",
-  "explorer.sortOrder": "mixed",
+  "task.allowAutomaticTasks": "off",
+  "task.autoDetect": "off",
+  "task.quickOpen.history": 5,
   "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,
   "files.associations": {
