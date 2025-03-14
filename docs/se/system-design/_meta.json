@@ -4,16 +4,16 @@
     "type": "dir",
     "collapsed": true
   },
-  "server",
-  "data-center",
   "scalability",
   "high-availability",
-  "load-balancer",
+  "consistent-hashing",
+  "bote",
   {
     "name": "database",
     "type": "dir",
     "collapsed": true
   },
+  "load-balancer",
   {
     "name": "cache",
     "type": "dir",
@@ -22,8 +22,8 @@
   "cdn",
   "queues",
   "cqrs",
-  "consistent-hashing",
-  "bote",
+  "server",
+  "data-center",
   "interview",
   {
     "name": "case-studies",

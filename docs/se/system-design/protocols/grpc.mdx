@@ -2,9 +2,12 @@
 
 ## RPC
 
-Remote Procedure Call (RPC) is a protocol that allows a program to execute a procedure (subroutine) on another computer over network as if it were a local procedure call.
+Remote Procedure Call (RPC) is a protocol that allows a program to execute a procedure on another computer over network as if it were a local procedure call.
 
-RPC uses stubs to handle the communication between the client and server. The client stub sends the request to the server, and the server stub receives the request and executes the procedure.
+RPC uses stubs to handle the communication between the client and server. The **client stub** sends the request to the server, and the **server stub** receives the request and executes the procedure.
+
+> [!INFO]
+> A stub is a small piece of code that acts as a proxy between the client and the server. Its purpose is to handle the communication and abstract the complexities of making remote calls.
 
 RPC is widely used in distributed systems, microservices, and client-server applications due to its simplicity and efficiency.
 

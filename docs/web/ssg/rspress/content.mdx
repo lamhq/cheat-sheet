@@ -49,7 +49,32 @@ title: Hello world
 
 ## Content Block
 
-You can use the `:::` syntax to create custom blocks with title:
+You can use [GitHub Markdown Alerts Syntax](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts) to create custom blocks:
+
+```md
+> [!NOTE]
+> This is a `block` of type `note`
+
+> [!TIP]
+> This is a `block` of type `tip`
+
+> [!INFO]
+> This is a `block` of type `info`
+
+> [!WARNING]
+> This is a `block` of type `warning`
+
+> [!DANGER]
+> This is a `block` of type `danger`
+
+> [!DETAILS]
+> This is a `block` of type `details`
+```
+
+> [!TIP]
+> Using GitHub Markdown Alerts Syntax enable previewing the document on GitHub.
+
+You can also use the `:::` syntax to create custom blocks with title:
 
 ```md
 :::note
@@ -83,28 +108,6 @@ This is a `block` of `Custom Title`
 :::tip{title="Custom Title"}
 This is a `block` of `Custom Title`
 :::
-```
-
-You can also use [GitHub Markdown Alerts Syntax](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts) to create custom blocks:
-
-```md
-> [!NOTE]
-> This is a `block` of type `note`
-
-> [!TIP]
-> This is a `block` of type `tip`
-
-> [!INFO]
-> This is a `block` of type `info`
-
-> [!WARNING]
-> This is a `block` of type `warning`
-
-> [!DANGER]
-> This is a `block` of type `danger`
-
-> [!DETAILS]
-> This is a `block` of type `details`
 ```
 
 
