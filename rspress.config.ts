@@ -1,4 +1,5 @@
 import { defineConfig } from 'rspress/config';
+import katex from 'rspress-plugin-katex';
 
 export default defineConfig({
   root: 'docs',
@@ -9,4 +10,5 @@ export default defineConfig({
     lastUpdated: true,
     enableScrollToTop: true,
   },
+  plugins: [katex()],
 });
