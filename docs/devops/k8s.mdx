@@ -23,3 +23,52 @@ It abstracts the underlying infrastructure, allowing your applications to run se
 - **Horizontal Scaling:** Scales applications up or down with manually or automatically (based on CPU usage).
 - **IPv4/IPv6 Dual-Stack:** Allocates IPv4 and IPv6 addresses to Pods and Services.
 - **Designed for Extensibility:** Adds features without changing source code. 
+
+
+## kubectl
+
+kubectl is the main Kubernetes command-line tool.
+
+At a high-level, kubectl converts user-friendly commands into HTTP REST requests that sent to the API server.
+
+> [!NOTE]
+> Your kubectl version is no more than one minor version higher or lower than your cluster.
+> 
+> For example, if your cluster is running Kubernetes 1.26.x, your kubectl should be no lower than 1.25.x and no higher than 1.27.x.
+
+
+### kubeconfig
+
+kubectl uses a configuration file to know which cluster and API server endpoint to send commands to. 
+
+The configuration file located in `~/.kube/config`. It contains definitions for:
+- Clusters: a list of Kubernetes clusters to work with
+- Users: users with different levels of access.
+- Contexts: group clusters and users together
+
+The following is a simple kubeconfig file with:
+- a cluster called `shield`
+- a user called `coulson`
+- a context called `director`. The `director` context
+combines the coulson `user` and the `shield` cluster and is also set as the default context.
+
+```yml
+apiVersion: v1
+kind: Config
+clusters: # <<==== Cluster definitions in this block
+- cluster:
+    name: shield
+    certificate-authority: C:\Users\nigel\.minikube\ca.crt
+    server: https://192.168.1.77:8443
+users: # <<==== User definitions in this block
+- name: coulson
+  user:
+    client-certificate: C:\Users\nigel\.minikube\client.crt
+    client-key: C:\Users\nigel\.minikube\client.key
+contexts: # <<==== Contexts in this block
+- context:
+    cluster: shield
+    user: coulson
+    name: director
+current-context: director
+```

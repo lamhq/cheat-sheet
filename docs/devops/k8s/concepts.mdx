@@ -1,26 +1,44 @@
 # Concepts
 
-## Workloads
-
-A workload is an application running on Kubernetes. It is run inside a set of pods.
-
-You can use workload resources to manage a set of pods on your behalf.
-
-Kubernetes provides several built-in workload resources:
-- **Deployment** and **ReplicaSet**: manages stateless applications and ensures the desired number of pods are running.
-- **StatefulSet** lets you run one or more related Pods that do track state somehow
-- **DaemonSet** ensures that all (or some) Nodes run a copy of a Pod
-- **Job** and **CronJob** provide different ways to define tasks that run to completion and then stop.
-
-There're also third-party workload resources that provide additional behaviors.
-
-
 ## Pods
 
 Pods are the smallest deployable units of computing that you can create and manage.
 
-A Pod is a group of one or more containers which are relatively tightly coupled, with shared storage and network resources, and a specification for how to run the containers.
+A Pod is a group of one or more containers that run your application. Containers in the same pod are tightly coupled, have shared storage, network resources, IP address.
+
+Pods are the minimum unit of scaling, if you need to scale an app, you add or remove Pods. You do not scale by adding more containers to existing Pods.
+
+A single Pod can only be scheduled to a single node.
+
+Pods are immutable. If you update its configuration, it will be replaced with a new one.
+
+Pods are ephemeral. They can be created, terminated, or replaced at any time. A new Pod has new ID and IP address.
 
 The name of a Pod should follow the more restrictive rules for a [DNS label](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-label-names).
 
-Usually you use workload resources such as **Deployment** or **Job** to create Pods. If your Pods need to track state, consider the **StatefulSet** resource.
+You'll rarely interact directly with Pods.
+
+If two containers in the same Pod need to talk to each other they can use the Pod’s `localhost` interface.
+
+Examples of multi-container Pods:
+- Service meshes
+- Web containers supported by a helper container pulling updated content
+- Containers with a tightly coupled log scraper
+
+
+## Deployments
+
+You usually deploy Pods via higher-level controllers, like Deployments, DaemonSets, and StatefulSets.
+
+A Deployment is a higher-level Kubernetes object that wraps around a Pod and adds features such as self-healing, scaling, zero-downtime rollouts, and versioned rollbacks.
+
+
+## Service
+
+Services provide a stable way to expose applications running on Pods.
+
+Services have a front-end consisting of a stable DNS name, IP address, and port.
+
+On the back-end, they load-balance traffic across a dynamic set of Pods. As Pods come and go, Service automatically updates itself, and continues to provide that stable networking endpoint.
+
+Services cannot provide application-layer host and path routing. 

@@ -36,9 +36,9 @@ Deno formatter should be specified in VS Code workspace settings:
 
 ## Testing
 
-:::warning
-If you don't write tests in the [default format](./testing.mdx#default-format), your tests won't show up in the [Testing view](https://code.visualstudio.com/docs/editor/testing#_automatic-test-discovery-in-testing-view).
-:::
+> [!WARNING]
+> If you don't write tests in the [default format](./testing.mdx#default-format), your tests won't show up in the [Testing view](https://code.visualstudio.com/docs/editor/testing#_automatic-test-discovery-in-testing-view).
+
 
 ```ts
 import { assertEquals } from "jsr:@std/assert";
@@ -91,11 +91,10 @@ To debug Deno scripts, you must define a VS Code launch configuration as follow:
 }
 ```
 
-:::warning
-You can't customize the launch command, it will always be `deno run ...`
-
-Processes which are launched from VS Code's Integrated Terminal using Deno commands (`run`, `test`, ...) won't be auto attached to Node.js debugger.
-:::
+> [!WARNING]
+> You can't customize the launch command, it will always be `deno run ...`
+>
+> Processes which are launched from VS Code's Integrated Terminal using Deno commands (`run`, `test`, ...) won't be auto attached to Node.js debugger.
 
 
 ### Test
