@@ -1,0 +1,203 @@
+# Markdown
+
+## Overview
+
+Markdown is an easy-to-read, easy-to-write language for formatting plain text.
+
+All listed syntaxes in this document are supported by Rspress and GitHub.
+
+
+## Headings
+
+```md
+# A first-level heading
+## A second-level heading
+### A third-level heading
+```
+
+## Styling text
+
+Style | Syntax | Keyboard shortcut | Example | Output
+-- | -- | -- | -- | --
+Bold | `** **` or `__ __` | `Command+B` (Mac) or `Ctrl+B` (Windows/Linux) | `**This is bold text**` | **This is bold text**
+Italic | `* *` or `_ _` | `Command+I` (Mac) or `Ctrl+I` (Windows/Linux) | `*This text is italicized*` | *This text is italicized*
+Strikethrough | `~~ ~~` |   | `~~This was mistaken text~~` | ~~This was mistaken text~~
+Bold and nested italic | `** **` and `_ _` |   | `**This text is _extremely_ important**` | **This text is _extremely_ important**
+All bold and italic | `*** ***` |   | `***All this text is important***` | ***All this text is important***
+
+
+## Quoting text
+
+```md
+> Text that is a quote
+```
+
+## Quoting code
+
+Inline code: you can parts of a string as code with single backtick \`
+
+```md
+Use `git status` command.
+```
+
+For code block, use triple backticks:
+
+````md
+Some basic Git commands are:
+```
+git status
+git add
+git commit
+```
+````
+
+## Links
+
+```md
+This site was built using [GitHub Pages](https://pages.github.com/).
+```
+
+Section links:
+
+```md
+Link to the sample section: [Link Text](#sample-section).
+```
+
+Relative links:
+
+```md
+Refer [Contribution guidelines for this project](docs/CONTRIBUTING.md).
+```
+
+## Line breaks
+
+To create a line break:
+1. Include two spaces at the end of the first line.
+   ```md
+   This example  
+   Will span two lines
+   ```
+2. Include a backslash at the end of the first line.
+   ```md
+   This example\
+   Will span two lines
+   ```
+3. Include an HTML single line break tag at the end of the first line.
+   ```md
+   This example<br/>
+   Will span two lines
+   ```
+
+If you leave a blank line between two lines, it will render two lines:
+```md
+This example
+
+Will be rendered as two `<p>` tags
+```
+
+
+## Images
+
+```md
+![Image description](https://myoctocat.com/assets/images/base-octocat.svg)
+```
+
+![Image description](https://myoctocat.com/assets/images/base-octocat.svg)
+
+
+## Lists
+
+Unordered list:
+```md
+- George Washington
+- John Adams
+- Thomas Jefferson
+```
+
+Ordered list:
+```md
+1. James Madison
+2. James Monroe
+3. John Quincy Adams
+```
+
+To create nested list, type **spac**e characters in front of your nested list item until the list marker character (`-`) lies directly below the first character of the text in the item above it:
+```md
+1. First list item
+   - First nested list item
+     - Second nested list item
+```
+
+## Task lists
+
+```md
+- [x] #739
+- [ ] https://github.com/octo-org/octo-repo/issues/740
+- [ ] Add delight to the experience when all tasks are complete :tada:
+```
+
+- [x] #739
+- [ ] https://github.com/octo-org/octo-repo/issues/740
+- [ ] Add delight to the experience when all tasks are complete :tada:
+
+
+## Footnotes
+
+```md
+Here is a simple footnote[^1].
+
+A footnote can also have multiple lines[^2].
+
+[^1]: My reference.
+[^2]: To add line breaks within a footnote, prefix new lines with 2 spaces.
+  This is a second line.
+```
+
+
+## Alerts
+
+```md
+> [!NOTE]
+> Useful information that users should know, even when skimming content.
+
+> [!TIP]
+> Helpful advice for doing things better or more easily.
+
+> [!IMPORTANT]
+> Key information users need to know to achieve their goal.
+
+> [!WARNING]
+> Urgent info that needs immediate user attention to avoid problems.
+
+> [!CAUTION]
+> Advises about risks or negative outcomes of certain actions.
+```
+
+
+## Table
+
+```md
+| First Header  | Second Header |
+| ------------- | ------------- |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
+
+| Left-aligned | Center-aligned | Right-aligned |
+| :---         |     :---:      |          ---: |
+| git status   | git status     | git status    |
+| git diff     | git diff       | git diff      |
+```
+
+
+## Escape special characters
+
+Use `\` before the Markdown character.
+
+```md
+Let's rename \*our-new-project\* to \*our-old-project\*.
+```
+
+
+## References
+
+- [Basic writing and formatting syntax](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)

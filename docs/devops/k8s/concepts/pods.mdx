@@ -99,7 +99,7 @@ Multi-container Pod patterns:
 - Ambassador pattern
 - Init pattern
 
-## Sidecar Pattern
+### Sidecar Pattern
 
 A helper container enhances the functionality of the main container (e.g., logging or monitoring).
 
@@ -107,7 +107,7 @@ An example use case is log aggregation and analysis:
 - Main Container: Runs the application (e.g., a web server like NGINX or a Java application).
 - Sidecar Container: Runs a logging agent which collects logs from from shared storage and sends them to a central logging system
 
-## Adapter Pattern
+### Adapter Pattern
 
 A container modifies or standardizes data for the main container.
 
@@ -116,7 +116,7 @@ An example use case is data transformation or standardization:
 - And a container that transforms incoming data into a compatible format before passing it to the main container.
 
 
-## Ambassador Pattern
+### Ambassador Pattern
 
 A container acts as a proxy to external services.
 
@@ -125,7 +125,7 @@ An example use case is database proxy:
 - Ambassador Container: Acts as a proxy for the database, handling tasks like authentication, load balancing, or connection pooling.
 
 
-## Init pattern
+### Init pattern
 
 The init pattern runs a special init container that:
 - starts and completes before the main app container (the main app container will not start until the init container completes)

@@ -9,5 +9,10 @@
     "collapsed": true,
     "label": "Javascript"
   },
+  {
+    "name": "markdown",
+    "type": "dir",
+    "collapsed": true
+  },
   "yaml"
 ]
