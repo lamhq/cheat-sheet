@@ -9,14 +9,14 @@
     "type": "dir",
     "collapsed": true
   },
+  "choosing-db",
+  "transaction",
+  "concurrency",
+  "eventual-consistency",
   "indexes",
   "sharding",
   "partitioning",
   "replication",
   "cap-theorem",
-  "base-model",
-  "eventual-consistency",
-  "concurrency",
-  "transaction",
-  "choosing-db"
+  "base-model"
 ]

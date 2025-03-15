@@ -1,60 +1,67 @@
 # Concurrency
 
+Database concurrency refers to the management of simultaneous operations on a database without compromising data integrity.
+
+
 ## Isolation issues
 
 These are potential problems that can occur when transactions are executed concurrently without sufficient isolation:
 
 ### Dirty Read
 
-Occurs when a transaction reads data that has been written by a concurrent uncommitted transaction.
+Occurs when a transaction reads uncommitted data from another transaction.
 
-The data read might be rolled back if the other transaction fails, leading to potential inconsistencies.
+The data might be rolled back if the transaction fails, leading to potential inconsistencies.
 
 
 ### Non-Repeatable Read
 
-This happens when a transaction reads the same row twice and the data changes between reads due to another committed transaction.
-
-This means the first transaction cannot repeat the initial read because the data has been modified.
+Occurs when a second read of the same data retrieves different results because another transaction has modified the data in the meantime.
 
 
 ### Phantom Read
 
-A phantom read occurs when a transaction re-executes a query and finds that the set of rows it returns has changed because of another committed transaction.
+Occurs when a transaction re-executes a query and retrieves a different set of rows, because another transaction has inserted, updated, or deleted rows that meet the query criteria.
 
-This typically happens when new rows are added or existing rows are deleted by the other transaction.
+> [!NOTE]
+> Phantom Read involves changes in the set of rows returned by a query (e.g., new rows added or deleted), while Non-Repeatable Read involves changes to the values of previously retrieved rows.
 
 
 ## Isolation Levels
 
+Isolation levels define the degree to which a transaction remains separate from others, helping to maintain data consistency and integrity.
+
 ### Serializalble
 
-This is the highest isolation level.
+Transactions are guaranteed to be executed in sequence.
 
-Concurrent transactions are guaranteed to be executed in sequence.
+This is the highest isolation level.
 
 
 ### Repeatable Read
 
-Data read during the transaction stays the same as the transaction starts.
+Prevent changes to rows that have been read until the transaction is complete.
 
 
 ### Read Committed
 
-Data modification can only be read after the transaction is committed.
+Ensures that a transaction can only read committed data.
+
+This prevent Dirty Reads but allowing Non-Repeatable Reads.
 
 
 ### Read Uncommitted
 
-The data modification can be read by other transactions before a transaction is committed.
+Allows transactions to read uncommitted data.
 
+Dirty Reads can happen.
 
-| Dirty Read | Non-repeatable | Phantom Read | Isolation Level  |
-|------------|----------------|--------------|------------------|
-| Impossible | Impossible     | Impossible   | Serializable     |
-| Impossible | Impossible     | Probably     | Repeatable Read  |
-| Impossible | Probably       | Probably     | Read Committed   |
-| Probably   | Probably       | Probably     | Read Uncommitted |
+| Isolation Level  | Dirty Read | Non-repeatable | Phantom Read |
+|------------------|------------|----------------|--------------|
+| Serializable     | Impossible | Impossible     | Impossible   |
+| Repeatable Read  | Impossible | Impossible     | Probably     |
+| Read Committed   | Impossible | Probably       | Probably     |
+| Read Uncommitted | Probably   | Probably       | Probably     |
 
 
 ## Locks
@@ -72,6 +79,6 @@ It's often used for read operations and ensures that no updates occur on the dat
 
 ### Exclusive Lock (X-Lock)
 
-This lock allows a transaction to both read and write a data item. While an exclusive lock is held, no other transactions can read or write the data item.
+Exclusive Lock allows only one transaction to read and write a data item.
 
-It's typically used for write operations to ensure that no other transactions can access the data item until the lock is released, either by a commit or rollback.
+It's typically used for write operations to ensure that no other transactions can access the data item until the lock is released (either by a commit or rollback).
