@@ -82,3 +82,35 @@ Switch the current Kubernetes context:
 ```sh
 kubectl config use-context my-context
 ```
+
+
+## Namespaces
+
+List all namespaces:
+
+```sh
+kubectl get namespaces
+```
+
+Get information about a namespace:
+
+```sh
+kubectl describe ns <NAMESPACE>
+```
+
+List all Service objects in namespace:
+
+```sh
+kubectl get svc --namespace kube-system
+```
+
+Switch to a namespace:
+
+```sh
+kubectl config set-context --current --namespace <NAMESPACE>
+```
+
+Create a new Namespace:
+```sh
+kubectl create ns hydra
+```

@@ -12,8 +12,6 @@ A Pod is a group of one or more containers that run your application.
 
 Pods are the smallest deployable units of computing that you can create and manage.
 
-The name of a Pod should follow the more restrictive rules for a [DNS label](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-label-names).
-
 
 ## Scheduling
 
@@ -34,6 +32,7 @@ If it's a multi-container Pod:
 - all containers share the IP.
 - containers communicate with each other via the Pod's `localhost` adapter and a port number.
 
+Pod's name will become the hostname of containers run inside it. It must be valid [DNS names](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-label-names).
 
 ## Pod lifecycle
 

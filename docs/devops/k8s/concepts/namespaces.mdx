@@ -1,0 +1,27 @@
+# Namespaces
+
+## Overview
+
+Namespaces are a way to divide a single Kubernetes cluster into multiple virtual clusters.
+
+It is useful for managing different environments (e.g., development, testing, production) or providing multi-tenancy.
+
+Most Kubernetes objects (Pods, Services, Deployments, ...) are deployed to a Namespace.
+
+The **default** Namespace is used if you don't specify the target namespace.
+
+Each namespace has its own set of users, permissions, and unique resource quotas.
+
+
+## Limitations
+
+Namespaces are not designed for strong workload isolation.
+
+**Not a Security Boundary**: Namespaces are not designed to provide strong security isolation (for example, they don't prevent access to resources in other namespaces).
+
+> [!TIP]
+> If you need strong workload isolation, the current method is to use multiple clusters.
+
+**Shared Cluster Resources**: Namespaces share the same underlying cluster resources, such as nodes and the control plane. This means that resource contention or misconfigurations in one namespace can potentially affect others
+
+**Limited Scope**: Namespace isolation applies only to namespaced objects (e.g., Pods, Services). Cluster-wide resources like Nodes, PersistentVolumes, and StorageClasses are not isolated by namespaces
