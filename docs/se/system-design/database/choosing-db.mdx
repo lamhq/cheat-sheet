@@ -1,14 +1,27 @@
 # Choosing Database
 
-## Overview
-
 When choosing databases, it's better to think about the use case and pick the datastore suitable for your application.
 
-A datastore that serves multiple use cases may help reduce the overhead.
+Instead of implementing operations externally through application-level logic, datastores with in-built operations are preferred.
 
-For analytics use cases, a tabular columnar database is often more suitable than a NoSQL database.
+> [!DETAILS]
+> These datastores provide native support for tasks such as filtering, aggregation, and complex querying, which leads to optimized performance, reduced development effort, and lower latency.
 
-Datastores with in-built operations suitable for the use case are preferred (instead of implementing those operations in each application).
+## Analytics Use Cases
+
+For analytics use cases, a tabular columnar database is highly effective for querying and processing large datasets efficiently. 
+
+Its column-oriented storage design accelerates operations like aggregations and filtering, making it well-suited for business intelligence, data warehousing, and reporting tasks.
+
+
+## Handling Unstructured Data
+
+NoSQL databases excel at handling unstructured or semi-structured data, suitable for applications requiring high scalability, flexible schemas, and rapid development, such as:
+- content management systems
+- real-time analytics
+- Internet of Things (IoT) data storage
+- social networks
+- applications with large volumes of diverse data formats
 
 
 ## Database Decision Tree
@@ -45,6 +58,8 @@ Datastores with in-built operations suitable for the use case are preferred (ins
 
 ## SQL vs. NoSQL
 
+Reference: [SQL vs. NoSQL Database: When to Use, How to Choose](https://www.ml4devs.com/articles/datastore-choices-sql-vs-nosql-database/)
+
 ![](https://www.ml4devs.com/images/illustrations/sql-vs-nosql-comparision.webp)
 
 ### Scaling
@@ -70,8 +85,3 @@ NoSQL datastores offer horizontal scale at various CAP Theorem tradeoffs. NoSQL 
 RDBMS are designed for fast transactions updating multiple rows across tables with complex integrity constraints. It will optimize your query (SQL) and find the best execution plan.
 
 NoSQL datastores are designed for efficiently handling a lot more data than RDBMS. NoSQL offers performance at a higher scale (typically by giving up strong consistency). 
-
-
-## References
-
-- [SQL vs. NoSQL Database: When to Use, How to Choose](https://www.ml4devs.com/articles/datastore-choices-sql-vs-nosql-database/)

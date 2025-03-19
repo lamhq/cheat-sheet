@@ -6,6 +6,9 @@
   },
   "scalability",
   "high-availability",
+  "cap-theorem",
+  "base-model",
+  "eventual-consistency",
   "consistent-hashing",
   "bote",
   {
@@ -24,11 +27,11 @@
   "cqrs",
   "server",
   "data-center",
-  "interview",
   {
     "name": "case-studies",
     "label": "Case Studies",
     "type": "dir",
     "collapsed": true
-  }
+  },
+  "interview"
 ]

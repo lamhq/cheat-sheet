@@ -21,5 +21,11 @@ Most applications require a much higher ratio of reads to writes. Thus, the numb
 ## Failover
 
 When one of the database servers goes offline:
-- If only one slave database is available and it goes offline, read operations will be directed to the master database temporarily. In case multiple slave databases are available, read operations are redirected to other healthy slave databases.
-- If the master database goes offline, a slave database will be promoted to be the new master. In production systems, promoting a new master is more complicated as the data in a slave database might not be up to date. The missing data needs to be updated by running data recovery scripts. Although some other replication methods like multi-masters and circular replication could help, those setups are more complicated;
+- If a slave database goes offline.
+  - If there's no other slave database, read operations will be directed to the master database temporarily.
+  - Otherwise, read operations are redirected to other healthy slave databases.
+- If the master database goes offline, a slave database will be promoted to be the new master.
+
+> [!CAUTION]
+> In production systems, promoting a new master is more complicated as the data in a slave database might not be up to date. The missing data needs to be updated by running data recovery scripts.\
+> Although some other replication methods like multi-masters and circular replication could help, those setups are more complicated;

@@ -12,11 +12,8 @@
   "choosing-db",
   "transaction",
   "concurrency",
-  "eventual-consistency",
   "indexes",
   "sharding",
   "partitioning",
-  "replication",
-  "cap-theorem",
-  "base-model"
+  "replication"
 ]
