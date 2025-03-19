@@ -15,7 +15,7 @@ Stateful architecture require every request from the same client must be routed 
 
 > In below figure, user A's session data is stored in Server 1. To authenticate User A, HTTP requests must be routed to Server 1. If a request is sent to other servers like Server 2, authentication would fail because Server 2 does not contain User A's session data.
 
-![](./load-balancer.md/../load-balancer/stateful.drawio.svg)
+![](./server/stateful.drawio.svg)
 
 
 ## Stateless Servers
@@ -26,7 +26,7 @@ State data is stored in a shared data store and kept out of web servers.
 
 Each request contains all the information the server needs to fulfill it. Requests from a client can be sent to any of the servers.
 
-![](./load-balancer.md/../load-balancer/stateless.drawio.svg)
+![](./server/stateless.drawio.svg)
 
 
 ### Benefits
