@@ -1,19 +1,23 @@
 # Concepts
 
+Fundamental building blocks in Kubernetes:
 
-## Deployments
+1. **Pod**: The smallest and simplest Kubernetes object, representing one or more containers that share storage, network, and specifications.
 
-You usually deploy Pods via higher-level controllers, like Deployments, DaemonSets, and StatefulSets.
+2. **ReplicaSet**: Ensures a specified number of pod replicas are running. Deployments usually manage ReplicaSets.
 
-A Deployment is a higher-level Kubernetes object that wraps around a Pod and adds features such as self-healing, scaling, zero-downtime rollouts, and versioned rollbacks.
+3. **Deployment**: Manages the lifecycle of pods, ensuring the desired number of replicas and allowing updates to applications seamlessly.
 
+4. **Service**: Provides a stable network endpoint for accessing a set of pods. It enables load balancing and service discovery.
 
-## Service
+5. **Namespace**: Offers a way to divide cluster resources between multiple users or applications, enabling resource isolation.
 
-Services provide a stable way to expose applications running on Pods.
+6. **ConfigMap**: Manages configuration data separately from the application code.
 
-Services have a front-end consisting of a stable DNS name, IP address, and port.
+7. **Secret**: Stores sensitive data such as passwords, OAuth tokens, and SSH keys, which can be used by pods.
 
-On the back-end, they load-balance traffic across a dynamic set of Pods. As Pods come and go, Service automatically updates itself, and continues to provide that stable networking endpoint.
+8. **PersistentVolume (PV) and PersistentVolumeClaim (PVC)**: PV represents storage in the cluster, and PVC allows pods to request specific storage resources.
 
-Services cannot provide application-layer host and path routing. 
+9. **Ingress**: Manages external HTTP and HTTPS access to services within the cluster, typically using a reverse proxy.
+
+10. **Node**: Represents a single worker machine in the cluster, where pods are scheduled and run.
