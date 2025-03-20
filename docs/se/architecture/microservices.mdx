@@ -1,0 +1,107 @@
+# Microservices
+
+## Overview
+
+Microservices are **independently releasable services** that are modeled around a business domain 
+
+> A **service** here means a completely separate operating system process.
+
+Each microservice encapsulates its own database, **avoid the use of shared databases** in most circumstances.
+
+Microservices host business functionality on one or more **network endpoints**. Consumers access microservice functionality through networked endpoints.
+
+Microservices are a type of **service-oriented architecture** (SOA). They are opinionated about how service boundaries should be drawn.
+
+Microservices are **technology agnostic**, offering advantages in flexibility.
+
+
+## Service-oriented architecture vs Microservices
+
+Service-oriented architecture (SOA) is a design approach where multiple services collaborate to provide a set of capabilities.
+
+SOA aims to promote software reusability and easier maintenance or rewriting of software.
+
+The lack of consensus on how to do SOA well has been an issue in the industry. Microservices have emerged as a specific approach for doing SOA well.
+
+Microservices can be seen as a specific approach for SOA, similar to how Extreme Programming (XP) or Scrum is a specific approach for Agile software development.
+
+
+## Key Concepts
+
+### Independent Deployability
+
+Each microservice should be able to be deployed independently, so changes in one service don't require changes or redeployment of other services.
+
+**Loosely coupled** microservices are essential for achieving independent deployability.
+
+Well-defined and stable contracts between services are necessary for loose coupling.
+
+Sharing databases can make achieving independent deployability difficult.
+
+The focus on independent deployability guides the identification of **microservice boundaries**.
+
+
+### Modeled Around a Business Domain
+
+Microservices should align with business domains, inspired by domain-driven design, to simplify updates and recombination.
+
+Avoid frequent cross-service changes, as they are costly and require coordination (across services, or different teams.)
+
+Designing services as complete slices of business functionality is prefered than technical functionality, it ensures they focus on business needs.
+
+
+### Owning Their Own State
+
+Microservices should **avoid using shared databases**, instead, access data from other microservices when needed.
+
+> Sharing databases is one of the worst things you can do if you're trying to achieve independent deployability.
+
+Internal state in a microservice should be hidden and only accessed through defined interfaces.
+
+Services should be seen as end-to-end slices of business functionality, which encapsulating UI, business logic, and data.
+
+
+### Size
+
+Microservices should be small enough to remain focused on a single business capability or responsibility, but large enough to be independently developed, deployed, and maintained.
+
+**Single Responsibility Principle**: A microservice should do one thing and do it well. This makes it easier to update or scale specific parts of your system without affecting others.
+
+**Team Ownership**: A microservice should be manageable by a small, cross-functional team. If a service requires coordination across multiple teams, it might be too large.
+
+**Avoid Over-Splitting**: If microservices become too small, the system can get overly complex, with increased communication overhead between services.
+
+
+
+### Flexibility
+
+Microservices provide flexibility and options for organizations in terms of organizational, technical, scale, and robustness aspects:
+- **Organizational Flexibility**: Different teams can independently own, develop, and deploy their respective services. This reduces dependencies between teams, enabling faster development cycles and more autonomy.
+- **Technical Flexibility**: Microservices allow the use of diverse technologies and tools for different services.
+- **Scalability**: you can scale specific parts of an application independently.
+- **Robustness**: If one service fails, it doesn't necessarily bring down the entire system.
+
+Incremental adoption of microservices is recommended to gradually assess the impact and make adjustments as needed.
+
+
+### Alignment of Architecture and Organization
+
+In Layered architectures, such as three-tiered architectures, changes often span multiple layers (presentation, application, data)
+
+![](./microservices/three-layer-arch.drawio.svg)
+
+Three-tiered architecture is widely used because it is well-understood and aligns with traditional team structures, which are often organized around specific core competencies.
+
+However, There is a shift towards breaking systems apart to reduce handoffs and silos, with an alternative architecture focusing on vertical business lines and dedicated teams for specific functionalities.
+
+*For example, a microservice owned by the profile team would handle the customer profile functionality, including the ability to update information and store customer state.*
+
+*The choice of a favorite genre would be associated with a given customer, making the change more localized.*
+
+![](./microservices/microservices-arch.drawio.svg)
+
+*Other microservices, such as a Catalog microservice and a Recommendation microservice, can also interact with the customer microservice.*
+
+*This architecture aligns teams to lines of business within the organization and makes it easier to make changes.*
+
+![](./microservices/services-comm.drawio.svg)
