@@ -20,10 +20,10 @@ Event-Driven Architectures use asynchronous communication, leads to loosely coup
 ## Patterns
 
 There are several event-driven architecture patterns:
-- Event notification: it's a notification that something has occurred
-- Event-carried state transfer: similar to Event Notification but also contains the state
-- Event sourcing: when every single change of state  is a submitted event such that the events make up the state of the whole system
-- Command and Query Responsibility Segregation (CQRS): a pattern to segregate reading and writing. The informational events are segregated from the actual commands to make changes
+1. Event notification: it's a notification that something has occurred
+2. Event-carried state transfer: similar to Event Notification but also contains the state
+3. Event sourcing: when every single change of state  is a submitted event such that the events make up the state of the whole system
+4. Command and Query Responsibility Segregation (CQRS): a pattern to segregate reading and writing. The informational events are segregated from the actual commands to make changes
 
 
 ## Communication types
@@ -55,14 +55,11 @@ Data is continuously pushed to a stream and consumers need to pull that data.
 
 **Choreography** is when the events flow through different services in a system without a higher level of control.
 
-For example, an `OrderPlaced` event then causes
-an `OrderPicked` and packed event,
-which itself causes an `OrderShipped` event.
+*For example, an `OrderPlaced` event then causes an `OrderPicked` and packed event, which itself causes an `OrderShipped` event.*
 
-Orchestration is when there is a central system
-controlling the interactions.
+**Orchestration** is when there is a central system controlling the interactions.
 
-You may design a single order orchestrator that calls each service in the right order and ensures each action is taken as appropriate.
+*You may design a single order orchestrator that calls each service in the right order and ensures each action is taken as appropriate.*
 
 
 ## Pitfalls
