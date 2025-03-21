@@ -1,0 +1,55 @@
+# Ingress
+
+## Overview
+
+Ingress is a Kubernetes resource that manages external access to services within a cluster, typically for HTTP and HTTPS traffic.
+
+It allows you to define rules for routing traffic to different services based on hostnames, paths, or other criteria.
+
+Ingress exposes multiple Services through a single cloud load-balancer.
+
+To do this, Ingress creates a single LoadBalancer Service, on port 80 or 443, and uses host-based and path-based routing to send traffic to the correct backend Service.
+
+Main components include:
+- Ingress Resource: Defines routing rules.
+- Ingress Controller: Implements those rules, routing traffic.
+
+
+## Ingress Resource
+
+An object that defines rules for traffic routing rules, such as which hostname or path maps to a target service.
+
+```yml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minimal-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx-example
+  rules:
+  - http:
+      paths:
+      - path: /testpath
+        pathType: Prefix
+        backend:
+          service:
+            name: test
+            port:
+              number: 80
+```
+
+- `name` of an Ingress object must be a valid DNS subdomain name.
+- `annotations` are key-value pairs that help customize the behavior of the Ingress controller. Annotations vary depending on the Ingress controller you are using.
+- `nginx.ingress.kubernetes.io/rewrite-target: /`: modifies the request URL by rewriting the path to `/` before forwarding to the backend service.
+- `nginx.ingress.kubernetes.io/ssl-redirect: "true"`: forces HTTPS by redirecting all HTTP traffic to HTTPS
+
+
+## Ingress Controller
+
+A load balancer that implements the rules defined in the Ingress Resource. It receives and directs traffic to the correct backend services.
+
+In order for an Ingress to work in your cluster, there must be an ingress controller running.
+
+A lot of Kubernetes clusters don’t ship with a built-in Ingress controller. You may need to deploy an Ingress controller such as [ingress-nginx](https://kubernetes.github.io/ingress-nginx/deploy/). You can choose from a number of [Ingress controllers](https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/).
