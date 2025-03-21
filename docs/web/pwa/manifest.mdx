@@ -1,0 +1,100 @@
+# Web app manifest
+
+## Overview
+
+The web app manifest is a file you create that tells the browser how you want your web content to display as an app in the operating system
+
+It includes:
+- app's name
+- icon
+- theme color
+
+> [!WARNING]
+> A web app manifest is required for your PWA to meet the installability criteria in every browser, although Chrome may still allow installation without it.
+
+
+## Create a manifest
+
+Create a JSON file that contains at least a `name` field:
+
+```json title="manifest.json"
+{
+  "name": "My First Application",
+  "short_name": "PWA",
+  "description": "Demo of a PWA",
+  "orientation": "portrait",
+  "display": "standalone",
+  "background_color": "#eff1f2",
+  "theme_color": "#296BE3",
+  "start_url": ".",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
+```
+
+
+## Use your manifest
+
+To make the browser aware of your web app manifest, you need to link it to your PWA using a `<link>` HTML element:
+
+```html
+<link rel="manifest" href="/manifest.json">
+```
+
+
+## Debug the manifest
+
+To ensure the manifest is set up correctly, you can use DevTools in every Chromium-based browser.
+
+1. In the left pane, under **Application**, select **Manifest**.
+2. Check the fields of the manifest as parsed by the browser.
+
+
+## Manifest fields
+
+### Basic
+
+- `name`, `short_name`
+- `start_url`: The URL the PWA should load when the user starts it from the installed icon, such as `/`. If you don't provide a start URL, the browser can use the URL the PWA was installed from as a start.
+- `display`: specifies how your web app should be presented to users when launched
+  - `fullscreen`: Launches the app in full-screen mode, without any browser UI
+  - `standalone`: Removes most browser UI but keeps minimal system UI like the status bar.
+  - `minimal-ui`: Displays a small set of browser controls, such as a back button and reload button.
+  - `browser`: Opens the app in a regular browser tab with full browser UI.
+- `id`: A string that uniquely identifies this PWA against others that may be hosted on the same origin. 
+- `icons`: Array of images used as app icons
+  - `src`: The path to the icon file. Make the file is accessible from the internet.
+  - `type`: The MIME type of the icon file, such as `image/png`
+  - `sizes`: The size of the icon, formatted as `<width>x<height>`. Required sizes are `192x192`, `512x512`
+
+> [!CAUTION]
+> While PNGs can include transparency, providing transparent icons may cause unexpected issues on some operating systems. For example, iOS, iPadOS, and Android 8 and later fill in the transparency with a background color out of your control. For better compatibility, use a square non-transparent icon.
+
+
+### Maskable icons
+
+Some operating systems, such as Android, can change the shape of icons from circles to squares to rounded-corner squares. To support these kinds of adaptive icons, you can provide a maskable icon using the purpose field.
+
+To do so, provide a square image file that has its main icon contained within a “safe zone”: a circle centered in the icon with a radius of 40 percent of the width of the icon.
+
+![](https://web.dev/static/learn/pwa/web-app-manifest/image/the-safe-area-marked-a-4-06cd30afb47b2_1920.png)
+
+> [!CAUTION]
+> If you don't provide a maskable icon, devices that expect them may shrink your icon and make it into the shape they need with a white background. If your maskable icon isn't displaying well, you can improve it by adding more padding.
+
+Maskable icons should be 512 by 512 at least.
+
+
+## References
+
+- [web.dev](https://web.dev/learn/pwa/web-app-manifest)

@@ -26,6 +26,11 @@
     "collapsed": true
   },
   {
+    "name": "pwa",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
     "name": "build-tools",
     "type": "dir",
     "label": "Build Tools",
