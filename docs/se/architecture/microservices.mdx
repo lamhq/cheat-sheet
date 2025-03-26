@@ -4,6 +4,7 @@
 
 Microservices are **independently releasable services** that are modeled around a business domain 
 
+> [!NOTE]
 > A **service** here means a completely separate operating system process.
 
 Each microservice encapsulates its own database, **avoid the use of shared databases** in most circumstances.
@@ -52,6 +53,7 @@ Designing services as complete slices of business functionality is prefered than
 
 Microservices should **avoid using shared databases**, instead, access data from other microservices when needed.
 
+> [!WARNING]
 > Sharing databases is one of the worst things you can do if you're trying to achieve independent deployability.
 
 Internal state in a microservice should be hidden and only accessed through defined interfaces.
@@ -92,15 +94,15 @@ Three-tiered architecture is widely used because it is well-understood and align
 
 However, There is a shift towards breaking systems apart to reduce handoffs and silos, with an alternative architecture focusing on vertical business lines and dedicated teams for specific functionalities.
 
-*For example, a microservice owned by the profile team would handle the customer profile functionality, including the ability to update information and store customer state.*
-
-*The choice of a favorite genre would be associated with a given customer, making the change more localized.*
+> For example, a microservice owned by the profile team would handle the customer profile functionality, including the ability to update information and store customer state.
+> <br/>
+> The choice of a favorite genre would be associated with a given customer, making the change more localized.
 
 ![](./microservices/microservices-arch.drawio.svg)
 
-*Other microservices, such as a Catalog microservice and a Recommendation microservice, can also interact with the customer microservice.*
-
-*This architecture aligns teams to lines of business within the organization and makes it easier to make changes.*
+> Other microservices, such as a Catalog microservice and a Recommendation microservice, can also interact with the customer microservice.
+> <br/>
+> This architecture aligns teams to lines of business within the organization and makes it easier to make changes.*
 
 ![](./microservices/services-comm.drawio.svg)
 
@@ -115,12 +117,14 @@ Implementing a log aggregation system is strongly recommended as a prerequisite 
 
 Log aggregation systems collect and aggregate logs from all services, providing a central place for analysis and alerting.
 
+> [!TIP]
 > **Humio** is mentioned as a recommended log aggregation tool, but simple logging services provided by public cloud vendors can also be used
 
 Implementing **correlation IDs** can help isolate logs associated with a specific flow of service calls, making troubleshooting easier.
 
 As the system grows in complexity, tools for exploring system behavior become essential, such as **analyzing traces** across multiple services and **detecting bottlenecks**.
 
+> [!TIP]
 > Open source tools like **Jaeger** focus on distributed tracing, while products like **Lightstep** and **Honeycomb** provide advanced capabilities for exploring the state of a running system.
 
 
@@ -141,18 +145,18 @@ Microservices require ways to share data between them.
 
 Products that allow for easy streaming and processing of large volumes of data have become popular in microservice architectures.
 
-**Apache Kafka** is a popular choice for streaming data in a microservice environment, offering features like message permanence, compaction, and scalability.
-
-Kafka has added stream-processing capabilities with KSQLDB and can be used with dedicated solutions like Apache Flink.
+> [!TIP]
+> **Apache Kafka** is a popular choice for streaming data in a microservice environment, offering features like message permanence, compaction, and scalability.
+> Kafka has added stream-processing capabilities with KSQLDB and can be used with dedicated solutions like Apache Flink.
 
 **Debezium** is an open source tool that helps stream data from existing datasources over Kafka, enabling traditional datasources to be part of a stream-based architecture.
 
 
-## Advantages
+## Benefits
 
 ### Technology Heterogeneity
 
-Microservices the use of different technologies for each service, enabling us to choose the right tool for the job.
+Microservices allow different technologies for each service, enabling us to choose the right tool for the job.
 
 Microservices enable faster adoption of new technologies.
 
@@ -204,7 +208,7 @@ Microservices allow functionality to be consumed in different ways for different
 Microservices create opportunities for external parties to enhance the system, making application development more flexible.
 
 
-## Disadvantages
+## Challenges
 
 ### Developer Experience
 

@@ -1,5 +1,9 @@
 [
   "monolith",
   "eda",
-  "microservices"
+  {
+    "name": "microservices",
+    "type": "dir",
+    "collapsed": true
+  }
 ]
