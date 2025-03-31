@@ -4,6 +4,5 @@
   "numpy": "NumPy",
   "pandas": "Pandas",
   "pyspark": "PySpark",
-  "postgresql": "PostgreSQL",
-  "mongodb": "MongoDB"
+  "postgresql": "PostgreSQL"
 }

@@ -1,0 +1,49 @@
+# Replication
+
+## Overview
+
+A replica set refers to a collection of `mongod` processes that uphold the same dataset.
+
+By default, a replica set consists of three nodes, each holding a complete copy of the database.
+
+![](https://www.mongodb.com/docs/manual/images/replica-set-read-write-operations-primary.bakedsvg.svg)
+
+A replica set can have up to 50 nodes.
+
+
+## Primary node
+
+Write operations in MongoDB are executed on the primary node and subsequently logged in the primary's oplog.
+
+A replica set can only have one primary node.
+
+
+## Secondary nodes
+
+The secondary nodes mirror the primary's dataset. They only support read operations.
+
+
+## Write operations
+
+MongoDB propagates write operations from the primary to secondary nodes.
+
+A client write is directed to the primary node, applied to its database copy, and recorded in the **operations log** (oplog), which is tailed by secondary nodes.
+
+Write operations may lag across nodes due to factors like network latency, hardware, workload. If a node falls behind, it will catch up or resync using the oplog.
+
+
+## Replica set elections
+
+When the primary node become inaccessible, a qualified secondary node will initiate an election to become the new primary.
+
+MongoDB employs a protocol built on top of the Raft consensus algorithm to orchestrate replica set elections. It includes a voting mechanism to select which member will assume the primary role.
+
+Events can initiate an election:
+- Adding or removing a node from the replica set
+- Initializing the replica set
+- A heartbeat failure a secondary nodes and the primary (health check timeout)
+
+The replica set cannot perform write operations until the election is completed. It can still handle read operations.
+
+
+## Replica set oplog

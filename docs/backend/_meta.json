@@ -10,6 +10,11 @@
     "label": "Javascript"
   },
   {
+    "name": "mongodb",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
     "name": "markdown",
     "type": "dir",
     "collapsed": true
