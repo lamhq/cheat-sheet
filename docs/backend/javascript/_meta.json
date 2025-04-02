@@ -12,11 +12,6 @@
     "label": "Syntax"
   },
   {
-    "name": "typescript",
-    "type": "dir",
-    "collapsed": true
-  },
-  {
     "name": "pkg-mgm",
     "type": "dir",
     "collapsed": true,
@@ -43,11 +38,6 @@
     "type": "dir",
     "collapsed": true,
     "label": "Database"
-  },
-  {
-    "name": "api",
-    "type": "dir",
-    "collapsed": true
   },
   {
     "name": "codebase",
