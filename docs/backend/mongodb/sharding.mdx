@@ -2,38 +2,27 @@
 
 ## Overview
 
-MongoDB supports horizontal scaling through sharding.
-
-This method divides a larger database into smaller, more manageable components known as shards.
+MongoDB supports horizontal scaling through sharding. This method divides a larger database into smaller, more manageable components known as shards.
 
 Each shard is stored on a separate database server instance, which distributes the load and offers an
 effective approach to data management.
 
+In MongoDB, data sharding occurs at the collection level (data of a collection is distributed across multiple shards).
 
-## Components
-
-A MongoDB sharded cluster consists of the following key elements:
-
-### Shard
-
-This is a replica set that stores a distinct subset of the overall data in the cluster.
+Each database in a cluster has its own primary shard that stores all the unsharded collections.
 
 
-### `mongos`
+## Shard key
 
-Clients establish connections with mongos instances, not shards.
+A shard key is made up of one or more document fields.
 
-It serves as a query router for client applications. It directs client requests to the appropriate shards and consolidates the results from multiple shards into a final response.
+The data is divided into non-overlapping chunks by breaking down the range of shard key values.
 
-It is recommended to run multiple instances of mongos in production deployments to ensure high availability.
+The goal is to evenly distribute these chunks among a cluster's shards, ensuring efficient distribution.
 
 
-### Config servers
+## Shard key index
 
-Responsible for storing metadata about the cluster's data distribution.
+To shard a populated collection, an index that begins with the shard key is necessary. 
 
-The metadata includes information about chunks (data partitions) and their allocation across shards.
-
-They are deployed as a replica set to ensure fault tolerance and high availability.
-
-It plays a crucial role in enabling efficient data management and query routing within the cluster.
+However, for empty collections, MongoDB automatically generates the required supporting index if needed.

@@ -4,7 +4,7 @@ import { PackageManagerTabs } from '@theme'
 
 ## Installation
 
-For Express and Apollo (default):
+For Express and Apollo server (default):
 
 <PackageManagerTabs command="i @nestjs/graphql @nestjs/apollo @apollo/server graphql" />
 
@@ -25,7 +25,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 export class AppModule {}
 ```
 
-The `forRoot()` method takes an options object as an argument. These options are passed through to the underlying driver instance. In this case, these options will be forwarded to the `ApolloServer` constructor.
+The `forRoot()` method takes an options object as an argument. These options are passed through to the underlying driver instance. In this case, these options will be forwarded to the `ApolloServer` [constructor](https://www.apollographql.com/docs/apollo-server/api/apollo-server).
 
 
 ## Include resolvers
@@ -42,11 +42,6 @@ GraphQLModule.forRoot({
 ## GraphQL playground
 
 You can access the GraphQL playground at http://localhost:3000/graphql
-
-
-## Code first
-
-Check the [official documentation](https://docs.nestjs.com/graphql/quick-start#code-first).
 
 
 ## Schema first

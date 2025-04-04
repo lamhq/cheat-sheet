@@ -1,0 +1,27 @@
+# Components
+
+![](https://www.mongodb.com/docs/manual/images/sharded-cluster-production-architecture.bakedsvg.svg)
+
+A MongoDB sharded cluster consists of the following key elements:
+
+## `mongos`
+
+Clients establish connections with mongos instances, not shards.
+
+It serves as a query router for client applications. It directs client requests to the appropriate shards and consolidates the results from multiple shards into a final response.
+
+It is recommended to run multiple instances of mongos in production deployments to ensure high availability.
+
+## Config servers
+
+Responsible for storing metadata about the cluster's data distribution.
+
+The metadata includes information about chunks (data partitions) and their allocation across shards.
+
+They are deployed as a replica set to ensure fault tolerance and high availability.
+
+It plays a crucial role in enabling efficient data management and query routing within the cluster.
+
+## Shard
+
+This is a replica set that stores a distinct subset of the overall data in the cluster.

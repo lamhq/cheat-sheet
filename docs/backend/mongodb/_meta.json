@@ -1,6 +1,10 @@
 [
   "installation",
   "replicaset",
-  "sharding",
+  {
+    "name": "sharding",
+    "type": "dir",
+    "collapsed": true
+  },
   "shell"
 ]

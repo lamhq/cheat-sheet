@@ -1,0 +1,32 @@
+# Sharding strategy
+
+MongoDB supports two sharding strategies for distributing data across sharded clusters: **Ranged sharding** and **Hashed sharding**.
+
+
+## Ranged sharding
+
+Divide data into continuous sequences determined by the shard key values.
+
+Documents with "close" shard key values are likely to be in the same chunk or shard, allows for efficient queries where reads target documents within a contiguous range.
+
+![](https://www.mongodb.com/docs/v7.0/images/sharding-range-based.bakedsvg.svg)
+
+Ranged sharding is most efficient when the shard
+key exhibits the following traits:
+- **High cardinality**: there are many unique values in that field, more chunks are created, leading to better distribution of data among shards, maximizes horizontal scalability, ensures that no single shard is overwhelmed with too much data or too many operations.
+- **Low frequency**: a value does not appear in many documents. This ensures that no single shard holds the majority of documents with a specific value, enabling even distribution of data across the shards and allowing the cluster to scale horizontally more effectively.
+- **Non-monotonically changing values**: the shard key should not steadily increasing or decreasing, its values should change in a non-monotonic way (e.g., they vary up and down unpredictably),
+
+> [!CAUTION]
+> **High frequency** example: If your shard key is `product_category` and the dataset contains many documents with `product_category = 'electronics'`, this value occurs at a **high frequency**. All documents with `product_category = 'electronics'` would be concentrated in the same chunk(s), which can grow excessively large, causing bottlenecks.
+
+> [!CAUTION]
+> **Monotonic shard keys are problematic**: When a shard key’s value always increases (e.g., timestamps) or decreases, new insertions are directed to a single chunk—the one at the edge of the current range. This creates a "hotspot," where one shard handles a disproportionate number of operations, causing an imbalance in workload.
+
+
+## Hashed sharding
+
+Hashed sharding calculates a hash value of the shard key field's value and assigns each chunk a range determined by the hashed values.
+
+Hashed sharding is not efficient for performing range-based operations. Hashed keys are ideal for shard keys with fields that
+change monotonically (e.g., ObjectId values or timestamps). 
