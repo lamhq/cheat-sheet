@@ -1,5 +1,7 @@
 # Chunks
 
+## Overview
+
 MongoDB uses the shard key to partition the data into chunks, owned by a shard.
 
 A chunk consists of a range of sharded data.
@@ -11,16 +13,6 @@ The balancer migrates data between shards.
 Each chunk has inclusive lower and exclusive upper limits based on the shard key.
 
 ![](https://www.mongodb.com/docs/v7.0/images/sharding-range-based.bakedsvg.svg)
-
-## Initial Chunks
-
-- **Populated Collection:** Initially, one large chunk is created to cover all shard key values. The balancer moves ranges off the initial chunk when it needs to start balancing data.
-
-- **Empty Collection with Zones:** If zones and ranges are defined, empty chunks are created for the defined zone ranges, cover the entire range of the shard key values, then an initial chunk distribution is performed based on the zone ranges. Balancer manages chunk distribution afterward.
-
-- **Empty Collection without Zones:**
-  - **Hashed Sharding:** The sharding operation creates empty chunks to cover the entire range of the shard key values and performs an initial chunk distribution.
-  - **Ranged Sharding:** A single empty chunk covers the shard key values. Balancer migrates chunks as needed and manages distribution afterward.
 
 
 ## Range Migration
