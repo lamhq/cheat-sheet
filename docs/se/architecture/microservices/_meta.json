@@ -1,5 +1,6 @@
 [
   "design",
   "ddd",
-  "splitting-monolith"
+  "splitting-monolith",
+  "communication"
 ]

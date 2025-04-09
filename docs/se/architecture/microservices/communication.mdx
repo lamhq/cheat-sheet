@@ -1,0 +1,26 @@
+# Communication
+
+## Characteristics
+
+Microservices use inter-process communication rather than in-process communication
+
+- inter-process: calls between different processes across a network
+- in-process: calls within a single process
+
+### Performance
+
+The overhead of an inter-process call to be significant compared to the overhead of an in-process call due to data serialization, transmission, and deserialization.
+
+This might lead you to:
+- minimize the calls between services
+- reduce the amount (size) of data being sent or received
+- pick more efficient serialization mechanisms
+- offload data to a filesystem and pass around a reference to that file location instead
+
+Developers must be aware for actions that trigger network calls to avoid hidden inter-service interactions that lead to performance bottlenecks.
+
+### Changing Interfaces
+
+In microservice communication, the service exposing an interface and the services consuming it are independently deployable units.
+
+For backward-incompatible changes to a microservice interface, either perform a lockstep deployment with consumers to ensure they adopt the new interface, or phase the rollout of the updated contract to maintain compatibility during the transition.

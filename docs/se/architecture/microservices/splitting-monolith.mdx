@@ -76,7 +76,7 @@ To do that, you intercept calls to the existing monolithic application:
 
 ![](./splitting-monolith/strangler-fig.drawio.svg)
 
-Benefit:
+Benefits:
 - no changes need to be made to the monolithic application
 - allow the legacy system to continue functioning while the new system is being built and tested
 
@@ -105,6 +105,41 @@ With the **strangler fig** pattern that use an HTTP proxy, we could implement th
 
 ### Performance
 
-When splitting databases apart for microservices, we end up having to move join operations from the data tier (database) up into the microservices themselves. And try as we might, it's unlikely to be as fast.
+Splitting databases apart moves join operations up into the microservices. Microservice has to call other microservices for requesting information.
 
-That's because the microservice has to call other microservices to request information that it doesn't own.
+*For example, when generating the bestsellers report, the Finance microservice need to call the Catalog microservice, requesting product information on each product SKUs*.
+
+*We can mitigate the impact of report generating latency by allowing for SKUs to be looked up in bulk, or cache the product information locally.*
+
+### Data Integrity
+
+You can no longer rely on your database to enforce the integrity of inter-entity relationships for entities stored in multiple microservice
+
+*For instance, a foreign key relationship enables navigation between related tables and prevents deletion of referenced records.*
+
+Work-arounds:
+- Use a soft delete to mark a record as deleted without actually removing it.
+- Copy the data to another microservice, and synchronize changes in that data.
+
+
+### Transactions
+
+We lose the safety of the ACID transactions when splitting data across multiple databases
+
+
+### Tooling
+
+We lack good refactoring-type tooling for changing databases.
+
+There are many tools for managing schema changes in relational database. Schema changes are defined in version-controlled delta scripts and run in strict order in an idempotent manner.
+
+
+### Reporting Database
+
+There are use cases for accessing data from more than one microservice or when that data was better made available in a database rather via an API.
+
+A reporting database is designed for external access, relies on a microservice to transfer data from internal storage. This setup allows hiding internal state management while still presenting data externally.
+
+This enables users to execute ad hoc SQL queries, perform large-scale joins, and leverage existing toolchains designed for SQL endpoints.
+
+The reporting database may contain only a subset of the microservice's data, customized to meet consumer needs, possibly with a different schema or database technology. Developers of the microservice handle the mapping from internal state to the reporting database.
