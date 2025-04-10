@@ -5,5 +5,7 @@
   "throttling",
   "debouncing",
   "code-splitting",
-  "web-workers"
+  "web-workers",
+  "transition",
+  "opt-update"
 ]

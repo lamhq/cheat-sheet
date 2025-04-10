@@ -29,9 +29,9 @@
     "label": "Authentication"
   },
   {
-    "name": "techniques",
+    "name": "performance",
     "type": "dir",
     "collapsed": true,
-    "label": "Techniques"
+    "label": "Performance Optimization"
   }
 ]

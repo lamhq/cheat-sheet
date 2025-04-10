@@ -1,0 +1,100 @@
+# Optimistic Update
+
+## Overview
+
+Optimistic updates are a technique to improve user experience by immediately reflecting changes in the interface, assuming that the operation will succeed.
+
+React introduced the `useOptimistic` hook to simplify optimistic updates. This hook allows you to manage optimistic state changes while an asynchronous operation is in progress.
+
+```js
+const [optimisticState, addOptimistic] = useOptimistic(state, updateFn);
+```
+
+- `optimisticState`: the current state that reflects all optimistic updates.
+- `addOptimistic`: a dispatch function that allows you to update the optimistic state by dispatching an action
+- `state`: the initial value for `optimisticState`
+- `updateFn`: determine how to transform the current state based on the action, similar to reducer-like approach.
+
+
+## Implementation
+
+You maintain a separated state for storing optimistic result and use that state for rendering.
+
+When an update operation take place, you immediately update the optimistic state to the expected result without waiting for the operation complete.
+
+If the operation fail, you revert the state to before the update.
+
+
+## Example
+
+The example below will add an item to the list every time the user clicks the Submit button:
+
+```js
+import { useOptimistic, useRef, useState } from 'react';
+
+async function fakeApiCall(item) {
+  return new Promise((resolve) =>
+    setTimeout(() => {
+      console.log('Item added to server:', item);
+      resolve();
+    }, 1000),
+  );
+}
+
+function updateStateFn(state, action) {
+  switch (action.type) {
+    case 'add':
+      return [...state, action.item];
+
+    case 'set':
+      return action.items;
+
+    default:
+      return state;
+  }
+}
+
+export default function App() {
+  const formRef = useRef(null);
+  const [items, setItems] = useState([]);
+  const [optimisticItems, addOptimistic] = useOptimistic(items, updateStateFn);
+
+  async function formAction(formData) {
+    'use client';
+    const name = formData.get('name');
+    if (!name) return;
+
+    const itemToAdd = { id: Date.now(), name }; // Create a new item
+    formRef.current.reset();
+
+    // Optimistically add the item to the list
+    addOptimistic({ type: 'add', item: itemToAdd });
+
+    try {
+      // Simulate API call (e.g., saving to server)
+      await fakeApiCall(itemToAdd);
+      const newItems = [...items, itemToAdd];
+      setItems(newItems);
+      addOptimistic({ type: 'set', items: newItems });
+    } catch (error) {
+      console.error('Error adding item:', error);
+      addOptimistic({ type: 'set', items });
+      // Handle rollback here if needed
+    }
+  }
+
+  return (
+    <div>
+      <form action={formAction} ref={formRef}>
+        <input type="text" name="name" placeholder="Add an item!" />
+        <button type="submit">Submit</button>
+      </form>
+      <ul>
+        {optimisticItems.map((item) => (
+          <li key={item.id.toString()}>{item.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
