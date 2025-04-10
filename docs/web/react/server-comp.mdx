@@ -1,0 +1,75 @@
+# Server Components
+
+## Overview
+
+Server Components are a new type of Component that renders ahead of time, before bundling, on the web or CI server.
+
+Server Components are rendered and sent to the client as serialized HTML, reducing the amount of JavaScript needed to be sent to the browser.
+
+
+## Benefits
+
+1. Server send less JavaScript to the client. This reduces the bundle size and improves loading times.
+2. Client is more lightweight and reduces its maintenance overhead.
+3. SEO-Friendly: search engines can easily crawl and index the page.
+4. Server Components can fetch data directly on the server without exposing APIs to the client, enhances security and reduces network requests
+
+
+## Disadvantages
+
+1. Increased Server Load.
+2. Server component can't have interaction or access DOM API
+3. Increase the latency for sending content from server
+4. Increase development complexity. Mixing between client and server components make the code more complicated.
+5. Require special server setup for deployment
+
+
+## How it work?
+
+Server components can run at build time to read from the filesystem or fetch static content, so a web server is not required.
+
+```js
+import marked from 'marked'; // Not included in bundle
+import sanitizeHtml from 'sanitize-html'; // Not included in bundle
+
+async function Page({page}) {
+  // NOTE: loads *during* render, when the app is built.
+  const content = await file.readFile(`${page}.md`);
+  
+  return <div>{sanitizeHtml(marked(content))}</div>;
+}
+```
+
+The rendered output can then be server-side rendered to HTML and uploaded to a CDN. When the app loads, The client will only see the rendered output, no need to download the original `Page` component, or the expensive libraries. 
+
+
+## Client Components
+
+Server Components are not sent to the browser, they cannot use interactive APIs like `useState`.
+
+To add interactivity to Server Components, you can compose them with Client Component.
+
+Client Components use the `"use client"` directive.
+
+> [!NOTE]
+> There is no directive for Server Components. The `"use server"` directive is used for Server Functions.
+
+An example client component:
+```js
+// Client Component
+"use client"
+
+export default function Expandable({children}) {
+  const [expanded, setExpanded] = useState(false);
+  return (
+    <div>
+      <button
+        onClick={() => setExpanded(!expanded)}
+      >
+        Toggle
+      </button>
+      {expanded && children}
+    </div>
+  )
+}
+```
