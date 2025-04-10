@@ -1,0 +1,68 @@
+# Web Workers
+
+## Overview
+
+Web Workers are a feature in JavaScript that allow you to run scripts in the background, separate from the main UI thread. 
+
+Useful for handling tasks that are computationally intensive or time-consuming, ensuring the UI remains smooth and responsive:
+- Working with large datasets: sorting, filtering, complex calculation
+- Image manipulation: resizing, croping, applying filters
+- Video or Audio processing
+- Cryptography: encryption, decryption, or hashing
+- Manage WebSocket communication
+
+
+## How it work?
+
+Web Workers operate in a different thread from the main UI thread, they can perform tasks without interfering with the rendering or user interactions.
+
+The main thread and the worker thread communicate via messages. You send data to the worker using `postMessage`, and the worker responds with `onmessage`
+
+Web Workers cannot directly manipulate the DOM. This ensures that the main thread remains focused on UI-related tasks.
+
+
+## Example
+
+This example define a web worker in a JavaScript file `worker.js`:
+
+```js title="worker.js"
+self.onmessage = function (event) {
+  const data = event.data;
+  const result = performHeavyTask(data);
+  self.postMessage(result);
+};
+
+function performHeavyTask(data) {
+  let sum = 0;
+  for (let i = 0; i < data; i++) {
+    sum += i;
+  }
+  return sum;
+}
+```
+
+Create an instance of the Web Worker in a React app and offload heavy computation to the worker:
+```js
+import React, { useState } from "react";
+
+export default function App() {
+  const [result, setResult] = useState(null);
+
+  const handleHeavyTask = () => {
+    const worker = new Worker(new URL("./worker.js", import.meta.url)); // Path to the worker file
+    worker.postMessage(100000000); // Send data to the worker
+    worker.onmessage = (event) => {
+      setResult(event.data); // Receive the result
+      worker.terminate(); // Clean up the worker
+    };
+  };
+
+  return (
+    <div>
+      <h1>Web Worker Example</h1>
+      <button onClick={handleHeavyTask}>Start Heavy Task</button>
+      {result && <p>Result: {result}</p>}
+    </div>
+  );
+}
+```

@@ -1,0 +1,9 @@
+[
+  "list-virtualization",
+  "lazy-loading-images",
+  "memoization",
+  "throttling",
+  "debouncing",
+  "code-splitting",
+  "web-workers"
+]

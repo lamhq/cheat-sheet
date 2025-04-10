@@ -27,5 +27,11 @@
     "type": "dir",
     "collapsed": true,
     "label": "Authentication"
+  },
+  {
+    "name": "techniques",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Techniques"
   }
 ]
