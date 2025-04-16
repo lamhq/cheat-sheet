@@ -162,3 +162,27 @@ author = {
   avatar: "photo1.jpg",
 };
 ```
+
+
+## Apply Design Patterns
+
+Schema design patterns are ways to optimize your data model for your application's access patterns.
+
+Each schema design pattern has different use cases and tradeoffs for data consistency, performance, and complexity. *For example, some schema design patterns improve write performance, while others improve read performance.*
+
+> [!CAUTION]
+> Implementing a pattern without understanding your application and the data it needs can degrade application performance and cause unnecessary complications to your schema design.
+
+
+## Create Indexes
+
+A single collection can have a maximum of 64 indexes.
+
+Too many indexes can degrade performance before that limit is reached.
+
+For collections with a high write-to-read ratio, indexes can degrade performance because each insert must also update any indexes.
+
+Steps:
+1. Identify common queries. use the `$queryStats` aggregation stage
+2. Create indexes to support common queries. Create indexes to support queries on those fields
+3. Analyze index use. Analyze your indexes' effectiveness with  `$indexStats` aggregation stage. 

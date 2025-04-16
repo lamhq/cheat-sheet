@@ -21,16 +21,28 @@ Use cases:
 docker run \
   --name <container_name> \
   -p host_port:container_port \
-  -v "$PWD":/path/in/container \
+  --mount type=bind,source="$(pwd)/data",target=/path/in/container \
   -d <image_name>
 ```
-- `--name <container_name>`: Names the container for easy reference.
-- `-p host_port:container_port`: Maps a port on the host to a port in the container, enabling communication.
-- `-v "$PWD":/path/in/container:` Mounts the current working directory (`$PWD`) to a specified path inside the container.
+- `--name <container_name>`: set name fot the container
+- `-p host_port:container_port`: maps a port on the host to a port in the container
+- `--mount`: mounts a directory in the current working directory to a specified path inside the container.
 - `-d`: Runs the container in the background.
 
+Start a Postgres database with mounted volume and directory:
+```sh
+docker run --rm --name postgres-13.3 \
+  -p 5432:5432 \
+  -e POSTGRES_USER=grvadmin \
+  -e POSTGRES_PASSWORD=pg12345 \
+  -e POSTGRES_DB=gravity \
+  -v gravity-db:/var/lib/postgresql/data \
+  --mount type=bind,source="$(pwd)/data",target=/scripts \
+  postgres:13.3
+```
 
-## Connect to a container
+
+## Connect to a running container
 
 Open terminal in a running container:
 ```sh
