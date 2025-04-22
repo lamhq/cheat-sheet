@@ -1,0 +1,150 @@
+# Communication Styles
+
+## Synchronous blocking
+
+A microservice makes a call to another microservice and blocks operation, waiting for the response.
+
+**Advantages**: simple and familiar to many programmers
+
+**Disadvantages**: 
+- Temporal couling between caller and downstream microservice:
+  - Failures occur if the downstream is unavailable
+  - Responses are lost if the upstream dies
+  - Can cause delays for the caller if the downstream is under significant load
+- System is vulnerable to cascading failures from downstream outages
+
+**Where to use**: for simple microservice architectures.
+
+**Where not to use**: when you have many chains of calls:
+- Any issue of involved microservices can cause the whole operation to fail.
+- Long chains can cause significant resource contention (happens when multiple services compete for limited resources like CPU, memory, or database connections. In this case is network connection).
+
+
+## Asynchronous nonblocking
+
+The caller can carry other processing without having to wait for a response.
+
+The three most common asynchronous communication styles in microservice:
+1. **Communication through common data**. A microservice changes some common data, then other microservices later make use of.
+2. **Request-response**. A microservice requests another to perform an operation. Once completed, the upstream microservice receive the response, regardless of success or failure.
+3. **Event-driven interaction**. A microservice broadcasts an event. Other microservices listen for the events they are interested in and react accordingly.
+
+> [!NOTE]
+> With `Async/Await`, the caller code is still blocked until the awaited promise is resolved. So even if the underlying technology we are using could be considered asynchronous, this is still inherently a synchronous, blocking interaction.
+
+**Advantages**: 
+- Microservices are decoupled temporarily. the downstream microservice do not need to be reachable at the same time the call is made
+- Beneficial for functionalities that take a long time to process
+
+**Disadvantages**: More complex implementation and debugging
+
+**Where to Use It**:
+- long-running processes
+- when you have long call chains that's not easily restructured
+
+
+# Communication Through Common Data
+
+One microservice puts data into a defined location, and another microservice then makes use of the data.
+
+The data can be a file system, data lake or data warehouse.
+
+Downstream microservice needs a mechanism to identify when new data is available (polling is a frequent solution).
+
+Advantages:
+- simple and can be implemented using common technologies
+- can work well with different data volumes
+
+Disadvantages:
+- not useful in low-latency situations
+- use polling or timed jobs to check for new data
+- the data store becomes a potential source of coupling
+- the robustness of data store affects the robustness communication
+
+> [!NOTE]
+> If you're interested in sending larger volumes of data and having them processed more in "real time," then using some sort of streaming technology like Kafka would be a better fit.
+
+Where to Use It?
+- When there're restrictions on what technology can be used (legacy systems)
+- sharing large volumes of data (multigigabyte file or million database rows)
+
+
+# Request-Response Communication
+
+A microservice requests an action from a downstream service and expects a response with the result.
+
+## Implementation: Synchronous (blocking)
+
+A synchronous call opens a network connection to the downstream microservice to send the request.
+
+This connection remains open while the upstream microservice waits for the response.
+
+The responding microservice is unaware of the requester.
+
+
+## Implementation: Asynchronous (nonblocking)
+
+A request is sent as a message over a message broker, not directly to the downstream service.
+
+The downstream microservice retrieves and processes messages from the queue at its own pace. It must know where to send the response back (e.g. the original queue it read from).
+
+Using a queue allows buffering multiple requests, which prevents overwhelming the downstream service during peak loads. 
+
+Upon receiving a response, the initiating microservice might need to correlate it with the original request, such as storing request state into a database.
+
+All forms of request-response communication require time-out handling to prevent blocking.
+
+## Where to Use It?
+
+Suitable when a respose is needed before further processing.
+
+When a microservice wants to know if a call didn't work so that it can carry out some sort of compensating action, like a retry.
+
+
+# Event-driven
+
+A microservice emit events, other microservices consume and react to accordingly.
+
+The microservice publishing an event doesn't know which services will consume it, coupling is greatly reduced.
+
+> [!NOTE]
+> With request-response, the sender knows what should be done and instructs the other service, indicating a stronger domain coupling due to the requester's awareness of the downstream service's capabilities.
+
+## Implementation
+
+Message brokers (e.g. RabbitMQ) enable microservices to emit and consume events.
+
+Message brokers are typically scalable and resilient, they can also increase development complexity as another system to run for development and testing.
+
+May require additional servers and expertise to keep the infrastructure up and running.
+
+
+## Event structure
+
+What should be inside an event so consumers can have what they need?
+
+1. **Just an ID**: the event to just contain an identifier for the related entity (`ID`), consumers fetch the full information using this ID from another microservice. Downsides:
+   1. Add domain coupling between consumers and the microservice contain data
+   2. Might result to a lot of fetch requests from consumer
+2. **Fully detailed events** (preferred). Put everything consumers need into an event. Allow for looser coupling, auditting, debugging. But the event size is limitted by the message broker
+
+> Kafka, a message brokers, has the default maximum size for a message is 1 MB
+
+## Where to Use It
+
+Where information needs to be broadcast and downstream microservices can work independently.
+
+Where loose coupling is preferred.
+
+FYI, more teams replacing request-response interactions with event-driven interactions.
+
+> [!NOTE]
+> Microservice architecture can contain a mix of different styles of interaction, so it's not necessary to go all in with event-driven collaboration.
+
+## Disadvantages
+
+Increase complexity:
+- manage messages publishing and subscribing
+- hadnling long-running async request-response
+- monitoring, request tracing with correlation IDs, debugging, replicating errors
+- require rewire your brain to be accustomed to this communication style

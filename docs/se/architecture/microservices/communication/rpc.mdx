@@ -1,0 +1,30 @@
+# RPC
+
+## Overview
+
+Remote procedure calls (RPC) is a technique for making a local function call that executes on a remote service.
+
+There are different RPC implementations, such as SOAP and gRPC, which require an explicit schema.
+
+The **schema** is often referred to as an Interface Definition Language (IDL). Having a separate schema makes it easier to generate **client and server stubs** for different technology stacks, for example, a Java server and a .NET client.
+
+RPC technologies typically involve a serialization protocol that defines how data is serialized and deserialized.
+
+> [!NOTE]
+> gRPC uses the Protocol Buffers serialization format.
+
+One of the main advantages of RPC is the ease of generating client-side code (due to its explicit schema), making it simpler for clients to interact with remote services.
+
+## Challenges
+
+1. **Technology Coupling**. Some RPC mechanisms are closely associated with a particular platform, which restricts the choice of technologies for both the client and server (for example, Java RMI ties both the client and server to the Java Virtual Machine).
+2. **Local calls are not like remote calls**. The cost of marshaling and unmarshaling payloads can be significant. Simply exposing a local API as a service boundary without careful consideration is likely to cause problems. Also, networks can fail, and data can be malformed.
+3. **Tighly coupled Client-Server**. Using an RPC mechanism with binary stub generation ties client and server deployments together. Any change, like adding or removing a field, requires regenerating client stubs—even if some clients don’t use the field. This can lead to lockstep releases.
+
+
+## Where to use it
+
+gRPC is a good choice when:  
+- **You have control over both client and server implementations**: Since gRPC requires client-side code to be compiled against the server’s schema, it works best in environments where you manage both sides.  
+- **You need efficient, high-performance communication**: gRPC is optimized for low-latency and high-throughput scenarios, making it ideal for service-to-service communication in microservices architectures.  
+- **Using synchronous request-response model**: While gRPC can work with reactive extensions, it’s primarily designed for structured request-response interactions.  

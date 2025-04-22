@@ -138,3 +138,10 @@ db.trades.updateOne(
 - The update searchs for a document with `_id` field match the prefix `123_` and `count` field is less than `10`
 - If there is a matching document, the update command pushes the new trade into the matched document's `history` array.
 - If there is not a matching document, the update command inserts a new document with the new trade. The `_id` field of the new document is a concatenation of the `customerId` and the time in seconds since the unix epoch of the trade.
+
+
+## Outlier Pattern
+
+**Problem**: If your collection stores documents of generally the same size and shape, a drastically different document can cause issues with query performance, indexing efficiency, and storage optimization (an outlier).
+
+Example: 
