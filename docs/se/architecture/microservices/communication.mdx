@@ -53,3 +53,11 @@ Criteria to consider:
 3. **Maintain Technology-Agnostic for APIs**. Avoiding integration technology that restrict the technology stacks we use to implement microservices.
 4. **Make Your Service Simple for Consumers**. Allow clients full freedom to integrate with in their technology choice. Providing a client library can ease adoption.
 5. **Hide Internal Implementation Detail**. Any technology that encourages exposing internal representation details should be avoided.
+
+
+## Technology Choices
+
+1. **Remote procedure calls**: Frameworks that allow for local method calls to be invoked on a remote process (SOAP, gRPC).
+2. **REST**: An architectural style where you expose resources that can be accessed using a common set of verbs (GET, POST, ...)
+3. **GraphQL**: a protocol that allows consumers to define queries that can fetch only necessary information from multiple downstream microservices.
+4. **Message brokers**: Middleware that allows for asynchronous communication via queues or topics.

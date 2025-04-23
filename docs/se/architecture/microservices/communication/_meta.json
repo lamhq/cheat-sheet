@@ -1,5 +1,6 @@
 [
   "styles",
-  "rpc",
-  "rest"
+  "common-data",
+  "request-response",
+  "event-driven"
 ]

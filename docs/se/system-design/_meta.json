@@ -1,6 +1,12 @@
 [
   {
-    "name": "protocols",
+    "name": "components",
+    "type": "dir",
+    "label": "Components",
+    "collapsed": true
+  },
+  {
+    "name": "communication",
     "type": "dir",
     "collapsed": true
   },
@@ -10,23 +16,8 @@
   "base-model",
   "eventual-consistency",
   "consistent-hashing",
-  "bote",
-  {
-    "name": "database",
-    "type": "dir",
-    "collapsed": true
-  },
-  "load-balancer",
-  {
-    "name": "cache",
-    "type": "dir",
-    "collapsed": true
-  },
-  "cdn",
-  "queues",
   "cqrs",
-  "server",
-  "data-center",
+  "bote",
   {
     "name": "case-studies",
     "label": "Case Studies",

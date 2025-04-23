@@ -1,0 +1,28 @@
+# GraphQL
+
+## Benefits
+
+GraphQL allows client-side devices to retrieve necessary data efficiently without multiple requests, improving query performance.
+
+GraphQL reduces the number of calls and the amount of data to transfer, it can address challenges when building user interfaces with microservice architectures.
+
+
+## How to use?
+
+To use GraphQL, Microservices must expose a GraphQL endpoint, providing a schema that defines available types and often includes a graphical query builder to simplify query creation.
+
+
+## Challenges
+
+1. Complex queries can cause significant load on the server side.
+2. GraphQL lacks of query planners, making it harder to diagnose problematic queries, compared to relational databases
+3. Requests throttling can be complex to implement, especially when a call spans multiple microservices 
+4. Caching in GraphQL is more complex to implement than RESTful APIs.
+
+## Where to use it
+
+1. GraphQL is well-suited for exposing functionality to external clients, particularly GUIs and mobile devices with data constraints and limited network capabilities.
+2. It's useful for aggregating calls across multiple downstream microservices.
+
+> [!NOTE]
+> GraphQL doesn't replace general microservice-to-microservice communication; it complements it by providing a specific solution for client interactions.
