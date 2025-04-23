@@ -7,58 +7,51 @@ Microservices are **independently releasable services** that are modeled around 
 > [!NOTE]
 > A **service** here means a completely separate operating system process.
 
-Each microservice encapsulates its own database, **avoid the use of shared databases** in most circumstances.
+Each microservice has its own database, **avoid the use of shared databases** in most circumstances.
 
 Microservices are **technology agnostic**, offering advantages in flexibility.
 
 
 ## SOA vs Microservices
 
-Service-oriented architecture (SOA) is a design approach where multiple services collaborate to provide a set of capabilities.
+Service-oriented architecture (SOA) is a design software approach where applications are built by combining independent services that communicate with each other.
 
-SOA aims to promote software reusability and easier maintenance or rewriting of software.
+SOA focuses on making software easier to reuse, maintain, or update by structuring software as a collection of independent, reusable services that work together seamlessly.
 
-The lack of consensus on how to do SOA well has been an issue in the industry. Microservices have emerged as a specific approach for doing SOA well.
-
-Microservices are a type of **service-oriented architecture** (SOA). They are opinionated about how service boundaries should be drawn.
-
-Microservices can be seen as a specific approach for SOA, similar to how Extreme Programming (XP) or Scrum is a specific approach for Agile software development.
+**Microservices is a specific approach for SOA**. They are opinionated about how service boundaries should be drawn. Similar to how Extreme Programming (XP) or Scrum is a specific approach for Agile software development
 
 
 ## Key Concepts
 
 ### Independent Deployability
 
-Each microservice should be able to be deployed independently, so changes in one service don't require changes or redeployment of other services.
+Each microservice should be able to be deployed independently (changes in one service don't require changes or redeployment of other services).
 
-**Loosely coupled** microservices are essential for achieving independent deployability.
+Loosely coupled microservices ensures independent deployability.
 
-Well-defined and stable contracts between services are necessary for loose coupling.
+Well-defined and stable service contracts are necessary for loose coupling.
 
-Sharing databases can make achieving independent deployability difficult.
+Independent deployability guides the identification of **microservice boundaries**.
 
-The focus on independent deployability guides the identification of **microservice boundaries**.
+> [!CAUTION]
+> Sharing databases can make achieving independent deployability difficult.
 
 
 ### Modeled Around a Business Domain
 
-Microservices should align with business domains, inspired by domain-driven design, to simplify updates and recombination.
+Microservices should align with business domains to simplify updates and recombination.
 
-Avoid frequent cross-service changes, as they are costly and require coordination (across services, or different teams.)
+Frequent cross-service changes are costly and require coordination (across services or teams), should be avoided.
 
-Designing services as complete slices of business functionality is prefered than technical functionality, it ensures they focus on business needs.
-
+Services should be designed around business functionality to focus on business needs, instead of technical functionality.
 
 ### Owning Their Own State
 
 Microservices should **avoid using shared databases**, instead, access data from other microservices when needed.
 
-> [!WARNING]
-> Sharing databases is one of the worst things you can do if you're trying to achieve independent deployability.
+Internal state in a microservice should be hidden and only accessed through interfaces.
 
-Internal state in a microservice should be hidden and only accessed through defined interfaces.
-
-Services should be seen as end-to-end slices of business functionality, which encapsulating UI, business logic, and data.
+Services should encapsulate UI, business logic, and data as complete slices of business functionality.
 
 
 ### Size
@@ -75,13 +68,14 @@ Microservices should be small enough to remain focused on a single business capa
 
 ### Flexibility
 
-Microservices provide flexibility and options for organizations in terms of organizational, technical, scale, and robustness aspects:
-- **Organizational Flexibility**: Different teams can independently own, develop, and deploy their respective services. This reduces dependencies between teams, enabling faster development cycles and more autonomy.
+Microservices provide flexibility in the following aspects:
+- **Organizational Flexibility**: Different teams can independently own, develop, and deploy their services. This reduces dependencies between teams, enabling faster development cycles and more autonomy.
 - **Technical Flexibility**: Microservices allow the use of diverse technologies and tools for different services.
 - **Scalability**: you can scale specific parts of an application independently.
 - **Robustness**: If one service fails, it doesn't necessarily bring down the entire system.
 
-Incremental adoption of microservices is recommended to gradually assess the impact and make adjustments as needed.
+> [!NOTE]
+> Incremental adoption of microservices is recommended to gradually assess the impact and make adjustments as needed.
 
 
 ### Alignment of Architecture and Organization
@@ -92,17 +86,17 @@ In Layered architectures, such as three-tiered architectures, changes often span
 
 Three-tiered architecture is widely used because it is well-understood and aligns with traditional team structures, which are often organized around specific core competencies.
 
-However, There is a shift towards breaking systems apart to reduce handoffs and silos, with an alternative architecture focusing on vertical business lines and dedicated teams for specific functionalities.
+There’s a shift toward breaking systems into vertical business lines, with dedicated teams to reduce silos and handoffs.
 
-> For example, a microservice owned by the profile team would handle the customer profile functionality, including the ability to update information and store customer state.
-> <br/>
-> The choice of a favorite genre would be associated with a given customer, making the change more localized.
+*For example, a microservice owned by the profile team would handle the customer profile functionality, including the ability to update information and store customer state.*
+
+*The choice of a favorite genre would be associated with a given customer, making the change more localized.*
 
 ![](./microservices/microservices-arch.drawio.svg)
 
-> Other microservices, such as a Catalog microservice and a Recommendation microservice, can also interact with the customer microservice.
-> <br/>
-> This architecture aligns teams to lines of business within the organization and makes it easier to make changes.*
+*Other microservices, such as a Catalog microservice and a Recommendation microservice, can also interact with the customer microservice.*
+
+*This architecture aligns teams to lines of business within the organization and makes it easier to make changes.*
 
 ![](./microservices/services-comm.drawio.svg)
 
@@ -113,50 +107,51 @@ Tools and technologies for implementing microservices.
 
 ### Log Aggregation and Distributed Tracing
 
-Implementing a log aggregation system is strongly recommended as a prerequisite for adopting microservices.
+Implementing a log aggregation system is strongly recommended for adopting microservices.
 
 Log aggregation systems collect and aggregate logs from all services, providing a central place for analysis and alerting.
 
 > [!TIP]
-> **Humio** is mentioned as a recommended log aggregation tool, but simple logging services provided by public cloud vendors can also be used
+> **Humio** is a recommended log aggregation tool, but simple logging services provided by public cloud vendors can also be used
 
 Implementing **correlation IDs** can help isolate logs associated with a specific flow of service calls, making troubleshooting easier.
 
 As the system grows in complexity, tools for exploring system behavior become essential, such as **analyzing traces** across multiple services and **detecting bottlenecks**.
 
 > [!TIP]
-> Open source tools like **Jaeger** focus on distributed tracing, while products like **Lightstep** and **Honeycomb** provide advanced capabilities for exploring the state of a running system.
+> **Jaeger** focus on distributed tracing. **Lightstep** and **Honeycomb** provide advanced capabilities for exploring the state of a running system.
 
 
 ### Containers and Kubernetes
 
-Running each microservice instance in isolation is ideal to prevent issues in one microservice from affecting another.
+Running microservice instance in isolation prevents issues in one microservice from affecting another.
 
-Containers provide a lightweight way to provision isolated execution for service instances, resulting in faster spin-up times and cost-effectiveness.
+Containers enable isolated execution for service instances, which is cost-effective and has faster spin-up times.
 
-Container orchestration platforms like **Kubernetes** help manage containers across multiple machines, distribute container instances, and improve robustness and throughput
+Container orchestration platforms like **Kubernetes** help manage containers across multiple machines, distribute container instances, and improve robustness and throughput.
 
-Consider using a managed service on a public cloud provider to run the Kubernetes cluster instead of managing it yourself.
+It's recommended to use a managed service on a public cloud provider to run the Kubernetes cluster instead of managing it yourself.
 
 
 ### Streaming
 
 Microservices require ways to share data between them.
 
-Products that allow for easy streaming and processing of large volumes of data have become popular in microservice architectures.
+Tools and technologies that allow for easy streaming and processing of large volumes are essential in microservice architectures.
 
 > [!TIP]
 > **Apache Kafka** is a popular choice for streaming data in a microservice environment, offering features like message permanence, compaction, and scalability.
 > Kafka has added stream-processing capabilities with KSQLDB and can be used with dedicated solutions like Apache Flink.
 
-**Debezium** is an open source tool that helps stream data from existing datasources over Kafka, enabling traditional datasources to be part of a stream-based architecture.
+> [!TIP]
+> **Debezium** is an open source tool that helps stream data from existing datasources over Kafka, enabling traditional datasources to be part of a stream-based architecture.
 
 
 ## Benefits
 
 ### Technology Heterogeneity
 
-Microservices allow different technologies for each service, enabling us to choose the right tool for the job.
+Microservices allow different technologies for each service, enable using the right tool for the job.
 
 Microservices enable faster adoption of new technologies.
 
@@ -170,7 +165,7 @@ Upgrading technologies can be easier as the implementation details are hidden fr
 By isolating failures within service boundaries, the rest of the system can continue functioning.
 
 > [!CAUTION]
-> However, distributed systems introduce new sources of failure, such as network and machine failures, which need to be understood and handled properly. Failure to address these concerns seriously can result in a less robust system after migrating to microservices.
+> Distributed systems also introduce new sources of failure, such as network and machine failures, which need to be understood and handled properly. Failure to address these concerns seriously can result in a less robust system after migrating to microservices.
 
 
 ### Scaling
@@ -187,7 +182,7 @@ Changes can be made to a single service and deployed independently, allowing for
 
 Any problems that occur can be isolated to an individual service, making rollback easier and faster.
 
-Enable quickly release new functionality and remove impediments to software deployment.
+Microservices enable quickly release new functionality and remove impediments to software deployment.
 
 
 ### Organizational Alignment
@@ -201,11 +196,9 @@ Ownership of services can be changed as the organization evolves, maintaining al
 
 ### Composability
 
-Distributed systems and service-oriented architectures enable reuse of functionality.
-
-Microservices allow functionality to be consumed in different ways for different purposes, catering to the needs of different consumers.
-
-Microservices create opportunities for external parties to enhance the system, making application development more flexible.
+- **Reusability**: Microservices enable reuse of functionality. 
+- **Flexibility**: Microservices allow functionality to be consumed in different ways, adapt to consumer needs.  
+- **Collaboration**: Microservices create opportunities for external parties to enhance the system, making application development more flexible.
 
 
 ## Challenges

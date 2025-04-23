@@ -1,26 +1,29 @@
 # Designing Microservices
 
-Microservices should be independently changeable, deployable, and releaseable to users. To achieve this, defining clear boundaries is crucial.
+Having a clear service boundaries is crucial to achieve independently changeable / deployable / and releaseable.
 
-Key concepts to consider for effective boundaries are **information hiding**, **cohesion**, and **coupling**
+Concepts to consider for effective boundaries:
+1. information hiding
+2. cohesion
+3. coupling
 
 
 ## Information Hiding
 
-Information hiding focuses on **limiting the exposure of internal details of a service**, ensuring that only necessary information is shared with other services.
+Limiting the exposure of internal details of a service, ensuring that only necessary information is shared with other services.
 
 Benefits:
-- **Faster development**: when services are able to be developed independently, it allows more work to be done in parallel and reduce the impact of adding more developers to a project.
 - **Comprehensibility**: each service can be looked at in isolation and understood in isolation.
 - **Flexibility**: services can be changed independently from one another, allowing for changes to be made to the functionality of the system without requiring other services to change.
+- **Faster development**: when services are able to be developed independently, it allows more work to be done in parallel and reduce the impact of adding more developers to a project.
 
-> [!NOTE]
-> The connections between modules/microservices are the expectations (assumptions) they make about each other. When one module changes, these expectations may lead to unintended consequences. By reducing the number of assumptions, we can minimize the impact of changes in one module on others. When developers fully understand how a module interacts with others, they can make changes safely, minimizing the need for additional changes in dependent modules (upstream callers).
+> [!TIP]
+> Minimizing the interface / expectations between modules / microservices reduces the impact of changes, making them easier to understand and update.
 
 
 ## Cohesion
 
-Cohesion refers to **grouping related functionality and behaviors together** within a single service.
+Grouping related functionality and behaviors together within a single service.
 
 When related functionality resides in one service, making changes is easier and less risky.
 
@@ -34,9 +37,9 @@ Strong cohesion allows changes to be implemented and deployed in one place witho
 
 ## Coupling
 
-The purpose of microservices is to enable independent changes and deployments.
+Loosely coupled services enable one service to change without affecting others.
 
-Loosely coupled services allow for **changes to one service without requiring changes to other services**. Tight coupling occurs when a change in one service necessitates a change in another service.
+Tight coupling occurs when a change in one service necessitates a change in another service.
 
 A service should only know essential details about about the services it collaborates with.
 
@@ -45,13 +48,11 @@ Limit the number of calls between services helps prevent tight coupling and perf
 
 ## Coupling and Cohesion
 
-> A system is stable when there is strong cohesion and low coupling
+> A SYSTEM IS STABLE WHEN THERE IS STRONG COHESION AND LOW COUPLING.
 
 Cohesion relates to the relationship between things within a boundary (microservice), while coupling describes the relationship across boundaries.
 
 High cohesion promotes a well-defined internal structure, while low coupling ensures minimal dependencies. Together, they contribute to the stability, scalability, and flexibility of a microservices architecture, enabling independent development and deployment across teams.
-
-Finding the right balance between coupling and cohesion depends on the context and problems faced.
 
 
 ## Types of Coupling
@@ -67,7 +68,7 @@ Occurs when microservices are too tightly connected through shared domain knowle
 ![](./design/domain-coupling.drawio.svg)
 
 **Problems**:
-- While domain coupling is considered a loose form of coupling, but it can still lead to problems if there are excessive dependencies or complex data exchanges between services, which lead to tightly intertwined systems that are harder to scale and maintain.
+- While domain coupling is considered a loose form of coupling, but it can cause issues if there are excessive dependencies or complex data exchanges between services, making systems harder to scale and maintain.
 
 **How to solve it?**
 - Adopt domain-driven design principles to separate bounded contexts.

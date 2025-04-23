@@ -2,5 +2,6 @@
   "styles",
   "common-data",
   "request-response",
-  "event-driven"
+  "event-driven",
+  "serialization"
 ]
