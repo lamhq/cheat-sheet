@@ -72,3 +72,65 @@ Key components:
 - These are modules needed only during the development and testing phases.
 - They are not included in the final production build.
 - Examples include testing frameworks like Mocha, ESLint for linting, or Webpack for bundling.
+
+
+## Compatible ranges
+
+You can use several operators provided by npm to define the constraints of compatible dependency versions in `package.json` file.
+
+
+### Caret (`^`)
+
+The caret allows compatibility with all future **MINOR** and **PATCH** versions within the same MAJOR version:
+```json
+"dependencies": {
+  "example-package": "^1.0.0"
+}
+```
+- Compatible with `1.0.0`, `1.1.0`, `1.2.3`, etc.
+- Does NOT include `2.0.0` or higher.
+
+
+### Tilde (`~`)
+
+The tilde limits compatibility to PATCH versions within the same MINOR version:
+```json
+"dependencies": {
+  "example-package": "~1.0.0"
+}
+```
+- Compatible with `1.0.0`, `1.0.1`, `1.0.5`, etc.
+- Does NOT include `1.1.0` or higher.
+
+
+### Exact Version
+
+To lock a dependency to an exact version:
+```json
+"dependencies": {
+  "example-package": "1.0.0"
+}
+```
+- Only compatible with `1.0.0`.
+
+
+### Range Operators
+
+To specify a range explicitly:
+```json
+"dependencies": {
+  "example-package": ">=1.0.0 <2.0.0"
+}
+```
+- Allows all versions from `1.0.0` to `1.x.x`, but excludes `2.0.0`.
+
+
+### Wildcard (`*`)
+
+To match any version:
+```json
+"dependencies": {
+  "example-package": "1.*"
+}
+```
+- Allows any `1.x.x` version.

@@ -13,5 +13,11 @@
     "type": "dir",
     "collapsed": true,
     "label": "Software Architecture"
+  },
+  {
+    "name": "development",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Software Development"
   }
 ]
