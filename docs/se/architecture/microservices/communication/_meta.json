@@ -3,6 +3,5 @@
   "common-data",
   "request-response",
   "event-driven",
-  "serialization",
-  "avoid-breaking-changes"
+  "serialization"
 ]

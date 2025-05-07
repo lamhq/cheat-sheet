@@ -1,0 +1,92 @@
+# Service Discovery
+
+## Overview
+
+Service discovery is a mechanism that helps different services within a system locate and communicate with one another dynamically. Instead of hardcoding addresses, services to register themselves and be found by others when needed.
+
+Service discovery typically involves two parts:
+
+1. **Registration**: where a service instance announces its presence
+2. **Lookup**: where consumers find the service
+
+
+## Domain Name System (DNS)
+
+DNS (Domain Name System) allows associating a name with the IP address of one or more machines. This can be used to provide a human-readable name for a microservice.
+
+*A DNS name like `accounts.musiccorp.net` can be resolved to the IP address of a host running the microservice or a load balancer distributing traffic across instances.*
+
+When deploying and updating services, DNS entries need to be updated.
+
+when dealing with service in different environments, convention-based domain templates work well. For example, we might have a template defined as `<servicename>-<environment>.musiccorp.net`, giving us entries like `accounts-uat.musiccorp.net` or `accounts-dev.musiccorp.net`.
+
+
+### Time To Live problem
+
+DNS entries for domain names have a Time to Live (TTL), indicating how long a client can consider the DNS entry fresh.
+
+Clients may retain stale DNS entries until the TTL expires. To mitigate this, services can point to a load balancer, which directs traffic to the appropriate instances. When updating instances, simply adjust the load balancer configuration, ensuring smooth transitions without relying on cached DNS data.
+
+
+## Dynamic Service Registries
+
+DNS works well for static environments, but it struggles when services frequently change or scale dynamically. Relying on DNS can lead to outdated or incorrect service locations due to caching and TTL delays.
+
+Another approach is services will register themselves upon startup with a service registry. Services can query the registry to find the most up-to-date locations of available instances. This ensures that service discovery remains accurate even as instances are added or removed.
+
+Popular service registries include Consul, and etcd (Kubernetes).
+
+
+### ZooKeeper
+
+Apache ZooKeeper is a **distributed coordination service** that provides a centralized service for maintaining configuration information, naming, distributed synchronization, and group services.
+
+It can be used as a **service registry**:
+
+- **Service Registration:** Microservices register their availability in ZooKeeper by creating **znodes** (data nodes in ZooKeeper's hierarchical structure).
+- **Service Discovery:** Clients query ZooKeeper to find active service instances.
+- **Automatic Updates:** ZooKeeper provides **watchers**, which notify clients when a service instance changes or becomes unavailable.
+- **Leader Election:** ZooKeeper can help elect a leader among distributed services to manage critical tasks.
+
+Benefits:
+
+- **High Availability:** ZooKeeper is designed for distributed environments, ensuring fault tolerance.
+- **Consistency:** It maintains strong consistency across nodes, preventing outdated service information.
+- **Scalability:** Works well in large-scale microservices architectures.
+
+In reality, better solutions exist for dynamic service registration, so ZooKeeper is avoided for this use case nowadays.
+
+
+### Consul
+
+Consul, like ZooKeeper, supports configuration management and service discovery but goes further in providing robust support for these use cases.
+
+Key Features:
+
+- **Service Registry:** Services register with Consul, allowing other services to discover them.
+- **Health Checking:** Consul continuously monitors registered services and removes unhealthy ones.
+- **Key-Value Store:** Provides a distributed key-value store for configuration management.
+- **Multi-Datacenter Support:** Works across multiple regions for scalability.
+- **Built-in DNS & API:** Services can be queried via DNS or HTTP API.
+
+How It Works:
+
+1. Services register with Consul, providing metadata like name, address, and health checks.
+2. Clients query Consul to find available services.
+3. Consul updates service availability dynamically, ensuring accurate discovery.
+
+Consul includes a suite of tools to enhance its functionality, such as **consul-template**, a tool that dynamically update configuration files based on changes in Consul's key-value store or service registry.
+
+
+### etcd and Kubernetes
+
+Kubernetes leverages **etcd**, a configuration management store that is bundled with Kubernetes, for service discovery.
+
+The capabilities provided by Kubernetes may be sufficient for many use cases, and users may not need dedicated service discovery tools. However, in mixed environments where workloads run both on Kubernetes and elsewhere, having a dedicated service discovery tool that can be used across both platforms may be a beneficial approach.
+
+
+## Humans Access
+
+Humans may also require access to service discovery information.
+
+Making the information available in ways that allow for humans to consume it can be vital (e.g., use APIs to pull this detail into humane registries).

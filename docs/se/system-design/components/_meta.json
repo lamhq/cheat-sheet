@@ -6,6 +6,7 @@
     "type": "dir",
     "collapsed": true
   },
+  "proxy",
   "load-balancer",
   "cache",
   "cdn",

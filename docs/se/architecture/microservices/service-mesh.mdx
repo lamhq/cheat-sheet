@@ -1,64 +1,10 @@
-# Service Meshes and API Gateways
+# Service Mesh
 
-**Service meshes** and **API gateways** are two technologies that have received significant attention and generated some confusion within the realm of microservices.
+## Overview
 
-Both service meshes and API gateways have their roles and use cases, but there can be some overlap in their responsibilities.
+A service mesh is a software layer that manages communication between microservices.
 
-It's important to understand how these technologies fit into a microservices architecture and to avoid potential misuse or misinterpretation.
-
-## Networked Perimeter
-
-The term "networked perimeter" could relate to an entire data center, a Kubernetes cluster, or perhaps just a virtual networking concept like a group of machines running on the same virtual LAN.
-
-In a networked perimeter, an **API gateway** typically handles **"north-south"** traffic. Its primary role is to manage access from the outside world to the internal microservices.
-
-A **service mesh**, on the other hand, primarily addresses **"east-west"** traffic, focusing on the communication between microservices within the networked perimeter.
-
-![](images/api-gateway-service-mesh.png)
-
-
-## Reverse proxy
-
-A reverse proxy is a server that sits in front of one or more web servers, intercepting requests from clients. 
-
-This is different from a forward proxy, where the proxy sits in front of the clients.
-
-Reverse proxies are typically implemented to help increase security, performance, and reliability. They can be used to protect web servers from attacks, distribute traffic across multiple servers, and cache content to improve performance.
-
-In contrast to a forward proxy, which is used to protect clients’ privacy and anonymity, a reverse proxy is used to protect the server’s identity and hide its internal structure. When a client sends a request to a web server through a reverse proxy, the request appears to come from the reverse proxy rather than the client itself. This makes it more difficult for attackers to identify and exploit vulnerabilities in the web server.
-
-Reverse proxies can also be used to provide additional services such as load balancing, SSL encryption, and content filtering. They are commonly used in large-scale web applications and content delivery networks (CDNs).
-
-![](images/reverse-proxy-vs-forward-proxy.png)
-
-
-## API Gateways
-
-The primary function of an API gateway is to map external requests to the appropriate internal microservices, often acting as a reverse proxy. It extends the capabilities of HTTP proxy products and is designed for handling external access.
-
-API gateways can implement various features, including security mechanisms like API keys, request logging, rate limiting, and more.
-
-API gateways are commonly used for managing access to microservices from an organization's GUI clients (such as web pages and native mobile applications) via the public internet, they can be overkill in scenarios where there is no involvement of external third parties.
-
-> For Kubernetes environments, an API gateway is essential because Kubernetes manages networking only within the cluster and doesn't address external communication.
-
-### Where to use them
-
-When your primary concern is exposing microservices running in Kubernetes, it's possible to handle this by running your own reverse proxies or considering dedicated products like Ambassador, designed specifically for Kubernetes environments.
-
-For scenarios involving a large number of third-party users accessing your API, there are specialized products available that may be more suitable for managing external access and providing additional features.
-
-### What to avoid
-
-Misuse of API gateways can occur when they are used for **call aggregation** and **protocol rewriting**. These practices can lead to the unintentional addition of complex business logic into the API gateway layer, which is not its intended purpose.
-
-**Call aggregation and filtering** are better handled through dedicated tools or patterns like GraphQL or the Backend-for-Frontend (BFF) pattern. Complex business processes should be explicitly modeled and managed, rather than pushed into an API gateway.
-
-**Protocol rewriting**, such as changing SOAP APIs into REST APIs, is often considered a task for API gateways. However, REST is a broader architectural concept that cannot be fully implemented in an intermediary layer. This practice can lead to placing too much behavior in the wrong place.
-
-Violating the principle of "keeping the pipes dumb and the endpoints smart" can be problematic. In microservices, the goal is to have independent deployability and manage changes within the microservices themselves. Placing too much behavior in API gateways leads to restricted control and more complicated change management.
-
-Using API gateways as intermediaries for all inter-microservice calls can introduce additional network hops and increase latency. Service meshes are much better placed to solve this problem.
+It operates independently of service code, providing features like **traffic control, monitoring, logging, and tracing**. 
 
 
 ## Service Meshes
@@ -85,7 +31,7 @@ One key strategy for achieving this goal is to distribute the proxy processes on
 >
 > The Order Processor thinks it’s making a normal network call, unaware that the call is routed locally on the machine, which is significantly faster (and also less prone to partitions).
 
-![](images/service-mesh.png)
+[](images/service-mesh.png)
 
 A control plane in a service mesh architecture is positioned above the local mesh proxies. It serves as a central point for altering the behavior of these proxies and gathering information about their activities.
 

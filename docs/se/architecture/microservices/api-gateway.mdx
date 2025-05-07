@@ -1,0 +1,28 @@
+# API Gateway
+
+## Overview
+
+API gateways map external requests to internal microservices, often acting as a reverse proxy.
+
+They can implement various features, including security mechanisms (e.g., API keys), request logging, rate limiting, ...
+
+Commonly used for managing access to microservices via the public internet, they may be unnecessary if no third-party involvement is required.
+
+
+## Where to Use?
+
+For exposing microservices in Kubernetes, reverse proxies or specialized products like Ambassador can be useful.
+
+If many third-party users need access, dedicated API management solutions may be more suitable.
+
+
+## What to Avoid
+
+Avoid using API gateways for **call aggregation** and **protocol rewriting**, as this can introduce unintended business logic. 
+
+- **Call aggregation** is better handled by GraphQL or Backend-for-Frontend (BFF) patterns.
+- **Protocol rewriting** (e.g., converting SOAP to REST) misplaces behavior that should be managed within microservices.
+
+Placing too much behavior in API gateways leads to restricted control and more complicated change management.
+
+Using API gateways for inter-microservice calls can introduce additional network hops and increase latency. Service meshes are much better placed to solve this problem.

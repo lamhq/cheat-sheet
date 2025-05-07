@@ -5,7 +5,7 @@
   "fastapi",
   "typescript",
   "debug",
-  "genie",
+  "ai",
   {
     "name": "dev-containers",
     "type": "dir",

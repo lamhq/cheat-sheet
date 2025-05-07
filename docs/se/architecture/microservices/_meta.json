@@ -6,5 +6,15 @@
     "name": "communication",
     "type": "dir",
     "collapsed": true
-  }
+  },
+  {
+    "label": "Breaking Changes",
+    "name": "breaking-changes",
+    "type": "dir",
+    "collapsed": true
+  },
+  "code-reuse",
+  "service-discovery",
+  "api-gateway",
+  "service-mesh"
 ]
