@@ -1,0 +1,77 @@
+# Distributed Transactions
+
+## Overview
+
+A **distributed transaction** is a transaction that spans multiple databases or services, requiring coordination to ensure consistency.
+
+Distributed transactions involve multiple independent systems, making atomicity and consistency harder to maintain.
+
+
+## Avoid Distributed Transactions
+
+Reasons to avoid distributed transactions:
+
+1. **Complexity** – Managing transactions across multiple services requires additional protocols like **Two-Phase Commit (2PC)**, which can be difficult to implement.
+2. **Performance Issues** – Distributed transactions introduce latency due to network communication and locking mechanisms.
+3. **Failure Handling** – If one part of the transaction fails, rolling back changes across multiple services can be challenging, leading to inconsistent data.
+4. **Scalability Concerns** – Microservices are designed for independent scaling, but distributed transactions create dependencies that limit flexibility.
+
+An approach worth considering is: instead of splitting data across microservices, **keep state that requiring atomicity and consistency in a single database** within a monolith for easier management.
+
+
+## Two-Phase Commit
+
+The Two-Phase Commit (2PC) algorithm helps coordinate changes across multiple processes in distributed systems, ensuring consistency.
+
+It has two phases:
+1. **Voting phase**: A central coordinator asks all participants if they can proceed with the change.
+2. **Commit phase**: If all agree, the change is applied. If any disagree, the operation is aborted.
+
+During voting, participants don’t make changes immediately but promise to do so later. They may lock records to guarantee the change.
+
+If any participant votes against the change, a rollback happens, undoing any preparations. If all vote in favor, the commit phase executes, changes are applied, locks are released, and the transaction completes successfully.
+
+For example, let's say an online **bank transfer** between two accounts is processed using Two-Phase Commit (2PC). The transaction involves:
+
+1. **Voting Phase**:  
+   - The **Sender's Bank** checks if there are sufficient funds.  
+   - The **Recipient's Bank** verifies that the account can receive money.  
+   - Both banks respond "yes" (ready to proceed) or "no" (cannot commit).  
+
+2. **Rollback Scenario**:  
+   - The Sender's Bank agrees to deduct the funds.  
+   - The Recipient's Bank encounters an issue (e.g., the account is frozen).  
+   - Since one participant did not agree, the **rollback** occurs:  
+     - The deducted amount in the Sender's account is restored.  
+     - No changes are made to the Recipient’s account.  
+
+This ensures that no money is lost due to inconsistent states across the system.
+
+
+### Inconsistent state
+
+In Two-Phase Commit, commits may not happen simultaneously due to message delays and processing times variations. This can cause temporary inconsistencies, violate ACID isolation, and lead to potential failures or lock contention.
+
+> Imagine a **bank transfer** where money is deducted from one account and added to another:
+> - If the sender’s balance updates first but the recipient’s balance updates **a few milliseconds later**, there’s a brief moment where the money appears missing from both accounts.  
+> - If someone queries the database at that moment, they might see an **inconsistent state**.
+
+
+### Managing locks
+
+Two-Phase Commit often involves coordinating distributed locks, which can be challenging. In a single-process system, managing locks and avoiding deadlocks is complex, and these challenges increase when dealing with multiple participants.
+
+
+### Failure
+
+Two-Phase Commit can lead to various failure modes, including scenarios where a worker agrees to proceed but doesn’t respond when asked to commit. Some failures can be handled automatically, while others need manual intervention.
+
+
+### Latency
+
+When more participants are involved, latency will increase, Two-Phase Commit may become less efficient and inject significant delays into the system.
+
+
+### Where to use it?
+
+It is typically used for short-lived operations to avoid resource locking for extended periods.

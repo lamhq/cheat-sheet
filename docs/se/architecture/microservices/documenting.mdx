@@ -1,0 +1,53 @@
+# Documenting Services
+
+## Why documenting?
+
+Microservices generate many APIs, making clear documentation essential for understanding their purpose and usage.
+
+## Explicit Schemas
+
+Explicit schemas help define API endpoint structures but may not fully capture their behavior, requiring additional documentation.
+
+Without a schema, documentation must explain both endpoint's functionality and its structure, making updates challenging.
+
+**OpenAPI** serves as both a schema format and documentation, with broad support from open source and commercial tools, simplifying the creation of developer portals for API documentation.
+
+**Ambassador's Developer Portal** is a useful tool for Kubernetes users, it automatically discovering OpenAPI endpoints to make documentation easily accessible during deployment.
+
+
+## Documenting Events
+
+Options available for documenting event-based interfaces: AsyncAPI and CloudEvents.
+
+### AsyncAPI
+
+- **A specification for asynchronous APIs**, similar to how OpenAPI works for REST APIs.  
+- It helps **describe event-driven architectures**, including message formats and communication channels.  
+- It defines **interactions between services**, making it easier to document event flows.  
+- Useful for documenting how microservices communicate via messaging protocols like Kafka, MQTT, and WebSockets. 
+
+
+### CloudEvents
+
+- **A specification for standardizing event data formats**, making event communication more interoperable across platforms.  
+- It focuses on **structuring event messages**, ensuring uniformity in metadata.  
+- Key metadata fields include **event type, source, and timestamp**, maintaining consistency across different systems.  
+
+
+### Using AsyncAPI and CloudEvents Together
+
+CloudEvents defines the format of events, while AsyncAPI helps document event-driven APIs.
+
+If your microservices use CloudEvents for event messaging, you can leverage AsyncAPI to describe how those events are published and consumed.
+
+AsyncAPI allows referencing CloudEvents schemas, ensuring clarity in event-driven communication.
+
+
+## Build self-describing system
+
+Techniques and tools to gain a comprehensive understanding of a system:
+
+- Tracking the health of downstream services and using correlation IDs to visualize call chains.
+- Utilizing service discovery systems like Consul to identify the locations of microservices.
+- Employing schema formats like OpenAPI and event formats like CloudEvents to understand the capabilities of endpoints.
+- Monitoring system health and individual service health.

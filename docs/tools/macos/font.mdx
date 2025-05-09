@@ -1,0 +1,34 @@
+# Font
+
+## Installing Fonts
+
+Font Book is the default font management application in macOS.
+
+To install fonts for current user using Font Book:
+
+1.  **Download the font file:** Obtain the font file(s) in a supported format. macOS supports:
+    * TrueType (.ttf)
+    * TrueType Collection (.ttc)
+    * OpenType (.otf)
+    * OpenType-SVG (.otf)
+2.  **Open Font Book:** You can find it in the **Applications** folder or by using Spotlight search (Command + Space, then type "Font Book").
+3.  **Install the font:** In the Font Book app, go to **File > Add Fonts to Current User**. In the window that appears, double-click the font file.
+
+The font will be installed in `~/Library/Fonts/`
+   
+
+## Managing Fonts
+
+Font Book allows you to manage your installed fonts:
+
+* **Previewing Fonts:** Select a font in the Font Book list to see a preview of its characters. Double-click a font for a more detailed preview and to see all available glyphs.
+* **Validating Fonts:** To check for errors or corruption in a font:
+    1.  Select a font (or multiple fonts).
+    2.  Go to **File > Validate Selection** (or **File > Validate File** to choose a font file in Finder).
+    3.  Review the results in the Font Validation window. A green icon indicates the font passed, yellow indicates a warning, and red indicates a failure. You can remove failed fonts from this window.
+* **Resolving Duplicate Fonts:** Font Book automatically checks for duplicates during installation. You can also manually check by going to **File > Resolve Duplicates**.
+* **Deactivating/Activating Fonts:** If you don't want to delete a font but want to temporarily prevent it from being used, you can deactivate it. Select the font(s) and go to **Edit > Deactivate**. Deactivated fonts appear dimmed in the Font Book list.
+* **Organizing Fonts with Collections and Libraries:**
+    * **Collections:** Allow you to group fonts for specific projects or purposes without moving the actual font files. To create a collection, go to **File > New Collection** or select fonts and go to **File > New Collection From Selection**.
+    * **Smart Collections:** Automatically update based on criteria you set (e.g., all bold fonts). Go to **File > New Smart Collection**.
+    * **Libraries:** Separate databases of fonts. This is useful for organizing large font archives. Go to **File > New Library** and then add fonts to the library (**File > Add Fonts to [Library Name]**). Libraries are not shown in the standard font menus of applications.
