@@ -23,6 +23,6 @@
     "files.trimTrailingWhitespace": false
   },
   "markdown.styles": [
-    "preview.css"
+    "assets/md-preview.css"
   ]
 }

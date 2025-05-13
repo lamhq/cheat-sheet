@@ -1,6 +1,9 @@
+/* display Tailwind components */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* import font  */
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700&display=swap');
 
 /* set font for better reading */
@@ -20,6 +23,7 @@ ul.nx-mt-6 {
     letter-spacing: 0.03125em;
   }
 }
+
 /* make img have a white background in dark mode */
 html[class~=dark] img[src$=".svg"] {
   background-color: whitesmoke;
