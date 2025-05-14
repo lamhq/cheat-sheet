@@ -1,0 +1,20 @@
+# Branching Models
+---
+Few topics around build and deployment seem to cause as much of a controversy as
+that of using source code branching for feature development. Branching in source
+code allows for development to be done in isolation without disrupting the work
+being done by others. On the surface, creating a source code branch for each feature
+being worked on—otherwise known as feature branching—seems like a useful
+concept.
+The problem is that when you work on a feature branch, you aren’t regularly inte‐
+grating your changes with everyone else. Fundamentally, you are delaying integra‐
+tion. And when you finally decide to integrate your changes with everyone else, you’ll
+have a much more complex merge.
+The alternative approach is to have everyone check in to the same “trunk” of source
+code. To keep changes from impacting other people, techniques like feature flags are
+used to “hide” incomplete work. This technique of everyone working off the same
+trunk is called trunk-based development.
+The discussion around this topic is nuanced, but my own take is that the benefits of
+frequent integration—and validation of that integration—are significant enough that
+trunk-based development is my preferred style of development. Moreover, the work
+to implement feature flags is frequently beneficial in terms of progressive delivery
