@@ -1,25 +1,27 @@
 # Continuous Integration
 
-### Overview
+## Overview
 
-Continuous Integration (CI) ensures seamless collaboration by frequently making sure that newl code properly integrates with existing code.
+Continuous Integration (CI) ensures seamless collaboration by frequently verifying that new code properly integrates with existing code.
 
 A CI server detects that the code has been committed, checks it out, and carries out some verification such as making sure that the code compiles and that tests pass. 
 
-### Artifact
+
+## Artifact
 
 CI generates artifacts for further validation, such as deploying a running service for testing.
 
-Ideally, artifacts should be built once and reused across deployments to maintain consistency and efficiency. For reuse, artifacts are stored in a repository, either within the CI tool or an external system.
+Artifacts should be built once and reused (to maintain consistency and efficiency) by stored in a repository, either within the CI tool or an external system.
 
 ### Benefits
+
 - **Fast Feedback:** get fast feedback about code quality via static analysis and testing.  
 - **Automatic creation:** Binary artifacts are automatically created, with version-controlled build processes ensuring reproducibility.  
 - **Traceability:** Deployed artifacts can be traced back to source code, along with details of tests conducted.  
 - **Enhances transparency and simplifies builds** if using infrastructure as code, we can version control both microservice and infrastructure configurations, ensuring transparency and easier build reproduction.
 
 
-### Are You Really Doing CI?
+## Are You Really Doing CI?
 
 Merely using a CI tool (e.g., Jenkins, CircleCI, Travis) doesn’t guarantee true CI adoption.
 
@@ -28,3 +30,56 @@ Three key questions to test if they you're really doing CI?
 1. **Do you check in to mainline once per day?** Frequent integration prevents future complexities, even when using short-lived branches.  
 2. **Do you have a suite of tests to validate your changes?** – Without tests, we don’t know if we have broken the behavior of the system
 3. **When the build is broken, is it the #1 priority of the team to fix it?** – You must resolve the build issue before moving on to other tasks.
+
+
+## Branching Models
+
+### Feature branching
+
+Feature branching is a development strategy where each new feature is developed in a separate branch, isolated from the main codebase.
+
+Benefits:
+- Allows developers to work independently without affecting the stability of the main branch
+
+Disadvantages:
+- Changes aren't integrated regularly with everyone else, integration is delayed, leading to more complex merges when changes are finally incorporated
+
+
+### Trunk-based development
+
+Trunk-based development is a version control strategy where developers commit directly to a shared main branch (the "trunk") rather than using long-lived feature branches.
+
+Benefits:
+- **Promote continuous integration**. Ensuring frequent updates and reducing complex merge conflicts.
+- **Improved collaboration**. Everyone works on the same branch, making it easier to track progress.
+- **Better stability**: Continuous validation ensures the codebase remains deployable.
+- **Supports CI/CD**: Enables rapid software delivery and progressive feature rollouts.
+
+
+#### Feature flags
+
+Feature flags (aka feature toggles) are a software development technique that allows teams to enable or disable features without modifying code or redeploying.
+
+Feature flags are values used in conditional statements in the code. They can be controlled via a management system, allowing teams to toggle features on or off dynamically.
+
+Feature flags are widely used in continuous integration and trunk-based development, ensuring smooth feature rollouts while maintaining stability.
+
+Benefits:
+- **Minimizing Impact**. Keep changes from impacting other people. incomplete work is hidden
+- **Risk mitigation**: If a feature causes issues, it can be turned off instantly without a rollback
+- **Decouple deployment from release**: new features can be deployed but remain hidden until activated
+- **Progressive delivery**: Features can be gradually rolled out to specific users or environments
+- **Infrastructure flexibility**: Useful for database migrations and backend changes
+
+To keep changes from impacting other people, techniques like feature flags are used to “hide” incomplete work. Moreover, the work to implement feature flags is frequently beneficial in terms of progressive delivery
+
+having branches or forks with very short lifetimes (less than a day) before being merged into trunk, and less than three active branches in total, are important aspects of continuous delivery, and all contribute to higher performance. So does merging code into trunk or master on a daily basis.
+
+
+## CI Tips
+
+- **Integrate early and often** to minimize merge conflicts.  
+- **Favor trunk-based development, short-lived branches** to streamline collaboration.  
+- **Commit sooner**, fast patch merges in open source projects help developers move quickly.  
+- **Work in small batches**, large changes are harder to review and merge.  
+- **Use automated testing** to boost productivity.  
