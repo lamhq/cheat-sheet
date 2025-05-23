@@ -1,0 +1,108 @@
+# Code Organization
+
+Main approachs for organizing code for microservices:
+
+## One Repo, One Build
+
+A single repository stores all code, with a single build process. Any code check-in triggers a full build that produce multiple artifacts (deployable packages).
+
+### Benefits
+- Simple and straightforward approach
+- Allows simultaneous changes to multiple services in one commit
+- Works well for lockstep releases, where multiple services deploy together
+
+### Downsides
+- Even minor changes trigger a full build, causing unnecessary delays
+- Difficult to determine which services need deployment, often leading to deploying everything
+- A broken build in one service blocks changes across all services
+- Ownership becomes unclear when multiple teams collaborate
+
+While technically a form of monorepo, this approach ties all services to a single build, preventing independent deployments. As a result, it's rarely used in practice.
+
+
+## Multirepo
+
+One Repository per Microservice
+
+Each microservice has its own repository, creating a direct link between code changes and builds. A check-in triggers a build for the affected service, allowing independent deployments and ownership.
+
+### Benefits
+- Clear ownership (per repository)
+- Independent builds and deployments
+- Helps enforce microservice boundaries
+- Suitable for teams of all sizes. Prefered when team scales.
+
+### Downsides
+- In practice, developers often manage multiple repositories, cross-service changes become painful
+- Changes across repos can't be atomic, requiring multiple commits per repository
+- Code reuse can be complex if using shared libraries:
+  - Updating a library requires publishing a new version, updating dependencies in each service, and deploying affected services
+  - Changes can't be rolled out atomically
+  - Compatibility checks and deprecation of old library versions can be challenging
+
+> [!CAUTION]
+> Frequent cross-service changes may indicate poor service boundaries. In such cases, reconsidering service boundaries or exploring monorepo alternatives might be beneficial.
+
+
+## Monorepo
+
+A monorepo stores code for multiple microservices in a single repository.
+
+### Build Mapping
+
+Folders in a monorepo are mapped to builds, where changes in a folder trigger the corresponding service build. If changes affect multiple folders, multiple builds are triggered.
+
+For larger projects, graph-based tools like Bazel may be needed for efficient dependency management.
+
+### Code reuse
+
+Monorepos enable finer-grained code reuse, allowing direct dependencies on source files instead of packaging code as a versioned artifacts. However, this causes complex build mapping.
+
+### Defining Ownership
+
+Monorepos work well with small teams but require better tooling as they grow. 
+
+Ownership models range from:
+1. **strong ownership**: only designated owners make changes
+2. **weak ownership**: outsiders can contribute, but changes must be reviewed and accepted by owners
+3. **collective ownership**: anyone can modify code.  
+
+Smaller teams (under 20) can use collective ownership, but larger teams should use strong or weak ownership model to maintain clear responsibilities.
+
+Tools like GitHub's **CODEOWNERS** help define ownership at the directory or file level, code owners are requested for review whenever a pull request is raised for the relevant files.
+
+```
+# Owners for all files
+*               @team-leads
+
+# Owners for the backend service
+backend/        @backend-team
+
+# Owners for the frontend service
+frontend/       @frontend-team
+
+# Owners for database migrations
+migrations/     @devops-team
+
+# A specific file with an individual owner
+config.yaml     @alice
+```
+
+### Per-Team Monorepos
+
+Some teams adopt per-team monorepos, where each team fully controls its own repository for all its microservices. While not a traditional monorepo, it retains many of its benefits.
+
+![](./code-organization/per-team-mono.drawio.svg)
+
+For teams practicing collective ownership, this approach offers advantages while avoiding large-scale challenges. It aligns with organizational boundaries and mitigates concerns about monorepo complexity.
+
+
+### Benefits
+- Enabling atomic commits across multiple services
+- Easier code reuse (compared to shared libraries)
+- Improved visibility of other service's code
+
+### Downsides
+- Deployment complexity. Atomic commits don't guarantee atomic rollouts
+- Require complex build mapping. Managing builds across multiple folders requires advanced tooling
+- Ownership challenges as team sizes grow, requires tooling
