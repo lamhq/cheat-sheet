@@ -3,6 +3,8 @@
     "name": "index",
     "label": "DevOps"
   },
+  "ci",
+  "cd",
   {
     "name": "docker",
     "type": "dir",

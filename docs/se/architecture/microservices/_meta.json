@@ -22,11 +22,5 @@
   "code-reuse",
   "code-organization",
   "service-discovery",
-  "documenting",
-  {
-    "label": "Build",
-    "name": "build",
-    "type": "dir",
-    "collapsed": true
-  }
+  "documenting"
 ]
