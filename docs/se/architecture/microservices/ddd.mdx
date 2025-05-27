@@ -28,13 +28,9 @@ It becomes part of the code, documentation, and conversations, bridging the gap 
 
 ## Aggregate
 
-Aggregate is a cluster of domain objects that are treated as a single unit to ensure consistency and enforce business rules.
+An **aggregate** is a cluster of domain objects that are treated as a single unit. This ensure that each aggregate maintains transactional consistency by enforcing business rules internally.
 
-Aggregate has a root entity, called the Aggregate Root, which acts as the entry point for interacting with the Aggregate. All external access to the Aggregate must go through this root, maintaining control over changes and interactions.
-
-Aggregates **encapsulate** related entities and value objects, ensuring changes within the Aggregate maintain business integrity.
-
-Aggregates enforce rules and constraints to ensure **consistency** within the boundaries of the Aggregate.
+**Aggregate Root** is a root entity that acts as the entry point for interacting with the Aggregate.
 
 Operations on an Aggregate are performed as a single **transaction**, making it easier to maintain consistency.
 

@@ -22,5 +22,11 @@
   "code-reuse",
   "code-organization",
   "service-discovery",
-  "documenting"
+  "documenting",
+  {
+    "label": "Deployment",
+    "name": "deployment",
+    "type": "dir",
+    "collapsed": true
+  }
 ]
