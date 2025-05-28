@@ -5,14 +5,21 @@
 ![](https://www.cncf.io/wp-content/uploads/2020/09/Kubernetes-architecture-diagram-1-1-900x614.png)
 
 A Kubernetes cluster consists of:
-- a control plane
-- a set of worker machines, called **nodes**, that run containerized applications
+- **nodes**: a set of machines that run containerized applications. Every cluster needs at least one node.
+- **control plane**: a set of controlling software that manages these nodes
 
-A node may be a virtual or physical machine. It contains the services necessary to run Pods.
+A **node** may be a virtual or physical machine.
 
-Every cluster needs at least one node.
+Rather than scheduling a container, Kubernetes instead schedules a pod.
 
-Each Pod contains one or more containers.
+A **pod** consists of one or more containers that will be deployed together. You often have one container in a pod.
+
+A **service** provides a stable network identity and a way to route traffic to a set of pods.
+
+With a **replica set**, you define the desired state of a set of pods. Replica sets are managed via a deployment.
+
+A **deployment** is how you apply changes to your pods and replica sets. Deployment allows rolling upgrades, rollbacks, scaling up the number of
+nodes, ...
 
 
 ## Control Plane

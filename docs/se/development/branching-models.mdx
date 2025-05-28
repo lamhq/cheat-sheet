@@ -47,20 +47,6 @@ TBD is a required practice of CI/CD. CI is not achieved when using lengthy featu
 8. **Optimize Build & Execution Speed** – Use caching and optimized test execution to accelerate CI/CD pipelines.  
 
 
-### Feature flags
-
-Feature flags (aka feature toggles) are conditional statements in the code that allows teams to enable or disable features without modifying code or redeploying.
-
-They nicely complement TBD, allows developers to commit new feature code directly to the main branch within a feature flag path without creating a separate feature branch.
-
-Benefits:
-- **Minimizing Impact**. Keep changes from impacting other people. incomplete work is hidden
-- **Risk mitigation**: If a feature causes issues, it can be turned off instantly without a rollback
-- **Decouple deployment from release**: new features can be deployed but remain hidden until activated
-- **Progressive delivery**: Features can be gradually rolled out to specific users or environments
-- **Infrastructure flexibility**: Useful for database migrations and backend changes
-
-
 ## GitHub Flow
 
 Developers create **short-lived feature branches**, make changes, and submit **pull requests** for review before merging into the `main` branch.  

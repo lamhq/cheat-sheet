@@ -5,6 +5,7 @@
   },
   "ci",
   "cd",
+  "progressive-delivery",
   {
     "name": "docker",
     "type": "dir",

@@ -13,33 +13,17 @@ It abstracts the underlying infrastructure, allowing your applications to run se
 
 ## Key Features
 
-- **Service Discovery and Load Balancing:** A container can be exposed using DNS or IP address.Kubernetes balances and distributes network traffic between containers to maintain stable deployments during high traffic.
-- **Storage Orchestration:** Automatically mounts storage systems of your choice.
-- **Automated Rollouts and Rollbacks:** automatically change the container's state to your desired state.
-- **Automatic Bin Packing:** Kubernetes can fit containers onto your available nodes to make the best use of your resources.
-- **Self-Healing:** Kubernetes restarts/replaces/kills unhealthy containers
-- **Secret and Configuration Management:** you can store and manage sensitive information securely.
-- **Batch Execution:**  Kubernetes can manage batch and CI workloads, replacing failing containers if needed.
-- **Horizontal Scaling:** Scales applications up or down with manually or automatically (based on CPU usage).
-- **IPv4/IPv6 Dual-Stack:** Allocates IPv4 and IPv6 addresses to Pods and Services.
-- **Designed for Extensibility:** Adds features without changing source code. 
+1. **Automated Scaling** – Kubernetes can automatically adjust the number of running containers based on demand.
+2. **Self-Healing** – Kubernetes detects failed containers and replaces them without requiring manual fixes.
+3. **Load Balancing** – Kubernetes distributes traffic across multiple containers, ensuring reliability and preventing overload.
+4. **Service Discovery & Networking** – Kubernetes manages internal and external service communication seamlessly.
+5. **Multi-Host Management** – Kubernetes runs and orchestrates containers across multiple machines.
+6. **Declarative Configuration & Desired State Management** – Kubernetes lets users define the ideal state of applications, and it continuously works to maintain that state.
 
 
-## kubectl
+## Configuration
 
-kubectl is the main Kubernetes command-line tool.
-
-At a high-level, kubectl converts user-friendly commands into HTTP REST requests that sent to the API server.
-
-> [!NOTE]
-> Your kubectl version is no more than one minor version higher or lower than your cluster.
-> 
-> For example, if your cluster is running Kubernetes 1.26.x, your kubectl should be no lower than 1.25.x and no higher than 1.27.x.
-
-
-### kubeconfig
-
-kubectl uses a configuration file to know which cluster and API server endpoint to send commands to. 
+`kubectl` uses a configuration file to know which cluster and API server endpoint to send commands to. 
 
 The configuration file located in `~/.kube/config`. It contains definitions for:
 - Clusters: a list of Kubernetes clusters to work with
