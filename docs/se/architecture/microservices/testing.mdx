@@ -1,0 +1,246 @@
+# Testing
+
+> [!NOTE]
+> Before adopting microservices, ensure you can validate software quickly and efficiently, if you currently carry out large amounts of manual testing, it must be addressed first.
+
+## Types of Tests
+
+![](./testing/test-types.drawio.svg)
+
+1. **Technology facing**: tests that aid the developers in creating the system in the first place
+2. **Business facing**: tests that help the nontechnical stakeholders understand how your system works
+
+
+## Test Scope
+
+The test pyramid is a conceptual model for structuring automated tests in a software system.
+
+It helps balance different test types:
+
+- **Higher levels**, broader test scope & higher confidence, tests are slower to run and harder to debug.
+- **Lower levels**, smaller, isolated tests, leading to faster feedback cycles & easier debugging.
+
+![](./testing/test-pyramid.drawio.svg)
+
+Three main categories of tests:
+
+1. **Unit Tests**: focus on individual pieces of code, small scope, fast execution, easy debugging
+2. **Service Tests**: examine interactions between components or microservices. Broader scope, more confidence, relatively fast feedback.
+3. **UI (End-to-End) Tests**: validate the entire application, checking how components work together in a real user environment. Highest confidence, comprehensive Scope, slow feedback, harder to debug.
+
+> [!CAUTION]
+> The term "Integration Tests" is ambiguous, some use it for service interactions, others for full end-to-end tests, so it isn't used here.
+
+
+## Unit Tests
+
+Unit tests focus on **testing individual functions or methods** in isolation.
+
+These tests ensure that specific pieces of code work as expected **without external dependencies** such as microservices, databases, or network connections.
+
+Key Characteristics:
+
+- **Small Scope:** They verify a single function or method at a time.
+- **Fast Execution:** they run extremely quickly, provide fast feedback.
+- **Easy Debugging:** they primarily help developers, as they focus on code correctness rather than business functionality.
+
+Benefits:
+
+- **Bug Detection:** help catch issues early, reducing costly fixes in later development stages.
+- **Supports Refactoring:** Developers can confidently restructure code knowing that unit tests will alert them if something breaks.
+- **Continuous Integration:** Fast-running unit tests help keep builds efficient, preventing delays caused by broken code.
+
+
+## Service Tests
+
+Service tests focus on **testing microservices directly**, bypassing the user interface to verify a service's functionality.
+
+Key Characteristics:
+- **Direct Testing:** Unlike UI tests, service tests interact **only with the service itself** rather than the full system.
+- **Isolated Scope:** If a service test fails, the issue is likely **within that specific microservice**, making debugging easier.
+- **Stubbing Dependencies:** To avoid interference from external systems, service tests often use **mocked or stubbed collaborators**, preventing unintended failures from unrelated components. Testing service with external resources (like databases or network connections) can increase execution time.
+
+Benefits:
+
+- Provide **higher confidence in service reliability** while keeping tests relatively **efficient**.
+- Help validate **business logic at the service level**, ensuring that the microservice operates correctly without requiring UI validation.
+- Strike a **balance between speed and scope**, making them **critical** in a microservice-based system.
+
+
+## End-to-End Tests
+
+End-to-end tests **validate the entire system**, ensuring that all components work together seamlessly.
+
+They simulate real user interactions, often through a browser GUI or other user actions.
+
+Key Characteristics:
+
+- **Comprehensive Scope:** E2E tests cover large portions of production code, offering high confidence that the system functions as expected.
+- **User-Centric:** These tests mimic actual user behavior, verifying workflows rather than isolated functions.
+- **Validation Across Components:** They check interactions between multiple services, ensuring system-wide reliability.
+
+Benefits:
+- E2E tests ensure real-world reliability, preventing critical failures before deployment.
+- They complement unit and service tests, forming an essential layer in a balanced testing strategy.
+- Help catching semantic breakages (i.e., behavior changes that break backward compatibility)
+
+Challenges:
+- **Slow Execution:** Due to their broad scope, E2E tests take longer to run compared to unit or service tests.
+- **Complex Debugging:** When failures occur, pinpointing the exact issue is more difficult due to multiple dependencies.
+- **Independent deployability is undermined**. When multiple teams share E2E tests, a services can't be deployed unless shared test suites pass, leading to bottlenecks.
+- **Hard to scale**. E2E tests become increasingly difficult as the number of microservices increases
+
+Implementation:
+1. Each service runs its own unit tests and service tests first.
+2. If a microservice pass its tests, a single shared E2E testing stage is triggered.
+3. The E2E tests run against the user interfaces.
+4. If E2E tests pass, the microservice can be safely deployed to production.
+
+![](./testing/fan-in-e2e-test.drawio.svg)
+
+### Alternatives
+
+Many organizations remove the need for E2E tests in favor of other mechanisms:
+- **Explicit schemas** (defining clear service contracts)
+- **Consumer-Driven Contracts (CDCs)** (ensuring microservices meet consumer expectations)
+- **In-production testing** (such as monitoring and error tracking)
+- **Progressive delivery techniques** (e.g., canary releases, which deploy changes to a small subset of users first)
+
+Be mindful about ditching end-to-end tests without fully understanding what you’ve lost is probably a bad idea.
+
+Team should carefully think about how much E2E testing they really need based on their risk profile.
+
+
+### Ownership
+
+Defining ownership for E2E tests can be challenging, especially when deciding who should write and maintain them.
+
+Here are different strategies to consider:
+
+#### No Ownership
+- Without a designated team responsible for managing tests, failures may be ignored, slowing development and reducing reliability.
+
+#### Shared by All Teams
+- When multiple teams contribute tests without coordination, it can lead to an excessive number of test cases, making maintenance difficult.
+
+#### Ownership by Functionality
+- Divide the E2E test suite into functional groups, each owned by a specific team.
+- Teams are responsible for maintaining the tests relevant to their service.
+- Challenge: coordination is needed when a test fails due to changes in a service outside the team's ownership.
+
+#### Separate "Testing Team"
+- Create a dedicated team for writting E2E test. This should be avoided, as it disconnects developers from their own test cases.
+- Developers who write the code don't know how to run and fix tests written by another team.
+
+#### Treat E2E Tests as a Shared Codebase
+- If ownership cannot be clearly assigned, all teams must share responsibility for maintaining the test suite.
+
+
+### Independent Testability
+
+Services should be deployed independently, so they should be able to test independently without relying on others.
+
+End-to-end tests reduce team autonomy by requiring excessive coordination, especially when teams share a single testing environment.
+
+To maximize autonomy, each team should have its own test environment, enabling faster development and fewer roadblocks.
+
+### Flaky Tests
+
+Flaky or brittle tests are automated tests that exhibit non-deterministic behavior. This means they can pass or fail intermittently without any changes to the code being tested or the test itself.
+
+Why Do they Occur?
+
+- **External Dependencies:** Tests rely on multiple services—if one is down, the test fails incorrectly.
+- **Network Issues:** Temporary glitches can cause false failures, unrelated to the software itself.
+- **Concurrency Problems:** Multi-threaded tests may fail due to race conditions, timeouts, or synchronization issues.
+- **Unstable Test Suites:** If tests randomly fail and pass when rerun, they become unreliable and cause bottlenecks in Continuous Integration (CI).
+
+Dangers of Flaky Tests:
+- Developers lose confidence in the test suite and may ignore failures, assuming they are false alarms.
+- CI/CD pipelines slow down due to frequent test retries, delaying software releases.
+
+How to Fix Flaky Tests?
+1. **Identify & Track** unstable tests—log failures and determine patterns.
+2. **Remove or Rewrite** failing tests, especially those involving multi-threaded or interdependent services.
+3. **Improve Test Isolation**—stub/mock dependencies to reduce instability from external systems.
+4. **Ensure Environmental Stability**: address network or infrastructure inconsistencies affecting tests.
+5. **Replace with Smaller-Scoped Tests** that provide better reliability and faster feedback.
+
+The goal is a reliable test suite that provides meaningful feedback, avoiding false positives that hinder development.
+
+
+## Contract Tests
+
+Contract Tests are tests written by the consumer (upstream microservice) to specify how they expect an external service to behave.
+
+They are **not meant to test the consumer's own service**, but rather ensure that the external service meets their expectations.
+
+They can be run against **stubs or mocks** (fake versions of external services) to verify expected behavior.
+
+### Consumer-driven contracts
+
+Consumer-driven contracts (CDC) take contract tests a step further by making them a formal agreement between the consumer and producer.
+
+1. The consumer team shares its contract tests with the producer team to ensure the producer meets expectations.
+2. The producer team runs these contract tests as part of its build process.
+
+This allows producers to detect breaking changes before they reach production, making testing faster and more reliable** than traditional E2E tests.
+
+For example, we have a **Customer microservice** that has two consumers Helpdesk application and Web shop. Each consumer has its own expectations of how the Customer microservice should behave. Both consumers create separate contract tests to define their needs. The Customer microservice only needs to run these tests, with external dependencies stubbed out, to verify that it meets the expectations.
+
+Benefits of CDCs:
+1. **Faster Testing** – Tests are run **against a single producer** instead of complex end-to-end systems.
+2. **Better Communication** – Encourages collaboration between **consumer and producer teams**.
+3. **Early Detection of Breaking Changes** – If a CDC test **fails during a build**, developers **immediately know** which consumer is affected and can address the issue
+
+### CDCs vs Service Test
+
+CDCs sit at the same level with as Service tests in the test pyramid, but focus on consumer usage. If a CDC test fails, the affected consumer is obvious.
+
+### Pact
+
+Pact is an open-source **consumer-driven contract testing tool** that helps ensuring compatibility between consumers and producers.
+
+1. The consumer defines expectations using a **DSL** (Domain-Specific Language).
+2. A local Pact server runs these expectations, generating a Pact specification file (JSON format) that formally describes the contract.
+3. The producer uses the Pact file to validate that it meets the consumer’s expectations.
+
+Pact files can be stored in **CI/CD artifact repositories** or the **Pact Broker**, which allows CDCs against different consumer versions (e.g., production vs. latest build).
+
+
+
+## Finding the Right Balance
+
+Tips to balance between **fast feedback** and **system confidence**:
+
+- If **tests take too long**, replace **large tests with smaller unit tests** for faster detection.
+- If **bugs slip into production**, consider adding broader tests.
+- **Best practice**: Have **10× more unit tests** than service tests, and **10× more service tests** than end-to-end tests.
+
+
+## Stubbing vs. Mocking
+
+- **Stubbing:** Returns **predefined outputs** for specific calls; focuses on testing **results**.
+- **Mocking:** Simulates dependencies and **tracks interactions**, verifying **how methods are called**.
+
+**Use stubbing** when testing function outputs; **use mocking** when validating method calls and behavior.
+
+
+## Stubbing Tool
+
+Mountebank is a programmable mock server that allows developers to create fake services for testing purposes. It listens on a defined port and simulates expected responses for HTTP, TCP, HTTPS, and SMTP requests.
+
+Key Features:
+
+- **Imposter Creation:** Developers define “imposters” that mimic real services.
+- **Protocol Support:** Works with multiple protocols (HTTP, TCP, etc.).
+- **Stub & Mock Capabilities:** Can provide predefined responses (stubbing) or verify expected interactions (mocking).
+- **Multi-Service Simulation:** A single instance can mock multiple microservices.
+
+Use Cases:
+
+- **Mocking external dependencies:** Ensures services work correctly without real dependencies.
+- **Microservices Testing:** Can simulate missing or unstable services during development.
+- **Performance Testing**.
+
+Limitations: does not support messaging protocols (Pact can help in cases requiring event validation).

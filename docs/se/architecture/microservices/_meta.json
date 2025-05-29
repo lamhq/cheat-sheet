@@ -8,25 +8,28 @@
     "collapsed": true
   },
   {
-    "label": "Workflow",
-    "name": "workflow",
-    "type": "dir",
-    "collapsed": true
-  },
-  {
-    "label": "Breaking Changes",
     "name": "breaking-changes",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "label": "Breaking Changes"
   },
-  "code-reuse",
-  "code-organization",
-  "service-discovery",
-  "documenting",
   {
-    "label": "Deployment",
+    "name": "workflow",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Workflow"
+  },
+  {
+    "name": "development",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Development"
+  },
+  {
     "name": "deployment",
     "type": "dir",
-    "collapsed": true
-  }
+    "collapsed": true,
+    "label": "Deployment"
+  },
+  "testing"
 ]
