@@ -1,6 +1,10 @@
 [
-  "design",
-  "ddd",
+  {
+    "name": "design",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Design"
+  },
   "splitting-monolith",
   {
     "name": "communication",
@@ -31,5 +35,10 @@
     "collapsed": true,
     "label": "Deployment"
   },
-  "testing"
+  {
+    "name": "testing",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Testing"
+  }
 ]

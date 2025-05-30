@@ -1,0 +1,37 @@
+# Contract Tests
+
+Contract Tests are tests written by the consumer (upstream microservice) to specify how they expect an external service to behave.
+
+They are **not meant to test the consumer's own service**, but rather ensure that the external service meets their expectations.
+
+They can be run against **stubs or mocks** (fake versions of external services) to verify expected behavior.
+
+## Consumer-driven contracts
+
+Consumer-driven contracts (CDC) take contract tests a step further by making them a formal agreement between the consumer and producer.
+
+1. The consumer team shares its contract tests with the producer team to ensure the producer meets expectations.
+2. The producer team runs these contract tests as part of its build process.
+
+This allows producers to detect breaking changes before they reach production, making testing faster and more reliable** than traditional E2E tests.
+
+For example, we have a **Customer microservice** that has two consumers Helpdesk application and Web shop. Each consumer has its own expectations of how the Customer microservice should behave. Both consumers create separate contract tests to define their needs. The Customer microservice only needs to run these tests, with external dependencies stubbed out, to verify that it meets the expectations.
+
+Benefits of CDCs:
+1. **Faster Testing** – Tests are run **against a single producer** instead of complex end-to-end systems.
+2. **Better Communication** – Encourages collaboration between **consumer and producer teams**.
+3. **Early Detection of Breaking Changes** – If a CDC test **fails during a build**, developers **immediately know** which consumer is affected and can address the issue
+
+## CDCs vs Service Test
+
+CDCs sit at the same level with as Service tests in the test pyramid, but focus on consumer usage. If a CDC test fails, the affected consumer is obvious.
+
+## Pact
+
+Pact is an open-source **consumer-driven contract testing tool** that helps ensuring compatibility between consumers and producers.
+
+1. The consumer defines expectations using a **DSL** (Domain-Specific Language).
+2. A local Pact server runs these expectations, generating a Pact specification file (JSON format) that formally describes the contract.
+3. The producer uses the Pact file to validate that it meets the consumer’s expectations.
+
+Pact files can be stored in **CI/CD artifact repositories** or the **Pact Broker**, which allows CDCs against different consumer versions (e.g., production vs. latest build).

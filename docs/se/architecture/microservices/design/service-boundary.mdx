@@ -1,6 +1,6 @@
-# Designing Microservices
+# Service Boundary
 
-Having a clear service boundaries is crucial to achieve independently changeable / deployable / and releaseable.
+Having a clear service boundaries is crucial to achieve independently changeable, deployable, and releaseable.
 
 Concepts to consider for effective boundaries:
 1. information hiding
@@ -65,7 +65,7 @@ Occurs when microservices are too tightly connected through shared domain knowle
 
 **Example**: the `Order` service calls the `Warehouse` and `Payment` microservices for reserving stock and making payment.
 
-![](./design/domain-coupling.drawio.svg)
+![](./domain-coupling.drawio.svg)
 
 **Problems**:
 - While domain coupling is considered a loose form of coupling, but it can cause issues if there are excessive dependencies or complex data exchanges between services, making systems harder to scale and maintain.
@@ -82,7 +82,7 @@ Occurs when multiple services depend on each other (by synchronous communication
 
 **Example**: the `Order` service makes a synchronous call to the `Warehouse` microservice, requiring `Warehouse` to be accessible during the call. If `Warehouse` cannot be reached, the operation fails.
 
-![](./design/temporal-coupling.drawio.svg)
+![](./temporal-coupling.drawio.svg)
 
 **Problems**:
 - Increases latency in reduces scalability due to synchronous communication

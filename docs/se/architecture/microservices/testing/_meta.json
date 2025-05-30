@@ -1,0 +1,6 @@
+[
+  "unit-test",
+  "service-test",
+  "e2e-test",
+  "contract-test"
+]
