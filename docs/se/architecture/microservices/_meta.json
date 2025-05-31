@@ -40,5 +40,7 @@
     "type": "dir",
     "collapsed": true,
     "label": "Testing"
-  }
+  },
+  "observability",
+  "ui"
 ]

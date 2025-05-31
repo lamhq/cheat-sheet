@@ -1,0 +1,250 @@
+# Observability
+
+## Observability
+
+Observability is about understanding a system’s internal state from its external outputs.
+
+A highly observable system enables engineers to diagnose and resolve issues quickly.
+
+Logs, events, and metrics help increase observability, but focus on making the system understandable rather than excessive tools.
+
+
+## Monitoring
+
+Monitoring is actively watching a system for predefined issues.
+
+Traditional monitoring sets alerts based on anticipated failures. This approach has limitations in distributed systems where unforeseen issues arise.
+
+> [!TIP]
+> Monitoring is something you do, while observability is a property of the system.
+
+
+## Building Blocks
+
+Building Blocks for Observability:
+
+- **Log aggregation**: Collecting logs from multiple microservices to gain a full picture of system behavior.
+- **Metrics aggregation**: Tracking numerical data (CPU usage, response times, etc.) to detect trends and predict issues.
+- **Distributed tracing**: Tracking a flow of calls across multiple microservice boundaries to work out what went wrong and derive accurate latency information.
+- **Are you doing OK?**: Measuring system reliability (error budgets, SLAs, SLOs) to ensure it's meeting user expectations.
+- **Alerting**: Defining meaningful alerts that notify teams about important issues.
+- **Semantic monitoring**: Rethinking system health beyond technical metrics (e.g., focusing on user experience).
+- **Testing in production**: A summary of various testing in production techniques.
+
+
+## Log Aggregation
+
+### How it work?
+
+In distributed systems, processes (microservice instances) write logs to local filesystem, a local daemon collects and forwards logs to a centralized storage for querying.
+
+> [!NOTE]
+> Before diving into microservices, set up a log aggregation system, it makes debugging and monitoring significantly easier.
+
+
+### Log Format
+
+Logs should include consistent fields (e.g., date, time, microservice name, log level) to make querying easier.
+
+Avoid reformatting logs during forwarding, because it can be expensive and cause issues. Instead, logs should be properly formatted when created.
+
+Structured formats (like **JSON**) make extracting information easier (e.g., timestamp, service name. log level, customer or order ID) but not human-friendly.
+
+
+### Correlating log lines
+
+With a large number of services interacting to provide any given end-user capability, each generating separate logs. Without correlation, diagnosing issues across different logs is challenging, and we can’t see the error in the wider context in which it occurs.
+
+Correlation IDs can be useful here. When an initial request is made, a **unique identifier** (correlation ID) is generated and passed through all downstream calls. This ID appears in every related log entry, making it easy to track an issue's full journey.
+
+Benefits:
+- Helps group related log entries across services.
+- Speeds up troubleshooting by providing full context.
+- Enables tracking costly transactions and detecting unexpected behaviors.
+
+Challenges:
+- All services must pass the correlation ID consistently, requiring standardization.
+- Retrofitting correlation IDs later is difficult, so it's best to implement them early.
+
+
+### Timing
+
+Log timestamps can be misleading. Each log entry includes a timestamp, but these timestamps are recorded on different machines, which make them logs aren't reliable for ordering events.
+
+Solution: distributed tracing tools track request flows accurately, solving both timing and ordering issues.
+
+
+### Implementations
+
+Common log aggregation stack:
+- Fluentd: A log forwarding agent that collects logs.
+- Elasticsearch: A search index for storing and querying logs.
+- Kibana: A visualization tool to analyze logs.
+
+Elasticsearch is powerful for log aggregation but has technical and licensing concerns:
+- Managing Elasticsearch can be complex, especially if used only for logging.
+- It is originally designed as a search index, not a database.
+- Elastic switched from an open-source Apache 2.0 license to a Server Side Public License (SSPL).
+
+Alternatives to Elasticsearch & Kibana:
+- Splunk: A powerful but very expensive commercial tool.
+- Humio & Datadog: Popular alternatives with different capabilities.
+- Cloud solutions: AWS CloudWatch & Azure Application Insights provide basic but workable log aggregation.
+
+
+## Metrics Aggregation
+
+Metrics aggregation is the process of **collecting, analyzing, and summarizing performance data** from multiple sources (microservices, servers, applications) to detect patterns, monitor system health, and optimize resource usage.
+
+Benefits:
+- Helps understand system behavior over time.
+- Detects patterns that signal when action is needed (e.g., rising error rates or CPU usage)
+- Helps determine when to scale infrastructure up or down.
+
+### Metrics resolution
+
+- **High-resolution (every 10 seconds)** for **real-time problem detection**, allowing engineers to quickly spot issues like sudden spikes in CPU usage or network failures.
+- **Lower-resolution (per-hour)** for **long-term trend analysis**, helping teams understand broader patterns such as seasonal traffic fluctuations or resource usage over time.
+
+
+### Cardinality
+
+Cardinality refers to the number of unique fields that can be queried in a dataset. The more fields available, the higher the cardinality.
+- **High-cardinality** data contains many unique values (e.g., customer IDs, request IDs, product IDs, cloud provider details). While rich in information, storing and retrieving it can be computationally expensive.
+- **Low-cardinality** data has fewer unique values (e.g., CPU usage for a machine). It is simpler to store and query but provides less flexibility.
+
+If your system is growing in complexity, you’ll likely need high-cardinality tools to improve observability and extract meaningful insights from your data.
+
+
+### Implementations
+
+- Prometheus has gained popularity as an open-source tool for gathering and aggregating metrics
+- Honeycomb & Lightstep: excel at storing, filtering, and querying high-cardinality metrics, valuable for detailed system observability
+
+
+## Distributed Tracing
+
+Distributed tracing is a technique for tracking requests as they move through multiple microservices in a system. It captures detailed traces of interactions (how services connect, bottlenecks, duration).
+
+Benefits:
+- Helps identify performance bottlenecks.
+- Shows how requests move through different services.
+- Enables teams to diagnose issues faster and optimize performance.
+
+> [!NOTE]
+> Correlation IDs are a basic way to track related requests, but they lack visualization and deeper insights. Distributed tracing provides a more sophisticated solution, capturing end-to-end traces of requests across multiple services.
+
+
+### How it work?
+
+Distributed tracing use spans and sampling to tracks the flow of requests across microservices
+
+A span represents local activity within a thread (such as an operation or request). Each span includes:
+- Start and end time (to measure duration).
+- Logs related to the span (to provide context).
+- Metadata (e.g., customer ID, order ID, hostname) for later querying.
+
+Tracing process:
+1. Spans are correlated using a unique identifier.
+2. They are sent to a central collector.
+3. The collector assembles related spans into a single trace, showing how a request moves through multiple services.
+
+Sampling: Since capturing every trace would overwhelm the system, sampling strategies help reduce the data load:
+- Random sampling (e.g., Google's Dapper samples a percentage of calls).
+- Fixed-rate sampling (e.g., Jaeger captures only 1 in 1,000 calls by default).
+- Dynamic sampling (used by Honeycomb & Lightstep) adjusts sampling rates, collecting more data for errors while limiting data for common operations.
+
+### Implementations
+
+Distributed tracing requires instrumenting microservices to capture spans, using an agent to forward data, and setting up a collector to analyze traces:
+- Each operation within a microservice is recorded as a span (a traceable unit of work).
+- Standard APIs like **OpenTracing** or **OpenTelemetry** help automate span collection for common activities like HTTP calls. To provide richer trace data, additional coding is often necessary.
+- A local forwarding agent periodically sends spans to the collector.
+- The collector aggregates spans and reconstructs full traces of request flows across microservices.
+
+Recommended tools:
+- **Jaeger** – A popular open-source distributed tracing tool.
+- **Lightstep & Honeycomb** – Commercial solutions offering advanced tracing & high-cardinality support.
+- **OpenTelemetry** – A widely adopted open API specification that ensures standardized tracing and better interoperability across different tools.
+
+
+## Measuring System Reliability
+
+Instead of relying solely on **binary health checks**, engineers must **think holistically**, ensuring the system **meets real user needs** rather than just staying online.
+
+Traditional monitoring focuses on CPU usage, response times, or uptime, but these **don’t fully capture whether the system is functioning correctly**. Observability must go beyond basic metrics to **measure real user experience and reliability**.
+
+
+### Service-level agreement
+
+A **Service-Level Agreement (SLA)** is a formal contract between the **system provider** (developers, service operators) and **users** that defines expected performance standards and consequences if those standards aren't met.
+
+Purposes:
+- Set expectations for reliability, uptime, and service quality.
+- Define compensation or remedies if the service fails to meet its commitments.
+
+SLAs set baseline expectations but may not reflect ideal service performance, users should evaluate real-world reliability beyond just SLA terms.
+
+For example: AWS EC2 instances have a 90% uptime guarantee, but no assurance beyond that. If an instance fails too often, AWS may refund charges but users still suffer downtime.
+
+
+### Service-Level Objectives
+
+While SLAs set external commitments, SLOs are internal targets that teams aim to meet, ensuring teams work toward high-quality service beyond contractual obligations.
+
+Why SLOs matter?
+- They help teams define their own standards for performance.
+- Ensuring all teams meet their SLOs will likely satisfy SLAs but also improve overall reliability.
+- SLOs may go beyond SLAs, setting aspirational goals or focusing on internal improvements.
+
+
+### Service-Level Indicator
+
+A Service-Level Indicator (SLI) is a quantitative measure of a system's behavior, used to determine whether SLOs are being met.
+
+Examples:
+- **Response time** (e.g., how fast a request is processed).
+- **Customer registration success rate** (ensuring users can sign up).
+- **Error rate** (how often failures occur).
+- **Order completion rate** (tracking successful transactions).
+
+Benefits:
+- Without real measurements, teams can't assess whether they are hitting their SLO targets.
+- SLIs help organizations optimize performance and ensure reliability.
+
+
+### Error budgets
+
+Error budgets define the acceptable amount of downtime or failures within a system
+
+For example: If a system has an SLO of 99.9% availability per quarter, it allows up to 2 hours and 11 minutes of downtime. This downtime forms the error budget (the amount of failure a team is allowed before corrective actions are needed).
+
+Using error budgets for decision-making:
+- If a team is well below the budget, they can safely experiment (e.g., rolling out a new microservice).
+- If they exceed the budget, they should prioritize stability, postponing risky deployments.
+
+
+## Alerting
+
+Alerts must be useful: Too many alerts, or alerts that lack meaningful information, can overwhelm operators.
+
+Guidelines for better alerts (based on EEMUA standards):
+- **Relevant** – Alerts should provide valuable information.
+- **Unique** – Avoid duplicate alerts that clutter monitoring systems.
+- **Timely** – Alerts must arrive quickly enough to be actionable.
+- **Prioritized** – Help operators understand which issues need urgent attention.
+- **Understandable** – Alerts should be clear and readable.
+- **Diagnostic** – Make it obvious what is wrong.
+- **Advisory** – Provide guidance on how to fix the problem.
+- **Focusing** – Highlight the most important issues.
+
+
+## Semantic Monitoring 
+
+Semantic monitoring is a method for assessing system behavior based on predefined expectations rather than just tracking errors.
+
+It works by defining a model for system correctness, establishing key performance criterias (e.g., customers can register, products sell at expected rates, orders ship normally). Criterias are often defined by product owners.
+
+Methods to validate system behavior:
+1. **Real user monitoring** – Observing **actual system behavior**, such as sign-ups and sales.
+2. **Synthetic transactions** – Simulated operations to proactively **test system behavior** before users encounter problems.
