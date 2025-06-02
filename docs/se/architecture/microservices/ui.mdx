@@ -1,20 +1,46 @@
-# User Interfaces
+# User Interface
 
 ## Stream-Aligned Teams
 
-We decompose the system into microservices but leave a monolithic user interface. This leads having separate frontend and backend teams, slowing development due to the need to constantly coordinate changes and hand off work between teams.
+A monolithic UI keeps frontend and backend teams siloed, slowing development. 
 
-Instead, we want stream-aligned teams, where  a team owning the end-to-end delivery of functionality in a specific part of the domain. A
-team with end-to-end responsibility for delivery of user-facing functionality is also going to have a more obvious, direct connection to the end user as well. They can be more focused on making sure that the people they are serving are getting what they need.
+> [!NOTE]
+> "Siloed" refers to teams working in isolation, with limited communication or collaboration between them. They must coordinate constantly, leading to delays and misunderstandings.
 
-The downsides of “backend” teams is they come with a hazy idea of what the software does or what the
-users need, which can cause all sorts of misunderstandings when it comes to implementing new functionality.
+Stream-aligned teams, owning end-to-end delivery within a domain, foster direct user connections and better responsiveness. They can be more focused on making sure that the people they are serving are getting what they need.
 
-To make that change happen and get rid of siloed frontend and backend teams, we need to break apart our user interfaces.
+Backend-only teams risk misunderstanding user needs, leading to implementation issues.
 
 
-## Why Dedicated Frontend Teams Exist?
+## Dedicated Frontend Teams
 
-- **Scarcity of Experts**: UI development requires skills in interaction design, graphics, and web/native app development, making specialists rare.  
-- **Consistency**: A single team owning the UI ensures a uniform look and feel across applications.  
-- **Technical Challenges**: Some systems have complex UI needs that require dedicated focus.  
+Reasons why dedicated frontend teams exist:
+
+### Sharing Specialists
+
+Finding specialists for a specific role is tough (UI designers, iOS, Android, web developers, ...).
+
+Best practices for deploying specialists:
+- Embedding them in teams for continuous collaboration.
+- Splitting specialist's time across multiple teams if their expertise doesn’t need full-time presence.
+- Creating an enabling team to help other teams become self-sufficient.
+
+> [!CAUTION]
+> Many organizations place specialists in separate teams, but this creates silos and reduces collaboration.
+
+> [!NOTE]
+> Enabling teams are specialized teams whose primary role is to support and empower others by providing expertise instead of delivering features. Like an internal consultancy, they guide teams toward self-sufficiency in specific areas.
+
+
+### Ensuring Consistency
+
+A dedicated frontend team ensures a uniform look and feel across a product (fonts, colors, and interaction patterns).
+
+> [!TIP]
+> Organizations can use **enabling teams** and **shared resources** (CSS style guide, UI components) to maintain design consistency.
+
+**Is consistency always necessary?**
+
+Amazon chooses team autonomy over UI consistency. Early versions of Amazon's shopping site had different design styles for various widgets.
+
+AWS prioritizes speed over consistency, and despite UI inconsistencies between its products, it remains a market leader.

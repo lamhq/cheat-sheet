@@ -42,5 +42,10 @@
     "label": "Testing"
   },
   "observability",
-  "ui"
+  {
+    "name": "ui",
+    "type": "dir",
+    "collapsed": true,
+    "label": "User Interface"
+  }
 ]

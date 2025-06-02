@@ -1,0 +1,46 @@
+# Widget-Based Decomposition
+
+Widget-Based Decomposition is a software design pattern used in building user interfaces. It divides a UI into smaller, independent **widgets**, each responsible for specific functionality.
+
+This pattern allows for modular development, where different teams can work on separate components without disrupting the overall system.
+
+
+## How it work?
+
+Each widget in a graphical interface functions independently.
+
+A widget may interact with backend microservices.
+
+There is a central application that manages navigation and defines which widgets appear on the UI.
+
+For example, Spotify uses separate widgets to display playlists, artists, and user-following details.
+
+
+## Implementation
+
+With simple website, including widgets as HTML fragments using client-side or server-side templating.
+
+With widgets that contain a lots of Javascript, ensure they are packaged in a way that don’t conflict with others. With isolation, it could end up with a lot of duplication between dependencies and increase page load size.
+
+Avoiding iFrames, they have issues related to sizing and communication difficulties between different parts of the UI.
+
+Communication between widgets is achieved using Browser custom event, similar to Event-Driven Communication in microservice.
+
+
+## Advantages
+
+This pattern allows multiple stream-aligned teams to contribute to the same UI.
+
+It's more flexibility than page-based decomposition, widgets from different teams can appear on the same page.
+
+It enables **enabling teams** to provide reusable widgets for stream-aligned teams.
+
+Useful if you are building a rich web-based user interface, or breaking an SPA into micro frontend.
+
+
+## Concerns
+
+Regarding SPAs:
+- Set up the separate bundling for each widget, which can be a one-time cost
+- Page size can inflate easily when updating a widget's dependencies. Be sure to put automated checks to alert you if
+the page weight goes above a threshold.
