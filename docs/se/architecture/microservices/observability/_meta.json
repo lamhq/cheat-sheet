@@ -1,0 +1,8 @@
+[
+  "log-aggregation",
+  "metrics-aggregation",
+  "distributed-tracing",
+  "reliability",
+  "alerting",
+  "semantic"
+]

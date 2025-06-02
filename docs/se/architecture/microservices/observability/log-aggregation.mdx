@@ -1,0 +1,58 @@
+# Log Aggregation
+
+## How it work?
+
+In distributed systems, processes (microservice instances) write logs to local filesystem, a local daemon collects and forwards logs to a centralized storage for querying.
+
+> [!NOTE]
+> Before diving into microservices, set up a log aggregation system, it makes debugging and monitoring significantly easier.
+
+
+## Log Format
+
+Logs should include consistent fields (e.g., date, time, microservice name, log level) to make querying easier.
+
+Avoid reformatting logs during forwarding, because it can be expensive and cause issues. Instead, logs should be properly formatted when created.
+
+Structured formats (like **JSON**) make extracting information easier (e.g., timestamp, service name. log level, customer or order ID) but not human-friendly.
+
+
+## Correlating log lines
+
+With a large number of services interacting to provide any given end-user capability, each generating separate logs. Without correlation, diagnosing issues across different logs is challenging, and we can’t see the error in the wider context in which it occurs.
+
+Correlation IDs can be useful here. When an initial request is made, a **unique identifier** (correlation ID) is generated and passed through all downstream calls. This ID appears in every related log entry, making it easy to track an issue's full journey.
+
+Benefits:
+- Helps group related log entries across services.
+- Speeds up troubleshooting by providing full context.
+- Enables tracking costly transactions and detecting unexpected behaviors.
+
+Challenges:
+- All services must pass the correlation ID consistently, requiring standardization.
+- Retrofitting correlation IDs later is difficult, so it's best to implement them early.
+
+
+## Timing
+
+Log timestamps can be misleading. Each log entry includes a timestamp, but these timestamps are recorded on different machines, which make them logs aren't reliable for ordering events.
+
+Solution: distributed tracing tools track request flows accurately, solving both timing and ordering issues.
+
+
+## Implementations
+
+Common log aggregation stack:
+- Fluentd: A log forwarding agent that collects logs.
+- Elasticsearch: A search index for storing and querying logs.
+- Kibana: A visualization tool to analyze logs.
+
+Elasticsearch is powerful for log aggregation but has technical and licensing concerns:
+- Managing Elasticsearch can be complex, especially if used only for logging.
+- It is originally designed as a search index, not a database.
+- Elastic switched from an open-source Apache 2.0 license to a Server Side Public License (SSPL).
+
+Alternatives to Elasticsearch & Kibana:
+- Splunk: A powerful but very expensive commercial tool.
+- Humio & Datadog: Popular alternatives with different capabilities.
+- Cloud solutions: AWS CloudWatch & Azure Application Insights provide basic but workable log aggregation.

@@ -1,0 +1,29 @@
+# Metrics Aggregation
+
+Metrics aggregation is the process of **collecting, analyzing, and summarizing performance data** from multiple sources (microservices, servers, applications) to detect patterns, monitor system health, and optimize resource usage.
+
+## Benefits
+
+- Helps understand system behavior over time.
+- Detects patterns that signal when action is needed (e.g., rising error rates or CPU usage)
+- Helps determine when to scale infrastructure up or down.
+
+## Metrics resolution
+
+- **High-resolution (every 10 seconds)** for **real-time problem detection**, allowing engineers to quickly spot issues like sudden spikes in CPU usage or network failures.
+- **Lower-resolution (per-hour)** for **long-term trend analysis**, helping teams understand broader patterns such as seasonal traffic fluctuations or resource usage over time.
+
+
+## Cardinality
+
+Cardinality refers to the number of unique fields that can be queried in a dataset. The more fields available, the higher the cardinality.
+- **High-cardinality** data contains many unique values (e.g., customer IDs, request IDs, product IDs, cloud provider details). While rich in information, storing and retrieving it can be computationally expensive.
+- **Low-cardinality** data has fewer unique values (e.g., CPU usage for a machine). It is simpler to store and query but provides less flexibility.
+
+If your system is growing in complexity, you’ll likely need high-cardinality tools to improve observability and extract meaningful insights from your data.
+
+
+## Implementations
+
+- Prometheus has gained popularity as an open-source tool for gathering and aggregating metrics
+- Honeycomb & Lightstep: excel at storing, filtering, and querying high-cardinality metrics, valuable for detailed system observability

@@ -41,7 +41,12 @@
     "collapsed": true,
     "label": "Testing"
   },
-  "observability",
+  {
+    "name": "observability",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Observability"
+  },
   {
     "name": "ui",
     "type": "dir",
