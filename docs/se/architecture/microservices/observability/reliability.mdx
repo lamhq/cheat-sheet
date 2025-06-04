@@ -1,13 +1,17 @@
 # Measuring System Reliability
 
-Instead of relying solely on **binary health checks**, engineers must **think holistically**, ensuring the system **meets real user needs** rather than just staying online.
+## Overview
 
-Traditional monitoring focuses on CPU usage, response times, or uptime, but these **don’t fully capture whether the system is functioning correctly**. Observability must go beyond basic metrics to **measure real user experience and reliability**.
+Traditional monitoring focuses on CPU usage, response times, or uptime, ...
+
+Measuring System Reliability ensure the system meets real user needs, it fully captures whether the system is functioning correctly.
 
 
 ## Service-level agreement
 
-A **Service-Level Agreement (SLA)** is a formal contract between the **system provider** (developers, service operators) and **users** that defines expected performance standards and consequences if those standards aren't met.
+A Service-Level Agreement (SLA) is a formal contract between the **system provider** (developers, service operators) and **users** that defines expected performance standards and consequences if those standards aren't met.
+
+Example: AWS EC2 instances have a 90% uptime guarantee, but no assurance beyond that. If an instance fails too often, AWS may refund charges but users still suffer downtime.
 
 Purposes:
 - Set expectations for reliability, uptime, and service quality.
@@ -15,12 +19,12 @@ Purposes:
 
 SLAs set baseline expectations but may not reflect ideal service performance, users should evaluate real-world reliability beyond just SLA terms.
 
-For example: AWS EC2 instances have a 90% uptime guarantee, but no assurance beyond that. If an instance fails too often, AWS may refund charges but users still suffer downtime.
-
 
 ## Service-Level Objectives
 
 While SLAs set external commitments, SLOs are internal targets that teams aim to meet, ensuring teams work toward high-quality service beyond contractual obligations.
+
+Example: Customer Support Ticket Resolution Time: "Resolve 80% of critical support tickets within 4 hours."
 
 Why SLOs matter?
 - They help teams define their own standards for performance.

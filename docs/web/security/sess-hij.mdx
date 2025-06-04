@@ -1,0 +1,25 @@
+# Session hijacking
+
+Session hijacking is a cyberattack where an attacker takes control of a user's active session on a website or application by stealing or manipulating the session token.
+
+This allows the attacker to impersonate the legitimate user and gain unauthorized access to sensitive data or functionalities.
+
+
+## How it Works
+
+1. Attackers steal session IDs through methods like network sniffing, Man-in-the-Middle (MITM) attack, [Cross-Site Scripting (XSS)](./xss.mdx), malware.
+2. Once the attacker obtains a valid session ID, they use it to send requests to the web server.
+3. The attacker can now perform any action the legitimate user could, including:
+   - Accessing sensitive personal data (passwords, financial information).
+   - Making unauthorized transactions.
+   - Changing account settings or passwords.
+   - Sending emails or messages from the compromised account.
+   - Deploying ransomware or other malicious software.
+
+
+## Prevention Methods
+
+- **Use HTTPS**: Encrypt communication to prevent interception.
+- **Secure Session Management**: Implement strong session ID generation and expiration policies.
+- **HTTP-Only Cookies**: Prevent client-side scripts from accessing session tokens.
+- **Multi-Factor Authentication (MFA)**: Adds an extra layer of security to prevent unauthorized access.

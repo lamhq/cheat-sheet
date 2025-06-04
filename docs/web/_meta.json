@@ -46,5 +46,11 @@
     "name": "storybook",
     "type": "dir",
     "collapsed": true
+  },
+  {
+    "name": "security",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Security"
   }
 ]
