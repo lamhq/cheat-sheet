@@ -8,7 +8,11 @@
   },
   "proxy",
   "load-balancer",
-  "cache",
+  {
+    "name": "cache",
+    "type": "dir",
+    "collapsed": true
+  },
   "cdn",
   "message-broker"
 ]

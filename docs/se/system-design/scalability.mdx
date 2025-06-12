@@ -89,7 +89,32 @@ Limitations:
 
 ## Best practices
 
-The best strategy involves combining multiple scaling techniques to optimize performance, reliability, and efficiency. The goal isn't to scale in every possible way, but to choose the right combination based on system needs
+### Avoid Premature Optimization
+
+Optimizing too early—before identifying real bottlenecks—can lead to wasted effort and unnecessary complexity.
+
+Optimization should be driven by actual needs, not assumptions.
+
+
+### Start Small
+
+Avoid Unnecessary Complexity.
+
+Decompose functionalities improves scalability, but also adds new infrastructure that must be managed.
+
+
+### Experimentation is key
+
+Confirm whether the proposed solution will work by conducting tests and experiments.
+
+Example: If you suspect database queries are slowing down your system, run load tests to measure performance before deciding on partitioning or sharding.
+
+
+### Combining Techniques
+
+The best strategy involves combining multiple scaling techniques to optimize performance, reliability, and efficiency.
+
+The goal isn't to scale in every possible way, but to choose the right combination based on system needs
 
 Imagine an Order microservice in an e-commerce system.  
 

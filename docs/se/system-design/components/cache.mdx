@@ -2,39 +2,36 @@
 
 ## Overview
 
-A cache is a temporary storage area that stores the result of expensive responses or frequently accessed data in memory so that subsequent requests are served more quickly.
+A cache is a temporary storage area that stores the result of an operation so that future requests can use the stored value instead of recalculating it.
 
-The goal of cache is to speed up getting some data from a slower storage by storing part of this data in a faster storage.
+Caching works best for read-heavy workloads, when data is read frequently but modified infrequently.
 
-You want to maximize cache hit ratio. Otherwise, it may introduce additional latency.
 
-Work best for read-heavy workloads, when data is read frequently but modified infrequently.
+## Benefits
 
-Pros:
-- Improve read performance. Reduce latency
+- Improve read performance. Fetching data from a cache avoids network calls and reduces load on the downstream service.
+- Increase scalability. Caching between clients and the origin service helps scale the system by reducing direct requests to the origin.
+- Ensure robustness. If the origin service is unavailable, a local cache allows continued operation.
 - Increase throughtput. System can handle more requests.
 
-Cons:
+
+## Limitations
+
 - Increase complexity to handle cache
 - Introduce inconsistencies where cache is not synced with data storage
 
 
 ## Best Practices
 
-Don't use cache to store critical data.
+1. **Minimize caching layers**, cache only where necessary.
+2. Don't use cache to store **critical data**.
+3. Set up multiple cache servers across different data centers to avoid **Single point of failure**.
+4. Keep data store and cache in sync to ensure data **consistency**.
+5. **Overprovision the required memory for cache servers** to handle unexpected spikes in demand without performance degradation.
+6. **Treat caching as a performance optimization**, not a fundamental data source.
 
-> Since cached data is stored in memory, if a cache server restarts, all the data in memory is lost.
+> [!CAUTION]
+> The more caches between client and the data source, the more stale the data can be, the more difficult to determine where data needs to be invalidated.
 
-Choose an approriate expiration time (TTL).
-
-> Setting the expiration date too short will cause the system to reload data from the database frequently. Meanwhile, if set too long, the data can become stale.
-
-Keep data store and cache in sync to ensure data consistency.
-
-Set up multiple cache servers across different data centers to avoid **SPOF** (Single point of failure).
-
-![](https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Single_Point_of_Failure.png/400px-Single_Point_of_Failure.png)
-
-**Overprovision the required memory for cache servers** to handle unexpected spikes in demand without performance degradation.
-
-**Choose an approriate eviction policy** to determines which data should be removed once the cache is full.
+> [!CAUTION]
+> Be cautious with cache headers `Expires: Never` can cause permanent stale data issues

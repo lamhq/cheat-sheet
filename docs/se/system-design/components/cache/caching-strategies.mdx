@@ -23,9 +23,7 @@ Cons:
 
 ## Read-Through
 
-Application doesn't have access to the database but instead always interacts with the cache API.
-
-In case of a cache miss, the API loads the missing data from the database, populates the cache, and returns it to the application.
+Client always interacts with the cache API. In case of a cache miss, the API loads data from the database, populates the cache, and returns it to the application.
 
 It's a common pattern in ORM frameworks.
 
@@ -43,25 +41,31 @@ Cons:
 
 ## Write-Through
 
-Similar to Read Through, application interact with an API that also update the cache when data is written.
-
-DynamoDB Accelerator (DAX) is a good example of read-through / write-through cache.
+Client interact with a cache API that also update the cache when data is written.
 
 ![](https://codeahoy.com/img/write-through.png)
 
+Typically used in server-side caching, where updates happen within the same transaction.
 
 Pros:
 - Cache always remains consistent with the database
 
 Cons:
-- Writes are expensive because data needs to be updated in both the cache and the database
+- Writes are expensive: every write operation update both the cache and the database
 - Redudant data: we write data to cache that never be read
 
+Where to use?
+- When data consistency is critical.
+- When using server-side caching (e.g., Redis, Memcached).
+- When read performance is more important than write speed.
+
+> [!NOTE]
+> DynamoDB Accelerator (DAX) is a good example of read-through / write-through cache.
 
 
-## Write-Behind (Write-Back)
+## Write-Behind
 
-Similar to Write-Through, but data is not written immediately.
+A write-behind cache (aka write-back) updates the cache first, then asynchronously updates the origin later.
 
 Data updates are batched and flushed to the database later.
 
@@ -71,13 +75,23 @@ When combined with **Read-through**, it works good for mixed workloads, where th
 
 Most relational databases storage engines (i.e. InnoDB) have Write-Behind cache enabled by default in their internals. Queries are first written to memory and eventually flushed to the disk.
 
-Use cases:
+**Example**:
+1. A User Preferences microservice updates a user's theme settings.
+2. The cache is updated immediately, allowing fast retrieval.
+3. The database is updated later, asynchronously.
+
+**Use cases**:
 - Good for write-heavy workloads.
+- When batch updates to the origin are acceptable.
+- When data loss is manageable (e.g., temporary session data).
 
-Pros:
-- No write penalty
-- Reduce load on the database (because of bulk update)
+**Benefits**:
+- Improves write performance: writes are fast since they go to the cache first.
+- Reduces load on the origin: batch updates to the database instead of frequent individual writes.
+- Efficient for high-write workloads: useful when frequent updates occur but immediate persistence isn’t required.
 
-Cons:
-- If there's a cache failure, the data may be permanently lost.
-- Data staleness if we don't flush data to database often
+**Challenges**:
+- Risk of data loss: if the cache fails before writing to the origin, data may be lost.
+- Unclear source of truth: since the cache holds the latest data, the origin may contains stale data, which cause confusion.
+
+> In Microservices, write-behind caching is rarely used, because consistency is prioritized, making delayed writes risky. Also, other caching strategies (e.g., write-through) are simpler and more reliable.

@@ -1,0 +1,94 @@
+# Invalidation
+
+## Overview
+
+Cache invalidation is the process of removing outdated data from a cache to ensure freshness and accuracy.
+
+Why does it matter?
+- Cached data can become stale if the original data changes.
+- Using outdated data can lead to inconsistencies in a system.
+- The challenge is deciding when and how to remove cached data.
+
+
+## Time to Live (TTL)
+
+TTL (Time to Live) is a cache invalidation mechanism, it ensures that cached data remains valid for a fixed duration, after which it is considered stale and must be refreshed.
+
+How it Works?
+- Each cache entry is assigned a TTL duration (e.g., 5 minutes).
+- During this period, the cache serves the stored data.
+- Once the TTL expires, the cache invalidates the entry and fetches a fresh copy from the origin service.
+
+Forms of TTL:
+- Fixed TTL: A expiration duration for all cached entries.
+- Timestamp-based expiration: Entries expire at a specific timestamp.
+- Dynamic TTL: TTL varies based on data characteristics (e.g., fast-selling items have shorter TTLs, slow-moving items have longer TTLs).
+
+Advantages:
+- Simple to implement (no complex invalidation logic).
+- Works well for predictable data refresh cycles.
+
+Challenges:
+- Inflexible. TTL does not react to real-time data changes.
+- Stale data can exists if the origin updates right after a TTL refresh, the cache remains outdated until the next cycle.
+
+> [!NOTE]
+> HTTP provides the ability to specify `Cache-Control` (how long clients should consider data fresh) and `Expires headers` (an explicit expiration timestamp for cached responses) on responses to enable smarter client-side caching.
+
+
+## Conditional GETs (HTTP)
+
+Conditional GET requests are an efficient way to check if cached data is still valid before fetching a new copy. They help reduce unnecessary data transfers and expensive resource regeneration.
+
+How it Work?
+1. HTTP provides `ETags` (Entity Tags), which act as unique identifiers for a resource.
+2. When a client fetches a resource, the server includes an `ETag` in the response.
+3. Later, when the client wants to refresh the resource, it sends a conditional GET request with the header: `If-None-Match: <ETag>`
+4. The server checks if the resource has changed:
+   - If unchanged, it responds with 304 Not Modified (no need to resend the data).
+   - If changed, it responds with 200 OK and the updated resource.
+
+Benefits:
+- Reduces unnecessary data transfers (avoids fetching unchanged resources).
+- Prevents expensive resource regeneration (avoids redundant database queries).
+- Improves efficiency in systems where data changes infrequently.
+
+Limitations:
+- Still requires a network request (does not eliminate round trips).
+- Not useful for reducing latency (client still contacts the server).
+
+
+## Notification-Based
+
+Notification-based invalidation uses events to inform subscribers when their cached data is outdated.
+
+**How it Works?**
+- The origin emits an event when data changes.
+- Subscribers listen for these events.
+- When an event is received, the subscriber invalidates its cache and updates it with fresh data.
+
+**Benefits**:
+- Reduces stale data window: cache updates as soon as a change occurs.
+- Efficient for real-time updates
+- Works well with pub/sub messaging systems
+
+**Challenges**:
+- Infrastructure complexity: requires event-driven architecture.
+- Reliability risk: if notifications fail, caches may not update (better to have heartbeat events to confirm the system is still active).
+
+**Where to use it?**
+- When real-time accuracy is critical (e.g., stock levels, pricing updates).
+- When a message broker is already in use for microservice communication.
+- When TTL-based invalidation is too slow for dynamic data changes.
+
+The notification event should contain ID of the changed item and its new data to allow direct cache update without fetching new data.
+
+
+## Write-through
+
+See [Write-Through](./caching-strategies.mdx#write-through).
+
+
+## Write-Behind
+
+See [Write-Behind](./caching-strategies.mdx#write-behind).
