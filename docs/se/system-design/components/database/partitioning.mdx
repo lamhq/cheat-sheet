@@ -2,9 +2,9 @@
 
 ## Overview
 
-Partitioning is a technique that divides a single database table into smaller, more manageable pieces called partitions.
+Partitioning is just a general term, referring to the process of dividing tables in a database instance into smaller sub-tables or partitions.
 
-Each partition holds a subset of the table's data based on specific criteria.
+These partitions can be accessed and managed separately to enhance performance, maintainability, and availability of the database.
 
 
 ## Types of Partitioning
@@ -15,14 +15,15 @@ Each partition holds a subset of the table's data based on specific criteria.
 
 ## Benefits
 
-- Enhances query performance on tables by reducing the amount of data scanned.
-- Helps build smaller indexes that can fit into memory.
-- Simplifies maintenance tasks like backups and indexing within a single database instance.
+- **Enhances query performance** by reducing the amount of data needs to be scanned or accessed.
+- **Helps build smaller indexes** that can fit into memory.
+- **Simplifies maintenance tasks** like backups and indexing within a single database instance.
 
 
 ## Downsides
 
-- Complexity of maintainance. You need to remember to add/remove partitions based your partitioning strategy.
+- **Complexity of maintainance**. Backup and recovery procedures become more difficult when dealing with multiple partitions.
+- **Potential Wasted Space**. If partitions are not evenly distributed, some may be underutilized, leading to wasted storage.
 - Querying data from all partitions is expensive
 - Harder to maintain uniqueness across partitions
 

@@ -13,7 +13,7 @@
   "transaction",
   "concurrency",
   "indexes",
-  "sharding",
   "partitioning",
+  "sharding",
   "replication"
 ]
