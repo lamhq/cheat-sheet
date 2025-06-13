@@ -10,9 +10,7 @@ A Kubernetes cluster consists of:
 
 A **node** may be a virtual or physical machine.
 
-Rather than scheduling a container, Kubernetes instead schedules a pod.
-
-A **pod** consists of one or more containers that will be deployed together. You often have one container in a pod.
+Kubernetes schedule **pods** that run on nodes. A pod consists of one or more containers that will be deployed together. You often have one container in a pod.
 
 A **service** provides a stable network identity and a way to route traffic to a set of pods.
 
@@ -65,12 +63,12 @@ Each controller is also extremely specialized and only interested in its own lit
 
 ### cloud controller manager
 
-integrates with the underlying cloud provider.
+Integrates with the underlying cloud provider.
 
 
 ## Node Components
 
-Node (or worker nodes) are where user applications run.
+Node (or worker nodes) are where applications run.
 
 At a high-level they do three things:
 - Watch the API server for new work assignments

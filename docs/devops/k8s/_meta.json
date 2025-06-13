@@ -6,5 +6,6 @@
     "type": "dir",
     "collapsed": true
   },
-  "cli"
+  "cli",
+  "config"
 ]
