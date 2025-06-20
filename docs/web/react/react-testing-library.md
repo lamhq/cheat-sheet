@@ -1,0 +1,299 @@
+# React Testing Library
+
+## Version
+
+This document is applied for version: `16.3.0` (2025)
+
+
+## Installation 
+
+For TypeScript:
+
+```bash
+npm install --save-dev @testing-library/react @testing-library/dom @types/react @types/react-dom
+```
+
+## Getting elements
+
+```tsx
+import * as React from 'react';
+import { render, screen } from '@testing-library/react';
+
+import App from './App';
+
+describe('App', () => {
+  it('renders App component', () => {
+    render(<App />);
+
+    expect(screen.getByText('Search:')).toBeInTheDocument();
+
+    // with regular expression
+    expect(screen.getByText(/Search/)).toBeInTheDocument();
+
+    // search by type
+    expect(screen.getByRole('textbox')).toBeInTheDocument();
+    // other search types: getByLabelText, getByPlaceholderText, getByAltText, getByDisplayValue
+
+    // get element without throwing error, useful for asserting that an element isn't there
+    expect(screen.queryByText(/Searches for JavaScript/)).toBeNull();
+
+    // wait for element to be in the document, useful for async operations
+    expect(await screen.findByText(/Signed in as/)).toBeInTheDocument();
+
+    // get multiple elements: getAllBy, queryAllBy, findAllBy
+    const listItems = screen.getAllByRole('listitem');
+    expect(listItems).toHaveLength(3);
+  });
+});
+```
+
+
+## Assertive Functions
+
+- `toBeChecked`
+- `toBeDisabled`
+- `toBeEnabled`
+- `toBeEmpty`
+- `toBeEmptyDOMElement`
+- `toBeInTheDocument`
+- `toBeInvalid`
+- `toBeNull`
+- `toBePartiallyChecked`
+- `toBeRequired`
+- `toBeValid`
+- `toBeVisible`
+- `toContainElement`
+- `toContainHTML`
+- `toHaveAttribute`
+- `toHaveClass`
+- `toHaveDescription`
+- `toHaveDisplayValue`
+- `toHaveFocus`
+- `toHaveFormValues`
+- `toHaveStyle`
+- `toHaveTextContent`
+- `toHaveValue`
+
+
+## Firing Event
+
+```tsx
+import { render, screen, fireEvent } from '@testing-library/react';
+
+import App from './App';
+
+describe('App', () => {
+  it('renders App component', () => {
+    render(<App />);
+
+    fireEvent.change(screen.getByRole('textbox'), {
+      target: { value: 'JavaScript' },
+    });
+  });
+});
+```
+
+Use the `userEvent` API is recommended, it mimics the actual browser behavior more closely than the `fireEvent` API:
+
+```tsx
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
+import App from './App';
+
+describe('App', () => {
+  it('renders App component', async () => {
+    render(<App />);
+
+    // wait for the user to resolve
+    await screen.findByText(/Signed in as/);
+
+    expect(screen.queryByText(/Searches for JavaScript/)).toBeNull();
+
+    await userEvent.type(screen.getByRole('textbox'), 'JavaScript');
+
+    expect(
+      screen.getByText(/Searches for JavaScript/)
+    ).toBeInTheDocument();
+  });
+});
+```
+
+
+## Callback Assertions
+
+Mock the `onChange` function which is passed to the component and assert it has been called:
+
+```tsx
+describe('Search', () => {
+  it('calls the onChange callback handler', async () => {
+    // Jest
+    // const onChange = jest.fn();
+    // Vitest
+    const onChange = vi.fn();
+
+    render(
+      <Search value="" onChange={onChange}>
+        Search:
+      </Search>
+    );
+
+    await userEvent.type(screen.getByRole('textbox'), 'JavaScript');
+
+    expect(onChange).toHaveBeenCalledTimes(10);
+  });
+});
+```
+
+
+## Asynchronous
+
+### waitFor
+
+Use `waitFor` to repeatedly runs a function until it no longer throws an error or until a timeout is reached.
+
+```tsx
+import * as React from 'react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+
+import App from './App';
+
+describe('App', () => {
+  it('renders App component', () => {
+    render(<App />);
+
+    expect(screen.queryByText(/Searches for JavaScript/)).toBeNull();
+
+    fireEvent.change(screen.getByRole('textbox'), {
+      target: { value: 'JavaScript' },
+    });
+
+    waitFor(() =>
+      expect(
+        screen.getByText(/Searches for JavaScript/)
+      ).toBeInTheDocument()
+    );
+  });
+});
+```
+
+Use `waitForElementToBeRemoved` for the removal of element(s) from the DOM.
+
+
+### Data fetching example
+
+The component to test:
+
+```tsx
+import axios from 'axios';
+
+const URL = 'http://hn.algolia.com/api/v1/search';
+
+function App() {
+  const [stories, setStories] = React.useState([]);
+  const [error, setError] = React.useState(null);
+
+  async function handleFetch(event) {
+    let result;
+
+    try {
+      result = await axios.get(`${URL}?query=React`);
+
+      setStories(result.data.hits);
+    } catch (error) {
+      setError(error);
+    }
+  }
+
+  return (
+    <div>
+      <button type="button" onClick={handleFetch}>
+        Fetch Stories
+      </button>
+
+      {error && <span>Something went wrong ...</span>}
+
+      <ul>
+        {stories.map((story) => (
+          <li key={story.objectID}>
+            <a href={story.url}>{story.title}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default App;
+```
+
+The test:
+
+```tsx
+import axios from 'axios';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
+import App from './App';
+
+// Jest
+// jest.mock('axios');
+// Vitest
+vi.mock('axios');
+
+describe('App', () => {
+  it('fetches stories from an API and displays them', async () => {
+    const stories = [
+      { objectID: '1', title: 'Hello' },
+      { objectID: '2', title: 'React' },
+    ];
+
+    const promise = Promise.resolve({ data: { hits: stories } });
+
+    axios.get.mockImplementationOnce(() => promise);
+
+    render(<App />);
+
+    await userEvent.click(screen.getByRole('button'));
+
+    waitFor(() => promise);
+
+    expect(screen.getAllByRole('listitem')).toHaveLength(2);
+  });
+
+  it('fetches stories from an API and fails', async () => {
+    axios.get.mockImplementationOnce(() =>
+      Promise.reject(new Error())
+    );
+
+    render(<App />);
+
+    await userEvent.click(screen.getByRole('button'));
+
+    const message = await screen.findByText(/Something went wrong/);
+
+    expect(message).toBeInTheDocument();
+  });
+});
+```
+
+## Debugging
+
+Use `screen.debug()` to display HTML element:
+
+```js
+import {screen} from '@testing-library/dom'
+
+document.body.innerHTML = `
+  <button>test</button>
+  <span>multi-test</span>
+  <div>multi-test</div>
+`
+
+// debug document
+screen.debug()
+// debug single element
+screen.debug(screen.getByText('test'))
+// debug multiple elements
+screen.debug(screen.getAllByText('multi-test'))
+```
