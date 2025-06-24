@@ -13,6 +13,25 @@ For TypeScript:
 npm install --save-dev @testing-library/react @testing-library/dom @types/react @types/react-dom
 ```
 
+## Jest setup
+
+```sh
+npm install --save-dev jest-environment-jsdom @testing-library/jest-dom
+```
+
+- `jest-environment-jsdom` simulates a browser so you can test DOM-related code (like document or window)
+- `@testing-library/jest-dom` adds custom matchers to Jest, like `toBeInTheDocument()` or `toHaveTextContent()`
+
+Update Jest config file:
+```js
+const config = {
+  testEnvironment: 'jsdom',
+}
+```
+
+Reference: [DOM Manipulation](https://jestjs.io/docs/next/tutorial-jquery).
+
+
 ## Getting elements
 
 ```tsx

@@ -27,14 +27,11 @@
     "collapsed": true,
     "label": "Windows"
   },
-  "facebook",
-  "google",
-  "youtube",
-  "udemy",
   {
-    "name": "pdf",
+    "name": "android",
     "type": "dir",
     "collapsed": true,
-    "label": "PDF Files"
-  }
+    "label": "Android"
+  },
+  "udemy"
 ]
