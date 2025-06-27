@@ -3,10 +3,7 @@
 	"tasks": [
 		{
 			"type": "npm",
-			"script": "dev",
-			"problemMatcher": [],
-			"label": "npm: dev",
-			"detail": "rspress dev --port 5002"
+			"script": "dev"
 		}
 	]
 }
