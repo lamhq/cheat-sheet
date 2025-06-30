@@ -37,7 +37,6 @@
   },
   {
     "name": "react-testing-library",
-    "type": "dir",
     "collapsed": true,
     "label": "Testing"
   }
