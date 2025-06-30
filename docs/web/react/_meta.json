@@ -4,23 +4,30 @@
     "type": "dir",
     "collapsed": true
   },
-  "server-comp",
-  {
-    "name": "form",
-    "type": "dir",
-    "collapsed": true,
-    "label": "Form Handling"
-  },
-  {
-    "name": "state",
-    "type": "dir",
-    "collapsed": true,
-    "label": "State Management"
-  },
   {
     "name": "react-router",
     "collapsed": true,
     "label": "Routing"
+  },
+  {
+    "name": "joy-ui",
+    "collapsed": true,
+    "label": "UI Framework"
+  },
+  {
+    "name": "react-hook-form",
+    "collapsed": true,
+    "label": "Form Handling"
+  },
+  {
+    "name": "react-testing-library",
+    "collapsed": true,
+    "label": "Testing"
+  },
+  {
+    "name": "jotai",
+    "collapsed": true,
+    "label": "State Management"
   },
   {
     "name": "auth",
@@ -28,15 +35,11 @@
     "collapsed": true,
     "label": "Authentication"
   },
+  "server-comp",
   {
     "name": "performance",
     "type": "dir",
     "collapsed": true,
     "label": "Performance Optimization"
-  },
-  {
-    "name": "react-testing-library",
-    "collapsed": true,
-    "label": "Testing"
   }
 ]
