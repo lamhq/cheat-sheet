@@ -1,3 +1,5 @@
+import { PackageManagerTabs } from '@theme'
+
 # React Testing Library
 
 ## Version
@@ -9,15 +11,12 @@ This document is applied for version: `16.3.0` (2025)
 
 For TypeScript:
 
-```bash
-npm install --save-dev @testing-library/react @testing-library/dom @types/react @types/react-dom
-```
+<PackageManagerTabs command="install --save-dev @testing-library/react @testing-library/dom @types/react @types/react-dom" />
+
 
 ## Jest setup
 
-```sh
-npm install --save-dev jest-environment-jsdom @testing-library/jest-dom
-```
+<PackageManagerTabs command="install --save-dev jest-environment-jsdom @testing-library/jest-dom" />
 
 - `jest-environment-jsdom` simulates a browser so you can test DOM-related code (like document or window)
 - `@testing-library/jest-dom` adds custom matchers to Jest, like `toBeInTheDocument()` or `toHaveTextContent()`

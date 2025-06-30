@@ -1,3 +1,5 @@
+import { PackageManagerTabs } from '@theme'
+
 # Number
 
 ## Integer
@@ -29,10 +31,8 @@ For true decimal math, use `big.js`. Whenever you use math for financial calcula
 * Perfect decimal math
 * Safe out of bound integer values
 
-```sh
-npm i big.js
-npm i -D @types/big.js
-```
+<PackageManagerTabs command="install big.js" />
+<PackageManagerTabs command="install --save-dev @types/big.js" />
 
 ```js
 import { Big } from 'big.js';
