@@ -18,8 +18,7 @@
     "label": "State Management"
   },
   {
-    "name": "routing",
-    "type": "dir",
+    "name": "react-router",
     "collapsed": true,
     "label": "Routing"
   },
