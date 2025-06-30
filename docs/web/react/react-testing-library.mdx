@@ -7,28 +7,45 @@ import { PackageManagerTabs } from '@theme'
 This document is applied for version: `16.3.0` (2025)
 
 
-## Installation 
+## Installation
 
 For TypeScript:
 
 <PackageManagerTabs command="install --save-dev @testing-library/react @testing-library/dom @types/react @types/react-dom" />
 
 
-### Set up Jest
+## Configure Jest
 
-<PackageManagerTabs command="install --save-dev jest-environment-jsdom @testing-library/jest-dom" />
+<PackageManagerTabs command="install --save-dev jest-environment-jsdom @testing-library/jest-dom identity-obj-proxy" />
 
 - `jest-environment-jsdom` simulates a browser so you can test DOM-related code (like document or window)
 - `@testing-library/jest-dom` adds custom matchers to Jest, like `toBeInTheDocument()` or `toHaveTextContent()`
+- `identity-obj-proxy` allow mocking non-js file imports
+
+Add a **Jest setupFile** to import `@testing-library/jest-dom` before running each test file:
+```ts title="src/setupTests.ts"
+import '@testing-library/jest-dom';
+```
 
 Update Jest config file:
-```js
+```js title="jest.config.mjs"
 const config = {
+  // The test environment that will be used for testing
   testEnvironment: 'jsdom',
+
+  // A list of paths to modules that run some code to configure or set up the testing framework before each test
+  setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
+
+  // Module name mapping for handling non-JS files
+  moduleNameMapper: {
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+  },
 }
 ```
 
-Reference: [DOM Manipulation](https://jestjs.io/docs/next/tutorial-jquery).
+References:
+- [DOM Manipulation](https://jestjs.io/docs/next/tutorial-jquery).
+- [React Testing Library](https://testing-library.com/docs/react-testing-library/intro)
 
 
 ## Getting elements
