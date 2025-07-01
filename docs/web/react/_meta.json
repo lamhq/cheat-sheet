@@ -10,19 +10,20 @@
     "label": "Routing"
   },
   {
-    "name": "joy-ui",
-    "collapsed": true,
-    "label": "UI Framework"
-  },
-  {
     "name": "react-hook-form",
     "collapsed": true,
     "label": "Form Handling"
   },
   {
-    "name": "react-testing-library",
+    "name": "react-query",
     "collapsed": true,
-    "label": "Testing"
+    "label": "Asynchronous Operations"
+  },
+  {
+    "name": "auth",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Authentication"
   },
   {
     "name": "jotai",
@@ -30,10 +31,14 @@
     "label": "State Management"
   },
   {
-    "name": "auth",
-    "type": "dir",
+    "name": "joy-ui",
     "collapsed": true,
-    "label": "Authentication"
+    "label": "UI Framework"
+  },
+  {
+    "name": "react-testing-library",
+    "collapsed": true,
+    "label": "Testing"
   },
   "server-comp",
   {
