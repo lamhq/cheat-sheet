@@ -1,3 +1,4 @@
 [
-  { "name": "rsbuild", "type": "dir" }
+  { "name": "rsbuild", "type": "dir", "collapsed": true },
+  { "name": "vite", "collapsed": true }
 ]

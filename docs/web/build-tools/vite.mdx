@@ -1,0 +1,23 @@
+import { PackageManagerTabs } from '@theme'
+
+# Vite
+
+## Version
+
+This guide covers Vite version `7.0.0` (2025).
+
+
+## Installation
+
+<PackageManagerTabs command="create vite@latest" />
+
+
+## VS Code Configuration
+
+If you encounter the error `Unknown compiler option 'erasableSyntaxOnly'` in your `tsconfig.json`, it means VS Code is not using the TypeScript version from your workspace.
+
+To fix this:
+
+1. Open the **Command Palette** (`Cmd+Shift+P`)
+2. Search for `TypeScript: Select TypeScript Version`
+3. Choose **Use Workspace Version**
