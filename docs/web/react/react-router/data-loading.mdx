@@ -1,0 +1,28 @@
+# Data Loading
+
+```ts title="routes.ts"
+import {
+  createBrowserRouter,
+  useLoaderData,
+} from "react-router";
+
+createBrowserRouter([
+  {
+    path: "/teams/:teamId",
+    loader: async ({ params }) => {
+      let team = await fetchTeam(params.teamId);
+      return { name: team.name };
+    },
+    Component: Team,
+  },
+]);
+```
+
+```tsx title="Team.tsx"
+import { useLoaderData } from "react-router";
+
+function Team() {
+  let data = useLoaderData();
+  return <h1>{data.name}</h1>;
+}
+```

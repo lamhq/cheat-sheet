@@ -6,6 +6,7 @@
   },
   {
     "name": "react-router",
+    "type": "dir",
     "collapsed": true,
     "label": "Routing"
   },
