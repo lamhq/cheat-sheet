@@ -1,0 +1,81 @@
+# Navigation State
+
+When the user navigates to a new route, the UI should immediately respond to the user's actions with a pending state.
+
+
+## Global Pending Navigation
+
+You can access the navigation state in layout component:
+
+```tsx
+import { useNavigation } from "react-router";
+
+export default function Root() {
+  const navigation = useNavigation();
+  const isNavigating = Boolean(navigation.location);
+
+  return (
+    <html>
+      <body>
+        {isNavigating && <GlobalSpinner />}
+        <Outlet />
+      </body>
+    </html>
+  );
+}
+```
+
+
+## Link Pending Navigation
+
+Pending indicators can also be localized to the link (`NavLink`). You can show a loading indicator next to the link on navigation.
+
+```tsx
+import { NavLink } from "react-router";
+
+function Navbar() {
+  return (
+    <nav>
+      <NavLink to="/home">
+        {({ isPending }) => (
+          <span>Home {isPending && <Spinner />}</span>
+        )}
+      </NavLink>
+      <NavLink
+        to="/about"
+        style={({ isPending }) => ({
+          color: isPending ? "gray" : "black",
+        })}
+      >
+        About
+      </NavLink>
+    </nav>
+  );
+}
+```
+
+
+## Lazy import
+
+The pending indicator is often used with lazy import:
+
+```ts title="routes.ts"
+import { createBrowserRouter } from 'react-router';
+
+export const router = createBrowserRouter([
+  {
+    path: '/sign-in',
+    lazy: async () => {
+      const Component = await import('./auth/pages/SignInPage');
+      return { Component: Component.default };
+    },
+  },
+  {
+    path: '/',
+    lazy: async () => {
+      const Component = await import('./todos/pages/HomePage');
+      return { Component: Component.default };
+    },
+  },
+]);  
+```

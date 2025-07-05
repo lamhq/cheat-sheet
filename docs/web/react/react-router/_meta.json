@@ -1,4 +1,7 @@
 [
   "routing",
-  "data-loading"
+  "data-loading",
+  "navigating",
+  "nav-state",
+  "testing"
 ]
