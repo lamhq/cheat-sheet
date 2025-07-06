@@ -1,0 +1,12 @@
+[
+  {
+    "name": "jest",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "vitest",
+    "type": "dir",
+    "collapsed": true
+  }
+]
