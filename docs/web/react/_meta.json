@@ -32,6 +32,12 @@
     "label": "State Management"
   },
   {
+    "name": "styling",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Styling"
+  },
+  {
     "name": "joy-ui",
     "collapsed": true,
     "label": "UI Framework"

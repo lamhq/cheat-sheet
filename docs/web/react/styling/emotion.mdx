@@ -1,0 +1,262 @@
+import { PackageManagerTabs } from '@theme'
+
+# Emotion
+
+## Version
+
+This document is for version `11.14.1` (2025).
+
+
+## Overview
+
+Emotion is a library designed for writing css styles with JavaScript.
+
+There're two primary methods of using Emotion:
+- Framework agnostic
+- Use with React
+
+This document is for the React method.
+
+
+## Installation
+
+<PackageManagerTabs command="install @emotion/react @emotion/styled" />
+
+
+## Usage
+
+### Basic
+
+```tsx
+import styled from '@emotion/styled'
+
+const Button = styled.button`
+  padding: 32px;
+  background-color: hotpink;
+  font-size: 24px;
+  border-radius: 4px;
+  color: black;
+  font-weight: bold;
+  &:hover {
+    color: white;
+  }
+`
+
+render(<Button>This my button component.</Button>)
+```
+
+
+### Custom component
+
+```tsx
+import styled from '@emotion/styled'
+
+const Basic = ({ className }) => <div className={className}>Some text</div>
+
+const Fancy = styled(Basic)`
+  color: hotpink;
+`
+
+render(<Fancy />)
+```
+
+
+### Use object declaration
+
+Define style using object notation:
+
+```tsx
+import styled from '@emotion/styled'
+
+const H1 = styled.h1(
+  {
+    fontSize: 20
+  },
+  props => ({ color: props.color })
+)
+
+render(<H1 color="lightgreen">This is lightgreen.</H1>)
+```
+
+
+### Style based on props
+
+```tsx
+import styled from '@emotion/styled'
+
+const Button = styled.button`
+  color: ${props => (props.primary ? 'hotpink' : 'turquoise')};
+`
+
+const Container = styled.div(props => ({
+  display: 'flex',
+  flexDirection: props.column && 'column'
+}))
+
+render(
+  <Container column>
+    <Button>This is a regular button.</Button>
+    <Button primary>This is a primary button.</Button>
+  </Container>
+)
+```
+
+
+### Changing rendered element
+
+```tsx
+import styled from '@emotion/styled'
+
+const Section = styled.section`
+  background: #333;
+  color: #fff;
+`
+
+// use `aside` tag instead of `section`
+const Aside = Section.withComponent('aside')
+
+render(
+  <div>
+    <Section>This is a section</Section>
+    <Aside>This is an aside</Aside>
+  </div>
+)
+```
+
+```tsx
+import styled from '@emotion/styled'
+
+const Button = styled.button`
+  color: hotpink;
+`
+
+render(
+  <Button as="a" href="https://github.com/emotion-js/emotion">
+    Emotion on GitHub
+  </Button>
+)
+```
+
+
+### Nesting components
+
+```tsx
+import styled from '@emotion/styled'
+
+const Example = styled('span')`
+  color: lightgreen;
+
+  & > strong {
+    color: hotpink;
+  }
+`
+
+render(
+  <Example>
+    This is <strong>nested</strong>.
+  </Example>
+)
+```
+
+Select the elements nested in another element:
+
+```tsx
+import { css } from '@emotion/react'
+
+const paragraph = css`
+  color: turquoise;
+
+  header & {
+    color: green;
+  }
+`
+render(
+  <div>
+    <header>
+      <p css={paragraph}>This is green since it's inside a header</p>
+    </header>
+    
+    <p css={paragraph}>This is turquoise since it's not inside a header.</p>
+  </div>
+)
+```
+
+
+### Targeting other element
+
+```tsx
+import styled from '@emotion/styled'
+
+const Child = styled.div`
+  color: red;
+`
+
+const Parent = styled.div`
+  ${Child} {
+    color: green;
+  }
+`
+
+render(
+  <div>
+    <Parent>
+      <Child>Green because I am inside a Parent</Child>
+    </Parent>
+    <Child>Red because I am not inside a Parent</Child>
+  </div>
+)
+```
+
+
+### Customizing prop forwarding
+
+By default, Emotion passes all props (except for `theme`) to the rendered component. You can customize this by passing a custom `shouldForwardProp` function.
+
+```tsx
+import isPropValid from '@emotion/is-prop-valid'
+import styled from '@emotion/styled'
+
+const H1 = styled('h1', {
+  shouldForwardProp: prop => isPropValid(prop) && prop !== 'color'
+})(props => ({
+  color: props.color
+}))
+
+render(<H1 color="lightgreen">This is lightgreen.</H1>)
+```
+
+
+### Reusing styles
+
+```tsx
+import styled from '@emotion/styled'
+import { css } from '@emotion/react'
+
+const dynamicStyle = props =>
+  css`
+    color: ${props.color};
+  `
+
+const Container = styled.div`
+  ${dynamicStyle};
+`
+render(<Container color="lightgreen">This is lightgreen.</Container>)
+```
+
+
+### Media Queries
+
+```tsx
+render(
+  <div
+    css={{
+      color: 'darkorchid',
+      '@media(min-width: 420px)': {
+        color: 'orange'
+      }
+    }}
+  >
+    This is orange on a big screen and darkorchid on a small screen.
+  </div>
+)
+```
