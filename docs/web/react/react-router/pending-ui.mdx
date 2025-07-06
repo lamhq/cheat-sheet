@@ -1,0 +1,168 @@
+# Pending UI
+
+When the user navigates to a new route, the UI should immediately respond to the user's actions with a pending UI.
+
+
+## Global Pending UI
+
+You can access the navigation state in layout component:
+
+```tsx
+import { useNavigation } from "react-router";
+
+export default function Root() {
+  const navigation = useNavigation();
+  const isNavigating = Boolean(navigation.location);
+
+  return (
+    <html>
+      <body>
+        {isNavigating && <GlobalSpinner />}
+        <Outlet />
+      </body>
+    </html>
+  );
+}
+```
+
+
+## Local Pending in Link
+
+Pending indicators can also be localized to the link (`NavLink`). You can show a loading indicator next to the link on navigation.
+
+```tsx
+import { NavLink } from "react-router";
+
+function Navbar() {
+  return (
+    <nav>
+      <NavLink to="/home">
+        {({ isPending }) => (
+          <span>Home {isPending && <Spinner />}</span>
+        )}
+      </NavLink>
+
+      <NavLink
+        to="/about"
+        style={({ isPending }) => ({
+          color: isPending ? "gray" : "black",
+        })}
+      >
+        About
+      </NavLink>
+
+      <NavLink
+        to="/messages"
+        className={({ isActive, isPending }) =>
+          isPending ? "pending" : isActive ? "active" : ""
+        }
+      >
+        Messages
+      </NavLink>
+    </nav>
+  );
+}
+```
+
+### Material UI usage
+
+Declare a navigation item:
+
+```tsx title="NavListItemButton"
+import CircularProgress from '@mui/joy/CircularProgress';
+import ListItemContent from '@mui/joy/ListItemContent';
+import Typography from '@mui/joy/Typography';
+import type { NavLinkRenderProps } from 'react-router';
+import { NavLink } from 'react-router';
+
+export type NavListItemButtonProps = {
+  label: string;
+  onClick?: () => void;
+  icon: React.ComponentType;
+  to: string;
+  className?: string;
+};
+
+export default function NavListItemButton({
+  label,
+  onClick,
+  icon: Icon,
+  to,
+  className,
+}: NavListItemButtonProps) {
+  return (
+    <NavLink
+      to={to}
+      onClick={onClick}
+      className={({ isActive }) =>
+        (className ?? '') + (isActive ? ' Mui-selected' : '')
+      }
+    >
+      {({ isPending }: NavLinkRenderProps) => {
+        return (
+          <>
+            <Icon />
+            <ListItemContent>
+              <Typography level="title-sm">{label}</Typography>
+            </ListItemContent>
+            {isPending && <CircularProgress size="sm" />}
+          </>
+        );
+      }}
+    </NavLink>
+  );
+}
+```
+
+Render navigation item in the list:
+```tsx
+import List from '@mui/joy/List';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+
+<List
+  size="sm"
+  sx={{
+    gap: 1,
+    '--List-nestedInsetStart': '30px',
+    '--ListItem-radius': (theme) => theme.vars.radius.sm,
+  }}
+>
+  <ListItem key={item.path}>
+    <ListItemButton
+      component={NavListItemButton}
+      to="/"
+      onClick={() => closeSidebar()}
+      label="Home"
+      icon={HomeRoundedIcon}
+    />
+  </ListItem>
+</List>
+```
+
+
+## Lazy import
+
+The pending indicator is often used with lazy import:
+
+```ts title="routes.tsx"
+import { createBrowserRouter } from 'react-router';
+
+export const router = createBrowserRouter([
+  {
+    path: '/sign-in',
+    hydrateFallbackElement: <p>Loading...</>,
+    lazy: async () => {
+      const Component = await import('./auth/pages/SignInPage');
+      return { Component: Component.default };
+    },
+  },
+  {
+    path: '/',
+    hydrateFallbackElement: <p>Loading...</>,
+    lazy: async () => {
+      const Component = await import('./todos/pages/HomePage');
+      return { Component: Component.default };
+    },
+  },
+]);
+```

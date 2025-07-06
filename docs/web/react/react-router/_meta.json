@@ -2,6 +2,6 @@
   "routing",
   "data-loading",
   "navigating",
-  "nav-state",
+  "pending-ui",
   "testing"
 ]
