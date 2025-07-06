@@ -41,6 +41,7 @@ function Navbar() {
           <span>Home {isPending && <Spinner />}</span>
         )}
       </NavLink>
+
       <NavLink
         to="/about"
         style={({ isPending }) => ({
@@ -49,6 +50,15 @@ function Navbar() {
       >
         About
       </NavLink>
+      
+      <NavLink
+        to="/messages"
+        className={({ isActive, isPending }) =>
+          isPending ? "pending" : isActive ? "active" : ""
+        }
+      >
+        Messages
+      </NavLink>      
     </nav>
   );
 }
