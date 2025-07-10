@@ -3,5 +3,6 @@
   "test-filtering",
   "mocking",
   "snapshot",
-  "test-projects"
+  "test-projects",
+  "test-context"
 ]
