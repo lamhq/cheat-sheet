@@ -9,12 +9,60 @@ This document is applied for version: `16.3.0` (2025)
 
 ## Installation
 
-For TypeScript:
-
 <PackageManagerTabs command="install --save-dev @testing-library/react @testing-library/dom @types/react @types/react-dom" />
 
 
-## Configure Jest
+## Setting up Vitest
+
+<PackageManagerTabs command="install --save-dev @testing-library/jest-dom" />
+
+- `@testing-library/jest-dom` adds custom matchers to Jest, like `toBeInTheDocument()` or `toHaveTextContent()`
+
+Update your `vite.config.ts` to include test configuration:
+
+```ts title="vite.config.ts"
+export default defineConfig({
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./vitest.setup.ts'],
+  },
+});
+```
+
+Create `vitest.setup.ts` file in your project root:
+
+```ts title="vitest.setup.ts"
+// Import custom matchers provided by jest-dom
+import '@testing-library/jest-dom';
+import { configure } from '@testing-library/react';
+
+configure({
+  // Disable automatic DOM dump for cleaner error messages
+  getElementError: (message: string | null) => {
+    const error = new Error(message ?? 'Element not found');
+    error.name = 'TestingLibraryElementError';
+    error.stack = undefined;
+    return error;
+  },
+});
+```
+
+Update TypeScript config to add type support for custom matchers:
+
+```ts title="tsconfig.json"
+{
+  "compilerOptions": {
+    // ... existing options ...
+    "types": ["@testing-library/jest-dom"]
+  },
+}
+```
+
+Reference: [Testing React Applications with Vitest: A Comprehensive Guide](https://dev.to/samuel_kinuthia/testing-react-applications-with-vitest-a-comprehensive-guide-2jm8).
+
+
+## Setting up Jest
 
 <PackageManagerTabs command="install --save-dev jest-environment-jsdom @testing-library/jest-dom identity-obj-proxy" />
 
