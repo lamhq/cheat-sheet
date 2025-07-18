@@ -4,5 +4,7 @@
   "configuration",
   "projects",
   "monitoring",
+  "mock-api",
+  "tracing",
   "storage"
 ]
