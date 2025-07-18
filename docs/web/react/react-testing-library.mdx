@@ -96,6 +96,25 @@ References:
 - [React Testing Library](https://testing-library.com/docs/react-testing-library/intro)
 
 
+## Custom Render
+
+It's often useful to define a custom render method that includes things like global context providers:
+
+```tsx
+import HomePage from './HomePage';
+
+const renderWithProviders = (ui: React.ReactElement) => {
+  const queryClient = new QueryClient();
+  return render(
+    <QueryClientProvider client={queryClient}>
+      {ui}
+    </QueryClientProvider>,
+  );
+};
+
+renderWithProviders(<HomePage />);
+```
+
 ## Getting elements
 
 ```tsx
@@ -380,3 +399,8 @@ screen.debug(screen.getByText('test'))
 // debug multiple elements
 screen.debug(screen.getAllByText('multi-test'))
 ```
+
+
+## Cheat sheet
+
+Refer to https://testing-library.com/docs/react-testing-library/cheatsheet

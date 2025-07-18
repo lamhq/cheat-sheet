@@ -115,43 +115,40 @@ describe('fetchData', () => {
 
 ### Third party modules
 
-Mock `axios` module:
+Mock `jotai` module:
 
 ```ts
-import axios from 'axios'
-import { describe, it, expect } from 'vitest'
+import { useAtomValue } from 'jotai';
 
-vi.mock('axios', () => {
-  return {
-    get: vi.fn(() => Promise.resolve({ data: 'mocked data' })),
-  }
-})
+vi.mock('jotai', async (importOriginal) => {
+  const originalModule = await importOriginal();
+  return Object.assign({}, originalModule, {
+    useAtomValue: vi.fn(),
+  });
+});
 
-describe('axios mock example', () => {
-  it('returns mocked data', async () => {
-    const response = await axios.get('/api/data')
-    expect(response.data).toBe('mocked data')
-  })
-})
+
+const useAtomValueMock = vi.mocked(useAtomValue);
+useAtomValueMock.mockReturnValue(1);
 ```
 
 ### Local module
 
-```ts title="math.js
-export function add(a, b) {
+```ts title="math.ts
+export function add(a: number, b: number): number {
   return a + b;
 }
 
-export function subtract(a, b) {
+export function subtract(a: number, b: number): number {
   return a - b;
 }
 
-export function multiply(a, b) {
+export function multiply(a: number, b: number): number {
   return a * b;
 }
 ```
 
-```ts title="math.test.js"
+```ts title="math.test.ts"
 import { describe, it, expect, vi } from 'vitest';
 import { add, subtract, multiply } from './math'; // Import functions from the module under test
 
@@ -189,6 +186,18 @@ describe('math operations', () => {
     expect(multiply(4, 5)).toBe(20);
   });
 });
+```
+
+
+### Default export
+
+Mock a React component used by the current component:
+
+```tsx
+vi.mock('../ChildComponent', () => ({
+  __esModule: true,
+  default: () => null,
+}));
 ```
 
 

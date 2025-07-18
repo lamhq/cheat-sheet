@@ -37,14 +37,20 @@
     "collapsed": true
   },
   {
-    "name": "design-patterns",
+    "name": "storybook",
     "type": "dir",
-    "label": "Design Patterns",
     "collapsed": true
   },
   {
-    "name": "storybook",
+    "name": "playwright",
     "type": "dir",
+    "collapsed": true,
+    "label": "End-to-end Test"
+  },
+  {
+    "name": "design-patterns",
+    "type": "dir",
+    "label": "Design Patterns",
     "collapsed": true
   },
   {

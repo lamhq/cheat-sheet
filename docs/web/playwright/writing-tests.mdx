@@ -1,0 +1,148 @@
+# Writing tests
+
+## Overview
+
+Playwright tests are simple, they:
+- perform actions, and
+- assert the state against expectations.
+
+There is no need to wait to performing an action.
+
+Tests are isolated (each test runs in a clean, independent environment). By receiving a [page fixture](https://playwright.dev/docs/test-fixtures#built-in-fixtures), pages are isolated between tests due to the [Browser Context](https://playwright.dev/docs/browser-contexts), which is equivalent to a brand new browser profile.
+
+
+## Test file name
+
+By default, Playwright automatically runs files that match: `.*(test|spec).(js|ts|mjs)`
+
+These files are typically located in the `tests` directory. You can configure a different path in `playwright.config.ts` using the `testDir` option.
+
+You can override the default pattern with `testMatch` in your config:
+
+```ts title="playwright.config.ts"
+import { defineConfig } from '@playwright/test';
+
+export default defineConfig({
+  // Glob patterns or regular expressions that match test files.
+  testMatch: 'tests/**/*.spec.ts'
+});
+```
+
+
+## Test hooks
+
+- `describe`: declare a group of tests
+- `beforeEach`, `afterEach`: executed before/after each test
+- `beforeAll`, `afterAll`: executed once per worker before/after all tests
+
+```ts
+import { test, expect } from '@playwright/test';
+
+test.describe('navigation', () => {
+  test.beforeEach(async ({ page }) => {
+    // Go to the starting url before each test.
+    await page.goto('https://playwright.dev/');
+  });
+
+  test('main navigation', async ({ page }) => {
+    // Assertions use the expect API.
+    await expect(page).toHaveURL('https://playwright.dev/');
+  });
+});
+```
+
+
+## Locators
+
+Locators represent a way to find element(s) on the page.
+
+- `getByRole()` – locate elements by ARIA role and accessible name  
+- `getByText()` – match visible text content  
+- `getByLabel()` – target form controls by label text  
+- `getByPlaceholder()` – locate inputs by placeholder text  
+- `getByAltText()` – find images by alt attribute  
+- `getByTitle()` – match elements by title attribute  
+- `getByTestId()` – use custom `data-testid` attributes  
+- `locator()` – use CSS or XPath selectors directly
+- `frameLocator()` - access `iframe` HTML tag to perform interactions inside the frame
+
+Check [here](https://playwright.dev/docs/locators) for different types of locators available.
+
+
+## Actions
+
+### Page actions
+
+- `page.goto(url)` – navigate to a specific URL  
+- `page.screenshot()` – take a screenshot of the page  
+- `page.pdf()` – generate a PDF (Chromium only)  
+- `page.evaluate(fn)` – run custom JavaScript in the page context  
+- `page.addInitScript()` – inject scripts before any page loads  
+- `page.context().storageState()` – capture cookies and localStorage  
+
+```ts
+await page.goto('https://playwright.dev/');
+```
+
+### Locator actions
+
+- `locator.click()` – click on an element  
+- `locator.fill()` – enter text into input fields  
+- `locator.type()` – simulate typing character-by-character  
+- `locator.press()` – press keyboard keys (e.g. Enter, Tab)  
+- `locator.check()` / `locator.uncheck()` – toggle checkboxes  
+- `locator.selectOption()` – choose from dropdown menus  
+- `locator.hover()` – simulate mouse hover over an element  
+- `locator.setInputFiles()` – upload files to input fields  
+- `locator.focus()` – set focus on an element  
+- `locator.clear()` – clear input field content  
+- `locator.scrollIntoViewIfNeeded()` – scroll element into view  
+- `locator.screenshot()` – capture screenshot of the element  
+- `locator.evaluate()` – run custom JavaScript on the element  
+- `locator.isVisible()` – check if the element is visible  
+- `locator.count()` – count number of matching elements
+
+Check [here](https://playwright.dev/docs/input) for a list of available actions.
+
+
+## Assertions
+
+Playwright support different types of assertions:
+
+- **Non-retrying assertions** (generic matchers): Evaluate conditions once, useful for deterministic checks (e.g. `expect(value).toBe(42)`)
+- **Auto-retrying assertions**: Automatically wait for conditions like visibility, text, or state to be met (e.g. `await expect(locator).toBeVisible()`)
+- **Soft assertions**: Allow tests to continue even if the assertion fails, useful for diagnostics
+- **Negating matchers**: Assert that something is _not_ true (e.g. `expect(locator).not.toBeVisible()`)
+- **Custom matchers**: Extend `expect()` with your own logic using `expect.extend()`
+- **Polling assertions**: Retry custom logic until it passes using `expect.poll()` or `expect.toPass()`
+
+### Element State Assertions
+
+- `toBeVisible()` – element is visible  
+- `toBeHidden()` – element is hidden or not in DOM  
+- `toBeEnabled()` – element is enabled  
+- `toBeDisabled()` – element is disabled  
+- `toBeChecked()` – checkbox or radio is checked  
+- `toBeEditable()` – input is editable  
+- `toBeEmpty()` – element has no text content  
+- `toBeFocused()` – element is focused 
+- `toHaveTitle()` – page has expected title  
+
+### Content & Attribute Assertions
+- `toHaveText()` – element has exact text  
+- `toContainText()` – element contains partial text  
+- `toHaveAttribute()` – element has specific attribute  
+- `toHaveClass()` – element has specific class  
+- `toHaveValue()` – input has a specific value  
+- `toHaveCount()` – locator matches expected number of elements  
+- `toHaveCSS()` – element has specific CSS property  
+
+### Page-Level Assertions
+
+- `toHaveURL()` – page has expected URL  
+- `toHaveScreenshot()` – page matches screenshot  
+
+### API & Response Assertions
+- `toBeOK()` – response status is OK (200–299)  
+
+Check [here](https://playwright.dev/docs/test-assertions) for a list of available assertions.
