@@ -1,0 +1,76 @@
+# Configuration
+
+## Web server Behavior
+
+You can:
+- Start a Local Dev Server Before Tests
+- Reuse Existing Server between tests
+- Wait for Server to Be Ready
+- Launch Multiple Servers (e.g., frontend, backend)
+
+```ts title="playwright.config.ts"
+import { defineConfig } from '@playwright/test';
+
+export default defineConfig({
+  webServer: {
+    // Run your local dev server before starting the tests.
+    command: 'npm run start',
+    url: 'http://localhost:3000',
+    timeout: 120 * 1000,
+
+    // Reuse Existing Server to save time during local test runs
+    reuseExistingServer: !process.env.CI,
+  },
+})
+```
+
+
+## Test Behavior
+
+You can:
+- Sets the base URL for all relative navigations in tests
+- Runs tests with UI visible and slow down operation for easier debugging
+- Simulates mobile devices for responsive design testing
+- Set Locale & Timezone
+- Set browser permission & Geolocation
+- Captures visual and trace data for failed tests
+- Set HTTP headers
+
+```ts title="playwright.config.ts"
+import { defineConfig } from '@playwright/test';
+
+export default defineConfig({
+  use: {
+    // Sets the base URL for all relative navigations in tests
+    baseURL: 'http://localhost:3000/',
+
+    // Runs tests in a headed browser (with UI visible)
+    headless: false,
+
+    // Slows down browser actions by 1000ms for easier debugging
+    launchOptions: { slowMo: 1000 },
+
+    // Simulates mobile devices
+    viewport: { width: 375, height: 667 },
+    userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_5 like Mac OS X)',
+
+    // Localization & Timezone
+    locale: 'fr-FR',
+    timezoneId: 'Europe/Paris',
+
+    // Permission & Geolocation Testing
+    geolocation: { latitude: 48.8566, longitude: 2.3522 },
+    permissions: ['geolocation'],
+
+    // Debugging Failures
+    screenshot: 'only-on-failure',
+    trace: 'on-first-retry',
+    video: 'on',
+
+    // Authorization
+    extraHTTPHeaders: {
+      Authorization: 'Bearer <token>'
+    },
+  }
+})
+```

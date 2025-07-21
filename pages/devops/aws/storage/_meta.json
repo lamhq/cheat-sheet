@@ -1,0 +1,7 @@
+{
+  "s3": "Amazon S3",
+  "block-storage": "Block Storage",
+  "file-storage": "File Storage",
+  "storage-gateway": "AWS Storage Gateway",
+  "backup": "AWS Backup"
+}

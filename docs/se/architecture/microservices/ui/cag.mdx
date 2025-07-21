@@ -1,0 +1,48 @@
+# Central Aggregating Gateway
+
+A Central Aggregating Gateway is an architectural pattern that sits between user interfaces and microservices, helping to filter and combine multiple requests into a single response.
+
+## How it works
+
+1. The UI sends one request to the aggregating gateway.
+2. The gateway fetches data from multiple microservices.
+3. It combines the results into a single optimized response.
+4. The UI receives only the necessary information.
+
+## Benefits
+
+- **Batch requests:** Instead of making separate calls for retrieving data for different items, the gateway processes everything in one batch.
+- **Performance boost:** Fewer network calls mean lower bandwidth use and faster responses.
+- **Optimized data fetching:** The gateway ensures that the UI only gets relevant information, reducing unnecessary data transmission.
+
+
+## Ownership
+
+The gateway should be owned by the team(s) creating the UI. This may be impossible if you have a dedicated frontend team, which may not have the skills to build a backend.
+
+
+## Downsides
+
+### Bottleneck for delivery
+
+The gateway can become a bottleneck for delivery, when multiple teams contribute to it, that require coordination between those teams, slowing things down (the backend for frontend pattern can help resolve this issue).
+
+### Different data requirements
+
+Different **devices** require **different data**:
+- **Mobile apps** need fewer API calls to conserve battery and data.
+- **Desktop apps** often display **more information** in larger layouts.
+- Customer-facing websites, Internal administrations interface, ...
+
+If the same gateway serves both, it may need **separate filtering and aggregating logic** for each client type. Over time, the gateway becomes **bloated** as more APIs are added.
+
+### Complexity
+
+Aside from the call aggregation and filtering, gateways also handle: **API key management**, **User authentication**, **Call routing**. 
+
+If using a third party API gateway solution:
+- You may **lose flexibility** since you're tied to the vendor’s toolset.
+- Configurations might **limit your ability** to evolve functionality.
+- Make sure to have your filtering and aggregation logic elsewhere
+
+If a gateway grows **too complex**, a dedicated team might be needed. Changes require **frontend, gateway, and backend teams** to coordinate—making **development painfully slow**.

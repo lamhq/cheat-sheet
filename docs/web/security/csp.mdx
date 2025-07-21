@@ -1,0 +1,67 @@
+# Content Security Policy
+
+Content Security Policy (CSP) is a security feature that helps prevent XSS attacks by restricting the sources from which a web page can load content.
+
+Example usages:
+
+## Define a CSP Header
+
+Set the `Content-Security-Policy` HTTP header in your server response.
+
+```
+Content-Security-Policy: default-src 'self';
+```
+
+This restricts scripts to only those from the same origin (`'self'`).
+
+## Use Nonces or Hashes
+
+Instead of allowing all scripts from a domain, use **nonces** or **hashes** to permit specific inline scripts.
+```
+Content-Security-Policy: script-src 'nonce-abc123';
+```
+
+This ensures only scripts with the correct nonce can execute.
+```js
+<script nonce="abc123">
+  console.log("This script is allowed!");
+</script>
+```
+
+## Block Inline Scripts
+
+- Avoid using `unsafe-inline`, which allows inline scripts.
+- Instead, use nonces or hashes to explicitly allow trusted scripts.
+
+## Restrict External Resources
+
+Limit third-party content by specifying trusted domains.
+
+Example:
+```
+Content-Security-Policy: img-src 'self' example.com;
+```
+
+This ensures images can only be loaded from your site or `example.com`.
+
+## Enable Strict CSP
+
+A strict CSP prevents attackers from injecting malicious scripts.
+
+Example:
+
+```
+Content-Security-Policy: script-src 'nonce-random' 'strict-dynamic'; object-src 'none'; base-uri 'none';
+```
+
+This prevents execution of unauthorized scripts.
+
+
+## Monitor CSP Violations
+
+Use the `report-uri` directive to log CSP violations.
+
+Example:
+```
+Content-Security-Policy: default-src 'self'; report-uri /csp-report-endpoint;
+```

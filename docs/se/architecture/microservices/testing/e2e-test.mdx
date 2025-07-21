@@ -1,0 +1,100 @@
+# End-to-End Tests
+
+End-to-end tests **validate the entire system**, ensuring that all components work together seamlessly.
+
+They simulate real user interactions, often through a browser GUI or other user actions.
+
+Key Characteristics:
+
+- **Comprehensive Scope:** E2E tests cover large portions of production code, offering high confidence that the system functions as expected.
+- **User-Centric:** These tests mimic actual user behavior, verifying workflows rather than isolated functions.
+- **Validation Across Components:** They check interactions between multiple services, ensuring system-wide reliability.
+
+Benefits:
+- E2E tests ensure real-world reliability, preventing critical failures before deployment.
+- They complement unit and service tests, forming an essential layer in a balanced testing strategy.
+- Help catching semantic breakages (i.e., behavior changes that break backward compatibility)
+
+Challenges:
+- **Slow Execution:** Due to their broad scope, E2E tests take longer to run compared to unit or service tests.
+- **Complex Debugging:** When failures occur, pinpointing the exact issue is more difficult due to multiple dependencies.
+- **Independent deployability is undermined**. When multiple teams share E2E tests, a services can't be deployed unless shared test suites pass, leading to bottlenecks.
+- **Hard to scale**. E2E tests become increasingly difficult as the number of microservices increases
+
+Implementation:
+1. Each service runs its own unit tests and service tests first.
+2. If a microservice pass its tests, a single shared E2E testing stage is triggered.
+3. The E2E tests run against the user interfaces.
+4. If E2E tests pass, the microservice can be safely deployed to production.
+
+![](./fan-in-e2e-test.drawio.svg)
+
+## Alternatives
+
+Many organizations remove the need for E2E tests in favor of other mechanisms:
+- **Explicit schemas** (defining clear service contracts)
+- **Consumer-Driven Contracts (CDCs)** (ensuring microservices meet consumer expectations)
+- **In-production testing** (such as monitoring and error tracking)
+- **Progressive delivery techniques** (e.g., canary releases, which deploy changes to a small subset of users first)
+
+Be mindful about ditching end-to-end tests without fully understanding what you’ve lost is probably a bad idea.
+
+Team should carefully think about how much E2E testing they really need based on their risk profile.
+
+
+## Ownership
+
+Defining ownership for E2E tests can be challenging, especially when deciding who should write and maintain them.
+
+Here are different strategies to consider:
+
+### No Ownership
+- Without a designated team responsible for managing tests, failures may be ignored, slowing development and reducing reliability.
+
+### Shared by All Teams
+- When multiple teams contribute tests without coordination, it can lead to an excessive number of test cases, making maintenance difficult.
+
+### Ownership by Functionality
+- Divide the E2E test suite into functional groups, each owned by a specific team.
+- Teams are responsible for maintaining the tests relevant to their service.
+- Challenge: coordination is needed when a test fails due to changes in a service outside the team's ownership.
+
+### Separate "Testing Team"
+- Create a dedicated team for writting E2E test. This should be avoided, as it disconnects developers from their own test cases.
+- Developers who write the code don't know how to run and fix tests written by another team.
+
+### Treat E2E Tests as a Shared Codebase
+- If ownership cannot be clearly assigned, all teams must share responsibility for maintaining the test suite.
+
+
+## Independent Testability
+
+Services should be deployed independently, so they should be able to test independently without relying on others.
+
+End-to-end tests reduce team autonomy by requiring excessive coordination, especially when teams share a single testing environment.
+
+To maximize autonomy, each team should have its own test environment, enabling faster development and fewer roadblocks.
+
+## Flaky Tests
+
+Flaky or brittle tests are automated tests that exhibit non-deterministic behavior. This means they can pass or fail intermittently without any changes to the code being tested or the test itself.
+
+Why Do they Occur?
+
+- **External Dependencies:** Tests rely on multiple services—if one is down, the test fails incorrectly.
+- **Network Issues:** Temporary glitches can cause false failures, unrelated to the software itself.
+- **Concurrency Problems:** Multi-threaded tests may fail due to race conditions, timeouts, or synchronization issues.
+- **Unstable Test Suites:** If tests randomly fail and pass when rerun, they become unreliable and cause bottlenecks in Continuous Integration (CI).
+
+Dangers of Flaky Tests:
+- Developers lose confidence in the test suite and may ignore failures, assuming they are false alarms.
+- CI/CD pipelines slow down due to frequent test retries, delaying software releases.
+
+How to Fix Flaky Tests?
+1. **Identify & Track** unstable tests—log failures and determine patterns.
+2. **Remove or Rewrite** failing tests, especially those involving multi-threaded or interdependent services.
+3. **Improve Test Isolation**—stub/mock dependencies to reduce instability from external systems.
+4. **Ensure Environmental Stability**: address network or infrastructure inconsistencies affecting tests.
+5. **Replace with Smaller-Scoped Tests** that provide better reliability and faster feedback.
+
+The goal is a reliable test suite that provides meaningful feedback, avoiding false positives that hinder development.

@@ -1,0 +1,76 @@
+# Variable declaration
+
+## `let` and `var`
+
+`let`, `var` and `const` are used to declare variables.
+
+`var`:
+- variables are globally scoped or function scoped
+- you can re-declare a variable (in the same scope)
+
+`let`:
+- variables are block scoped.
+- you can't re-declare a variable with `let`
+
+Example:
+
+```js
+function example() {
+  var x = 1;
+  let y = 2;
+
+  if (true) {
+    var x = 3; // same variable as above
+    let y = 4; // different variable than above
+  }
+
+  console.log(x); // 3
+  console.log(y); // 2
+}
+```
+
+
+## hoisting
+
+With `var`, you can access a variable before declaring it, because the `var` statement get hoisted and moved to the top:
+
+```js
+console.log(aa)
+var aa = 5
+console.log(aa)
+```
+
+Output:
+
+```
+undefined
+5
+```
+
+Because it's equivalent to:
+
+```js
+var aa
+console.log(aa)
+aa = 5
+console.log(aa)
+```
+
+Variables declared with `let/const` do not get hoisted, it will throw an error
+
+```
+Uncaught ReferenceError: aa is not defined
+```
+
+
+## `const`
+
+Once you bind a value/object to a variable using `const`, you can’t reassign to that variable.
+
+```js
+const x = 1;
+x = 2; // This will throw an error
+
+let y = 1;
+y = 2; // This is allowed
+```

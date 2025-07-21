@@ -1,0 +1,81 @@
+# Deployment Options
+
+Microservices Deployment Options.
+
+## Containers
+
+Containers offer lightweight, cost-effective deployment compared to VMs, enabling more instances on the same hardware while maintaining isolation per service.
+
+Docker made containers practical for microservices, allowing tech stack flexibility and simplified management. For desired state management, orchestration tools like Kubernetes are essential.
+
+Containerizing your microservices is a good compromise between isolation and cost, while has some benefits for local development.
+
+
+## Application Containers
+
+Application containers host multiple services on a single platform, improving manageability, provide monitoring tools, and reducing runtime overhead.
+
+Trade offs:
+- Restrict technology choices, automation and management options
+- When using shared in-memory session state, it introduce scalability challenges.
+- The provided monitoring capabilities aren't be sufficient for microservices
+- They're not cheap
+- The lack of isolation is one of the main reasons why this model is rarely used.
+
+
+## Platform as a Service (PaaS)
+
+PaaS operates at a higher abstraction level than individual hosts. Some of them rely on technology-specific artifact (such as a Java WAR file or Ruby gem) and automatically provisioning and running it for you.
+
+Some platforms manage scaling automatically, while others allow controlling the number of nodes your service might run on.
+
+Platforms like Heroku don’t just run your application instance; they also provide capabilities such as running database instances for you.
+
+PaaS solutions are designed for general applications, limiting customization and control to fix things. The more nonstandard your application, the more likely it is that it might not play nicely with a PaaS.
+
+PaaS doesn't growth much, while serverless products have stepped in to fill the gap. Public cloud providers now offer managed solutions for components like databases and message brokers, enabling more flexibility. Within this trend, Function as a Service (FaaS) has gained significant traction.
+
+
+## Function as a Service (FaaS)
+
+Serverless abstracts infrastructure management, letting developers focus on code without worrying about servers.
+
+FaaS, a key part of serverless, beside that there're also other serverless products like databases, queues, storage solutions.
+
+AWS Lambda plet you deploy code (a function), it remains dormant until triggered, runs, and when it finishes, it shuts down. The platform automatically scales functions, launching or shutting them down as needed. It also manages concurrent executions, allowing multiple instances to run simultaneously when required.
+
+### Benefits
+
+- Hide significant complexity and offload a lot of work
+- Saving cost. You pay only for what you use. Ideal for low or unpredictable workloads
+- Provides automatic scaling, ensuring high availability and robustness with no manual effort.
+
+
+### Limitations
+
+Limited control over runtime, requiring FaaS provider support for specific languages. Azure Functions support many runtimes, while Google Cloud Functions offer fewer options. AWS allows custom runtimes but introduces additional operational overhead.  
+
+Resource allocation is restricted, with memory often tied to CPU. Not suitable if precise resource tuning is required.  
+
+Execution time is limited: Google Cloud Functions (9 min), AWS Lambda (15 min), and Azure Functions (unlimited, depending on the plan).  
+
+Function invocations are stateless, requiring external storage for persistent data.
+
+
+### Challenges
+
+Some runtimes experience "cold starts," requiring extra time to spin up functions and serve requests.  
+
+However, due to optimizations by FaaS providers, cold start impact is minimal.  
+
+Choosing languages with fast-starting runtimes, such as Go, Python, Node, or Ruby, helps minimize delays.
+
+
+### Mapping to microservices
+
+**Function per microservice**. Each microservice instance is deployed as a single function, requiring an entry point to dispatch requests to appropriate functionalities (e.g., `/receipt`, `/claim`, `/report`).  
+
+![](./options/fn-per-service.drawio.svg)
+
+> [!TIP]
+> In the future, most developers will rely on platforms that abstract much of the underlying complexity, FaaS being the closest fit. However, since FaaS isn't suitable for everything, containerization remains the best alternative.

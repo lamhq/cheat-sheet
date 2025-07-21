@@ -1,0 +1,12 @@
+{
+  "install": "Installation",
+  "session": "Session",
+  "dataframe": "DataFrame",
+  "column": "Column",
+  "row": "Row",
+  "aggregation": "Aggregation",
+  "testing": "Testing",
+  "sql": "SQL",
+  "streaming": "Streaming",
+  "rdd": "RDD (old API)"
+}

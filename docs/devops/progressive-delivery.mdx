@@ -1,0 +1,66 @@
+# Progressive delivery
+
+## Overview
+
+Progressive delivery is a modern approach to deploying software that minimizes risk while enabling frequent releases.
+
+Progressive delivery is an extension of **continuous delivery**, making releases safer and more adaptable. Instead of launching new features to all users at once, changes are gradually introduced using techniques like feature toggles, canary releases, and parralel runs, ...
+
+By decoupling deployment from release, we can ensure that software works in production setting without exposing failures to users:
+- Deployment is when a software version is installed into an environment (production by default)
+- Release is when you make a system or a feature available to users
+
+
+
+## Blue-green deployment
+
+Blue-green deployment keeps one version (blue) live while deploying a new one (green). If the new version works as expected, users are redirected to it; otherwise, no customers are affected.
+
+
+## Feature Toggles
+
+Feature toggles (aka feature flags) are conditional statements in the code that allows teams to enable or disable features without modifying code or redeploying.
+
+They're commonly used as part of trunk-based development, allows developers to commit new feature code directly to the main branch within a feature flag path without creating a separate feature branch.
+
+Benefits:
+- **Minimizing Impact**. Keep changes from impacting other people. incomplete work is hidden
+- **Risk mitigation**: If a feature causes issues, it can be turned off instantly without a rollback
+- **Decouple deployment from release**: new features can be deployed but remain hidden until activated
+- **Progressive delivery**: Features can be gradually rolled out to specific users or environments
+- **Infrastructure flexibility**: Useful for database migrations and backend changes
+
+
+## Canary Release
+
+Canary release is a deployment strategy where a new software version is gradually rolled out to a small subset of users before being released to everyone. This allows teams to monitor performance, detect issues early, and minimize risk.
+
+Benefits:
+
+- Limits the impact of potential failures by testing changes on a small group before full deployment. If problems arise, the rollout can be halted or reversed, ensuring a smoother transition.
+- Helps catch bugs and performance issues before they affect all users
+- Supports A/B Testing: Enables comparison between old and new versions to optimize functionality
+
+Companies often use canary releases for high-risk updates that require real-world testing.
+
+
+## Parallel Run
+
+Parallel run is a deployment strategy where a new system runs alongside the existing one for a period of time.
+
+Both systems process the same data simultaneously, allowing teams to compare outputs and ensure the new system functions correctly before fully switching over.  
+
+Benefits:
+
+- **Reduces Risk:** Ensures the new system works properly before replacing the old one.  
+- **Allows Comparison:** Teams can verify accuracy by comparing results from both systems.  
+- **Minimizes Disruptions:** Users can continue using the old system while testing the new one.  
+- **Supports Training:** Helps staff get familiar with the new system before full adoption.  
+
+Where to Use?
+
+- **Software Migrations:** Transitioning from legacy systems to modern platforms.  
+- **Financial Systems:** Ensuring accuracy in banking and accounting software updates.  
+- **Enterprise Applications:** Testing new versions of business-critical software.  
+
+Parallel run is commonly used in industries where accuracy and reliability are crucial.

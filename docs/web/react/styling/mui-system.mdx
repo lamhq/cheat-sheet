@@ -1,0 +1,333 @@
+import { PackageManagerTabs } from '@theme'
+
+# MUI System
+
+## Version
+
+This document is for version `7.2.0` (2025).
+
+
+## Overview
+
+MUI System is a set of CSS utilities to help you build custom designs more efficiently.
+
+When to use:
+- you want to style components inline using the `sx` prop.
+- you're using Material UI components and need consistent styling across your project
+
+There're two way to style a component using MUI System:
+- Use the `styled` API with [Styled component](https://styled-components.com/) approach
+- Use the `sx` props on the component
+
+
+## Installation
+
+<PackageManagerTabs command="install @mui/system @emotion/react @emotion/styled" />
+
+
+## styled-components API
+
+Define a component with styled attached to be used in other places:
+
+```tsx
+const StatWrapper = styled('div')(
+  ({ theme }) => `
+  background-color: ${theme.palette.background.paper};
+  box-shadow: ${theme.shadows[1]};
+  border-radius: ${theme.shape.borderRadius}px;
+  padding: ${theme.spacing(2)};
+  min-width: 300px;
+`,
+);
+
+return (
+  <StatWrapper>
+    content
+  </StatWrapper>
+);
+```
+
+
+## The `sx` prop
+
+The `sx` prop allows defining styles directly within the component itself. Useful for components that need custom design that isn't going to be reused across many different contexts.
+
+The `sx` prop support additional CSS properties (MUI System properties) that map values directly from the theme (only the `sx` prop on `Box`, `Stack`, `Typography`, and `Grid` components accept MUI System properties).
+
+Runtime performance takes a hit when using `sx` props.
+
+The sx prop can be used in:
+- All Material UI and Joy UI components support the `sx` prop.
+- `Box` component
+- Custom components
+- Any element with the babel plugin
+
+For properties of the `sx` prop, see [Theme-aware properties](https://mui.com/system/getting-started/the-sx-prop/#theme-aware-properties).
+
+
+
+### Basic Usage
+
+```tsx
+import Box from '@mui/system/Box';
+
+<Box
+  component="div"
+  sx={{
+    bgcolor: 'background.paper',
+    flexDirection: { xs: 'column', md: 'row' },
+    boxShadow: 1,
+    borderRadius: 1,
+    p: 2,
+    minWidth: 300,
+  }}
+>
+  content
+</Box>
+```
+
+### Custom component
+
+```tsx
+import { styled } from '@mui/material/styles';
+
+const Div = styled('div')``;
+
+<Div sx={{
+    bgcolor: 'background.paper',
+    flexDirection: { xs: 'column', md: 'row' },
+    boxShadow: 1,
+    borderRadius: 1,
+    p: 2,
+    minWidth: 300,
+  }}
+>
+  content
+</Div>
+```
+
+With styled component:
+
+```ts
+import styled, { ThemeProvider, StyleFunction } from 'styled-components';
+import { unstable_styleFunctionSx, SxProps } from '@mui/system';
+import { createTheme } from '@mui/material/styles';
+
+interface DivProps {
+  sx?: SxProps;
+}
+
+const theme = createTheme();
+
+const Div = styled('div')<DivProps>(
+  unstable_styleFunctionSx as StyleFunction<DivProps>,
+);
+
+export default function StyleFunctionSxDemo() {
+  return (
+    <ThemeProvider theme={theme}>
+      <Div sx={{ m: 1, p: 1, border: 1 }}>Custom component with the sx prop</Div>
+    </ThemeProvider>
+  );
+}
+```
+
+
+### Pseudo-selectors
+
+```tsx
+<Box
+  sx={{    // some styles
+    ":hover": {
+      boxShadow: 6,
+    },
+  }}
+>
+```
+
+### Nested selector
+
+```tsx
+<Box
+  sx={{    // some styles
+    '& .ChildSelector': {
+      bgcolor: 'primary.main',
+    },
+  }}
+>
+```
+
+### Responsive values
+
+```tsx
+<Box
+  sx={{
+    width: {
+      xs: 100, // theme.breakpoints.up('xs')
+      sm: 200, // theme.breakpoints.up('sm')
+      md: 300, // theme.breakpoints.up('md')
+      lg: 400, // theme.breakpoints.up('lg')
+      xl: 500, // theme.breakpoints.up('xl')
+    },
+  }}
+>
+  This box has a responsive width.
+</Box>
+```
+
+Breakpoints as an array:
+
+```tsx
+<Box sx={{ width: [100, 200, 300] }}>This box has a responsive width.</Box>
+```
+
+
+Custom breakpoints (defined in theme):
+
+```tsx
+import Box from '@mui/material/Box';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const theme = createTheme({
+  breakpoints: {
+    values: {
+      mobile: 0,
+      tablet: 640,
+      laptop: 1024,
+      desktop: 1280,
+    },
+  },
+});
+
+export default function CustomBreakpoints() {
+  return (
+    <ThemeProvider theme={theme}>
+      <Box
+        sx={{
+          width: {
+            mobile: 100,
+            laptop: 300,
+          },
+        }}
+      >
+        This box has a responsive width
+      </Box>
+    </ThemeProvider>
+  );
+}
+```
+
+You will also need to use module augmentation for the theme to accept the custom breakpoints:
+
+```tsx
+declare module '@mui/material/styles' {
+  interface BreakpointOverrides {
+    xs: false; // removes the `xs` breakpoint
+    sm: false;
+    md: false;
+    lg: false;
+    xl: false;
+    tablet: true; // adds the `tablet` breakpoint
+    laptop: true;
+    desktop: true;
+  }
+}
+```
+
+
+### Accessing theme
+
+```tsx
+<Box
+  sx={{
+    p: 1,
+    border: 1,
+    borderColor: (theme: Theme) => theme.palette.primary.main,
+  }}
+>
+  Border color with theme value.
+</Box>
+```
+
+
+
+### Media queries
+
+```tsx
+<Box
+  sx={{    // some styles
+    '@media print': {
+      width: 300,
+    },
+  }}
+>
+```
+
+
+### Passing the `sx` prop
+
+If you want a custom component accept an `sx` prop and pass it to other MUI components:
+
+1. Define the `sx` prop on the component props
+2. Pass the prop to other MUI components as array
+
+```tsx
+import ListItem from '@mui/material/ListItem';
+import FormLabel from '@mui/material/FormLabel';
+import { SxProps, Theme } from '@mui/material/styles';
+
+interface ListHeaderProps {
+  children: React.ReactNode;
+  sx?: SxProps<Theme>;
+}
+
+function ListHeader({ sx = [], children }: ListHeaderProps) {
+  return (
+    <ListItem
+      sx={[
+        {
+          width: 'auto',
+          textDecoration: 'underline',
+        },
+        // You cannot spread `sx` directly because `SxProps` (typeof sx) can be an array.
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
+    >
+      <FormLabel sx={{ color: 'inherit' }}>{children}</FormLabel>
+    </ListItem>
+  );
+}
+
+export default function PassingSxProp() {
+  return (
+    <ListHeader
+      sx={(theme) => ({
+        color: 'info.main',
+        ...theme.typography.overline,
+      })}
+    >
+      Header
+    </ListHeader>
+  );
+}
+```
+
+
+### TypeScript usage
+
+To define a style object and pass it to the `sx` prop, cast the object to `const`:
+
+```tsx
+const style = {
+  flexDirection: 'column',
+} as const;
+
+export default function App() {
+  return <Button sx={style}>Example</Button>;
+}
+```
+
+
+## Components
+
+MUI System provide CSS utilities through four components that support the `sx` prop: `Box`, `Stack`, `Typography`, and `Grid`.

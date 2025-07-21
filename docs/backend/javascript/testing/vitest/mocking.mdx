@@ -1,0 +1,291 @@
+# Mocking
+
+## Dates
+
+The function to test, it return true if the purchase only if the current hour is between 9 and 17
+
+```ts
+const businessHours = [9, 17]
+
+function purchase() {
+  const currentHour = new Date().getHours()
+  const [open, close] = businessHours
+
+  if (currentHour > open && currentHour < close) {
+    return { message: 'Success' }
+  }
+
+  return { message: 'Error' }
+}
+```
+
+Test the function by mocking current datetime:
+
+```ts
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+describe('purchasing flow', () => {
+  beforeEach(() => {
+    // tell vitest we use mocked time
+    vi.useFakeTimers()
+  })
+
+  afterEach(() => {
+    // restoring date after each test run
+    vi.useRealTimers()
+  })
+
+  it('allows purchases within business hours', () => {
+    // set hour within business hours
+    const date = new Date(2000, 1, 1, 13)
+    vi.setSystemTime(date)
+
+    // access Date.now() will result in the date set above
+    expect(purchase()).toEqual({ message: 'Success' })
+  })
+
+  it('disallows purchases outside of business hours', () => {
+    // set hour outside business hours
+    const date = new Date(2000, 1, 1, 19)
+    vi.setSystemTime(date)
+
+    // access Date.now() will result in the date set above
+    expect(purchase()).toEqual({ message: 'Error' })
+  })
+})
+```
+
+
+## Functions
+
+Validate whether or not a specific function has been called:
+
+```ts
+import { describe, it, expect, vi } from 'vitest'
+
+describe('spyOn example', () => {
+  it('tracks console.log calls', () => {
+    const logSpy = vi.spyOn(console, 'log')
+
+    console.log('Hello, Vitest!')
+
+    expect(logSpy).toHaveBeenCalledWith('Hello, Vitest!')
+    logSpy.mockRestore() // optional: restore original behavior
+  })
+})
+```
+
+Alter the implementation of a function with a fake version:
+
+```ts title="myModule.js"
+export const fetchData = (id) => `Data for ${id}`;
+```
+
+```ts title="myModule.test.js"
+import { describe, it, expect, vi } from 'vitest';
+import * as myModule from './myModule';
+
+describe('fetchData', () => {
+  it('should be called with the correct argument', () => {
+    // 1. Create a mock function
+    const mockFetchData = vi.fn();
+
+    // 2. Define its behavior (optional, here it just returns a string)
+    mockFetchData.mockReturnValue('Mocked Data');
+
+    // 3. Replace the original function with the mock
+    vi.spyOn(myModule, 'fetchData').mockImplementation(mockFetchData);
+
+    // Call the function that internally uses fetchData
+    const result = myModule.fetchData(123);
+
+    // Assertions
+    expect(result).toBe('Mocked Data');
+    expect(mockFetchData).toHaveBeenCalledTimes(1);
+    expect(mockFetchData).toHaveBeenCalledWith(123);
+
+    // Clean up
+    vi.restoreAllMocks();
+  });
+});
+```
+
+
+## Modules
+
+### Third party modules
+
+Mock `jotai` module:
+
+```ts
+import { useAtomValue } from 'jotai';
+
+vi.mock('jotai', async (importOriginal) => {
+  const originalModule = await importOriginal();
+  return Object.assign({}, originalModule, {
+    useAtomValue: vi.fn(),
+  });
+});
+
+
+const useAtomValueMock = vi.mocked(useAtomValue);
+useAtomValueMock.mockReturnValue(1);
+```
+
+### Local module
+
+```ts title="math.ts
+export function add(a: number, b: number): number {
+  return a + b;
+}
+
+export function subtract(a: number, b: number): number {
+  return a - b;
+}
+
+export function multiply(a: number, b: number): number {
+  return a * b;
+}
+```
+
+```ts title="math.test.ts"
+import { describe, it, expect, vi } from 'vitest';
+import { add, subtract, multiply } from './math'; // Import functions from the module under test
+
+// Mock the 'math' module
+vi.mock('./math', async (importOriginal) => {
+  // Get the original module's exports
+  const originalModule = await importOriginal();
+
+  // Return an object that spreads the original exports,
+  // but overrides 'add' with a mocked version.
+  return {
+    ...originalModule, // Keep original 'subtract' and 'multiply'
+    add: vi.fn((a, b) => { // Mock the 'add' function
+      console.log(`Mocked add called with ${a}, ${b}`);
+      return a + b + 100; // Add 100 to the original sum for mocking purposes
+    }),
+  };
+});
+
+describe('math operations', () => {
+  it('should use the mocked add function', () => {
+    // When add is called, it uses our mocked implementation
+    expect(add(2, 3)).toBe(105); // 2 + 3 + 100
+    expect(vi.mocked(add)).toHaveBeenCalledTimes(1);
+    expect(vi.mocked(add)).toHaveBeenCalledWith(2, 3);
+  });
+
+  it('should use the original subtract function', () => {
+    // subtract is not mocked, so it uses its original implementation
+    expect(subtract(5, 2)).toBe(3);
+  });
+
+  it('should use the original multiply function', () => {
+    // multiply is not mocked, so it uses its original implementation
+    expect(multiply(4, 5)).toBe(20);
+  });
+});
+```
+
+
+### Default export
+
+Mock a React component used by the current component:
+
+```tsx
+vi.mock('../ChildComponent', () => ({
+  __esModule: true,
+  default: () => null,
+}));
+```
+
+
+## Network Requests
+
+To mock HTTP request, edit the setup file:
+
+```ts title="setupTests.ts"
+import { afterAll, afterEach, beforeAll } from 'vitest'
+import { setupServer } from 'msw/node'
+import { http, HttpResponse } from 'msw'
+
+const posts = [
+  {
+    userId: 1,
+    id: 1,
+    title: 'first post title',
+    body: 'first post body',
+  },
+  // ...
+]
+
+export const restHandlers = [
+  http.get('https://rest-endpoint.example/path/to/posts', () => {
+    return HttpResponse.json(posts)
+  }),
+]
+
+const server = setupServer(...restHandlers)
+
+// Start server before all tests
+beforeAll(() => server.listen({ onUnhandledRequest: 'error' }))
+
+// Close server after all tests
+afterAll(() => server.close())
+
+// Reset handlers after each test for test isolation
+afterEach(() => server.resetHandlers())
+```
+
+Configure Vite to use the setup file:
+
+```ts title="vite.config.ts"
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  test: {
+    setupFiles: ['./setupTests.ts'],
+  },
+})
+```
+
+Reference: https://vitest.dev/guide/mocking.html#requests
+
+
+## Timers
+
+```ts
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+function executeEveryMinute(func) {
+  setInterval(func, 1000 * 60) // 1 minute
+}
+
+const mock = vi.fn(() => console.log('executed'))
+
+describe('delayed execution', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+  
+  it('should execute every minute', () => {
+    executeEveryMinute(mock)
+    vi.advanceTimersToNextTimer()
+    expect(mock).toHaveBeenCalledTimes(1)
+
+    vi.advanceTimersToNextTimer()
+    expect(mock).toHaveBeenCalledTimes(2)
+  })
+})
+```
+
+Reference: https://vitest.dev/guide/mocking.html#timers
+
+
+## References
+
+https://vitest.dev/guide/mocking.html#cheat-sheet

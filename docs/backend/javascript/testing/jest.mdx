@@ -1,0 +1,105 @@
+import { PackageManagerTabs } from '@theme'
+
+# Jest
+
+## Version
+
+This document is for version `30.0.0` (2025).
+
+## Installation 
+
+<PackageManagerTabs command="install --save-dev jest" />
+
+
+## TypeScript setup
+
+
+Add Type definitions for Jest global APIs (`describe`, `expect`, `test`, ...):
+<PackageManagerTabs command="install --save-dev @types/jest" />
+
+Install TypeScript preprocessor:
+<PackageManagerTabs command="install --save-dev ts-jest" />
+
+Set `type: "module"` in `package.json`:
+```json title="package.json"
+{
+  "type": "module"
+}
+```
+
+Update TypeScript config file:
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "module": "ES2022", // or `ESNext`
+    "target": "ESNext",
+    "esModuleInterop": true
+  }
+}
+```
+
+Create a Jest config file:
+```ts title="jest.config.mjs"
+import { ESM_TS_TRANSFORM_PATTERN, TS_EXT_TO_TREAT_AS_ESM } from 'ts-jest';
+
+export default {
+  extensionsToTreatAsEsm: [...TS_EXT_TO_TREAT_AS_ESM],
+
+  transform: {
+    [ESM_TS_TRANSFORM_PATTERN]: [
+      'ts-jest',
+      {
+        //...other `ts-jest` options
+        useESM: true,
+        tsconfig: 'tsconfig-jest.json',
+      },
+    ],
+  },
+};
+```
+
+
+## Configure ESLint
+
+Install [`eslint-plugin-jest`](https://github.com/jest-community/eslint-plugin-jest):
+
+<PackageManagerTabs command="install --save-dev eslint-plugin-jest" />
+
+Update your ESLint configuration:
+
+```js title="eslint.config.mjs"
+import pluginJest from 'eslint-plugin-jest';
+ 
+export default [
+  {
+    name: 'eslint-plugin-jest', // add a config name for better debugging
+    files: ['**/*.spec.ts', '**/*.test.ts'],
+    plugins: { jest: pluginJest },
+    languageOptions: {
+      globals: pluginJest.environments.globals.globals,
+    },
+  }
+];
+```
+
+
+## Run tests
+
+Add a `test` script to `package.json`:
+```json
+{
+  "scripts": {
+    "test": "jest"
+  }
+}
+```
+
+Run the test from your project root:
+<PackageManagerTabs command="run test" />
+
+
+## References
+
+- [jestjs.io](https://jestjs.io/docs/getting-started#using-typescript)
+- [eslint-plugin-jest](https://github.com/jest-community/eslint-plugin-jest)
+- [ts-jest](https://kulshekhar.github.io/ts-jest/docs/guides/esm-support/)

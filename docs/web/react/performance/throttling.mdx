@@ -1,0 +1,81 @@
+# Throttling
+
+## Overview
+
+Throttling is a technique used in JavaScript to control the rate at which a function is executed.
+
+It ensures that a function is called at most once in a specified time interval, preventing it from being executed too frequently.
+
+Useful for optimizing performance in scenarios:
+- handling scroll events
+- mouse movements
+- window resizing.
+
+For example, if you have a function that sends API requests on mouse movement, throttling can limit the number of requests sent to the server, preventing overload.
+
+
+## How it works
+
+1. We store the last time the function is called
+2. In subsequence calls, we stop the current scheduled call, then schedule a new call after the remaining time esplapes
+
+
+## Implementation
+
+Here's a simple implementation of throttling:
+
+```javascript
+import { useEffect } from 'react';
+
+function throttle(func, limit) {
+  let timer;
+  let lastRan;
+  return function (...args) {
+    const context = this;
+    if (!lastRan) {
+      // instantly run the function on the first execution
+      func.apply(context, args);
+      lastRan = Date.now();
+    } else {
+      // stop previously triggered call
+      clearTimeout(timer);
+      // trigger a function call until remaining time has elapsed
+      timer = setTimeout(
+        () => {
+          if (Date.now() - lastRan >= limit) {
+            func.apply(context, args);
+            lastRan = Date.now();
+          }
+        },
+        limit - (Date.now() - lastRan),
+      );
+    }
+  };
+}
+
+const ThrottledScrollComponent = () => {
+  console.log('component rendered');
+  // Throttled scroll handler
+  const handleScroll = throttle(() => {
+    console.log('Scroll event triggered!');
+  }, 2000);
+
+  useEffect(() => {
+    // Add the scroll event listener
+    window.addEventListener('scroll', handleScroll);
+
+    // Cleanup on component unmount
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [handleScroll]);
+
+  return (
+    <div style={{ height: '250vh', padding: '1rem' }}>
+      <h1>Scroll down the page to see throttling in action!</h1>
+    </div>
+  );
+};
+
+export default ThrottledScrollComponent;
+```

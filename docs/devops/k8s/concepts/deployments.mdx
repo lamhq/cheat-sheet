@@ -1,0 +1,118 @@
+# Deployments
+
+## Overview
+
+A Deployment is a higher-level Kubernetes object that wraps around a Pod and adds features such as self-healing, scaling, zero-downtime rollouts, and versioned rollbacks.
+
+> [!NOTE]
+> You can deploy container by define it in a Pod template. However, static Pods don't self-heal, they don't scale, and they don't allow for easy updates and rollbacks.
+
+There are two major components to Deployments:
+1. The spec
+2. The controller
+
+
+## Deployment spec
+
+A Deployment object is a high-level Kubernetes resource that describes the desired state of a stateless app.
+
+A Deployment object is defined in YAML or JSON file, called the  Deployment spec.
+
+A basic example of a Deployment spec:
+
+```yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx:1.23
+        ports:
+        - containerPort: 80
+```
+
+- `replicas`: specifies the number of desired Pod replicas to run.
+- `selector` & `matchLabels`: Defines how the Deployment identifies the Pods it manages. In this case, it uses the label `app: my-app`
+- `template`: Pod template, describes how the Pods should be created
+
+
+## Deployment controller
+
+The controller element reconciling observed state with desired state defined in the Deployment spec.
+
+> [!NOTE]
+> Reconciliation refers to the process where the controller ensures that the actual state of a resource matches its desired state as defined in the resource's specification.
+
+Responsibilities:
+
+- **Pod Scaling**: It creates, updates, or deletes Pods to match the desired `replicas` count.
+- **Rolling Updates**: It gradually replaces old Pods with new ones during an update to minimize downtime.
+- **Rollback**: If an update causes issues, the Deployment controller can revert to a previously stable state.
+- **Self-Healing**: If Pods go into a failed state or are unintentionally deleted, the Deployment controller recreates them to ensure consistency with the desired state.
+- **History Tracking**: It maintains a revision history of updates, allowing you to inspect and roll back to previous versions of the Deployment configuration if needed.
+
+
+## Deployments and Pods
+
+A Deployment object only manages a single Pod template.
+
+> [!NOTE]
+> For example, an application with a front-end web service and a shopping basket service will have a different Pod template for each. As a result, it'll need two Deployment objects, one managing frontend web Pods, the other managing any shopping basket Pods.
+
+
+## Deployments and ReplicaSets
+
+Deployments rely heavily on another object called a ReplicaSet
+
+It's not recommended to manage ReplicaSets directly, but let the Deploymentcontroller manage them.
+
+ReplicaSets manage Pods and bring self-healing and scaling. Deployments manage ReplicaSets and add rollouts and rollbacks.
+
+
+## Rolling update
+
+Setting related to rollout update:
+
+```yml
+revisionHistoryLimit: 5
+progressDeadlineSeconds: 300
+minReadySeconds: 10
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 1
+```
+- `revisionHistoryLimit`: keep the configs of the previous 5 releases
+- `progressDeadlineSeconds`: the maximum seconds to wait for the Deployment to progress to its desired state (e.g., completing a rolling update) before marking it as failed.
+- `minReadySeconds`: the minimum secondss a newly created Pod must be in the Ready state before it's considered available.
+- `maxUnavailable`: the maximum number of Pods that can be unavailable during a rolling update
+- `maxSurge`: the maximum number of extra Pods that can be created above the desired number of replicas during a rolling update
+
+> [!NOTE]
+> As the desired state of the app requests 10 replicas, `maxSurge: 1` means you'll never have more than 11 replicas during the update process, and `maxUnavailable: 1` means you'll never have less than 9. The net result is a rollout that updates two Pods at a time
+(the delta between 9 and 11 is 2).
+
+
+## Rollback
+
+Kubernetes maintains a documented revision history of rollouts.
+
+Rolling updates create new ReplicaSets, but old ReplicaSets aren't
+deleted, makes them ideal for executing rollbacks.
+
+> [!TIP]
+> You can use the command `kubectl get rs` to list all ReplicaSets
+
+Rollbacks follow the same rules as rolling update (defined in the `strategy` block of the Deployment object).

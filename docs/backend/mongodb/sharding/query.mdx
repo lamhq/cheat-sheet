@@ -1,0 +1,56 @@
+# Querying sharded data
+
+## The mongos router
+
+Instead of connecting to the single server or the primary of the replica set, you connect to mongos, which acts as a query router and decides which shard to ask for data.
+
+
+## `find`
+
+If a query includes the shard key or a prefix of the shard key, mongos will only query the shards that hold the keys you are looking for. Otherwise, mongos query every shard (broadcast operation, aka fan-out queries).
+
+For example, there's a compound shard key for the `user` collection is `_id`, `email`, `country` and three queries:
+```js
+db.user.find({ _id: 1 })
+db.user.find({ _id: 1, "email": "packt@ packt.com" })
+db.user.find({ _id: 1, "email": "packt@ packt.com" , "country": "UK" })
+```
+- the first two queries consist a prefix of the shard key
+- the third query consist of the complete shard key
+- query on `{ email, country }` or `{ country }` will result in a broadcast operation
+ 
+
+## `sort`
+
+For sorting results, you have two options:
+- If sort criteria include the shard key, `mongos` can efficiently target specific shards for querying.
+- Without a shard key, it becomes a fan-out query, the primary shard performs a distributed merge sort locally before sending the sorted results to `mongos`.
+
+
+## `limit`
+
+A query limit is applied on each shard individually and then again at the `mongos` level to account for results from multiple shards.
+
+
+## `skip`
+
+A skip operator, cannot be passed on to individual shards and will be applied by `mongos` after retrieving all the results locally.
+
+If you combine the `skip()` and `limit()`, `mongos` will optimize the query by passing both values to individual shards, useful for pagination.
+
+Without `sort()`, mongos retrieves results from multiple shards in a round-robin manner.
+
+
+## Update and delete
+
+Using the shard key in `updateOne()`, `deleteOne()`, or `findAndmodify()` operations is more efficient (but not required) as it allows for targeted queries.
+
+| Operation | Description |
+| -- | -- |
+| insert() | Must include the shard key |
+ |update() | Can include the shard key, but not mandatory |
+| Query with shard key | Targeted operation |
+| Query without shard key | A scatter-gather operation behind the scenes |
+| Index sorted, query with shard | key Targeted operation |
+| Index sorted, query without shard key | Distributed sort merge |
+| updateOne(), replaceOne(), deleteOne() | Can use any field to match on, but more efficient with shard key |

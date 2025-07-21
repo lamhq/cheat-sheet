@@ -1,0 +1,38 @@
+[
+  {
+    "name": "index",
+    "label": "Backend Development"
+  },
+  {
+    "name": "javascript",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Javascript"
+  },
+  {
+    "name": "typescript",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "python",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "mongodb",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "graphql",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "markdown",
+    "type": "dir",
+    "collapsed": true
+  },
+  "yaml"
+]

@@ -1,0 +1,135 @@
+# VS Code
+
+## Installation
+
+Install the [official Deno extension](https://marketplace.visualstudio.com/items?itemName=denoland.vscode-deno).
+
+Open the Command Palette, run `Deno: Initialize Workspace Configuration`:
+
+![](https://docs.deno.com/runtime/getting_started/images/vscode-setup.png)
+
+This command will add `"deno.enable": true` to the workspace configuration (your workspace root `.vscode/settings.json`)
+
+
+## Linting
+
+By enabling the *Deno: Lint* setting in the settings panel (or `deno.lint` if editing settings in JSON) the editor should start to display lint "warnings" in your code.
+
+```json title=".vscode/settings.json"
+{
+  "deno.lint": true
+}
+```
+
+
+## Formatting
+
+Deno formatter should be specified in VS Code workspace settings:
+
+```json title=".vscode/settings.json"
+{
+  "editor.defaultFormatter": "denoland.vscode-deno",
+  "editor.formatOnSave": true
+}
+```
+
+
+## Testing
+
+> [!WARNING]
+> If you don't write tests in the [default format](./testing.mdx#default-format), your tests won't show up in the [Testing view](https://code.visualstudio.com/docs/editor/testing#_automatic-test-discovery-in-testing-view).
+
+
+```ts
+import { assertEquals } from "jsr:@std/assert";
+
+Deno.test("simple test", () => {
+  const x = 1 + 2;
+  assertEquals(x, 3);
+});
+
+import { delay } from "jsr:@std/async";
+
+Deno.test("async test", async () => {
+  const x = 1 + 2;
+  await delay(100);
+  assertEquals(x, 3);
+});
+
+Deno.test({
+  name: "read file test",
+  permissions: { read: true },
+  fn: () => {
+    const data = Deno.readTextFileSync("./somefile.txt");
+    assertEquals(data, "expected content");
+  },
+});
+```
+
+
+## Debugging
+
+### Script
+
+To debug Deno scripts, you must define a VS Code launch configuration as follow:
+
+```json title=".vscode/launch.json"
+{
+  "configurations": [
+    {
+      "name": "Run script",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "program": "${relativeFile}",
+      "runtimeExecutable": "/opt/homebrew/bin/deno",
+      "runtimeArgs": [
+        "--inspect-wait"
+      ]
+    }
+  ]
+}
+```
+
+> [!WARNING]
+> You can't customize the launch command, it will always be `deno run ...`
+>
+> Processes which are launched from VS Code's Integrated Terminal using Deno commands (`run`, `test`, ...) won't be auto attached to Node.js debugger.
+
+
+### Test
+
+To debug test files:
+1. Add the `--inspect-wait` flag to `deno.testing.args` in your workspace setting
+2. Add a launch configuration to enable the VS Code debugger to attach to test sessions
+3. Add some breakpoints to your code
+4. Select and run a test in the **Testing view**
+5. Start the VS Code debugger
+
+```json title=".vscode/settings.json"
+{
+  "deno.testing.args": [
+    "--allow-all",
+    "--no-check",
+    "--inspect-wait=127.0.0.1:9339"
+  ]
+}
+```
+
+```json title=".vscode/launch.json"
+{
+  "configurations": [
+    {
+      "name": "Debug Test",
+      "port": 9339,
+      "request": "attach",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node",
+      "timeout": 0,
+      "restart": true
+    }
+  ]
+}
+```

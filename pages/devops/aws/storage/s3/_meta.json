@@ -1,0 +1,14 @@
+{
+  "storage-classes": "Storage Classes",
+  "replication": "Replication",
+  "versioning": "Versioning",
+  "lifecycle": "Lifecycle",
+  "object-lock": "Object Lock",
+  "event": "Event Notifications",
+  "encryption": "Encryption",
+  "access-control": "Access Control",
+  "monitoring": "Monitoring and Reporting",
+  "logging": "Logging and Auditing",
+  "pricing": "Pricing",
+  "optimizing-perf": "Optimizing Performance"
+}

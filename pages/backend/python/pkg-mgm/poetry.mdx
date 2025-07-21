@@ -1,0 +1,145 @@
+# Poetry
+
+## Version
+
+This documentation is for Poetry 1.7.1.
+
+## System requirements
+
+Python 3.8+
+
+## Installation (macOS)
+
+### Install Homebrew
+
+1. run this script in the terminal
+    ```sh
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    ```
+1. follow instruction in the terminal
+
+
+### Install `pipx`
+
+```sh
+brew install pipx
+pipx ensurepath
+```
+
+Upgrade `pipx`:
+
+```sh
+brew update && brew upgrade pipx
+```
+
+### Install Poetry
+
+```sh
+pipx install poetry
+```
+
+## Configure Poetry
+
+Create virtual environment within your project directory:
+```sh
+poetry config virtualenvs.in-project true
+```
+
+## Set up project
+
+Create a new project:
+
+```sh
+poetry new poetry-demo
+```
+
+Initialize an existing project:
+
+```sh
+cd pre-existing-project
+```
+
+```sh
+poetry init
+```
+
+### Project structure
+
+Your code files must be located in a directory that has the same name of your python package defined in `pyproject.toml`.
+
+For example, if the package name is `app`:
+```toml filename="pyproject.toml"
+[tool.poetry]
+name = "app"
+```
+
+Your project structure will look like this:
+
+```
+app/
+├── main.py
+└── utils.py
+pyproject.toml
+```
+
+Files in project are imported under `app` package:
+```py filename="main.py"
+import app.utils
+
+print('Hello')
+```
+
+If there's no directory matching the package name in `pyproject.toml`, run `poetry install` will produce an error.
+
+
+## Activating virtual environment
+
+```sh
+poetry shell
+```
+
+To deactivate the virtual environment without leaving, use:
+
+```sh
+deactivate
+```
+
+
+## Install dependencies
+
+```sh
+poetry install
+```
+
+
+## Add a package
+
+```sh
+poetry add fastapi
+```
+
+Add dev package
+
+```sh
+poetry add pylint --dev
+```
+
+## Remove a package
+
+```sh
+poetry remove fastapi
+```
+
+
+## Show installed packages
+
+```sh
+poetry show
+```
+
+
+## Export a `requirements.txt`
+
+```sh
+poetry export -f requirements.txt --output requirements.txt
+```

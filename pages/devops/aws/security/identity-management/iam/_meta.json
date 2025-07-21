@@ -1,0 +1,6 @@
+{
+  "credentials": "AWS Credentials",
+  "policies": "IAM Policies",
+  "api-auth": "API authentication",
+  "cross-account-role-access": "Cross-Account Role Access"
+}

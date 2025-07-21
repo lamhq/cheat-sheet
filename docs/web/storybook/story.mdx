@@ -1,0 +1,324 @@
+# Story
+
+## Creating story
+
+1. Run Storybook
+2. Click the ➕ button in the sidebar to search for your component and have a basic story created for you
+
+You can also open the existing story and use the Controls panel to adjust the value of a control and then save those changes as a new story.
+
+
+## Args
+
+Args allow you to dynamically control props or component parameters from the UI.
+
+There're three levels of args:
+- [Story args](https://storybook.js.org/docs/writing-stories/args#story-args)
+- [Component args](https://storybook.js.org/docs/writing-stories/args#component-args)
+- [Global args](https://storybook.js.org/docs/writing-stories/args#global-args)
+
+```tsx {14-17}
+// Replace your-framework with the framework you are using, e.g. react-vite, nextjs, nextjs-vite, etc.
+import type { Meta, StoryObj } from '@storybook/your-framework';
+
+import { Button } from './Button';
+
+const meta = {
+  component: Button,
+} satisfies Meta<typeof Button>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Primary: Story = {
+  args: {
+    primary: true,
+    label: 'Button',
+  },
+};
+```
+
+
+### Setting args from within a story
+
+```tsx {3,25-29}
+// Replace your-framework with the framework you are using, e.g. react-vite, nextjs, nextjs-vite, etc.
+import type { Meta, StoryObj } from '@storybook/your-framework';
+import { useArgs } from 'storybook/preview-api';
+
+import { Checkbox } from './checkbox';
+
+const meta = {
+  title: 'Inputs/Checkbox',
+  component: Checkbox,
+} satisfies Meta<typeof Checkbox>;
+export default meta;
+
+type Story = StoryObj<typeof Checkbox>;
+
+export const Example = {
+  args: {
+    isChecked: false,
+    label: 'Try Me!',
+  },
+  /**
+   * 👇 To avoid linting issues, it is recommended to use a function with a capitalized name.
+   * If you are not concerned with linting, you may use an arrow function.
+   */
+  render: function Render(args) {
+    const [{ isChecked }, updateArgs] = useArgs();
+
+    function onChange() {
+      updateArgs({ isChecked: !isChecked });
+    }
+
+    return <Checkbox {...args} onChange={onChange} isChecked={isChecked} />;
+  },
+} satisfies Story;
+```
+
+
+### Actions
+
+Actions are used to display data received by event handler (callback) arguments in your stories.
+
+If your component calls an arg which is an Action, the event will show up in the action panel:
+
+```tsx {11}
+// Replace your-framework with the framework you are using, e.g. react-vite, nextjs, vue3-vite, etc.
+import type { Meta } from '@storybook/your-framework';
+
+import { fn } from 'storybook/test';
+
+import { Button } from './Button';
+
+const meta = {
+  component: Button,
+  // 👇 Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked
+  args: { onClick: fn() },
+} satisfies Meta<typeof Button>;
+
+export default meta;
+```
+
+
+## Parameters
+
+Parameters are used to control the behavior of Storybook features and addons.
+
+There're three levels of parameters:
+- [Story parameters](https://storybook.js.org/docs/writing-stories/parameters#story-parameters)
+- [Component parameters](https://storybook.js.org/docs/writing-stories/parameters#component-parameters)
+- [Global parameters](https://storybook.js.org/docs/writing-stories/parameters#global-parameters)
+
+```tsx title=".storybook/preview.ts" {6-11}
+// Replace your-framework with the framework you are using, e.g. react-vite, nextjs, vue3-vite, etc.
+import type { Preview } from '@storybook/your-framework';
+
+const preview: Preview = {
+  parameters: {
+    backgrounds: {
+      options: {
+        light: { name: 'Light', value: '#fff' },
+        dark: { name: 'Dark', value: '#333' },
+      },
+    },
+  },
+};
+
+export default preview;
+```
+
+
+## Decorators
+
+A decorator is a way to wrap a story in extra "rendering" functionality. They are typically used to wrap stories with extra markup or context mocking.
+
+A decorator is declared as a function with two parameters, it should return a React component:
+- `Story`: the story to be rendered
+- `context`: the story context object that contain [additional properties](https://storybook.js.org/docs/writing-stories/decorators#context-for-mocking).
+
+There're two levels of decorators:
+- [Component decorators](https://storybook.js.org/docs/writing-stories/decorators#component-decorators)
+- [Global decorators](https://storybook.js.org/docs/writing-stories/decorators#global-decorators)
+
+```tsx title=".storybook/preview.ts" {9-15}
+import React from 'react';
+
+// Replace your-framework with the framework you are using, e.g. react-vite, nextjs, nextjs-vite, etc.
+import type { Preview } from '@storybook/your-framework';
+
+const preview: Preview = {
+  decorators: [
+    // 👇 Defining the decorator in the preview file applies it to all stories
+    (Story, { args, argTypes, globals, hooks, parameters, viewMode }) => {
+      return (
+        <div className="page-layout">
+          <Story />
+        </div>
+      );
+    },
+  ],
+};
+
+export default preview;
+```
+
+
+## Play function
+
+Play functions are small snippets of code executed after the story renders.
+
+They enable you to interact with your components like typing, clicking, or submitting forms.
+
+For example, you could write the following story with the play function on a registration form:
+
+```tsx
+// Replace your-framework with the framework you are using, e.g. react-vite, nextjs, vue3-vite, etc.
+import type { Meta, StoryObj } from '@storybook/your-framework';
+
+import { RegistrationForm } from './RegistrationForm';
+
+const meta: Meta<typeof RegistrationForm> = {
+  component: RegistrationForm,
+};
+export default meta;
+
+type Story = StoryObj<typeof RegistrationForm>;
+
+/*
+ * See https://storybook.js.org/docs/writing-stories/play-function#working-with-the-canvas
+ * to learn more about using the canvas to query the DOM
+ */
+export const FilledForm: Story = {
+  play: async ({ canvas, userEvent }) => {
+    const emailInput = canvas.getByLabelText('email', {
+      selector: 'input',
+    });
+
+    await userEvent.type(emailInput, 'example-email@email.com', {
+      delay: 100,
+    });
+
+    const passwordInput = canvas.getByLabelText('password', {
+      selector: 'input',
+    });
+
+    await userEvent.type(passwordInput, 'ExamplePassword', {
+      delay: 100,
+    });
+
+    const submitButton = canvas.getByRole('button');
+    await userEvent.click(submitButton);
+  },
+};
+```
+
+### Querying elements
+
+The `canvas` object in the play function's parameter allows you to query the DOM of the rendered story:
+
+```tsx
+await userEvent.type(canvas.getByTestId('example-element'), 'something');
+await userEvent.click(canvas.getByRole('button'));
+```
+
+If you need to query outside of the `canvas`, use the `screen` object:
+
+```tsx
+import { screen } from 'storybook/test';
+
+// Starts querying from the document
+const dialog = screen.getByRole('dialog');
+await expect(dialog).toBeVisible();
+```
+
+
+## Tags
+
+Tags are static strings you assign to stories or components to:
+- **Filter** stories in the sidebar
+- **Include/exclude** stories from test runs
+- **Control visibility** in docs or dev environments
+
+Use Cases:
+- Docs-only stories: `['autodocs', '!dev']`
+- Exclude from tests: `['!test']`
+- Highlight experimental features: `['experimental']`
+- Organize by persona: `['admin', 'user']`
+
+
+### Built-in Tags
+
+| Tag        | Applied by Default | Purpose                                                                 |
+|------------|--------------------|-------------------------------------------------------------------------|
+| `dev`      | ✅ Yes              | Renders stories in the sidebar                                         |
+| `test`     | ✅ Yes              | Includes stories in test runner or Vitest runs                         |
+| `autodocs` | ❌ No               | Includes stories in generated docs pages                               |
+
+
+### Applying tags
+
+Tags may be applied at the project, component (meta), or story levels.
+
+```tsx
+// Replace your-framework with the framework you are using, e.g. react-vite, nextjs, vue3-vite, etc.
+import type { Meta, StoryObj } from '@storybook/your-framework';
+
+import { Button } from './Button';
+
+const meta = {
+  component: Button,
+  tags: ['autodocs'],
+} satisfies Meta<typeof Button>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const ExperimentalFeatureStory: Story = {
+  tags: ['experimental'],
+};
+```
+
+### Removing tags
+
+You can also **remove inherited tags** using a `!` prefix:
+
+```tsx
+tags: ['!dev', 'docs-only']
+```
+
+
+## Organizing Stories
+
+You can explicitly use the `title` parameter to define the story's position in the sidebar:
+
+```tsx {7}
+// Replace your-framework with the framework you are using, e.g. react-vite, nextjs, vue3-vite, etc.
+import type { Meta } from '@storybook/your-framework';
+
+import { Button } from './Button';
+
+const meta = {
+  title: 'Design System/Atoms/Button',
+  component: Button,
+} satisfies Meta<typeof Button>;
+
+export default meta;
+```
+
+You can remove the top-level grouping named `root` in the Sidebar by updating the [configuration](https://storybook.js.org/docs/configure/user-interface/sidebar-and-urls#roots).
+
+
+## Writting Stories for multiple components
+
+How to write stories for components that work together, like a `List` with `ListItem`.
+
+Techniques:
+
+* **`subcomponents` property:** This property helps document parent-child relationships, adding a panel to `ArgTypes` and `Controls` for the subcomponent's props, though with some limitations.
+* **Reusing story definitions:** You can import and reuse arguments from subcomponent stories, like `ListItem` stories within a `List` story, to avoid repetition. However, this method has limitations regarding controls and reuse in more complex scenarios.
+* **Using `children` as an argument:** This approach allows for reusing rendered subcomponents by passing `children` as an arg. It requires careful handling of JSON serialization for controls and might have issues with third-party libraries.
+* **Creating a "story-generating" template component:** This is a more complex setup, but it offers better reusability of arguments in composite components and allows for altering component arguments using the Controls addon.
+
+You can find more details in the [Stories for multiple components](https://storybook.js.org/docs/writing-stories/stories-for-multiple-components) article.

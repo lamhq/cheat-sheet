@@ -1,0 +1,92 @@
+# Domain-Driven Design
+
+## Overview
+
+Domain-Driven Design is a strategic approach that focuses on modeling software based on the core business domain.
+
+When applied to microservices, DDD helps in defining clear boundaries and responsibilities for each service, ensuring they align with business needs.
+
+Core concepts:
+- **Ubiquitous language**: A shared language between developers and domain experts, ensuring clarity and alignment in communication and implementation.
+- **Aggregate**: A collection of objects that are managed as a single entity, typically referring to real-world concepts.
+- **Bounded context**: An explicit boundary that encapsulates a specific part of the business domain. This ensures that services are cohesive and independent.
+
+
+## Ubiquitous Language
+
+Ubiquitous language is a shared vocabulary that everyone (developers, domain experts, and stakeholders) uses to communicate within a specific domain.
+
+The goal is to avoid misunderstandings by ensuring that everyone talks about the same concepts using the same terms.
+
+It becomes part of the code, documentation, and conversations, bridging the gap between technical and business perspectives. Essentially, it keeps everyone on the same page!
+
+> Let's say we're building an e-commerce system. Using Ubiquitous Language, all team members—developers, business experts, and stakeholders—agree to use terms like "Order," "Customer," and "Product" consistently.
+> - Order: Represents a customer's purchase, including items, total cost, and delivery details.
+> - Customer: Refers to the person placing the order, with a unique ID and personal information.
+> - Product: Describes items available for sale, including name, price, and stock quantity.
+
+
+## Aggregate
+
+An **aggregate** is a cluster of domain objects that are treated as a single unit. This ensure that each aggregate maintains transactional consistency by enforcing business rules internally.
+
+**Aggregate Root** is a root entity that acts as the entry point for interacting with the Aggregate.
+
+Operations on an Aggregate are performed as a single **transaction**, making it easier to maintain consistency.
+
+> Imagine a Shopping Cart Aggregate in an e-commerce application:
+> - The Aggregate Root is the Cart entity.
+> - Entities inside the Aggregate could include Cart Items and Discounts.
+> - Operations like adding a product to the cart or applying a discount must go through the Cart entity to enforce rules (e.g., checking stock availability or validating discount codes).
+
+Aggregates can have relationships with other aggregates, which:
+- can be stored using foreign keys in a relational database within the same microservice
+- is modeled using explicit references if spanning microservice boundaries.
+
+
+## Bounded Context
+
+A Bounded Context is a well-defined boundary that encapsulates a specific part of the business domain.
+
+It helps break down the system into manageable pieces, where each piece focuses on a single area of functionality.
+
+Each Bounded Context operates independently and is responsible for its own data, logic, and behavior, aligning closely with business requirements.
+
+Each microservice is typically designed around a single Bounded Context.
+
+Bounded contexts hide implementation detail and internal concerns that are not relevant to the outside world.
+
+Bounded contexts contain one or more aggregates, which can be exposed or hidden within the context.
+
+Bounded contexts can have relationships with other bounded contexts, creating inter-service dependencies when mapped to services.
+
+> For example, In an e-commerce system:
+>
+> - The `Order` Service has its own Bounded Context, handling orders, payments, and shipping. It uses its unique terms and models (e.g., "Order ID," "Payment Status").
+> - The `Catalog` Service focuses on product details and availability, using its models (e.g., "Product ID," "Stock Quantity").
+
+
+## Mapping Aggregates and Bounded Contexts to Microservices
+
+Both the aggregate and the bounded context can serve as service boundaries.
+
+An aggregate represents a single domain concept and works like an independent state machine.
+
+A bounded context is a group of related aggregates with a clear interface to interact with other systems.
+
+When starting, it’s best to limit the number of services by aligning them with entire bounded contexts. As you gain experience, you can split services into smaller ones, but aggregates must remain intact.
+
+A microservice can manage multiple aggregates, but an aggregate should always belong to just one microservice.
+
+
+## Benefits
+
+Bounded Contexts explicitly hide information and present clear boundaries to the system. This makes it easier to manage internal changes without affecting the rest of the system.
+
+Information hiding in DDD helps find stable microservice boundaries.
+
+Ubiquitous language in DDD greatly helps in defining microservice endpoints, APIs, and event formats.
+
+DDD brings business concepts directly into software design, improving developer expertise, user understanding, and collaboration.
+
+DDD's principles align technical architecture with organizational structure, fostering teamwork and breaking silos between IT and business units.

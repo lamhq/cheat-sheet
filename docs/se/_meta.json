@@ -1,0 +1,23 @@
+[
+  {
+    "name": "index",
+    "label": "Software Engineering"
+  },
+  {
+    "name": "system-design",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "architecture",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Software Architecture"
+  },
+  {
+    "name": "development",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Software Development"
+  }
+]

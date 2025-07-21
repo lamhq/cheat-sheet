@@ -1,0 +1,12 @@
+[
+  "queries-mutations",
+  "schemas-types",
+  "introspection",
+  "deployment",
+  {
+    "name": "best-practices",
+    "type": "dir",
+    "label": "Best Practices",
+    "collapsed": true
+  }
+]

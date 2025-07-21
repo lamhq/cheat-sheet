@@ -1,0 +1,110 @@
+# Services
+
+## Overview
+
+Services provide a stable and reliable network endpoint to Pods.
+
+Every Service gets its own: IP address, DNS name, port. All are never changed.
+
+Service observes changes and maintains an up-to-date list of healthy Pods and load-balance traffic to them.
+
+Services are loosely coupled with Pods via **labels** and **selectors**. For a Service to send traffic to a Pod, the Pod needs every label the Service is selecting on (Boolean AND).
+
+```yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-svc
+spec:
+  ports:
+  - port: 8080
+  selector:
+    app: hello-world   <<==== Send to Pods with these labels
+    env: tkb           <<==== Send to Pods with these labels
+```
+
+Services cannot provide application-layer host and path routing. 
+
+
+## EndpointSlices
+
+For every label selector of a Service, there're one or more EndpointSlice objects that store a list of healthy Pods matching the selector.
+
+Kubernetes is constantly evaluating the Service's label selector against all healthy Pods on the cluster. Any new Pods that match the selector get added to one of the Service's EndpointSlice objects, whereas any Pods that disappear get removed.
+
+
+## Internal access
+
+ClusterIP is a type of Service that exposes an application running in a set of Pods on an internal IP address within the cluster.
+
+Every Service you create gets a ClusterIP and a Service name, registered in the cluster’s internal DNS service.
+
+Pods can use the DNS service to resolve Service names to ClusterIPs address and connect to the Pods behind it.
+
+iptables or IPVS rules are distributed across all cluster nodes to ensure traffic sent to the ClusterIP gets routed to Pods with the label the Service is selecting on.
+
+
+## External access
+
+Kubernetes has two types of Service for requests originating from outside the cluster:
+- NodePort
+- LoadBalancer
+
+### NodePort
+
+NodePort Services allow external clients to hit a dedicated port on every cluster node and reach the Service.
+
+NodePort Services build on top of the ClusterIP. ClusterIP registers a DNS name, virtual IP, and port with the cluster’s DNS. NodePort Services add an additional NodePort that can be used to reach the Service from outside the cluster.
+
+```yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: skippy
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    nodePort: 30050
+  selector:
+    app: hello-world
+```
+
+- Pods inside the cluster can access this Service by its name (`skippy`) on port `8080`
+- Clients can send traffic to any node on port `30050` (`<Node-IP>:30050`).
+
+> [!TIP]
+> You can get node's IP using the command `kubectl get nodes -o wide`
+
+
+### LoadBalancer
+
+LoadBalancer Services provisions an external load balancer (provided by the cloud infrastructure) to expose your application to external traffic.
+
+When you create a Service of type LoadBalancer, Kubernetes configures the cloud provider's load balancer to route external traffic to your application's Pods.
+
+The load balancer gets a unique, publicly accessible IP address or DNS name.
+
+Traffic arriving at the external load balancer (public IP or DNS) is forwarded to the Kubernetes cluster.
+
+Within the cluster, the service's ClusterIP or NodePort ensures traffic is routed to the correct Pods.
+
+The following YAML defines a new Service called `clou-lb`
+that will provision a cloud load-balancer listening on port `9000` and forward traffic on port `8080` to all Pods with the `chapter=services` label:
+
+```yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloud-lb
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 9000
+    targetPort: 8080
+  selector:
+    chapter: services
+```
+
+> [!TIP]
+> You can access the load balancer using its public IP address (the `EXTERNAL-IP` field from the `kubectl get svc --watch` command) with the port defined in the YML file.

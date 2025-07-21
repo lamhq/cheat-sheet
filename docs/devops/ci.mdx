@@ -1,0 +1,47 @@
+# Continuous Integration
+
+## Overview
+
+Continuous Integration (CI) is a development practice where developers frequently merge their code changes into a shared repository, usually multiple times a day.
+
+Each integration is automatically verified by building the software and running automated tests to ensures seamless collaboration.
+
+The main goals of CI include:
+- **Detecting bugs early** – Small, frequent updates help identify issues before they escalate.
+- **Improving collaboration** – Developers work on the same codebase and integrate changes seamlessly.
+- **Accelerating development** – Automated testing ensures rapid feedback and a smoother development process.
+- **Reducing integration problems** – Since code is merged often, there are fewer conflicts compared to infrequent, large-scale integrations.
+
+
+## Artifact
+
+CI generates artifacts for further validation, such as deploying a running service for testing.
+
+Artifacts should be built once and reused (to maintain consistency and efficiency) by stored in a repository, either within the CI tool or an external system.
+
+### Benefits
+
+- **Fast Feedback:** get fast feedback about code quality via static analysis and testing.  
+- **Automatic creation:** Binary artifacts are automatically created, with version-controlled build processes ensuring reproducibility.  
+- **Traceability:** Deployed artifacts can be traced back to source code, along with details of tests conducted.  
+- **Enhances transparency and simplifies builds** if using infrastructure as code, we can version control both microservice and infrastructure configurations, ensuring transparency and easier build reproduction.
+
+
+## Are You Really Doing CI?
+
+Merely using a CI tool (e.g., Jenkins, CircleCI, Travis) doesn’t guarantee true CI adoption.
+
+Three key questions to test if they you're really doing CI?
+
+1. **Do you check in to mainline once per day?** Frequent integration prevents future complexities, even when using short-lived branches.  
+2. **Do you have a suite of tests to validate your changes?** – Without tests, we don’t know if we have broken the behavior of the system
+3. **When the build is broken, is it the #1 priority of the team to fix it?** – You must resolve the build issue before moving on to other tasks.
+
+
+## CI Tips
+
+- **Integrate early and often** to minimize merge conflicts.  
+- **Favor trunk-based development, short-lived branches** to streamline collaboration.  
+- **Commit sooner**, fast patch merges in open source projects help developers move quickly.  
+- **Work in small batches**, large changes are harder to review and merge.  
+- **Use automated testing** to boost productivity.  

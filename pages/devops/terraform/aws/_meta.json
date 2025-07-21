@@ -1,0 +1,9 @@
+{
+  "s3": "Amazon S3",
+  "ec2": "Amazon EC2",
+  "vpc": "Amazon VPC",
+  "lambda": "AWS Lambda",
+  "lake-formation": "AWS Lake Formation",
+  "glue": "AWS Glue",
+  "appsync": "AWS AppSync"
+}

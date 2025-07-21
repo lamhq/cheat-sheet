@@ -1,0 +1,31 @@
+# Code Reuse
+
+Solutions for reusing code between services.
+
+## DRY
+
+**DRY** (Don't Repeat Yourself) is a key principle in software development that advocates avoiding duplication in **system behavior and knowledge**, not just code.
+
+Redundant code makes a codebase larger and harder to maintain, increasing the risk of errors when behavior needs to change.
+
+DRY promotes **reusability** by abstracting shared functionality so it can be accessed across the system.
+
+
+## Sharing Code via Libraries
+
+Shared code that containin **common domain objects** can create coupling between microservices, so it's crucial to prevent shared code from leaking beyond service boundaries.
+
+Internal **common code**, like logging libraries, is acceptable within a microservice. However, when **libraries** are used across microservices, different versions may lead to update challenges.
+
+If you require all users to update the code simultaneously, consider reusing code via a **dedicated microservice** to manage updates effectively.
+
+
+## Client Libraries
+
+Client libraries simplify service consumption and prevent code duplication. 
+
+However, when the same team develops both the **server API** and **client API**, server logic may leak into the client library, causing cohesion issues and requiring multiple client updates for server fixes.
+
+To use the client library approach effectively, separate client code handling **transport protocol** and **infrastructure concerns** (e.g., service discovery and failure handling) from code related to the destination service itself.
+
+Ensure clients can control their **library upgrades**, allowing services to evolve independently.

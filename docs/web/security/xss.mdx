@@ -1,0 +1,18 @@
+# Cross-Site Scripting
+
+## Overview
+
+Cross-Site Scripting (XSS) is a security vulnerability that allows attackers to inject malicious scripts into web applications, compromising user interactions and stealing sensitive data.
+
+## How it Works
+
+1. Attackers inject malicious JavaScript into a vulnerable website.
+2. When users visit the site, the script executes in their browser.
+3. This can lead to data theft, [session hijacking](./sess-hij.mdx), or even full control over user accounts.
+
+
+## Prevention Methods
+
+- **Input Validation & Sanitization**: Ensure user input is properly filtered.
+- [**Content Security Policy**](./csp.mdx): Restrict the execution of unauthorized scripts.
+- **Escaping Output**: Encode data before rendering it in the browser.

@@ -1,0 +1,7 @@
+[
+  "pods",
+  "deployments",
+  "services",
+  "ingress",
+  "namespaces"
+]

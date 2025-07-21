@@ -1,0 +1,16 @@
+{
+  "logging": "Logging",
+  "setting": "Setting",
+  "email": "Email",
+  "json": "JSON",
+  "regex": "Regular expression",
+  "performance": "Performance",
+  "file-io": "File IO",
+  "file-system": "File System Operations",
+  "cli-api": "Develop CLI Applications",
+  "exec-program": "Executing programs",
+  "excel": "Excel",
+  "table-extraction": "Table Extraction",
+  "web-scraping": "Web Scraping",
+  "interpreter": "Python Interpreter"
+}

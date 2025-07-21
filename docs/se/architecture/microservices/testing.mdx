@@ -1,0 +1,69 @@
+# Testing
+
+> [!NOTE]
+> Before adopting microservices, ensure you can validate software quickly and efficiently, if you currently carry out large amounts of manual testing, it must be addressed first.
+
+## Types of Tests
+
+![](./testing/test-types.drawio.svg)
+
+1. **Technology facing**: tests that aid the developers in creating the system in the first place
+2. **Business facing**: tests that help the nontechnical stakeholders understand how your system works
+
+
+## Test Scope
+
+The test pyramid is a conceptual model for structuring automated tests in a software system.
+
+It helps balance different test types:
+
+- **Higher levels**, broader test scope & higher confidence, tests are slower to run and harder to debug.
+- **Lower levels**, smaller, isolated tests, leading to faster feedback cycles & easier debugging.
+
+![](./testing/test-pyramid.drawio.svg)
+
+Three main categories of tests:
+
+1. **Unit Tests**: focus on individual pieces of code, small scope, fast execution, easy debugging
+2. **Service Tests**: examine interactions between components or microservices. Broader scope, more confidence, relatively fast feedback.
+3. **UI (End-to-End) Tests**: validate the entire application, checking how components work together in a real user environment. Highest confidence, comprehensive Scope, slow feedback, harder to debug.
+
+> [!CAUTION]
+> The term "Integration Tests" is ambiguous, some use it for service interactions, others for full end-to-end tests, so it isn't used here.
+
+
+## Finding the Right Balance
+
+Tips to balance between **fast feedback** and **system confidence**:
+
+- If **tests take too long**, replace **large tests with smaller unit tests** for faster detection.
+- If **bugs slip into production**, consider adding broader tests.
+- **Best practice**: Have **10× more unit tests** than service tests, and **10× more service tests** than end-to-end tests.
+
+
+## Stubbing vs. Mocking
+
+- **Stubbing:** Returns **predefined outputs** for specific calls; focuses on testing **results**.
+- **Mocking:** Simulates dependencies and **tracks interactions**, verifying **how methods are called**.
+
+**Use stubbing** when testing function outputs; **use mocking** when validating method calls and behavior.
+
+
+## Stubbing Tool
+
+Mountebank is a programmable mock server that allows developers to create fake services for testing purposes. It listens on a defined port and simulates expected responses for HTTP, TCP, HTTPS, and SMTP requests.
+
+Key Features:
+
+- **Imposter Creation:** Developers define “imposters” that mimic real services.
+- **Protocol Support:** Works with multiple protocols (HTTP, TCP, etc.).
+- **Stub & Mock Capabilities:** Can provide predefined responses (stubbing) or verify expected interactions (mocking).
+- **Multi-Service Simulation:** A single instance can mock multiple microservices.
+
+Use Cases:
+
+- **Mocking external dependencies:** Ensures services work correctly without real dependencies.
+- **Microservices Testing:** Can simulate missing or unstable services during development.
+- **Performance Testing**.
+
+Limitations: does not support messaging protocols (Pact can help in cases requiring event validation).

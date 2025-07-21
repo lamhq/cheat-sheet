@@ -1,0 +1,21 @@
+{
+  "infrastructure": "Infrastructure",
+  "compute": "Compute",
+  "database": "Database",
+  "dev-tools": "Developer Tools",
+  "network": "Network & Content Delivery",
+  "storage": "Storage",
+  "security": "Security",
+  "analytics": "Analytics",
+  "app-integration": "Application Integration",
+  "app-dev": "Application Development",
+  "monitoring": "Monitoring",
+  "migration": "Migration",
+  "governance": "Governance",
+  "compliance": "Compliance",
+  "machine-learning": "Machine Learning",
+  "cost": "Cost Management",
+  "media": "Media",
+  "certifications": "Certifications",
+  "naming-convention": "Naming Convention"
+}

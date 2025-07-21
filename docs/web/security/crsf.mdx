@@ -1,0 +1,32 @@
+# Cross-Site Request Forgery
+
+## Overview
+
+Cross-Site Request Forgery (CSRF) is a security vulnerability that tricks users into performing unintended actions on a web application where they are authenticated. Attackers exploit the trust between the user and the website to execute unauthorized requests.
+
+## How it Works
+
+- The attacker crafts a malicious request and embeds it in a webpage or email.
+- When the victim, who is logged into the target website, interacts with the malicious content, their browser unknowingly sends the request.
+- Since the request includes the victim’s authentication credentials (like cookies), the website processes it as a legitimate action.
+
+## Example
+
+Imagine a banking website where users can transfer money using:
+
+```html
+<form action="https://bank.com/transfer" method="POST">
+    <input type="hidden" name="amount" value="1000">
+    <input type="hidden" name="recipient" value="attacker_account">
+    <input type="submit" value="Transfer">
+</form>
+```
+
+An attacker could embed this form in a their compromised webpage and use JavaScript to auto-submit it when the victim visits the page (by sending deceptive emails or messages with links, for example), it will send a POST request to the bank and unknowingly transferring money.
+
+## Prevention Methods
+
+- **CSRF Tokens**: Generate unique tokens for each request to verify authenticity.
+- **SameSite Cookies**: Restrict cookies from being sent with cross-site requests.
+- **Referer & Origin Checks**: Validate request sources to ensure they originate from trusted domains.
+- **User Authentication Prompts**: Require re-authentication for sensitive actions.

@@ -1,0 +1,62 @@
+[
+  {
+    "name": "index",
+    "label": "Web Development"
+  },
+  {
+    "name": "css",
+    "label": "CSS",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "react",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "ssr",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Server Rendering"
+  },
+  {
+    "name": "ssg",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "pwa",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "build-tools",
+    "type": "dir",
+    "label": "Build Tools",
+    "collapsed": true
+  },
+  {
+    "name": "storybook",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "playwright",
+    "type": "dir",
+    "collapsed": true,
+    "label": "End-to-end Test"
+  },
+  {
+    "name": "design-patterns",
+    "type": "dir",
+    "label": "Design Patterns",
+    "collapsed": true
+  },
+  {
+    "name": "security",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Security"
+  }
+]

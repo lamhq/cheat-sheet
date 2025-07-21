@@ -1,0 +1,80 @@
+# Navigating
+
+## Display Navigation Link
+
+The [`NavLink`](https://reactrouter.com/start/framework/navigating#navlink) component render links that require **active** and **pending** states:
+
+```tsx
+import { NavLink } from "react-router";
+
+export function MyAppNav() {
+  return (
+    <nav>
+      <NavLink to="/" end>
+        Home
+      </NavLink>
+      <NavLink
+        to="/messages"
+        className={({ isActive, isPending, isTransitioning }) =>
+          [
+            isPending ? "pending" : "",
+            isActive ? "active" : "",
+            isTransitioning ? "transitioning" : "",
+          ].join(" ")
+        }
+      >
+        Messages
+      </NavLink>
+    </nav>
+  );
+}
+```
+
+## Normal Link
+
+```tsx
+import { Link } from "react-router";
+
+export function LoggedOutMessage() {
+  return (
+    <p>
+      You've been logged out.{" "}
+      <Link to="/login">Login again</Link>
+    </p>
+  );
+}
+```
+
+## Redirecting
+
+### Inside loaders
+
+Only use `redirect` API inside **loaders** and **actions**:
+
+```ts
+import { redirect } from "react-router";
+
+export async function loader({ request }) {
+  let user = await getUser(request);
+  if (!user) {
+    return redirect("/login");
+  }
+  return { userName: user.name };
+}
+```
+
+### Inside components
+
+Use `useNavigate` hook:
+
+```tsx
+import { useNavigate } from "react-router";
+
+export function useLogoutAfterInactivity() {
+  let navigate = useNavigate();
+
+  useFakeInactivityHook(() => {
+    navigate("/logout");
+  });
+}
+```

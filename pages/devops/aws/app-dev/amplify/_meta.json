@@ -1,0 +1,7 @@
+{
+  "cli": "Amplify CLI",
+  "api": "API",
+  "auth": "Authentication",
+  "hosting": "Amplify Hosting",
+  "studio": "Amplify Studio"
+}

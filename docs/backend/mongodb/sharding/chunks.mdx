@@ -1,0 +1,45 @@
+# Chunks
+
+## Overview
+
+MongoDB uses the shard key to partition the data into chunks, owned by a shard.
+
+A chunk consists of a range of sharded data.
+
+A range can be a portion of the chunk or the whole chunk.
+
+The balancer migrates data between shards.
+
+Each chunk has inclusive lower and exclusive upper limits based on the shard key.
+
+![](https://www.mongodb.com/docs/v7.0/images/sharding-range-based.bakedsvg.svg)
+
+
+## Range Migration
+
+MongoDB migrates data ranges to distribute data (of a collection) evenly among shards.
+
+Migrations may be either:
+- Manual. Should be limited.
+- Automatic. The balancer automatically migrates data to address uneven distribution of data across the shards.
+
+![](https://www.mongodb.com/docs/v7.0/images/sharding-migrating.bakedsvg.svg)
+
+
+## Jumbo Chunks
+
+Jumbo Chunks are oversized chunks that exceed the maximum chunk size. These chunks cannot be automatically split by MongoDB, which prevents the balancer from migrating them across shards.
+
+To clear the jumbo flag, you can manually split the chunk; MongoDB removes the flag if splitting succeeds. You can use either the `sh.splitAt()` or `sh.splitFind()` method to split a jumbo chunk.
+
+If you cannot split the chunk, you can modify the shard key (reshard a collection) to make the chunk divisible or you can manually remove the flag.
+
+
+## Pre-splitting
+
+Pre-splitting ranges involves manually creating and distributing chunks for a sharded collection before inserting data.
+
+When ingesting large volumes of data, pre-splitting can help distribute the data evenly across shards from the beginning.
+
+> [!CAUTION]
+> It is advised to only pre-split ranges for empty collections. Attempting to manually split ranges for a non-empty collection can result in irregular range boundaries and sizes, and may also cause the balancing behavior to function inefficiently or crashed.

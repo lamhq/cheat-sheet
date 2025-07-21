@@ -1,0 +1,46 @@
+@font-face {
+  font-family: 'Bookerly';
+  src: url('./Bookerly.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Bookerly';
+  src: url('./Bookerly Italic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Bookerly';
+  src: url('./Bookerly Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Bookerly';
+  src: url('./Bookerly Bold Italic.ttf') format('truetype');
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Bookerly Light';
+  src: url('./Bookerly Light.ttf') format('truetype');
+  font-weight: 300; /* Assuming "Light" corresponds to a font-weight of 300 */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Bookerly Light';
+  src: url('./Bookerly Light Italic.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
+
+/* Set default font */
+:root {
+  --rp-font-family-base: 'Bookerly';
+}

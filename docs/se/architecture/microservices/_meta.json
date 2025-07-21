@@ -1,0 +1,57 @@
+[
+  {
+    "name": "design",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Design"
+  },
+  "splitting-monolith",
+  {
+    "name": "communication",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "breaking-changes",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Breaking Changes"
+  },
+  {
+    "name": "workflow",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Workflow"
+  },
+  {
+    "name": "development",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Development"
+  },
+  {
+    "name": "deployment",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Deployment"
+  },
+  {
+    "name": "testing",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Testing"
+  },
+  {
+    "name": "observability",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Observability"
+  },
+  "resiliency",
+  {
+    "name": "ui",
+    "type": "dir",
+    "collapsed": true,
+    "label": "User Interface"
+  }
+]

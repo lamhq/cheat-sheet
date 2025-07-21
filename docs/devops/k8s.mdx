@@ -1,0 +1,81 @@
+# Kubernetes
+
+## Overview
+
+Kubernetes is an open-source system for automating deployment, scaling, and management of containerized applications.
+
+
+## Key Features
+
+1. **Automated Scaling**. **Kubernetes** can automatically adjust the number of running containers based on demand.
+2. **Self-Healing**. Kubernetes detects failed containers and replaces them without requiring manual fixes.
+3. **Load Balancing**. Kubernetes distributes traffic across multiple containers, ensuring reliability and preventing overload.
+4. **Service Discovery & Networking**. Kubernetes manages internal and external service communication seamlessly.
+5. **Multi-Host Management**. Kubernetes runs and orchestrates containers across multiple machines.
+6. **Declarative Configuration & Desired State Management**. Kubernetes lets users define the ideal state of applications, and it continuously works to maintain that state.
+
+
+## Container Benefits
+
+1. **Quick Onboarding**. Containers help teams get up to speed quickly. Tools like Docker Compose allow developers to spin up an entire environment effortlessly.
+3. **Avoiding Application Conflicts**. Developers can run multiple versions of the same application without conflicts by isolating them in separate containers.
+4. **Consistent Environments**. Containers ensure that code runs reliably across different environments (local development, QA, production), eliminating the common "works on my machine" problem.
+5. **Faster Software Delivery**. Containers streamline the software development and deployment process, accelerating delivery.
+
+
+## Kubernetes Benefits
+
+1. **Container Orchestration**. Kubernetes manages and coordinates containers across multiple nodes.
+2. **Zero-Downtime Deployments**. Kubernetes enables seamless updates without service interruptions.
+3. **Self-Healing Capabilities**. Kubernetes automatically detects and replaces failed containers.
+4. **Horizontal Scaling**. Kubernetes makes it easy to scale applications by adding more pods (which contain containers) to a node.
+
+
+## Developer Use Cases
+
+Why developers should learn Kubernetes?
+
+1. **Run Production-like Environments Locally**. Kubernetes helps emulate production for better testing.
+2. **End-to-End & Performance Testing**. Kubernetes enables full environment testing with tools like **Selenium** or **Cypress.io**.
+3. **Secrets & Configuration Management**. Ensures proper loading of secrets and configs across microservices.
+4. **CI/CD & Build Servers**. Kubernetes automates builds, replaces failed containers, and streamlines deployment pipelines.
+5. **Advanced Deployment Strategies**. Supports **zero-downtime, canary, A/B, and blue-green deployments** for safer rollouts.
+6. **Troubleshooting in Production**. Helps developers assist **DevOps/IT** in diagnosing and resolving issues efficiently.
+
+
+## Why not Docker Compose?
+
+Docker Compose is simple, fast, and effective for local development but lacks the scalability, resilience, and orchestration needed for production environments.
+
+1. **Single-host**. Docker Compose runs containers on **one machine**, while Kubernetes orchestrates containers across multiple nodes in a cluster.
+2. **Simplified Networking**. Docker Compose lacks networking capabilities needed for distributed systems like **service discovery, load balancing, and network policies**.
+3. **No Built-in Scaling or Self-Healing**. Docker Compose does not automatically **scale** containers or **restart** failed ones.
+4. **Limited Deployment & Management Features**. Docker Compose lacks **rolling updates, zero-downtime deployments, and advanced scheduling** found in Kubernetes.
+5. **Designed for Development & Testing**. Developers use Docker Compose to quickly set up **local environments** with databases, APIs, and dependencies.
+
+## Running Kubernetes
+
+Options for running Kubernetes locally:
+
+### Docker Desktop
+- The easiest way to enable Kubernetes if Docker is already installed.
+- Supports one master node and one worker node, enough for basic Kubernetes tasks.
+- To active: click on the **Preferences** menu (⚙️ gear icon), navigate to the Kubernetes tab, check the box **Enable Kubernetes**.
+- https://www.docker.com/products/docker-desktop
+
+### Minikube
+- A long-standing tool for running Kubernetes on a local machine.
+- Provides a single master node and worker node setup.
+- Supports full Kubernetes functionality via `kubectl`.
+- Limitation: Cannot scale out like a production cluster.
+- https://github.com/kubernetes/minikube
+
+### Kubernetes in Docker
+- Allows scaling out worker nodes beyond Docker Desktop’s limitations.
+- A viable option for those needing more flexibility.
+- https://kind.sigs.k8s.io
+
+### kubeadm
+- Used for setting up a full Kubernetes cluster, typically for administrators.
+- More complex than other options, requiring additional configuration.
+- https://kubernetes.io/docs/reference/setup-tools/kubeadm

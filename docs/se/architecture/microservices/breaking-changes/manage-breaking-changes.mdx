@@ -1,0 +1,85 @@
+# Managing Breaking Changes
+
+Three strategies to manage breaking changes in microservices:
+1. Lockstep deployment
+2. Coexist microservice versions
+3. Emulate the old interface
+
+
+## Lockstep deployment
+
+The updated service and all of its consumers are deployed simultaneously when there're breaking changes.
+
+Lockstep deployment conflict with independent deployability in microservices.
+
+Suitable where:
+- same team manages both the microservice and its consumers
+- teams can coordinate deployments effectively and ensure synchronized updates
+
+> [!CAUTION]
+> Overusing lockstep deployments can lead to a distributed monolith, so it should be used sparingly.
+
+
+## Coexist microservice versions
+
+Both the old and new versions of the microservice operate concurrently.
+
+Older consumers continue to use the older version, while newer consumers access the new one.
+
+Useful in scenarios where:
+- it's crucial to support both older and newer consumers (may be the cost of changing older consumers is too high).
+- transit to newer version for a short period (minutes or hours), such as blue-green deployments or canary releases
+
+**Challenges:**
+- Requires updating and deploying two service versions, potentially leading to codebase branching issues.
+- Complex routing logic to the appropriate microservice, making system behavior harder to understand.
+- Managing persistent state across service versions add complexity.
+
+> [!NOTE]
+> If the transition of consumers to the new version and its release takes longer, it's more practical to coexist different endpoints within the same microservice, rather than maintaining entirely separate versions.
+
+
+## Emulate the old interface
+
+Implement the new interface in a new endpoint, but still preserve the existing interface (to maintain backward compatibility) for a transitional period.
+
+Once all the consumers are no longer using the old endpoint, remove it along with any associated code.
+
+**Emulation of old endpoints is the preferred approach**, as the challenges of implementing emulation are generally easier to deal with than coexisting microservice versions.
+
+> [!TIP]
+> For systems making use of **HTTP**, choose between version numbers in URI (for example, `/v1/customer` or `/v2/customer`) or request headers for routing, based on your project's needs and client behavior preferences. For **RPC**, methods are put in different namespaces (for example, `v1.createCustomer` and `v2.createCustomer`).
+
+
+## The social contract
+
+Owner and the consumer need to be clear on:
+- How to raise when the interface needs to change?
+- How to collaborate to agree on what the change will look like?
+- Who will update consumers?
+- Timeline for consumers to adopt the new interface.
+
+
+## Tracking Usage
+
+All endpoints exposed by the microservice must be **logged** to track usage and identify consumers still using the old interface.
+
+A **client identifier** helps teams coordinate migration from the old interface. Consumers can include their identifier in the **user-agent header** when making HTTP requests or use an **API gateway** requiring client keys for identification.
+
+
+## Extreme Measures
+
+If consumers still do not upgrade even after agreed to do so, **extreme measures** may be considered.
+
+### One-year transition period
+
+One option is retiring old interfaces after a **one-year transition period** without tracking usage.
+
+Responsibility for system failures after the old interface is turned off was shifted to the consuming microservice's team.
+
+This extreme approach can lead to inefficiency, as it lacks active user tracking.
+
+
+### Slowing down responses
+
+A more drastic approach is **gradually slowing down responses** from the old library, pushing teams toward upgrading. The slowdown increases over time to reinforce the need for migration.

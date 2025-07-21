@@ -1,0 +1,28 @@
+# Sharding
+
+## Overview
+
+MongoDB supports horizontal scaling through sharding. This method divides a larger database into smaller, more manageable components known as shards.
+
+Each shard is stored on a separate database server instance, which distributes the load and offers an
+effective approach to data management.
+
+In MongoDB, data sharding occurs at the collection level (data of a collection is distributed across multiple shards).
+
+Each database in a cluster has its own primary shard that stores all the unsharded collections.
+
+
+## Shard key
+
+A shard key is made up of one or more document fields.
+
+The data is divided into non-overlapping chunks by breaking down the range of shard key values.
+
+The goal is to evenly distribute these chunks among a cluster's shards, ensuring efficient distribution.
+
+
+## Shard key index
+
+To shard a populated collection, an index that begins with the shard key is necessary. 
+
+However, for empty collections, MongoDB automatically generates the required supporting index if needed.

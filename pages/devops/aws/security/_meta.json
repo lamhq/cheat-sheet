@@ -1,0 +1,8 @@
+{
+  "shared-responsibility-model": "Shared Responsibility Model",
+  "dos": "Denial-of-Service Attacks",
+  "identity-management": "Identity Management",
+  "data-protection": "Data Protection",
+  "infrastructure-protection": "Infrastructure Protection",
+  "threat-detection": "Threat Detection"
+}

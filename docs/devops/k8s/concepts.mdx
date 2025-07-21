@@ -1,0 +1,23 @@
+# Concepts
+
+Fundamental building blocks in Kubernetes:
+
+1. **Pod**: The smallest and simplest Kubernetes object, representing one or more containers that share storage, network, and specifications.
+
+2. **ReplicaSet**: Ensures a specified number of pod replicas are running. Deployments usually manage ReplicaSets.
+
+3. **Deployment**: Manages the lifecycle of pods, ensuring the desired number of replicas and allowing updates to applications seamlessly.
+
+4. **Service**: Provides a stable network endpoint for accessing a set of pods. It enables load balancing and service discovery.
+
+5. **Namespace**: Offers a way to divide cluster resources between multiple users or applications, enabling resource isolation.
+
+6. **ConfigMap**: Manages configuration data separately from the application code.
+
+7. **Secret**: Stores sensitive data such as passwords, OAuth tokens, and SSH keys, which can be used by pods.
+
+8. **PersistentVolume (PV) and PersistentVolumeClaim (PVC)**: PV represents storage in the cluster, and PVC allows pods to request specific storage resources.
+
+9. **Ingress**: Manages external HTTP and HTTPS access to services within the cluster, typically using a reverse proxy.
+
+10. **Node**: Represents a single worker machine in the cluster, where pods are scheduled and run.

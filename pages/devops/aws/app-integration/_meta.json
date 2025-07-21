@@ -1,0 +1,10 @@
+{
+  "api-gateway": "Amazon Api Gateway",
+  "app-flow": "Amazon AppFlow",
+  "app-sync": "AWS AppSync",
+  "event-bridge": "Amazon EventBridge",
+  "sns": "Amazon SNS",
+  "mq": "Amazon MQ",
+  "sqs": "Amazon SQS",
+  "step-function": "AWS Step Functions"
+}

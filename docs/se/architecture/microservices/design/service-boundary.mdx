@@ -1,0 +1,150 @@
+# Service Boundary
+
+Having a clear service boundaries is crucial to achieve independently changeable, deployable, and releaseable.
+
+Concepts to consider for effective boundaries:
+1. information hiding
+2. cohesion
+3. coupling
+
+
+## Information Hiding
+
+Limiting the exposure of internal details of a service, ensuring that only necessary information is shared with other services.
+
+Benefits:
+- **Comprehensibility**: each service can be looked at in isolation and understood in isolation.
+- **Flexibility**: services can be changed independently from one another, allowing for changes to be made to the functionality of the system without requiring other services to change.
+- **Faster development**: when services are able to be developed independently, it allows more work to be done in parallel and reduce the impact of adding more developers to a project.
+
+> [!TIP]
+> Minimizing the interface / expectations between modules / microservices reduces the impact of changes, making them easier to understand and update.
+
+
+## Cohesion
+
+Grouping related functionality and behaviors together within a single service.
+
+When related functionality resides in one service, making changes is easier and less risky.
+
+Strong cohesion allows changes to be implemented and deployed in one place without involving others.
+
+> [!WARNING]
+> Weak cohesion occurs when related functionality is spread across the system. Making changes in multiple places increases the risk and time required for deployment. To avoid these issues, we need to find boundaries that ensure related behavior is in one place and communicate loosely with other boundaries.
+
+> THE CODE THAT CHANGES TOGETHER, STAYS TOGETHER.
+
+
+## Coupling
+
+Loosely coupled services enable one service to change without affecting others.
+
+Tight coupling occurs when a change in one service necessitates a change in another service.
+
+A service should only know essential details about about the services it collaborates with.
+
+Limit the number of calls between services helps prevent tight coupling and performance issues.
+
+
+## Coupling and Cohesion
+
+> A SYSTEM IS STABLE WHEN THERE IS STRONG COHESION AND LOW COUPLING.
+
+Cohesion relates to the relationship between things within a boundary (microservice), while coupling describes the relationship across boundaries.
+
+High cohesion promotes a well-defined internal structure, while low coupling ensures minimal dependencies. Together, they contribute to the stability, scalability, and flexibility of a microservices architecture, enabling independent development and deployment across teams.
+
+
+## Types of Coupling
+
+Here are different types of coupling, organized from low (desirable) to high (undesirable):
+
+### Domain Coupling
+
+Occurs when microservices are too tightly connected through shared domain knowledge or business logic, relying heavily on each other's internal implementation
+
+**Example**: the `Order` service calls the `Warehouse` and `Payment` microservices for reserving stock and making payment.
+
+![](./domain-coupling.drawio.svg)
+
+**Problems**:
+- While domain coupling is considered a loose form of coupling, but it can cause issues if there are excessive dependencies or complex data exchanges between services, making systems harder to scale and maintain.
+
+**How to solve it?**
+- Adopt domain-driven design principles to separate bounded contexts.
+- Share only necessary information and send minimal data (information hiding)
+- Define clear contracts and APIs instead of sharing internal logic
+
+
+### Temporal coupling
+
+Occurs when multiple services depend on each other (by synchronous communication), they must operate simultaneously to function properly.
+
+**Example**: the `Order` service makes a synchronous call to the `Warehouse` microservice, requiring `Warehouse` to be accessible during the call. If `Warehouse` cannot be reached, the operation fails.
+
+![](./temporal-coupling.drawio.svg)
+
+**Problems**:
+- Increases latency in reduces scalability due to synchronous communication
+- Reduces system resilience to outages, as downtime in one service can cascade to others.
+
+**How to solve it?**
+- Use asynchronous communication patterns, such as message queues or event-driven mechanisms.
+
+
+### Pass-Through Coupling
+
+Occurs when one microservice passes data to another microservice because it is needed by a downstream microservice.
+
+**Example**: Suppose Microservice A sends a request to Microservice B, but Microservice B just passes it along to Microservice C without performing any transformation or business logic. This creates unnecessary dependencies.
+
+**Problems**:
+- Upstream services must know about the internal behavior of the pass-through service.
+- Creates unnecessary dependencies on the pass-through service.  
+- Changes to the forwarded data can break multiple services.
+- Increases system complexity without delivering value.  
+
+**How to solve it?**
+- Bypass the intermediary microservice and allow direct communication between the originating and downstream microservices
+- Avoid designing "proxy-like" microservices unless there’s a clear purpose, like authentication or request aggregation.  
+- Use API gateways or service meshes for request routing instead of pass-through services.  
+- Focus on aligning services with clear, independent business capabilities.  
+
+
+### Common Coupling
+
+Occurs when multiple microservices share access to a global resource, such as a shared database, configuration file, or shared variables.
+
+**Problems**:
+- Changes to the structure of the data can impact multiple microservices at once
+- Harder to scale and refactor, as removing or updating a shared resource requires coordinated changes across multiple services
+- Debugging becomes more complicated, as it’s harder to determine which module modified the shared data
+- Shared data bypass the principle of encapsulation, where each module should manage its own state without exposing it unnecessarily
+
+**When Might It Be Acceptable**?
+- Sharing configuration settings or constants across modules
+- Systems with limited scope and simplicity where the downsides of common coupling are manageable
+
+**How to solve it?**
+- Implement communication through APIs, ensuring clear boundaries.
+- Use service discovery or centralized configuration management tools like Consul or Spring Cloud Config.
+- Regularly review and refactor shared dependencies to minimize risks.
+
+
+### Content Coupling
+
+Happens when one microservice relies directly on the internal data structures or logic of another microservice.
+
+Example: a service accesses another microservice's database and changing it directly. If the database schema is changed, the service will break.
+
+**Problems**:
+- Reduces flexibility and scalability.  
+- Makes updates or changes risky and time-consuming.  
+- Increases the likelihood of cascading failures across services.
+- Eliminates information hiding and makes it difficult to define what can or cannot be changed.
+
+**How to solve it?**  
+- Use well-defined APIs to communicate between services.  
+- Avoid direct access to another service's database or internals.  
+- Emphasize proper documentation and contracts for APIs.  
+- Adopt techniques like domain-driven design and event-driven communication patterns.  

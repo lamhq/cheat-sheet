@@ -1,0 +1,15 @@
+[
+  "installation",
+  "replicaset",
+  {
+    "name": "sharding",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "data-modeling",
+    "type": "dir",
+    "collapsed": true
+  },
+  "shell"
+]

@@ -1,0 +1,34 @@
+# Monitoring
+
+## Console
+
+Listen for all console logs:
+```ts
+page.on('console', msg => console.log(msg.text()));
+```
+
+Listen for `console.error()`:
+```ts
+page.on('console', msg => {
+  if (msg.type() === 'error')
+    console.log(`Error text: "${msg.text()}"`);
+});
+```
+
+
+## Exceptions
+
+Capture unhandled exceptions:
+```ts
+const errors: Error[] = [];
+
+// Listen for uncaught exceptions
+page.on('pageerror', (error) => {
+  errors.push(error);
+});
+
+await page.goto('https://example.com');
+
+// Assert no errors were thrown
+expect(errors, 'Unexpected page errors').toHaveLength(0);
+```

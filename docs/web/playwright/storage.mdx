@@ -1,0 +1,44 @@
+# Storage
+
+## Cookie
+
+Get All Cookies:
+```ts {3}
+test.describe("cookie demo", () => {
+  test("some test", async ({ page, context }) => {
+    const cookies = await context.cookies();
+    console.log(cookies);
+  });
+});
+```
+
+Set Cookies:
+```ts
+await context.addCookies([
+  {
+    name: 'session_id',
+    value: 'abc123',
+    domain: "localhost",
+    path: "/",
+    httpOnly: true,
+    secure: false,
+    sameSite: 'Lax'
+  }
+]);
+```
+
+## Local Storage
+
+Get storage state:
+
+```ts
+await browserContext.storageState();
+```
+
+Set Local Storage Values:
+```ts
+await page.evaluate(() => {
+  localStorage.setItem('theme', 'dark');
+  localStorage.setItem('authToken', 'abc123');
+});
+```

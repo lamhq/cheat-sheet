@@ -1,0 +1,50 @@
+# GitHub Pages
+
+## Overview
+ 
+GitHub Pages is a **static website hosting service**.
+
+GitHub Pages is available in:
+- Public repositories with GitHub Free, GitHub Free for organizations
+- Public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server.
+
+
+## How it work?
+
+GitHub Pages supports two primary deployment methods for your website:
+
+### Deploy from a GitHub Branch
+
+1. You write your website using HTML, CSS, and JavaScript
+2. Push website's content to GitHub and it is automatically deployed to Github Pages
+3. Your site is now live at `https://yourusername.github.io/repo-name`
+4. Suitable for simple static sites which doesn't require a build process
+
+### Deploy Using GitHub Actions
+
+1. Your develop your website using a frontend framework (e.g. with React, Vue, Svelte)
+2. Create a Github Action workflow that to build and deploy your website
+3. Push the code to GitHub and wait for the workflow run
+4. Your site is now live at `https://yourusername.github.io/repo-name`
+
+
+## Why GitHub Pages?
+
+- Centralized management in GitHub repo settings, no need for extra accounts.  
+- Simple setup. perfect for beginners, minimal configuration.  
+- Supports custom domains with free HTTPS SSL.  
+- Fast loading—served via GitHub’s global CDN.  
+
+
+## Custom Domain
+
+Add a **custom sub domain** to a GitHub Pages site deployed via **GitHub Actions**:
+
+1. Add a **CNAME record** in your domain registrar:
+   - **Type**: `CNAME`  
+   - **Host/Name**: `your-sub-domain` (or your subdomain)  
+   - **Points to**: `yourusername.github.io`  
+
+2. Go to your repo’s **Settings** → **Pages**:
+   - Under **Custom Domain**, enter your domain (`abc.example.com`)
+   - Check **Enforce HTTPS** once it's available

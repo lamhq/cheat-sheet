@@ -1,0 +1,47 @@
+# Event-driven Communication
+
+A microservice emit events, other microservices consume and react to accordingly.
+
+The microservice publishing an event doesn't know which services will consume it, coupling is greatly reduced.
+
+> [!NOTE]
+> With request-response, the sender knows what should be done and instructs the other service, indicating a stronger domain coupling due to the requester's awareness of the downstream service's capabilities.
+
+## Implementation
+
+Message brokers (e.g. RabbitMQ) enable microservices to emit and consume events.
+
+Message brokers are typically scalable and resilient, they can also increase development complexity as another system to run for development and testing.
+
+May require additional servers and expertise to keep the infrastructure up and running.
+
+
+## Event structure
+
+What should be inside an event so consumers can have what they need?
+
+1. **Just an ID**: the event to just contain an identifier for the related entity (`ID`), consumers fetch the full information using this ID from another microservice. Downsides:
+   1. Add domain coupling between consumers and the microservice contain data
+   2. Might result to a lot of fetch requests from consumer
+2. **Fully detailed events** (preferred). Put everything consumers need into an event. Allow for looser coupling, auditting, debugging. But the event size is limitted by the message broker
+
+> Kafka, a message brokers, has the default maximum size for a message is 1 MB
+
+## Where to Use It
+
+Where information needs to be broadcast and downstream microservices can work independently.
+
+Where loose coupling is preferred.
+
+FYI, more teams replacing request-response interactions with event-driven interactions.
+
+> [!NOTE]
+> Microservice architecture can contain a mix of different styles of interaction, so it's not necessary to go all in with event-driven collaboration.
+
+## Disadvantages
+
+Increase complexity:
+- manage messages publishing and subscribing
+- hadnling long-running async request-response
+- monitoring, request tracing with correlation IDs, debugging, replicating errors
+- require rewire your brain to be accustomed to this communication style

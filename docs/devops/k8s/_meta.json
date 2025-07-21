@@ -1,0 +1,11 @@
+[
+  "getting-started",
+  "architecture",
+  {
+    "name": "concepts",
+    "type": "dir",
+    "collapsed": true
+  },
+  "cli",
+  "config"
+]

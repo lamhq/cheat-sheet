@@ -1,0 +1,337 @@
+# Microservices
+
+## Overview
+
+Microservices are **independently releasable services** that are modeled around a business domain 
+
+> [!NOTE]
+> A **service** here means a completely separate operating system process.
+
+Each microservice has its own database, **avoid the use of shared databases** in most circumstances.
+
+Microservices are **technology agnostic**, offering advantages in flexibility.
+
+
+## SOA vs Microservices
+
+Service-oriented architecture (SOA) is a design software approach where applications are built by combining independent services that communicate with each other.
+
+SOA focuses on making software easier to reuse, maintain, or update by structuring software as a collection of independent, reusable services that work together seamlessly.
+
+**Microservices is a specific approach for SOA**. They are opinionated about how service boundaries should be drawn. Similar to how Extreme Programming (XP) or Scrum is a specific approach for Agile software development
+
+
+## Key Concepts
+
+### Independent Deployability
+
+Each microservice should be able to be deployed independently (changes in one service don't require changes or redeployment of other services).
+
+Loosely coupled microservices ensures independent deployability.
+
+Well-defined and stable service contracts are necessary for loose coupling.
+
+Independent deployability guides the identification of **microservice boundaries**.
+
+> [!CAUTION]
+> Sharing databases can make achieving independent deployability difficult.
+
+
+### Modeled Around a Business Domain
+
+Microservices should align with business domains to simplify updates and recombination.
+
+Frequent cross-service changes are costly and require coordination (across services or teams), should be avoided.
+
+Services should be designed around business functionality to focus on business needs, instead of technical functionality.
+
+### Owning Their Own State
+
+Microservices should **avoid using shared databases**, instead, access data from other microservices when needed.
+
+Internal state in a microservice should be hidden and only accessed through interfaces.
+
+Services should encapsulate UI, business logic, and data as complete slices of business functionality.
+
+
+### Size
+
+Microservices should be small enough to remain focused on a single business capability or responsibility, but large enough to be independently developed, deployed, and maintained.
+
+**Single Responsibility Principle**: A microservice should do one thing and do it well. This makes it easier to update or scale specific parts of your system without affecting others.
+
+**Team Ownership**: A microservice should be manageable by a small, cross-functional team. If a service requires coordination across multiple teams, it might be too large.
+
+**Avoid Over-Splitting**: If microservices become too small, the system can get overly complex, with increased communication overhead between services.
+
+
+
+### Flexibility
+
+Microservices provide flexibility in the following aspects:
+- **Organizational Flexibility**: Different teams can independently own, develop, and deploy their services. This reduces dependencies between teams, enabling faster development cycles and more autonomy.
+- **Technical Flexibility**: Microservices allow the use of diverse technologies and tools for different services.
+- **Scalability**: you can scale specific parts of an application independently.
+- **Robustness**: If one service fails, it doesn't necessarily bring down the entire system.
+
+> [!NOTE]
+> Incremental adoption of microservices is recommended to gradually assess the impact and make adjustments as needed.
+
+
+### Alignment of Architecture and Organization
+
+In Layered architectures, such as three-tiered architectures, changes often span multiple layers (presentation, application, data)
+
+![](./microservices/three-layer-arch.drawio.svg)
+
+Three-tiered architecture is widely used because it is well-understood and aligns with traditional team structures, which are often organized around specific core competencies.
+
+There’s a shift toward breaking systems into vertical business lines, with dedicated teams to reduce silos and handoffs.
+
+*For example, a microservice owned by the profile team would handle the customer profile functionality, including the ability to update information and store customer state.*
+
+*The choice of a favorite genre would be associated with a given customer, making the change more localized.*
+
+![](./microservices/microservices-arch.drawio.svg)
+
+*Other microservices, such as a Catalog microservice and a Recommendation microservice, can also interact with the customer microservice.*
+
+*This architecture aligns teams to lines of business within the organization and makes it easier to make changes.*
+
+![](./microservices/services-comm.drawio.svg)
+
+
+## Technologies
+
+Tools and technologies for implementing microservices.
+
+### Log Aggregation and Distributed Tracing
+
+Implementing a log aggregation system is strongly recommended for adopting microservices.
+
+Log aggregation systems collect and aggregate logs from all services, providing a central place for analysis and alerting.
+
+> [!TIP]
+> **Humio** is a recommended log aggregation tool, but simple logging services provided by public cloud vendors can also be used
+
+Implementing **correlation IDs** can help isolate logs associated with a specific flow of service calls, making troubleshooting easier.
+
+As the system grows in complexity, tools for exploring system behavior become essential, such as **analyzing traces** across multiple services and **detecting bottlenecks**.
+
+> [!TIP]
+> **Jaeger** focus on distributed tracing. **Lightstep** and **Honeycomb** provide advanced capabilities for exploring the state of a running system.
+
+
+### Containers and Kubernetes
+
+Running microservice instance in isolation prevents issues in one microservice from affecting another.
+
+Containers enable isolated execution for service instances, which is cost-effective and has faster spin-up times.
+
+Container orchestration platforms like **Kubernetes** help manage containers across multiple machines, distribute container instances, and improve robustness and throughput.
+
+It's recommended to use a managed service on a public cloud provider to run the Kubernetes cluster instead of managing it yourself.
+
+
+### Streaming
+
+Microservices require ways to share data between them.
+
+Tools and technologies that allow for easy streaming and processing of large volumes are essential in microservice architectures.
+
+> [!TIP]
+> **Apache Kafka** is a popular choice for streaming data in a microservice environment, offering features like message permanence, compaction, and scalability.
+> Kafka has added stream-processing capabilities with KSQLDB and can be used with dedicated solutions like Apache Flink.
+
+> [!TIP]
+> **Debezium** is an open source tool that helps stream data from existing datasources over Kafka, enabling traditional datasources to be part of a stream-based architecture.
+
+
+## Benefits
+
+### Technology Heterogeneity
+
+Microservices allow different technologies for each service, enable using the right tool for the job.
+
+Microservices enable faster adoption of new technologies.
+
+Upgrading technologies can be easier as the implementation details are hidden from consumers.
+
+![](./microservices/tech-hetero.drawio.svg)
+
+
+### Robustness
+
+By isolating failures within service boundaries, the rest of the system can continue functioning.
+
+> [!CAUTION]
+> Distributed systems also introduce new sources of failure, such as network and machine failures, which need to be understood and handled properly. Failure to address these concerns seriously can result in a less robust system after migrating to microservices.
+
+
+### Scaling
+
+Smaller services in a microservices architecture allow for scaling only the services that need it, enabling other parts of the system to run on smaller hardware.
+
+> [!TIP]
+> Microservices, combined with on-demand provisioning systems like AWS, enable cost-effective scaling based on demand.
+
+
+### Ease of Deployment
+
+Changes can be made to a single service and deployed independently, allowing for quicker deployment of code.
+
+Any problems that occur can be isolated to an individual service, making rollback easier and faster.
+
+Microservices enable quickly release new functionality and remove impediments to software deployment.
+
+
+### Organizational Alignment
+
+Large teams and large codebases can lead to problems, especially when the team is distributed. Smaller teams working on smaller codebases tend to be more productive.
+
+Microservices align architecture with organization by minimizing the number of people working on a specific codebase, optimizing team size and productivity.
+
+Ownership of services can be changed as the organization evolves, maintaining alignment between architecture and organization in the future.
+
+
+### Composability
+
+- **Reusability**: Microservices enable reuse of functionality. 
+- **Flexibility**: Microservices allow functionality to be consumed in different ways, adapt to consumer needs.  
+- **Collaboration**: Microservices create opportunities for external parties to enhance the system, making application development more flexible.
+
+
+## Challenges
+
+### Developer Experience
+
+As the number of microservices increases, the developer experience can be impacted.
+
+There is a limit to the number of services that can be run locally.
+
+Running the entire system on one machine may not be feasible, especially when using cloud services that cannot be run locally.
+
+Extreme solutions like "developing in the cloud" can impact feedback cycles and may not be ideal.
+
+
+### Technology Overload
+
+The abundance of technology available for microservices can be overwhelming.
+
+It's important to avoid blindly adopting new technologies and instead weigh their benefits and costs carefully.
+
+The approach of gradually introducing new technologies as needed helps avoid overwhelm and improves adaptability.
+
+
+### Cost
+
+Adopting microservices increases short-term costs due to added resources (for infrastructure) and slows productivity (as teams adapt to new ideas). 
+
+This can delay the delivery of new functionality or require more hires.
+
+While are not an ideal choice for cost reduction, microservices may boost profits by enabling broader customer reach and parallel development.
+
+They're better for driving profits than cutting costs.
+
+
+### Reporting
+
+Microservice architectures scatter data across multiple schemas, that makes reporting across all the data becomes more challenging.
+
+Solutions include:
+1. Real-time reporting on large volumes of data using streaming
+2. Consolidating data into central reporting databases or data lakes for analysis.
+
+
+### Monitoring and Troubleshooting
+
+With many smaller services, tracking down the root cause of an issue becomes difficult as problems may span multiple services and their dependencies.
+
+Gaining end-to-end visibility into how requests flow through the system requires advanced monitoring and tracing tools.
+
+Each microservice generates its own logs, making it harder to aggregate and analyze them without specialized tools.
+
+
+### Security
+
+In a microservice architecture, information flows over networks between services, making it more vulnerable to observation and manipulation during transit.
+
+Data in transit needs to be protected to prevent unauthorized access or tampering.
+
+Microservice endpoints should be secured to ensure that only authorized parties can interact with them.
+
+
+### Testing
+
+End-to-end tests in microservices are harder to write and maintain due to their broad scope across multiple processes. 
+
+Issues like service failures or timeouts can cause false negatives in end-to-end tests.
+
+As systems grow, the cost of such tests increases while confidence decreases.
+
+Alternative approaches, like contract-driven testing, testing in production, or techniques like canary releases, become more valuable.
+
+
+### Latency
+
+In microservices, local processing becomes distributed, requiring data serialization and transmission, which can cause latency.
+
+It can be difficult to measure the impact of latency during the design or coding phase, so incremental migration (making small changes) is important.
+
+Understanding acceptable latency helps ensure efficiency, as slower operations might still be adequate.
+
+> [!TIP]
+> Using distributed tracing tools like Jaeger can help measure end-to-end latency for the operations that matter.
+
+
+### Data Consistency
+
+Shifting from a monolithic system to a distributed one introduces challenges in maintaining data consistency due to multiple databases.
+
+In a distributed system, traditional transactions become impractical.
+
+To manage state in a distributed system, concepts like sagas and eventual consistency need to be considered. But adopting them  demand significant adjustments in the way data is handled, which can be daunting.
+
+Therefore, it's essential to proceed step by step. By gradually decomposing the monolithic architecture, it allows you to measure the impact of changes without disrupting the entire system.
+
+
+## Should I Use Microservices?
+
+### Whom They Might Not Work For
+
+Microservices are often unsuitable for new products or startups due to frequent domain model changes, which make altering service boundaries costly.
+
+Startups, with smaller teams, may struggle with the added complexity and resource demands of microservices.
+
+Deployment and management of microservices also require extra time and effort.
+
+It's better to wait for a stable domain model before defining services.
+
+
+### Where They Work Well
+
+Microservices enable developers to work independently and reduce delivery contention.
+
+While unsuitable for small startups, they support growth in larger scale-ups.
+
+SaaS applications benefit from microservice due to independent releasability and scalability.
+
+Microservices can be easily deployed and matched with cloud services, maximizing the benefits of cloud platforms.
+
+The technology-agnostic nature of microservices allows for experimentation with new technologies and identification of potential benefits.
+
+
+## How to start?
+
+### Have a Goal
+
+Don't be obsessed with creating microservices without ever asking why.
+
+Microservices are not the goal. You don't "win" by having microservices. You must have a clear understanding of what you expect to achieve. 
+
+
+### Breaking Down Monoliths
+
+Having an existing codebase you want to decompose into microservices is much easier than trying to go to microservices from the beginning.
+
+There is danger in creating microservices when you have an unclear understanding of the domain. Prematurely decomposing a system into microservices can be costly, especially if you are new to the domain.

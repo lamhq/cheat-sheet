@@ -1,0 +1,36 @@
+# Handle Computed Values
+
+## Overview
+
+If you want to return calculated data values to your application, by using the **Computed** and the **Approximation** schema patterns you can improve performance by pre-computing and storing the resulting values ahead of time so they are readily available when you request the data.
+
+
+## Computed Data Pattern
+
+Use the computed pattern when your application performs the same calculations repeatedly and has a high read to write ratio.
+
+Instead of computing values on every read, the application stores the computed value and recalculates it as needed (when computed value's source data changes or periodicly).
+
+The computed pattern reduces CPU workload and increases application performance.
+
+
+## Approximation Pattern
+
+Use the approximation pattern when you have values that change frequently, but users don't need to know precise values (e.g., City population, Website visits, Airline travelers). 
+
+Instead of updating values every time data changes, the approximation pattern updates data based on a larger granularity. This results in fewer updates and a lower application workload.
+
+*For example, consider tracking a city's population. Instead of updating the population count with every individual change, you can store updates only when the population shifts by a significant amount, such as 100 people:*
+
+```js
+function updateStoredPopulation(curr_population, new_population) {
+  let population_change = Math.abs(curr_population - new_population);
+  if (population_change >= 100) {
+    db.population.insertOne({
+      city: "New Perth",
+      population: new_population,
+      date: new Date(),
+    });
+  }
+}
+```

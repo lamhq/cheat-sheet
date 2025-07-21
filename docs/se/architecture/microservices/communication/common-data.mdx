@@ -1,0 +1,31 @@
+# Communication Through Common Data
+
+## Overview
+
+One microservice puts data into a defined location, and another microservice then makes use of the data.
+
+The data can be a file system, data lake or data warehouse.
+
+Downstream microservice needs a mechanism to identify when new data is available (polling is a frequent solution).
+
+
+## Advantages
+
+- simple and can be implemented using common technologies
+- can work well with different data volumes
+
+## Disadvantages
+
+- not useful in low-latency situations
+- use polling or timed jobs to check for new data
+- the data store becomes a potential source of coupling
+- the robustness of data store affects the robustness communication
+
+> [!NOTE]
+> If you're interested in sending larger volumes of data and having them processed more in "real time," then using some sort of streaming technology like Kafka would be a better fit.
+
+
+## Where to Use It?
+
+- When there're restrictions on what technology can be used (legacy systems)
+- sharing large volumes of data (multigigabyte file or million database rows)

@@ -1,0 +1,11 @@
+[
+  "flex-layout",
+  "grid-layout",
+  "sass",
+  "css-modules",
+  {
+    "name": "tailwind-css",
+    "type": "dir",
+    "collapsed": true
+  }
+]

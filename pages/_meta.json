@@ -1,0 +1,17 @@
+{
+  "*": {
+    "type": "page"
+  },
+  "index": {
+    "display": "hidden",
+    "theme": {
+      "typesetting": "article"
+    }
+  },
+  "backend": "Backend",
+  "data-engineering": "Data",
+  "devops": "DevOps",
+  "software-engineering": "Software",
+  "tools": "Tools",
+  "soft-skills": "Soft Skills"
+}

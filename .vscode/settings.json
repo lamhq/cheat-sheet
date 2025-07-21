@@ -1,0 +1,50 @@
+{
+  "explorer.sortOrder": "mixed",
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  "editor.tabCompletion": "onlySnippets",
+  "editor.snippetSuggestions": "top",
+  "task.allowAutomaticTasks": "off",
+  "task.autoDetect": "off",
+  "task.quickOpen.history": 5,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "files.associations": {
+    "*.mdx": "markdown"
+  },
+  "files.exclude": {
+    "**/.ipynb_checkpoints": true
+  },
+  "[python]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4
+  },
+  "[markdown]": {
+    "files.trimTrailingWhitespace": false
+  },
+  "markdown.styles": [
+    "assets/md-preview.css"
+  ],
+  "taskExplorer.clickAction": "Execute",
+  "taskExplorer.enabledTasks": {
+    "tsc": false,
+    "ruby": false,
+    "ant": false,
+    "bash": false,
+    "composer": false,
+    "gradle": false,
+    "grunt": false,
+    "gulp": false,
+    "make": false,
+    "maven": false,
+    "npm": false,
+    "perl": false,
+    "pipenv": false,
+    "powershell": false,
+    "python": false
+  },
+  "taskExplorer.expanded": {
+    "lastTasks": false,
+    "favorites": false
+  }
+}

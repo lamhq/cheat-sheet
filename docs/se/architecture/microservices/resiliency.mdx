@@ -1,0 +1,153 @@
+# Resiliency
+
+## Stability Patterns
+
+Stability Patterns help make sure that when something fails in a system, it doesn’t break everything else.
+
+## Time-Outs
+
+Time-outs help keep a system responsive and resilient by ensuring that operations don’t hang indefinitely or fail prematurely.
+
+Best practices:
+
+1. Apply time-outs to all calls to external services.
+2. Set an overall time-out for an entire operation.
+3. Choose a reasonable default time-out.
+4. Monitor when time-outs occur and adjust accordingly.
+5. Base time-out values on typical response times of downstream services.
+
+
+## Retries
+
+Retrying failed requests when temporary issues occur can make a lot of sense.
+
+Temporary failures:
+- Packet loss: data gets lost in transmission
+- High load spikes: a server briefly struggles
+- Gateway disruptions: unexpected delays at routing points
+
+Not all failures should trigger a retry. Too many retries can worsen performance rather than fix temporary failures.
+
+Examples:
+- 404 Not Found → No retry needed (the resource doesn’t exist)
+- 503 Service Unavailable → Retry might be useful (server may be temporarily overloaded)
+- 504 Gateway Timeout → Retry might be useful (network delay could resolve itself)
+
+Considerations:
+- Introduce a delay before retrying to prevent overwhelming a struggling service.
+- Have a time budget for user-facing operations, reduce unnecessary retries.
+
+
+## Bulkheads
+
+Bulkheads isolate system components so that failures in one area don’t impact others.
+
+Bulkheads help prevent failures rather than just reacting to them, while **time-outs** and **circuit breakers** free up resources when they're constrained.
+
+Examples:
+- Separate connection pools for each downstream service: Prevents one failing connection from affecting others.
+- Microservice separation: Ensures that an outage in one service doesn’t cascade to others.
+- Load shedding: Bulkheads allow systems to reject requests strategically to prevent overload.
+
+
+## Circuit Breakers
+
+A circuit breaker acts as a protection mechanism that automatically stops requests to a failing service, preventing cascading failures in a system.
+
+If too many requests to a downstream service fail, the circuit breaker "blows" (opens), and all further requests fail fast instead of waiting indefinitely.
+
+### Benefits
+
+- **Prevents system slowdowns:** If a failing service responds slowly, it can impact the entire system. Circuit breakers stop unnecessary requests to that service.
+- **Stops unnecessary retries:** Instead of continually sending requests to a broken service, the circuit breaker ensures that requests stop temporarily.
+- **Ensures recovery monitoring:** After a set period, the system tests the failed service with a few requests. If responses are healthy, the circuit breaker closes, and normal traffic resumes.
+
+
+### Implementation
+
+1. Define what counts as a failure (e.g., time-outs or 5XX HTTP errors).
+2. Set a threshold for failures before the circuit breaker activates.
+3. Allow automatic recovery by periodically testing the service and closing the circuit breaker when it's stable.
+4. Consider manual activation for maintenance, preventing unnecessary failures during planned downtime.
+
+
+## Isolation
+
+Isolation ensures that one service's failure doesn't negatively impact another.
+
+### Benefits
+
+- **Minimizes disruptions**: If a downstream microservice goes offline, upstream services can continue operating if middleware or buffering systems are in place.
+- **Increases autonomy**: Isolated services require less coordination between teams, allowing independent development and evolution.
+- **Reduces failure spread**: If services run on the same machine or share infrastructure, a failure in one can affect others. Proper isolation ensures failures remain contained.
+
+### Isolation Types
+
+1. **Logical isolation**: Services don't communicate directly, reducing dependency risks.
+2. **Physical isolation**: Services run on separate hosts, preventing resource contention (e.g., one service consuming all CPU).
+3. **Database isolation**: Each microservice has its own database infrastructure, avoiding shared failures.
+
+
+### Trade-offs
+
+- **Increased infrastructure costs**: Running services on independent machines requires more resources.
+- **Additional complexity**: Managing isolated systems introduces new failure points, such as middleware dependencies.
+- **Operational overhead**: More isolated services mean more tools needed for monitoring, scaling, and management.
+
+
+## Redundancy
+
+Redundancy means having extra copies or instances of a critical component to reduce the risk of failure.
+
+If a microservice instance fails, redundancy ensures another instance is available to continue handling requests.
+
+### Benefits
+
+- **Prevents service disruptions:** If one instance fails, others can take over, ensuring continuous operation.
+- **Protects against resource unavailability:** If a critical component (like a database or server) goes offline, redundancy minimizes downtime.
+- **Enhances scalability:** Redundant systems not only prevent failures but also help scale workloads efficiently.
+
+### Considerations
+
+- Identify which parts of a system are most vulnerable to failure.
+- Prioritize redundancy for components that would severely disrupt operations if they fail.
+- More redundancy requires more infrastructure, increasing expenses.
+
+
+## Idempotency
+
+Idempotency refers to operations that produce the same result no matter how many times they are executed.
+
+Idempotency is a critical principle in designing fault-tolerant, scalable systems, ensuring that retrying operations won’t cause unintended consequences.
+
+
+### Example
+
+Non-idempotent operation: "Adding Points":
+```xml
+<credit>
+  <amount>100</amount>
+  <forAccount>1234</forAccount>
+</credit>
+```
+
+If processed multiple times, it adds 100 points repeatedly.
+
+An idempotent version, which includes a reference to a specific order:
+```xml
+<credit>
+  <amount>100</amount>
+  <forAccount>1234</forAccount>
+  <reason>
+    <forPurchase>4567</forPurchase>
+  </reason>
+</credit>
+```
+This ensures that the points are only applied once for each unique order.
+
+
+### Benefits
+
+Due to asynchronous processing, there is a small chance that the same message may be processed more than once. By handling events idempotently, duplicate effects are prevented, enhancing system reliability.
+
+> [!CAUTION] For REST API, some HTTP verbs (e.g., GET, PUT) are expected to be idempotent, but this depends on the implementation in the underlying service.

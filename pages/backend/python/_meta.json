@@ -1,0 +1,13 @@
+{
+  "installation": "Installation",
+  "pkg-mgm": "Package Management",
+  "types": "Types",
+  "syntax": "Syntax",
+  "code-style": "Code Style",
+  "debugging": "Debugging",
+  "validation": "Validation",
+  "testing": "Testing",
+  "database": "Database",
+  "api": "API Development",
+  "techniques": "Techniques"
+}

@@ -1,0 +1,29 @@
+# Wide-column Database
+
+## Overview
+
+A wide-column database is a type of NoSQL database that stores data in a tabular format but organizes it differently from traditional relational databases.
+
+Wide-column databases are row-oriented databases.
+
+They're highly scalable and designed to handle large volumes of data.
+
+Ideal for use cases like big data applications, time-series data, real-time analytics, and distributed workloads.
+
+
+## Data model
+
+Data is stored in rows and columns.
+
+Each data entry is identified by a unique combination of row key, column name, and timestamp:
+- Each row can have a different set of columns, which can be very large in number (hence "wide-column").
+- The timestamp can be used for versioning data.
+
+Columns are grouped into "column families," which makes it easier to retrieve and manage related sets of data.
+
+
+## Examples
+
+- Apache HBase was the first open-source wide-column datastore.
+- Cassandra
+- ScyllaDB

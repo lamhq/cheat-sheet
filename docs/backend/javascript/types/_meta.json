@@ -1,0 +1,14 @@
+[
+  "number",
+  "string",
+  "array",
+  "object",
+  "null-undefined",
+  "truthy",
+  "this",
+  "promise",
+  "regex",
+  "map",
+  "set",
+  "symbol"
+]

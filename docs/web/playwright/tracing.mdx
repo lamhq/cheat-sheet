@@ -1,0 +1,62 @@
+# Tracing
+
+## Overview
+
+Tracing records a detailed log of test execution, including browser actions, page state, and network activity.
+
+The output is a `.zip` trace file that can be opened in the **Playwright Trace Viewer**, a GUI tool for debugging.
+
+It include:
+- **DOM snapshots** before, during, and after each action  
+- **Screenshots** rendered as a filmstrip  
+- **Network requests and responses**  
+- **Console logs and errors**  
+- **Source code location** for each action  
+- **Execution timeline** with duration and failure points  
+- **Metadata** like browser type, viewport, and test duration
+
+Use Cases:
+- **Debugging flaky tests**: See exactly where and why a test failed  
+- **CI troubleshooting**: Automatically record traces on failure or retry  
+- **Visual inspection**: Replay test steps with DOM and screenshot context  
+- **Performance analysis**: Identify slow actions or network bottlenecks  
+- **Team collaboration**: Share trace files for remote debugging
+
+Traces are normally run in a Continuous Integration(CI) environment, because locally you can use UI Mode for developing and debugging tests.
+
+
+## Enable Tracing
+
+In your config:
+```ts title="playwright.config.ts"
+use: {
+  trace: 'on-first-retry' // or 'retain-on-failure', 'on', 'off'
+}
+```
+
+Or manually in code:
+```ts
+await context.tracing.start({ screenshots: true, snapshots: true });
+await page.goto('https://example.com');
+
+// ... test actions ...
+
+await context.tracing.stop({ path: 'trace.zip' });
+```
+
+Or you can enable tracing when running tests with `--trace on`:
+```sh
+npx playwright test --trace on
+```
+
+## Viewing trace
+
+Using command line to view a trace file:
+```sh
+npx playwright show-trace trace.zip
+```
+
+Or open the HTML report, clicking on a test will open the detailed view where you can see more information on your tests such as the errors, the test steps and the trace:
+```sh
+npx playwright show-report
+```

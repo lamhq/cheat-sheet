@@ -1,0 +1,14 @@
+[
+  "markdown",
+  "python",
+  "jupyter-nb",
+  "fastapi",
+  "typescript",
+  "debug",
+  "ai",
+  {
+    "name": "dev-containers",
+    "type": "dir",
+    "collapsed": true
+  }
+]

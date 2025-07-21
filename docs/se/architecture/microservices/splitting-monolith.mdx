@@ -1,0 +1,150 @@
+# Splitting the Monolith
+
+## Incremental Migration
+
+Migration from monolithic to microservice should be incremental:
+
+1. Start somewhere small. Choose one or two areas of functionality
+2. Implement them as microservices
+3. Get them deployed into production
+4. Reflect on whether creating your new microservices helped you get closer to your end goal.
+
+
+## What to Split First?
+
+What to split first depends on the balance of **how easy the extraction is** versus **the benefit of extracting**.
+
+1. **Identify Domain Boundaries**: Break down the system by understanding the business domains and subdomains.
+1. **Focus on High-Impact Features**: components that are business-critical or need scalability the most
+2. **Address Bottlenecks**: areas that consistently cause performance issues.
+3. **Most Volatile Features**: Identify areas that change most frequently, see if they would work as microservices. Examples could be pricing modules, promotions, or UI components.
+4. **Separate by Data Ownership**: features or modules that manage distinct datasets. For example, splitting the user database functionality from other systems.
+5. **Least Coupled Component**: modules or features that have minimal dependencies on other parts of the system. These are easier to decouple.
+
+> [!TIP]
+> You can use static analysis tools like [CodeScene](https://www.codescene.com/) to quickly find volatile parts of your codebase.
+
+![](https://codescene.com/hubfs/Teams%20Map%20CodeScene.png)
+
+
+## Decomposition by Layer
+
+Once you've identified the first microservice to extract, you can break it down further.
+
+In three tiers stack, we can look at its user interface, backend code, and data.
+
+### Decomposing UI
+
+Underestimate the importance of decomposing the UI can lead to disconnected systems.
+
+Decomposing the UI often happens after the backend, but don’t let it fall too far behind.
+
+Splitting the UI can bring big advantages once the microservices are ready.
+
+
+### Extracting the code first
+
+The code associated with the functionality is extracted into microservice. However, the data remains in the monolithic database.
+
+Extracting application code before data tends to deliver more short-term benefit and it's easier.
+
+If extracting the application code cause major issues, it might be better to stop the process.
+
+If extracting data is impossible, it's important to analyze the system's data storage early in the process. You need to evaluate whether the data can be separated and decide on a clear strategy for the extraction.
+
+
+### Extracting data first
+
+The data being extracted first, before the application code.
+
+It can be useful in situations in which you are unsure whether the data can be separated cleanly. You want to derisk the full extraction of the microservice.
+
+It forces you to deal up front with issues like loss of enforced data integrity in your database or lack of transactional operations across both sets of data.
+
+It's important to assess whether it's feasible to separate data that is managed within a transaction. If it's too complex now, focus on other system aspects and revisit later.
+
+
+## Decompositional Patterns
+
+Some usefull decompositional patterns:
+
+### Strangler Fig Pattern
+
+This approach gradually replaces the old system by incrementally transferring its features to the new system.
+
+To do that, you intercept calls to the existing monolithic application:
+- If the functionality is implemented in the new microservice, redirected the calls to it.
+- otherwise, let the calls continue to the monolith.
+
+![](./splitting-monolith/strangler-fig.drawio.svg)
+
+Benefits:
+- no changes need to be made to the monolithic application
+- allow the legacy system to continue functioning while the new system is being built and tested
+
+
+### Parallel Run
+
+Running both the old monolithic system and the new microservices-based system simultaneously.
+
+They serve the same requests, allowing you to compare results and verify the new system's accuracy.
+
+As confidence in the new system grows, you can incrementally shift more functionality from the monolith to the microservices.
+
+If issues arise in the new system, the old system can continue to operate without disruption.
+
+Particularly useful for critical systems where downtime or errors during migration are unacceptable.
+
+
+### Feature Toggle
+
+It is a mechanism that allows a feature to be switched off or on, or to switch between two different implementations of some functionality.
+
+> [!TIP]
+> With the **strangler fig** pattern that use an HTTP proxy, we could implement the feature toggle in the proxy layer to allow for a simple control to switch between implementations of the functionality in the monolith and the new microservice.
+
+
+## Concerns
+
+### Performance
+
+Splitting databases apart moves join operations up into the microservices. Microservice has to call other microservices for requesting information.
+
+*For example, when generating the bestsellers report, the Finance microservice need to call the Catalog microservice, requesting product information on each product SKUs*.
+
+*We can mitigate the impact of report generating latency by allowing for SKUs to be looked up in bulk, or cache the product information locally.*
+
+### Data Integrity
+
+You can no longer rely on your database to enforce the integrity of inter-entity relationships for entities stored in multiple microservice
+
+*For instance, a foreign key relationship enables navigation between related tables and prevents deletion of referenced records.*
+
+Work-arounds:
+- Use a soft delete to mark a record as deleted without actually removing it.
+- Copy the data to another microservice, and synchronize changes in that data.
+
+
+### Transactions
+
+We lose the safety of the ACID transactions when splitting data across multiple databases
+
+
+### Tooling
+
+We lack good refactoring-type tooling for changing databases.
+
+There are many tools for managing schema changes in relational database. Schema changes are defined in version-controlled delta scripts and run in strict order in an idempotent manner.
+
+
+### Reporting Database
+
+There are cases for accessing data from a database rather via an API.
+
+With a reporting database, we create dedicated database for external access, and microservice has to push data to the reporting database.
+
+![](./splitting-monolith/reporting-db.drawio.svg)
+
+Reporting database enables users to execute ad hoc SQL queries, perform large-scale joins, and leverage existing toolchains designed for SQL endpoints.
+
+The reporting database may contain only a subset of the microservice's data (to practice information hiding), customized to meet consumer needs, possibly with a different schema or database technology. Developers of the microservice handle the mapping from internal state to the reporting database.

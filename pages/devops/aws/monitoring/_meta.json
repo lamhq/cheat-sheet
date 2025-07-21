@@ -1,0 +1,7 @@
+{
+  "cloudwatch": "Amazon CloudWatch",
+  "cloudtrail": "AWS CloudTrail",
+  "grafana": "Amazon Managed Grafana",
+  "prometheus": "Amazon Managed Prometheus",
+  "health": "AWS Health"
+}

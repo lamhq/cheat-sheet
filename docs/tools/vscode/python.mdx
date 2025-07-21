@@ -1,0 +1,82 @@
+# Python
+
+## Installation
+
+Install [Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) for VS Code.
+
+
+## Python commands
+
+Enter “Python: “ in the Command Palette to find the commands available through the Python extension.
+
+![](https://code.visualstudio.com/assets/docs/python/quick-start/cmd-plt-v2.gif)
+
+
+## Create virtual environment
+
+VS Code can create a python virtual environment from your `requirements.txt` without you to run the `venv` command.
+
+Create a virtual environment by opening the Command Palette and running the **Python: Create Environment** command.
+
+
+## Enable Auto Imports
+
+This enables import statements to be automatically added as you type.
+
+Auto imports are disabled by default, but you can enable them by setting `python.analysis.autoImportCompletions` to `true` in your settings.
+
+
+## Linter
+
+Install [Pylint](https://marketplace.visualstudio.com/items?itemName=ms-python.pylint) extension.
+
+Other extensions can be found in the [VS Code doc](https://code.visualstudio.com/docs/python/linting#_choose-a-linter).
+
+Errors and warnings are shown in the Problems panel and are also highlighted in the code editor.
+
+
+## Formatter
+
+Install [Black formatter](https://marketplace.visualstudio.com/items?itemName=ms-python.black-formatter) extension.
+
+Set it as the default formatter by adding below lines to `settings.json` file:
+
+```json
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  }
+```
+
+Enable formatting on save for your code:
+
+```json
+  "[python]": {
+    "editor.formatOnSave": true
+  }
+```
+
+## Debugging
+
+VS Code keeps debugging configuration information in a `launch.json` file located in a `.vscode` folder in your workspace (project root folder) or in your [user settings](https://code.visualstudio.com/docs/editor/debugging#_global-launch-configuration) or [workspace settings](https://code.visualstudio.com/docs/editor/multi-root-workspaces#_workspace-launch-configurations).
+
+To create a `launch.json` file, click the **create a `launch.json` file** link in the Run start view.
+
+![](https://code.visualstudio.com/assets/docs/editor/debugging/launch-configuration.png)
+
+The attributes available in launch configurations vary from debugger to debugger. You can use IntelliSense suggestions (`^Space`) to find out which attributes exist for a specific debugger.
+
+![](https://code.visualstudio.com/assets/docs/editor/debugging/launch-json-intellisense.png)
+
+
+## Testing
+
+The Python extension provides robust testing support for [Unittest](https://docs.python.org/3.3/library/unittest.html) and [pytest](https://pytest.org/en/7.4.x/).
+
+You can configure Python tests through the Testing view on the Activity Bar by selecting **Configure Python Tests** and selecting your test framework of choice.
+
+![](https://code.visualstudio.com/assets/docs/python/testing/test-explorer-no-tests.png)
+
+
+## References
+
+- [Getting Started with Python in VS Code](https://code.visualstudio.com/docs/python/python-quick-start)

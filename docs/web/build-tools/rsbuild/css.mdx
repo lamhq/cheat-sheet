@@ -1,0 +1,35 @@
+# CSS
+
+## Import CSS
+
+Import CSS in `node_modules`.
+
+Import in a JS file:
+
+```js title="src/index.js"
+/* reference normalize.css */
+/* https://github.com/necolas/normalize.css */
+import 'normalize.css';
+```
+
+Import in a CSS file::
+```json
+@import 'normalize.css';
+
+body {
+  /* */
+}
+```
+
+
+## Use Tailwind CSS
+
+1. Follow [Tailwind guide](../../css/tailwind-css.mdx#installation-react) to integrate Tailwind CSS to your project
+2. Update PostCSS config to below (no need for `autoprefixer`):
+    ```js title="postcss.config.cjs"
+    module.exports = {
+      plugins: {
+        tailwindcss: {},
+      },
+    };
+    ```

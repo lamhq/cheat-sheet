@@ -1,0 +1,46 @@
+# Running test
+
+## Run Vitest
+
+```sh
+vitest
+```
+
+- Run Vitest in current directory
+- This will enter the watch mode in development environment and run mode in CI (or non-interactive terminal) automatically.
+
+
+## Contain *text* in path
+
+```sh
+vitest foobar
+```
+
+
+## Related to specific source files
+
+```sh
+vitest related /src/index.ts /src/hello-world.js
+```
+
+If you are using `lint-staged`, you can also run tests for staged files:
+```json
+{
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx}": [
+      "vitest related --run --passWithNoTests"
+    ]
+  }
+}
+```
+
+- `--passWithNoTests`: Prevents errors if no related tests are found.
+
+
+## Regex
+
+Run tests whose names match a regex
+
+```sh
+vitest --run --testNamePattern="add"
+```

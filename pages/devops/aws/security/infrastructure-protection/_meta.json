@@ -1,0 +1,7 @@
+{
+  "aws-shield": "AWS Shield",
+  "aws-waf": "AWS WAF",
+  "network-firewall": "AWS Network Firewall",
+  "firewall-manager": "AWS Firewall Manager",
+  "aws-security-hub": "AWS Security Hub"
+}

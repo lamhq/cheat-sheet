@@ -1,0 +1,75 @@
+# CLI
+
+## Running script
+
+Deno supports running npm scripts natively with the `deno task` subcommand.
+
+```json title="package.json"
+{
+  "name": "my-project",
+  "scripts": {
+    "start": "eslint"
+  }
+}
+```
+
+You can execute this script with Deno by running:
+```sh
+deno task start
+```
+
+
+## Watch mode
+
+Enable automatic reloading of your application whenever changes are detected in the source files.
+
+```sh
+deno run --watch main.ts
+deno test --watch
+deno fmt --watch
+```
+
+Exclude files:
+```sh
+deno run --watch --watch-exclude=file1.ts,file2.ts main.ts
+
+deno run --watch --watch-exclude='*.js' main.ts
+```
+
+
+## Hot Module Replacement
+
+Instead of restarting the program, the runtime will try to update the program in-place. If updating in-place fails, the program will still be restarted.
+
+```sh
+deno run --watch-hmr main.ts
+```
+
+
+## Passing script arguments
+
+Script arguments are additional parameters you can pass to your script when running it from the command line.
+
+```sh
+deno run main.ts arg1 arg2 arg3
+# [ "arg1", "arg2", "arg3" ]
+```
+
+
+## Type checking
+
+You can type-check your code (without executing it) using the command:
+
+```sh
+deno check main.ts
+```
+
+Type-check your code before execution:
+```sh
+deno run --check main.ts
+```
+
+
+## References
+
+- [Command Line Interface](https://docs.deno.com/runtime/getting_started/command_line_interface)

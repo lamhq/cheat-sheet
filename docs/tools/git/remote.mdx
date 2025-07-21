@@ -1,0 +1,79 @@
+# Remote
+
+## Add Remote and Push
+
+```sh
+git remote add origin git@github.com:lamhq/restful-api-boilerplate.git
+git config --global push.autoSetupRemote true
+git push
+```
+
+
+## List remote
+
+```sh
+git remote
+git config --get remote.origin.url
+```
+
+
+## Updating remote's URL
+
+```sh
+git remote set-url origin git@bitbucket.org:theappteamdevs/troocoo-web.git
+```
+
+
+## Rename remote
+
+```sh
+git remote rename <old> <new>
+```
+
+
+## Remove remote
+
+```sh
+git remote remove <name>
+```
+
+
+## Use different SSH private key for a repo
+
+Use multiple Github account on the same machine.
+
+### Modify the ssh config
+
+```sh
+vi ~/.ssh/config
+```
+
+Then add:
+
+```
+# Duong Pham account
+Host github.com-truck2hand
+	HostName github.com
+	User git
+	IdentityFile /Users/lam/Desktop/source/keys/id_rsa_pvd
+
+# Lam account
+Host github.com-lamhq
+	HostName github.com
+	User git
+	IdentityFile ~/.ssh/id_rsa
+```
+
+### Clone you repo with modified url
+
+Add `-truck2hand` in the host
+
+```sh
+git clone git@github.com-truck2hand:truck2hand/t2h-backend.git t2h
+```
+
+### Update remote url of existing repos
+
+```sh
+git remote set-url origin git@github.com-truck2hand:truck2hand/t2h-backend.git
+```

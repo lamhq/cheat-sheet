@@ -1,0 +1,79 @@
+# Container
+
+## Start a container for testing
+
+```sh
+docker run --rm -it --entrypoint /bin/bash <image_name>
+```
+
+- `--rm`: removes the container after it exits
+- `-it` makes the container interactive with a terminal
+- `--entrypoint /bin/bash` sets Bash as the entry point
+
+Use cases:
+- **Development**: Running scripts or testing applications in an isolated environment.
+- **Debugging**: Inspecting a container's filesystem or environment variables to troubleshoot issues.
+
+
+## Start and mount directories
+
+```sh
+docker run \
+  --name <container_name> \
+  -p host_port:container_port \
+  --mount type=bind,source="$(pwd)/data",target=/path/in/container \
+  -d <image_name>
+```
+- `--name <container_name>`: set name fot the container
+- `-p host_port:container_port`: maps a port on the host to a port in the container
+- `--mount`: mounts a directory in the current working directory to a specified path inside the container.
+- `-d`: Runs the container in the background.
+
+Start a Postgres database with mounted volume and directory:
+```sh
+docker run --rm --name postgres-13.3 \
+  -p 5432:5432 \
+  -e POSTGRES_USER=grvadmin \
+  -e POSTGRES_PASSWORD=pg12345 \
+  -e POSTGRES_DB=gravity \
+  -v gravity-db:/var/lib/postgresql/data \
+  --mount type=bind,source="$(pwd)/data",target=/scripts \
+  postgres:13.3
+```
+
+
+## Connect to a running container
+
+Open terminal in a running container:
+```sh
+docker exec -it <container_name> /bin/bash
+```
+
+## List containers
+
+List running containers:
+```sh
+docker ps
+```
+
+List all containers:
+```sh
+docker ps -a
+```
+
+## Stop a container
+
+Gracefully stop the specified container
+```sh
+docker container stop <container_name or ID>
+```
+
+Force shutdown a specified container:
+```sh
+docker container kill <container_name or ID>
+```
+
+## Start a stopped container
+```sh
+docker start container_name
+```

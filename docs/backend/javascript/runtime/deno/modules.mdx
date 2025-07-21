@@ -1,0 +1,81 @@
+# Modules
+
+## Using Node's built-in modules
+
+```ts
+import * as os from "node:os";
+console.log(os.cpus());
+```
+
+To load built-in types for Node, you must add a types reference directive to the `@types/node` package:
+
+```ts
+/// <reference types="npm:@types/node" />
+```
+
+
+## Importing third party modules
+
+NPM:
+```ts
+import * as emoji from "npm:node-emoji";
+
+console.log(emoji.emojify(`:sauropod: :heart:  npm`));
+```
+
+JSR:
+```ts
+import { camelCase } from "jsr:@luca/cases@1.0.0";
+```
+
+HTTPS:
+```ts
+import { pascalCase } from "https://deno.land/x/case/mod.ts";
+```
+
+Some packages do not ship with types but you can specify their types when importing them with the `@ts-types` directive:
+```ts
+// @ts-types="npm:@types/express@^4.17"
+import express from "npm:express@^4.17";
+```
+
+
+## Import map
+
+Typing out the module name with the full version specifier can become tedious when importing them in multiple files.
+
+You can configure Deno to use import map:
+
+```json title="deno.json"
+{
+  "imports": {
+    "@luca/cases": "jsr:@luca/cases@^1.0.0",
+    "cowsay": "npm:cowsay@^1.6.0",
+    "cases": "https://deno.land/x/case/mod.ts"
+  }
+}
+```
+
+With remapped specifiers, the code looks cleaner:
+```ts title="main.ts"
+import { camelCase } from "@luca/cases";
+import { say } from "cowsay";
+import { pascalCase } from "cases";
+```
+
+
+## node_modules
+
+Deno resolve npm packages to a central global npm cache, instead of using a `node_modules` folder in your projects.
+
+By default, Deno will not create a `node_modules` directory when you use the `deno run` command
+
+You can configure Deno to create a `node_modules` directory in the current working directory:
+
+```json title="deno.json"
+{
+  "nodeModulesDir": "auto"
+}
+```
+
+If you have a `package.json` file in your project directory, Deno uses the local `node_modules` directory .

@@ -1,0 +1,55 @@
+import { PackageManagerTabs } from '@theme'
+
+# Joy UI
+
+## Version
+
+This document is for version `5.0.0-beta.52` (2025).
+
+
+## Installation
+
+<PackageManagerTabs command="install @mui/joy @emotion/react @emotion/styled" />
+
+
+## Install font
+
+<PackageManagerTabs command="install @fontsource/inter" />
+
+Import the font:
+
+```ts title="index.tsx"
+import '@fontsource/inter';
+```
+
+## Responsive meta tag
+
+Add Responsive meta tag to `<head>` element:
+
+```html
+<meta name="viewport" content="initial-scale=1, width=device-width" />
+```
+
+## Add CSS Reset
+
+Add `<CssVarsProvider />` and `<CssBaseline/>` component:
+```tsx title="index.tsx"
+import { CssBaseline, CssVarsProvider } from '@mui/joy';
+
+import App from './App';
+
+const root = ReactDOM.createRoot(rootEl);
+root.render(
+  <React.StrictMode>
+    <CssVarsProvider>
+      <CssBaseline />
+      <App />
+    </CssVarsProvider>
+  </React.StrictMode>,
+);
+```
+
+
+## Install Material icons
+
+<PackageManagerTabs command="install @mui/icons-material" />

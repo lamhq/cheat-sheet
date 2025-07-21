@@ -1,0 +1,10 @@
+{
+  "relational": "Relational databases",
+  "dynamodb": "Amazon DynamoDB",
+  "documentdb": "Amazon DocumentDB",
+  "elasticache": "Amazon ElastiCache",
+  "keyspaces": "Amazon Keyspaces",
+  "neptune": "Amazon Neptune",
+  "qldb": "Amazon QLDB",
+  "timestream": "Amazon Timestream"
+}

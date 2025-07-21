@@ -1,0 +1,158 @@
+# Operators
+
+## Loose equality operator (`==`)
+
+The `==` operator compares two values for equality **after** converting both values to a common type (type coercion).
+
+
+## Strict equality operator, (`===`)
+
+The `===` operator compares two values for equality **without** converting them to a common type (no type coercion).
+
+Example:
+
+```js
+console.log(5 == '5'); // true
+console.log(5 === '5'); // false
+```
+
+
+## Optional Chaining operator (`?.`)
+
+Access a property of an object (or call a function) if it exists, without throwing an error if the object is nullish (null or undefined). 
+
+Use cases:
+
+1. **Property Access**: If the object or property before `?.` is `null` or `undefined`, the expression returns `undefined` instead of throwing an error.
+   ```typescript
+   let user = { name: "Alice", address: { city: "Wonderland" } };
+   let city = user?.address?.city; // "Wonderland"
+   let street = user?.address?.street; // undefined
+   ```
+2. **Array Indexing**: You can use it to safely access elements in an array.
+   ```typescript
+   let arr = [1, 2, 3];
+   let firstElement = arr?.[0]; // 1
+   let nonExistentElement = arr?.[10]; // undefined
+   ```
+3. **Function Calls**: It can also be used to call a function that might not exist.
+   ```typescript
+   let obj = { greet: () => "Hello" };
+   let greeting = obj.greet?.(); // "Hello"
+   let farewell = obj.farewell?.(); // undefined
+   ```
+
+
+## Nullish coalescing operator (`??`)
+
+Return the right-hand side operand when the left-hand side operand is `null` or `undefined`. Otherwise, it returns the left-hand side operand.
+
+Here's an example:
+
+```js
+let x = null;
+let y = x ?? "default value";
+console.log(y); // Output: "default value"
+```
+
+In this example, the variable `x` is `null`, so the `??` operator returns the right-hand side operand `"default value"`.
+
+The nullish coalescing operator can be used to provide a default value for a variable that may be `null` or `undefined`.
+
+
+## Nullish coalescing assignment operator (`??=`)
+
+Assign a value to a variable only if the variable is `null` or `undefined`. 
+
+Here's an example:
+
+```js
+let x = null;
+x ??= "default value";
+console.log(x); // Output: "default value"
+```
+
+In this example, the variable `x` is `null`, so the `??=` operator assigns the right-hand side operand `"default value"` to `x`.
+
+The nullish coalescing assignment operator can be used to provide a default value for a variable that may be `null` or `undefined`.
+
+
+## Arithmetic operators
+
+Exponentiation operator:
+```js
+const usingExponentiationOperator = 17 ** 3; // Math.pow(17, 3); 
+```
+
+
+## Bitwise operators
+
+Bitwise operators allow you to manipulate individual bits within an integer.
+
+They are often used in low-level programming, such as system programming or performance-critical applications.
+
+### AND (`&`)
+
+Combines corresponding bits of two operands. The result bit is `1` if both bits are `1`.
+
+```js
+let a = 5;  // 0101
+let b = 3;  // 0011
+let result = a & b;  // 0001 (1)
+```
+
+### OR (`|`)
+
+Combines corresponding bits of two operands. The result bit is `1` if either bit is `1`.
+```js
+let a = 5;  // 0101
+let b = 3;  // 0011
+let result = a | b;  // 0111 (7)
+```
+
+### XOR (`^`)
+
+Combines corresponding bits of two operands. The result bit is `1` if only one of the bits is `1`.
+```js
+let a = 5;  // 0101
+let b = 3;  // 0011
+let result = a ^ b;  // 0110 (6)
+```
+
+### NOT (`~`)
+
+Inverts all bits of the operand. The result is the two's complement of the operand.
+```js
+let a = 5;  // 0101
+let result = ~a;  // 1010 (-6)
+```
+
+### Left Shift (`<<`)
+
+Shifts bits of the first operand to the left by the number of positions specified by the second operand.
+
+Zero bits are shifted in from the right.
+```js
+let a = 5;  // 0101
+let result = a << 1;  // 1010 (10)
+```
+
+### Right Shift (`>>`)
+
+Shifts bits of the first operand to the right by the number of positions specified by the second operand.
+
+The leftmost bits are filled with the sign bit (0 for positive numbers, 1 for negative numbers).
+```js
+let a = 5;  // 0101
+let result = a >> 1;  // 0010 (2)
+```
+
+### Zero-fill Right Shift (`>>>`)
+
+Shifts bits of the first operand to the right by the number of positions specified by the second operand.
+
+The leftmost bits are always filled with zeros.
+```js
+let a = -5;  // 11111111111111111111111111111011 (in 32-bit representation)
+let result = a >>> 1;  // 01111111111111111111111111111101 (2147483645)
+```

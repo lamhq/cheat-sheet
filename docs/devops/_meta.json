@@ -1,0 +1,21 @@
+[
+  {
+    "name": "index",
+    "label": "DevOps"
+  },
+  "ci",
+  "cd",
+  "progressive-delivery",
+  {
+    "name": "docker",
+    "type": "dir",
+    "collapsed": true
+  },
+  "podman",
+  {
+    "name": "k8s",
+    "type": "dir",
+    "collapsed": true
+  },
+  "github-pages"
+]

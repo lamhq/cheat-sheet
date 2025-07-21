@@ -1,0 +1,17 @@
+[
+  "getting-started",
+  {
+    "name": "syntax",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Syntax"
+  },
+  "style-guide",
+  "module-resolution",
+  "configuration",
+  {
+    "name": "graphql",
+    "type": "dir",
+    "collapsed": true
+  }
+]

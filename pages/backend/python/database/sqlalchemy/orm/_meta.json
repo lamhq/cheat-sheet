@@ -1,0 +1,8 @@
+{
+  "schema": "Schema definition",
+  "session": "The Session object",
+  "insert": "Inserting Data",
+  "query": "Querying data",
+  "update": "Updating Data",
+  "delete": "Deleting Data"
+}

@@ -1,0 +1,87 @@
+# Message Brokers
+
+## Overview
+
+A message broker acts as an intermediary that facilitates communication between different applications, systems, or services.
+
+A message is a generic concept that defines the thing that a message broker sends. A message could contain a request, a response, or an event.
+
+Message brokers facilitate asynchronous communication between microservices. Instead of directly interacting with another microservice, a microservice sends a message to the message broker, it then delivery the message to the appropriate consumer.
+
+Brokers may provide **queues** and **topics**.
+
+
+## Consumers
+
+Consumers are entities that receive and process messages sent by a producer via the message broker.
+
+Each instance of a microservice can be a consumer.
+
+Multiple instances of the same microservice form a consumer group.
+
+
+## Queues
+
+A queue is a data structure used by message brokers to store messages.
+
+Queues are typically point to point:
+1. A sender puts a message on a queue, and a consumer reads from that queue.
+2. The queue acts as an intermediary, ensuring that each message is consumed by only one consumer.
+3. Once a consumer receives and processes the message, it is removed from the queue.
+
+When a message is put into the queue, only one member of the consumer group will receive that message; the queue works as a load distribution mechanism.
+
+![](./message-broker/queue.drawio.svg)
+
+Example: RabbitMQ, Amazon SQS.
+
+
+## Topics
+
+Topics are channels where messages are published by producers.
+
+Multiple consumers can subscribe to a topic and receive a copy of every message published to it.
+
+If multiple consumer groups subscribe to a topic, within each consumer group, only one instance will see that message.
+
+![](./message-broker/topic.drawio.svg)
+
+> [!NOTE]
+> Unlike queues, topics allow broadcasting messages to all subscribers rather than delivering messages to just one consumer.
+
+
+## Benefits
+
+Message brokers provide capabilities that can be useful for asynchronous communication:
+1. **Guaranteed Delivery**: Brokers ensure messages are reliably delivered to their destination, even if the downstream service is temporarily unavailable. They store messages in a durable manner until they can be processed.
+1. **Message Order Guarantee**: Most brokers ensures that messages are delivered in the same order they were sent.
+2. **Transactions on Write**: allow to write data to multiple topics in a single transactionn (e.g., Kafka).
+3. **Read Transactionality**: prevents message loss in case the consumer fail to process it.
+4. **Exactly-Once Delivery**: Guarantees that messages are delivered only once without duplication.
+
+> [!CAUTION]
+> While brokers may guarantee exactly once delivery, it is still recommended to design consumers to gracefully handle potential duplicate messages.
+
+
+## Choices
+
+Popular message brokers:
+- RabbitMQ
+- ActiveMQ
+- Kafka
+- Simple Queue Service (AWS)
+- Simple Notification Service (AWS)
+- Kinesis (AWS)
+
+
+### Kafka
+
+Kafka is widely used for handling large-scale data in stream processing pipelines, enabling real-time processing.
+
+Kafka is designed for very large-scale use, supporting up to fifty thousand producers and consumers within a single cluster.
+
+Kafka allows messages to be stored for a configurable period or indefinitely, enabling reprocessing previous messages.
+
+Kafka includes built-in stream processing, enable some tasks can be done inside Kafka itself.
+
+*For example, using KSQL, you can define SQL-like statements to process topics on the fly, creating dynamic materialized database views with Kafka topics as the data source rather than a database.*

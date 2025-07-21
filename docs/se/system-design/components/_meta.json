@@ -1,0 +1,18 @@
+[
+  "data-center",
+  "server",
+  {
+    "name": "database",
+    "type": "dir",
+    "collapsed": true
+  },
+  "proxy",
+  "load-balancer",
+  {
+    "name": "cache",
+    "type": "dir",
+    "collapsed": true
+  },
+  "cdn",
+  "message-broker"
+]

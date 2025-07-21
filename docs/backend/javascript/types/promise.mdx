@@ -1,0 +1,78 @@
+# Promise
+
+Require ES6.
+
+## Defining promises
+
+```js
+new Promise((resolve, reject) => {
+  request.get(url, (error, response, body) => {
+    if (body) {
+      resolve(JSON.parse(body));
+    } else {
+      resolve({});
+    }
+  })
+}).then(
+    () => { /* resolve handling */  }, 
+    () => { /* reject handling */ }
+  ).catch((err) => throw err)
+  .finally(() => console.log('Request completed'));
+```
+
+Create an externally controlled promise:
+
+```js
+const { promise, resolve, reject } = Promise.withResolvers();
+
+setTimeout(() => {
+  resolve('I am batman');
+}, 1000);
+
+promise.then(console.log); // Output after 1 second: I am batman
+```
+
+
+## Parallelize tasks
+
+`Promise.all`: wait all promises to resolve successfully, handle any rejections as errors:
+
+```js
+Promise.all([ promise1, promise2, promise3 ])
+  .then(() => {
+    // all tasks are finished
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+```
+
+`Promise.allSettled`: wait for all promises to settle, regardless of whether they are resolved or rejected, handle both outcomes:
+
+```js
+const promise1 = Promise.resolve(3);
+const promise2 = Promise.reject('error');
+const promise3 = new Promise((resolve) => setTimeout(resolve, 100, 'foo'));
+
+Promise.allSettled([promise1, promise2, promise3]).then((results) => {
+  results.forEach((result) => {
+    if (result.status === 'fulfilled') {
+      console.log(`Fulfilled: ${result.value}`);
+    } else {
+      console.log(`Rejected: ${result.reason}`);
+    }
+  });
+});
+```
+
+`Promise.any`: returns the first promise that resolves
+
+```js
+const p1 = Promise.reject('Superhero not found');
+const p2 = Promise.reject('Human not found');
+const p3 = Promise.resolve('Martian found');
+
+Promise.any([p1, p2, p3])
+  .then(result => console.log(result)) // 'Martian found'
+  .catch(err => console.log(err));
+```

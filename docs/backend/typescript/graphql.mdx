@@ -1,0 +1,53 @@
+# GraphQL API
+
+Building GraphQL API with NestJS.
+
+## Overview
+
+NestJS provide the built-in `@nestjs/graphql` module to build GraphQL API.
+
+It can be configured to use [Apollo](https://www.apollographql.com/) server (with the `@nestjs/apollo` driver) and [Mercurius](https://github.com/mercurius-js/mercurius) (with the `@nestjs/mercurius`).
+
+You can also build your own dedicated driver.
+
+
+## Approaches
+
+Nest offers two ways of building GraphQL applications:
+
+### Code first
+
+You use decorators and TypeScript classes to generate the corresponding GraphQL schema.
+
+Pros:
+- Reduce the need for manual matching of resolvers
+- Easier to manage and scale for large projects
+- Ensure type safety throughout development
+
+Cons:
+- The schema is embedded and scaterred in multiple code files, which might be harder to understand
+- Hard to migrate the API to another programming language
+
+When to use?
+- If you prefer to work exclusively with TypeScript.
+
+
+### Schema first
+
+- You define GraphQL schemas using Schema Definition Language (SDL)
+- Nest automatically generates your TypeScript definitions based on the GraphQL schemas
+
+Pros:
+- Using SDL makes it readable and understandable for teams with different programming languages
+- Having a schema as the blueprint allows front-end and back-end teams to work simultaneously
+- This approach aligns with GraphQL's original design philosophy and is widely supported
+
+Cons:
+- You need to regenerate TypeScript code whenever schema is changed
+- You need to commit both the schema and code
+
+When to use?
+- You have a schema (from the design phase) and use it to develop the API
+
+> [!NOTE]
+> This document will use the code first approach

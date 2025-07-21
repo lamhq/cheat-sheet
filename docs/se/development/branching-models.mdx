@@ -1,0 +1,58 @@
+# Branching Models
+
+## Overview
+
+Branching models define how teams manage code changes in version control systems.
+
+Common models include:
+
+- **Trunk-Based Development** – Developers commit directly to the main branch with small, frequent updates.
+- **Feature Branching** – Each feature gets a separate branch, merged back after completion.
+- **Git Flow** – Uses multiple branches like `develop`, `feature`, `release`, and `hotfix` for structured development.
+- **GitHub Flow** – A simpler model with short-lived feature branches merged into `main` via pull requests.
+- **Release Branching** – Separate branches for different software versions to maintain stability.
+
+
+## Feature branching
+
+Developers create separate branches for individual features or tasks. These branches exist independently from the main branch and are merged back once the feature is complete.
+
+- **Pros**: Allows isolated development, reduces risk of breaking the main branch, and supports long-term feature development.
+- **Cons**: Changes aren't integrated regularly, can lead to complex merges, stale branches, and delayed integration.
+
+
+
+## Trunk-based development
+
+Trunk-based development (TBD) is a version control management practice where developers merge **small, frequent updates** to a main branch (trunk), rather than using long-lived feature branches.
+
+TBD is a required practice of CI/CD. CI is not achieved when using lengthy feature branches, which are infrequently merged into the main branch.
+
+### Benefits
+
+1. **Allows continuous code integration** – Code is merged regularly into trunk, automated integration and test validate the code quality.  
+2. **Ensures continuous code review** – Small, rapid commits make code review a more efficient process, compared to lengthy feature branches.  
+3. **Enables consecutive production code releases** – TBD keeps the trunk branch remains deployable at any time with automated tests, code converge, and code reviews.
+
+
+### Best Practices
+
+1. **Develop in Small Batches** – Keep commits small to maintain a rapid development and deployment rhythm.  
+2. **Use Feature Flags** – Enable incomplete features without disrupting production, reducing the need for long-lived branches.  
+3. **Implement Automated Testing** – Use unit, integration, and end-to-end tests to ensure code quality before merging.  
+4. **Perform Immediate Code Reviews** – Prioritize quick code reviews backed by automated testing for faster collaboration.  
+5. **Maintain Three or Fewer Active Branches** – Avoid cluttered repositories by keeping only essential branches active.  
+6. **Merge to Trunk Daily** – Ensure continuous integration by frequently merging and tagging releases.  
+7. **Minimize Code Freezes** – Keep updates flowing without planned pauses, supporting continuous delivery.  
+8. **Optimize Build & Execution Speed** – Use caching and optimized test execution to accelerate CI/CD pipelines.  
+
+
+## GitHub Flow
+
+Developers create **short-lived feature branches**, make changes, and submit **pull requests** for review before merging into the `main` branch.  
+
+Highlights:
+- **Continuous Integration & Deployment** – Encourages frequent updates and fast delivery.
+- **Feature Branches** – Developers create separate branches for new features or bug fixes.
+- **Pull Requests** – Changes are reviewed before merging into the main branch.
+- **Main Branch Stability** – The `main` branch always contains deployable, production-ready code.

@@ -1,0 +1,174 @@
+# Array
+
+## Creating array
+
+Create an array with `n` items
+
+```js
+Array.from({length: n}, (_, i) => i + 1);
+```
+
+Joining two arrays:
+
+```js
+arr1.concat(arr2)
+```
+
+Spreading the elements of an array into another array (ES6):
+
+```js
+const numbers = [1, 2, 3];
+const moreNumbers = [...numbers, 4, 5, 6];
+console.log(moreNumbers); // Output: [1, 2, 3, 4, 5, 6]
+```
+
+
+## Check item exists
+
+```js
+const superheroes = ["Batman", "Superman", "Flash"];
+
+if (superheroes.includes("Batman")) {
+    console.log("Batman is bruce wayne!");
+} // will print - Batman is bruce wayne!
+```
+
+
+## Get item by index
+
+Require ES13.
+
+```js
+const superheroes = ["Batman", "Superman", "Spiderman", "Ironman", "Captain America"];
+
+console.log(superheroes.at(1)); // Superman (from the start)
+console.log(superheroes.at(-1)); // Captain America (from the end)
+console.log(superheroes.at(-2)); // Ironman (from the end)
+```
+
+
+## Find item's index
+
+Determining the index of an item in an array:
+
+```ts
+arr.indexOf(item)
+```
+
+
+## Extracting array elements
+
+Use array destructuring (ES6):
+
+```js
+const [uid, uname] = [1, "Batman"];
+console.log(uid, uname); // 1 Batman
+```
+
+Using rest operator (ES6):
+
+```js
+const [first, second, ...rest] = [10, 20, 30, 40, 50];
+console.log(first); // Output: 10
+console.log(second); // Output: 20
+console.log(rest); // Output: [30, 40, 50]
+```
+
+
+## Summing array
+
+Calculating sum of an array
+```ts
+arr.reduce((prev, cur) => prev+cur, 0);
+```
+
+
+## Changing array
+
+- `.splice()`: a method that can add, remove, or replace elements in an array. It changes the original array and returns the removed elements (if any).
+- `.toSpliced()`: Returns a modified copy of an array with elements removed/added, without mutating the original array
+
+```js
+array.splice(start, deleteCount, item1, item2, ...)
+```
+
+- `start`: The index at which to start changing the array.
+- `deleteCount`: The number of elements to remove. If `0`, no elements are removed.
+- `item1`, `item2`, ...: The elements to add to the array. If not provided, `splice()` will only remove elements.
+
+Example:
+
+```js
+let fruits = ['apple', 'banana', 'cherry', 'date'];
+
+// Remove 1 element at index 2 (`cherry`) and add 'kiwi' and 'mango'
+fruits.splice(2, 1, 'kiwi', 'mango');
+
+console.log(fruits); 
+// Output: ['apple', 'banana', 'kiwi', 'mango', 'date']
+```
+
+
+## Sorting array
+
+- `toSorted()`: Returns a sorted copy of an array, without mutating the original array
+- `toReversed()`: Returns a reversed copy of an array, without mutating the original array
+
+
+## Grouping
+
+Group the array of objects based on a given callback function:
+
+```js
+const superheroes = [
+  { name: "Batman", id: 9801 },
+  { name: "Superman", id: 9804 },
+  { name: "Flash", id: 9802 },
+  { name: "Aquaman", id: 9803 },
+];
+
+const groupedById = Object.groupBy(superheroes, (superhero) => superhero.id);
+console.log(groupedById);
+/* 
+{
+'9801': [ { name: 'Batman', id: 9801 } ],
+'9802': [ { name: 'Flash', id: 9802 } ],
+'9803': [ { name: 'Aquaman', id: 9803 } ],
+'9804': [ { name: 'Superman', id: 9804 } ]
+}
+*/
+```
+
+## Removing values
+
+Removing all instances of a value from an array (modify the original array)
+```ts
+// Modifies the original array
+removeWithoutCopy = function(arr, item) {
+  let idx = 0;
+  while(idx < arr.length) {
+    if (item === arr[idx]) {
+      arr.splice(idx, 1)
+    } else {
+      idx+=1;
+    }
+  }
+}
+```
+
+
+## Flattening
+
+```js
+const nestedNumbers = [1, [2, [3, [4]]]];
+
+console.log(nestedNumbers.flat());       // 1 level flattening [1, 2, [3, [4]]]
+console.log(nestedNumbers.flat(2));      // 2 level flattening [1, 2, 3, [4]]
+console.log(nestedNumbers.flat(Infinity)); // infinite flattening [1, 2, 3, 4]
+```
+
+Combines `map()` and `flat()` in one method:
+
+```js
+console.log(nestedNumbers.flat(Infinity).flatMap(x => [x, x * 2]));  // [1, 2, 2, 4, 3, 6, 4, 8]
+```

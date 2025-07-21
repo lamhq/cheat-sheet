@@ -1,0 +1,53 @@
+# Transaction
+
+## Overview
+
+A database transaction is a sequence of one or more operations performed on database data.
+
+It is treated as a single, indivisible unit, ensuring that either all operations within it are successfully completed, or none are. 
+
+Transactions are often executed concurrently (e.g., multiple transactions reading and writing to a table at the same time).
+
+Transactions adhere to the ACID properties to maintain integrity in the database system.
+
+
+## ACID properties
+
+These properties are designed to ensure that database transactions are processed reliably.
+
+- **Atomicity**: This property ensures that all operations within a transaction are treated as a single unit, which either completely succeeds or fails.
+- **Consistency**: A transaction can only bring the database from one valid state to another, maintaining the integrity of the data.
+- **Isolation**: Concurrent execution of multiple transactions leaves the database in the same state as if the transactions were executed sequentially.
+- **Durability**: Committed transactions are permanent, and survive even a system crash.
+
+
+## Transactional databases
+
+Transactional databases are systems that support database transactions with ACID properties.
+
+They ensure data integrity, consistency, and reliability, especially in environments with high volumes of concurrent operations.
+
+Most SQL databases support transactions.
+
+Examples: MySQL, PostgreSQL, and Oracle.
+
+
+## Distributed Transactions
+
+Distributed transactions are operations that span multiple databases or systems.
+
+They follow ACID properties, ensure all parts of a transaction succeed or fail together, maintaining data consistency.
+ 
+A distributed transaction might include systems:
+- databases
+- storage managers
+- file systems
+- messaging systems
+- other data managers...
+
+DBMSs that support distributed transactions:
+- Oracle
+- Microsoft SQL Server
+- PostgreSQL (with extensions like Postgres-XL)
+- MySQL Cluster
+- IBM DB2

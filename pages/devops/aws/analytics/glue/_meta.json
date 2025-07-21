@@ -1,0 +1,16 @@
+{
+  "components": "Components",
+  "tables": "Tables",
+  "crawlers": "Crawlers",
+  "dpu": "Data Processing Units",
+  "jobs": "Jobs",
+  "scripts": "Scripts",
+  "triggers": "Triggers",
+  "monitoring": "Monitoring",
+  "permission": "Permission",
+  "bookmarks": "Job Bookmarks",
+  "int-sessions": "Interactive sessions",
+  "workflows": "Workflows",
+  "blueprints": "Blueprints",
+  "data-shuffling": "Data Shuffling"
+}

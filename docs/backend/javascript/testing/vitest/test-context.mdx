@@ -1,0 +1,30 @@
+# Test Context
+
+## Overview
+
+Test context is a special object passed as the first argument to each test function. It provides metadata, utilities, and fixtures that are scoped to that specific test.
+
+## Built-in Test Context
+
+- `expect`: A version of the expect API bound to the current test, useful for concurrent testing.
+- `task` or `meta`: Metadata about the test (like its name).
+- `skip`, `annotate`, `signal`: Built-in helpers to control test flow or add annotations.
+- `onTestFailed`, `onTestFinished`: Hooks for handling test lifecycle events.
+
+```ts
+import { test, expect } from 'vitest'
+
+test('adds numbers', ({ expect }) => {
+  expect(2 + 2).toBe(4)
+})
+```
+
+
+## Extending Context
+
+You can use `test.extend()` to define custom fixtures (like mock data or setup functions) and inject them into the context. This makes it easy to reuse setup logic across multiple tests.
+
+
+## Reference
+
+https://vitest.dev/guide/test-context.html

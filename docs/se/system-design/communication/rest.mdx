@@ -1,0 +1,55 @@
+# REST
+
+## Overview
+
+REST (Representational State Transfer) is an architectural style for designing networked applications, it contains a set of principles that guide the design of web-based applications and services.
+
+REST treats everything as a resource, identified by a URL.
+
+These resources are accessed using standard HTTP methods, like GET, POST, PUT, and DELETE.
+
+REST follows a stateless approach, each request from a client  contains all the necessary information for the server to process it, no need for the server to remember previous interactions.
+
+
+## REST and HTTP
+
+REST primarily uses the HTTP protocol.
+
+HTTP aligns well with REST's architectural principles:
+- Stateless Communication
+- Standard Methods
+- Uniform Resource Identifiers (URIs)
+- Caching Support
+
+HTTP brings a large ecosystem of **supporting tools** and technology: caching proxies, load balancers, monitoring tools.
+
+There are several mechanisms that enhance security for HTTP: HTTPS, OAuth, JWT, Basic Auth, Access control headers, Content Security Policy, HttpOnly Cookie.
+
+HTTP can also be used to implement **RPC** (for example, SOAP runs over HTTP).
+
+
+## HATEOAS
+
+HATEOAS (Hypermedia as the Engine of Application State) is a REST principle that allows clients to navigate and interact with an API dynamically through hyperlinks provided in responses.
+
+Instead of hardcoding API endpoints, clients discover actions from server-provided links. This gives a huge amount of decoupling between the client and the server.
+
+*For example, a client doesn't need to know which URI scheme to access to buy the **product**; it just need to access the resource, find the **buy control**, and navigate to that. The buy control could change location but the client wouldn't care.*
+
+In practice, many APIs rely on predefined routes, making HATEOAS a hard concept to promote.
+
+HATEOAS can introduce additional performance issues due to navigating multiple round trips to find the right endpoints.
+
+
+## Challenges
+
+1. Ease of consumption. generating client-side code for REST was not as straightforward as with RPC. Client libraries can cause coupling between client and server.
+2. Performance. HTTP rely on TCP, which may be inefficient compared to other networking protocols (such as UDP).
+
+
+## Where to use it
+
+1. You need to support a **wide range of external clients**, REST-over-HTTP ensures interoperability across a wide range of technologies.
+2. For **exposing APIs to external parties** or client interfaces.
+3. Where you require large-scale and effective caching of requests
+4. You want **looser coupling** between client and server (without requiring schema compilation, like RPC).

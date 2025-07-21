@@ -1,0 +1,84 @@
+# Concurrency
+
+Database concurrency refers to the management of simultaneous operations on a database without compromising data integrity.
+
+
+## Isolation issues
+
+These are potential problems that can occur when transactions are executed concurrently without sufficient isolation:
+
+### Dirty Read
+
+Occurs when a transaction reads uncommitted data from another transaction.
+
+The data might be rolled back if the transaction fails, leading to potential inconsistencies.
+
+
+### Non-Repeatable Read
+
+Occurs when a second read of the same data retrieves different results because another transaction has modified the data in the meantime.
+
+
+### Phantom Read
+
+Occurs when a transaction re-executes a query and retrieves a different set of rows, because another transaction has inserted, updated, or deleted rows that meet the query criteria.
+
+> [!NOTE]
+> Phantom Read involves changes in the set of rows returned by a query (e.g., new rows added or deleted), while Non-Repeatable Read involves changes to the values of previously retrieved rows.
+
+
+## Isolation Levels
+
+Isolation levels define the degree to which a transaction remains separate from others, helping to maintain data consistency and integrity.
+
+### Serializalble
+
+Transactions are guaranteed to be executed in sequence.
+
+This is the highest isolation level.
+
+
+### Repeatable Read
+
+Prevent changes to rows that have been read until the transaction is complete.
+
+
+### Read Committed
+
+Ensures that a transaction can only read committed data.
+
+This prevent Dirty Reads but allowing Non-Repeatable Reads.
+
+
+### Read Uncommitted
+
+Allows transactions to read uncommitted data.
+
+Dirty Reads can happen.
+
+| Isolation Level  | Dirty Read | Non-repeatable | Phantom Read |
+|------------------|------------|----------------|--------------|
+| Serializable     | Impossible | Impossible     | Impossible   |
+| Repeatable Read  | Impossible | Impossible     | Probably     |
+| Read Committed   | Impossible | Probably       | Probably     |
+| Read Uncommitted | Probably   | Probably       | Probably     |
+
+
+## Locks
+
+Locks are mechanisms used to manage concurrent access to data to ensure consistency and isolation.
+
+They help prevent issues like dirty reads, non-repeatable reads, and phantom reads by controlling access to data during concurrent transactions.
+
+
+### Shared Lock (S-Lock)
+
+This lock allows multiple transactions to read a data item concurrently but prevents any transaction from writing to the data item while the lock is in place.
+
+It's often used for read operations and ensures that no updates occur on the data item during the read, maintaining read integrity.
+
+### Exclusive Lock (X-Lock)
+
+Exclusive Lock allows only one transaction to read and write a data item.
+
+It's typically used for write operations to ensure that no other transactions can access the data item until the lock is released (either by a commit or rollback).

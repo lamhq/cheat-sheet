@@ -1,0 +1,14 @@
+# Service Tests
+
+Service tests focus on **testing microservices directly**, bypassing the user interface to verify a service's functionality.
+
+Key Characteristics:
+- **Direct Testing:** Unlike UI tests, service tests interact **only with the service itself** rather than the full system.
+- **Isolated Scope:** If a service test fails, the issue is likely **within that specific microservice**, making debugging easier.
+- **Stubbing Dependencies:** To avoid interference from external systems, service tests often use **mocked or stubbed collaborators**, preventing unintended failures from unrelated components. Testing service with external resources (like databases or network connections) can increase execution time.
+
+Benefits:
+
+- Provide **higher confidence in service reliability** while keeping tests relatively **efficient**.
+- Help validate **business logic at the service level**, ensuring that the microservice operates correctly without requiring UI validation.
+- Strike a **balance between speed and scope**, making them **critical** in a microservice-based system.

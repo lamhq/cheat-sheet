@@ -1,0 +1,36 @@
+# Serialization
+
+## Serialization Formats
+
+Format is how we covert data for network calls.
+
+### Textual Formats
+
+**REST APIs** often use a textual format for the request and response bodies.
+
+**JSON** has replaced **XML** as the preferred text serialization format due to its browser compatibility, compactness, and simplicity.
+
+**Avro** is a schema-based serialization format built on JSON. It includes the schema in the payload, which can support different messaging formats much easier.
+
+
+### Binary Formats
+
+Binary serialization protocols is suitable when you're concerned about **payload size** or the **efficiency of writing and reading payloads**.
+
+Protocol buffers (used by gRPC) is the most popular binary serialization format for microservice-based communication.
+
+
+## Schemas
+
+Schemas are used to define what our endpoints expose and what they accept.
+
+Schemas help reduce the amount of documentation required.
+
+Picking a serialization format will typically define which schema technology you can use.
+
+*For example, XML use XML Schema Definition (XSD), JSON use JSON Schema.*
+
+Explicit schema helps catching accidental breakages of microservice endpoints.
+
+> [!NOTE]
+> Breakages refer to errors or issues that arise when changes made to a microservice endpoint in a way that make it incompatible with consumers.

@@ -1,0 +1,107 @@
+import { PackageManagerTabs } from '@theme'
+
+# React Query
+
+## Installation
+
+<PackageManagerTabs command="i @tanstack/react-query" />
+
+Add `QueryClientProvider`:
+
+```tsx title="index.tsx"
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient()
+
+createRoot(document.getElementById('root')!).render(
+  <QueryClientProvider client={queryClient}>
+    <App />
+  </QueryClientProvider>
+);
+```
+
+
+## Query
+
+```tsx title="TodoList.tsx"
+import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+
+type Todo = {
+  id: number;
+  title: string;
+  completed: boolean;
+};
+
+const fetchTodos = async (): Promise<Todo[]> => {
+  const response = await axios.get('https://jsonplaceholder.typicode.com/todos');
+  return response.data;
+};
+
+export default function TodoList() {
+  const { data, isLoading, error } = useQuery<Todo[]>({
+    queryKey: ['todos'],
+    queryFn: fetchTodos,
+  });
+
+  if (isLoading) return <p>Loading todos...</p>;
+  if (error instanceof Error) return <p>Error: {error.message}</p>;
+
+  return (
+    <ul>
+      {data?.slice(0, 10).map((todo) => (
+        <li key={todo.id}>
+          {todo.title} {todo.completed ? '✅' : '❌'}
+        </li>
+      ))}
+    </ul>
+  );
+}
+```
+
+## Mutation
+
+```tsx title="AddTodo.tsx"
+import React, { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+
+const addTodo = async (newTodo: Todo): Promise<Todo> => {
+  const response = await axios.post('https://jsonplaceholder.typicode.com/todos', newTodo);
+  return response.data;
+};
+
+export default function AddTodo() {
+  const [title, setTitle] = useState('');
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: addTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['todos'] });
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    mutation.mutate({ title, completed: false });
+    setTitle('');
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Enter todo title"
+      />
+      <button type="submit">Add Todo</button>
+      {mutation.isPending && <p>Adding...</p>}
+      {mutation.isError && <p>Error: {(mutation.error as Error).message}</p>}
+      {mutation.isSuccess && <p>Todo added ✅</p>}
+    </form>
+  );
+};
+```

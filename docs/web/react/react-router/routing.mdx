@@ -1,0 +1,168 @@
+# Defining Routes
+
+## Nested Routes & Layout
+
+```ts title="routes.ts"
+createBrowserRouter([
+  {
+    path: "/dashboard",
+    Component: Dashboard,
+    children: [
+      { index: true, Component: Home },
+      { path: "settings", Component: Settings },
+    ],
+  },
+]);
+```
+
+The component of parent route need to render `<Outlet/>` to render child routes:
+
+```tsx title="Dashboard.tsx"
+import { Outlet } from "react-router";
+
+export default function Dashboard() {
+  return (
+    <div>
+      <h1>Dashboard</h1>
+      {/* will either be <Home> or <Settings> */}
+      <Outlet />
+    </div>
+  );
+}
+```
+
+
+## Index Routes
+
+An index route is a special route that matches the parent route's path exactly.
+
+It's useful when you want to render a default component when no specific sub-routes are matched.
+
+```ts showLineNumbers {4,5,10,11}
+import { createBrowserRouter } from "react-router";
+
+createBrowserRouter([
+  // renders at "/"
+  { index: true, Component: Home },
+  {
+    Component: Dashboard,
+    path: "/dashboard",
+    children: [
+      // renders at "/dashboard"
+      { index: true, Component: DashboardHome },
+      { path: "settings", Component: DashboardSettings },
+    ],
+  },
+]);
+```
+
+
+## Prefix Route
+
+A route with just a path and no component creates a group of routes with a path prefix.
+
+```ts
+createBrowserRouter([
+  {
+    // no component, just a path
+    path: "/projects",
+    children: [
+      { index: true, Component: ProjectsHome },
+      { path: ":pid", Component: Project },
+      { path: ":pid/edit", Component: EditProject },
+    ],
+  },
+]);
+```
+
+
+## Dynamic Segments
+
+If a path segment starts with `:` then it becomes a "dynamic segment".
+
+```ts
+{
+  path: "teams/:teamId",
+  loader: async ({ params }) => {
+    // params are available in loaders/actions
+    let team = await fetchTeam(params.teamId);
+    return { name: team.name };
+  },
+  Component: Team,
+}
+```
+
+To get the value from dynamic segment:
+
+```tsx title="Team.tsx"
+import { useParams } from "react-router";
+
+function Team() {
+  // params are available in components through useParams
+  let params = useParams();
+  // ...
+}
+```
+
+
+## Optional Segments
+
+You can make a route segment optional by adding a `?` to the end of the segment.
+
+```ts
+{
+  path: ":lang?/categories";
+}
+```
+
+Will match:
+- `/categories`
+- `/en/categories`
+- `/fr/categories`
+
+
+## Splats (Catch All Routes)
+
+If a route path pattern ends with `/*` then it will match any characters following the `/`, including other `/` characters.
+
+```ts
+{
+  path: "files/*";
+  loader: async ({ params }) => {
+    params["*"]; // will contain the remaining URL after files/
+  };
+}
+```
+
+You can destructure the `*`, you just have to assign it a new name. A common name is `splat`:
+```ts
+const { "*": splat } = params;
+```
+
+
+## Getting URL values
+
+Get query string parameters:
+
+```tsx
+function SearchResults() {
+  let [searchParams] = useSearchParams();
+  return (
+    <div>
+      <p>
+        You searched for <i>{searchParams.get("q")}</i>
+      </p>
+      <FakeSearchResults />
+    </div>
+  );
+}
+```
+
+Location information:
+```ts
+function useAnalytics() {
+  let location = useLocation();
+  // location.pathname
+  // location.key
+}
+```

@@ -1,0 +1,9 @@
+{
+  "ec2": "EC2",
+  "ec2-auto-scaling": "EC2 Auto Scaling",
+  "aws-batch": "AWS Batch",
+  "beanstalk": "Elastic Beanstalk",
+  "wavelength": "AWS Wavelength",
+  "container": "Container",
+  "serverless": "Serverless"
+}

@@ -1,0 +1,7 @@
+{
+  "macie": "Amazon Macie ",
+  "inspector": "Amazon Inspector",
+  "guardduty": "Amazon GuardDuty",
+  "detective": "Amazon Detective",
+  "trusted-advisor": "AWS Trusted Advisor"
+}

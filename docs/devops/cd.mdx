@@ -1,0 +1,69 @@
+# Continuous Delivery
+
+## Build Pipeline 
+
+A build pipeline is a structured process that automates the steps required to build, test, and deploy applications.
+
+It consists of multiple stages, allowing teams to track progress and gain insight into software quality.
+
+Benefits:
+- **Automation & Efficiency** – It automates code building, testing, and deployment, reducing manual effort and speeding up delivery cycles.
+- **Faster Deployment** – Automated deployments allow teams to roll out features quickly and frequently while ensuring stability.
+- **Reduced Risk**: Catching errors early prevents costly mistakes in production.
+- **Clear Visibility**: Developers can track progress and quickly identify bottlenecks in the workflow.
+- **Consistent Quality**: Ensures that each code change meets predefined standards before deployment.
+
+
+## Continuous Delivery
+
+
+Continuous delivery (CD) is a software development approach where every code change is tested and evaluated for production readiness.
+
+To implement CD effectively, teams must model and automate the entire process of moving software from development to production (build, test, deploy), allowing developers to track the status of any version and determine whether a specific version is ready for release.
+
+Continuous delivery focuses on automating and streamlining the release process, ensuring software is always deployable.
+
+
+## Continuous Deployment
+
+Continuous delivery treats each check-in as a release candidate, assessing its quality before deployment. 
+
+**Continuous deployment**, an extension of continuous delivery, uses automated mechanisms for validation. Software that passes verification is deployed automatically without human intervention.
+
+While continuous delivery can exist without continuous deployment, the reverse isn't possible.
+
+Many people want human interaction to decide whether software should be deployed, it's totally compatible with continuous delivery.
+
+
+## CD Tools
+
+Features that a CD tool should have:
+
+1. **Pipeline Definition & Visualization** – A CD tool enables users to define and visualize the pipeline from development to production.
+
+2. **Automated Verification Stages** – The tool facilitates automated testing and validation at different pipeline stages. If code successfully passes a verification step, it automatically advances.
+
+3. **Support for Manual Stages** – Some steps require human intervention, like user acceptance testing (UAT). A CD tool should allow modeling these manual processes within the pipeline.
+
+4. **Build Management & Deployment** – The tool helps track available builds, ensuring readiness for deployment. Users can deploy builds to specific environments.
+
+5. **Status Marking & Progression Control** – After manual checks, users can mark a stage as successful, allowing the build to proceed to the next step.
+
+6. **Automatic Triggering of Subsequent Stages** – If the next phase is automated, the CD tool ensures that once conditions are met, the process moves forward without manual intervention.
+
+
+## Artifact
+
+An artifact is a deployable package of software created during CI/CD process. It is tested, verified, and stored for deployment in different environments.
+
+Key characteristics:
+
+1. **Deployable** – The artifact contains everything needed for deployment, like compiled code, dependencies, or container images.
+2. **Technology-dependent** – The type of artifact varies based on the deployment technology (e.g., a JAR file for Java apps, a Docker image for containerized apps).
+3. **Stored in repositories** – After creation, artifacts are saved in storage solutions like **Artifactory, Nexus, or container registries** for later retrieval.
+
+> [!TIP]
+> 1. Build the artifact once, early in the pipeline
+> 2. Reuse the artifact everywhere you want to deploy
+> 3. Environment-specific configuration need to be kept outside
+the artifact

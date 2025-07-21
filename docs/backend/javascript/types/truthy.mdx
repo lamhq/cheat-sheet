@@ -1,0 +1,18 @@
+# Truthy Values
+
+Truthy values are values that are considered `true` when evaluated in a boolean context (e.g. `if` conditions, `&&` and `||` operators).
+
+
+| Variable Type   | When it is *falsy*       | When it is *truthy*      |
+|-----------------|--------------------------|--------------------------|
+| `boolean`       | `false`                  | `true`                   |
+| `string`        | `''` (empty string)      | any other string         |
+| `number`        | `0`  `NaN`               | any other number         |
+| `null`          | always                   | never                    |
+| `undefined`     | always                   | never                    |
+| Any objects, including `{}`,`[]` | never | always |
+
+
+## The `!!` pattern
+
+You can easily convert values to a true boolean by prefixing it with `!!` e.g. `!!foo`.

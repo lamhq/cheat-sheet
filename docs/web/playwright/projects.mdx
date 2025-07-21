@@ -1,0 +1,121 @@
+# Projects
+
+## Overview
+
+Projects are logical groupings of tests that run with specific configurations.
+
+They allow you to run the same test suite across different environments, browsers, devices, or settings—all from a single config file.
+
+Use cases:
+- Cross-Browser Testing. Run tests across Chromium, Firefox, WebKit, ...
+- Environment-Specific Testing. Run tests against staging and production with different setting
+- Split Test Suites. Separate smoke tests from full regression tests
+- Global setup and teardown
+
+
+## Configuring
+
+Projects are configured in the `playwright.config.ts` file.
+
+```ts title="playwright.config.ts"
+import { defineConfig, devices } from '@playwright/test';
+
+export default defineConfig({
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
+
+    {
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
+    },
+  ],
+});
+```
+
+
+## Run projects
+
+You can run tests on all projects or only on a specific project.
+
+```sh
+npx playwright test --project=firefox
+```
+
+Playwright will run all projects by default.
+
+You can also use VS Code test runner to select projects to run tests.
+
+
+## Multiple environments
+
+```ts title="playwright.config.ts"
+import { defineConfig } from '@playwright/test';
+
+export default defineConfig({
+  timeout: 60000, // Timeout is shared between all tests.
+  projects: [
+    {
+      name: 'staging',
+      use: {
+        baseURL: 'staging.example.com',
+      },
+      retries: 2,
+    },
+    {
+      name: 'production',
+      use: {
+        baseURL: 'production.example.com',
+      },
+      retries: 0,
+    },
+  ],
+});
+```
+
+
+## Global setup and teardown
+
+Uses a dedicated **setup project** that runs before others, and optionally a **teardown project** that runs afterward:
+
+```ts title="playwright.config.ts" {6,11}
+export default defineConfig({
+  projects: [
+    {
+      name: 'chromium',
+      use: { browserName: 'chromium' },
+      dependencies: ['setup db'],
+    },
+    {
+      name: 'setup db',
+      testMatch: /global\.setup\.ts/,
+      teardown: 'cleanup db', // optional teardown project
+    },
+    {
+      name: 'cleanup db',
+      testMatch: /global\.teardown\.ts/,
+    },
+  ]
+});
+```
+
+
+```ts title="global.setup.ts"
+import { test as setup } from '@playwright/test';
+
+setup('initialize database', async () => {
+  console.log('Setting up database...');
+  // Your setup logic here
+});
+```
+
+```ts title="global.teardown.ts"
+import { test as teardown } from '@playwright/test';
+
+teardown('clean up database', async () => {
+  console.log('Cleaning up database...');
+  // Your teardown logic here
+});
+```

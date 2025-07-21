@@ -1,0 +1,67 @@
+# Principles
+
+Principles of Microservice Deployment:
+
+## Isolated execution
+
+- Microservice instances must have their own computing resources
+- Their execution cannot impact other microservice instances
+
+
+## Focus on automation
+
+- Choose technology that allows for a high degree of automation
+- Opt for tools that allow automated deployment, database management, and infrastructure adjustments.
+- Organizations must prioritize automation to streamline management and reduce operational burden.
+
+
+## Infrastructure as code
+
+- Configures infrastructure using machine-readable code, ensuring consistency and automation.
+- Version controlling your infrastructure code to allow for environments to be re-created and gives transparency over who has made changes.
+- Terraform and Pulumi also enable configuring cloud resources. Pulumi allows infrastructure configuration using standard programming languages rather than the domain-specific languages.
+
+
+## Zero-downtime deployment
+
+- Ensure that deploying a new version of a microservice can be done without any downtime to users of your service (humans or other microservices). Without it, releases may require coordination to inform potential outages
+- Using asynchronous communication helps implement Zero-downtime deployment smoothly
+- Zero-downtime deployment can be implemented using techniques like rolling upgrades in Kubernetes (gradually replacing instances instead of shutting down). Blue-green deployment is another effective strategy
+- Designing microservices with zero-downtime deployment from the start simplifies implementation compared to retrofitting an existing system
+
+
+## Desired state management
+
+- Use a platform that maintains your microservice in a defined state, launching new instances if required in the event of outages or traffic increases
+- This eliminates manual intervention, letting teams focus on defining the desired state instead of managing failures
+- Tools like Kubernetes support this concept, as do autoscaling solutions from cloud providers like Azure and AWS.
+- Fully automated microservice deployment is essential for leveraging desired state management effectively.
+
+---
+shorten this:
+```
+Desired state management is the ability to specify the infrastructure requirements you
+have for your application, and for those requirements to be maintained without manual intervention.
+
+If the running system changes in such a way that your desired state is no longer maintained, the underlying platform takes the required steps to bring the system back into desired state. As a simple example of how desired state management might work, you could specify
+the number of instances your microservice requires, perhaps also specifying how
+much memory and CPU those instances need. Some underlying platform takes this
+configuration and applies it, bringing the system into the desired state. 
+
+The beauty of desired state management is that the platform itself manages how the
+desired state is maintained. It frees development and operations people alike from
+having to worry about exactly how things are being done—they just have to focus on
+getting the desired state definition right in the first place. It also means that in the
+event of a problem occurring, such as an instance dying, the underlying hardware
+failing, or a data center shutting down, the platform can handle the issue for you
+without human intervention being required.
+
+Kubernetes is one such tool that
+embraces this idea, and you can also achieve something similar using concepts such
+as autoscaling groups on a public cloud provider like Azure or AWS.
+
+To take advantage of desired state management, the platform needs some way to
+automatically launch instances of your microservice. So having a fully automated
+deployment for microservice instances is a clear prerequisite for desired state man‐
+agement. 
+```

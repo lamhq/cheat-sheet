@@ -1,0 +1,46 @@
+# Distributed Tracing
+
+Distributed tracing is a technique for tracking requests as they move through multiple microservices in a system. It captures detailed traces of interactions (how services connect, bottlenecks, duration).
+
+
+## Benefits
+
+- Helps identify performance bottlenecks.
+- Shows how requests move through different services.
+- Enables teams to diagnose issues faster and optimize performance.
+
+> [!NOTE]
+> Correlation IDs are a basic way to track related requests, but they lack visualization and deeper insights. Distributed tracing provides a more sophisticated solution, capturing end-to-end traces of requests across multiple services.
+
+
+## How it work?
+
+Distributed tracing use spans and sampling to tracks the flow of requests across microservices
+
+A span represents local activity within a thread (such as an operation or request). Each span includes:
+- Start and end time (to measure duration).
+- Logs related to the span (to provide context).
+- Metadata (e.g., customer ID, order ID, hostname) for later querying.
+
+Tracing process:
+1. Spans are correlated using a unique identifier.
+2. They are sent to a central collector.
+3. The collector assembles related spans into a single trace, showing how a request moves through multiple services.
+
+Sampling: Since capturing every trace would overwhelm the system, sampling strategies help reduce the data load:
+- Random sampling (e.g., Google's Dapper samples a percentage of calls).
+- Fixed-rate sampling (e.g., Jaeger captures only 1 in 1,000 calls by default).
+- Dynamic sampling (used by Honeycomb & Lightstep) adjusts sampling rates, collecting more data for errors while limiting data for common operations.
+
+## Implementations
+
+Distributed tracing requires instrumenting microservices to capture spans, using an agent to forward data, and setting up a collector to analyze traces:
+- Each operation within a microservice is recorded as a span (a traceable unit of work).
+- Standard APIs like **OpenTracing** or **OpenTelemetry** help automate span collection for common activities like HTTP calls. To provide richer trace data, additional coding is often necessary.
+- A local forwarding agent periodically sends spans to the collector.
+- The collector aggregates spans and reconstructs full traces of request flows across microservices.
+
+Recommended tools:
+- **Jaeger** – A popular open-source distributed tracing tool.
+- **Lightstep & Honeycomb** – Commercial solutions offering advanced tracing & high-cardinality support.
+- **OpenTelemetry** – A widely adopted open API specification that ensures standardized tracing and better interoperability across different tools.

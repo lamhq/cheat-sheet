@@ -1,0 +1,96 @@
+import { PackageManagerTabs } from '@theme'
+
+# Storybook
+
+## Version
+
+This document is for version `9.0.14` (2025).
+
+
+## Install Storybook
+
+<PackageManagerTabs command="create storybook@latest" />
+
+
+## Start storybook
+
+<PackageManagerTabs command="run storybook" />
+
+
+## Enable mocking
+
+Mock Rest and GraphQL requests right inside your story.
+
+<PackageManagerTabs command="install -D msw-storybook-addon msw" />
+
+Generate service worker for MSW:
+
+```sh
+npx msw init public/
+```
+
+Add MSW handler:
+```ts title=".storybook/msw.ts"
+import { http, HttpResponse } from 'msw';
+
+export const handlers = [
+
+  http.post('api/auth/access-tokens', () => {
+    return HttpResponse.json({
+      user: {
+        id: '123',
+        email: 'test@test.com',
+      },
+    });
+  }),
+
+];
+```
+
+Enable MSW in Storybook:
+
+```ts title=".storybook/preview.ts"
+import { initialize, mswLoader } from 'msw-storybook-addon'
+import { handlers } from './msw';
+
+// Initialize MSW
+initialize()
+
+const preview = {
+  parameters: {
+    msw: {
+      handlers,
+    },
+  },
+  // Provide the MSW addon loader globally
+  loaders: [mswLoader],
+}
+
+export default preview
+```
+
+
+## References
+
+- [Install Storybook](https://storybook.js.org/docs/get-started/install)
+- [Mock Service Worker](https://storybook.js.org/addons/msw-storybook-addon)
+
+
+## Opt out of telemetry
+
+Stop sharing any information with Storybook.
+
+```ts title=".storybook/main.ts"
+// Replace your-framework with the framework you are using, e.g. react-vite, nextjs, vue3-vite, etc.
+import type { StorybookConfig } from '@storybook/your-framework';
+
+const config: StorybookConfig = {
+  framework: '@storybook/your-framework',
+  stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  core: {
+    disableTelemetry: true, // 👈 Disables telemetry
+  },
+};
+
+export default config;
+```

@@ -1,0 +1,132 @@
+# Pods
+
+## Overview
+
+The process of building and running an app on Kubernetes:
+1. Write your app/code
+2. Package it as a container image
+3. Wrap the container image in a Pod
+4. Run it on Kubernetes
+
+A Pod is a group of one or more containers that run your application.
+
+Pods are the smallest deployable units of computing that you can create and manage.
+
+
+## Scheduling
+
+A Pod can only be scheduled to a single node.
+
+Every container in a Pod is guaranteed to be scheduled to the
+same node.
+
+
+## Networking
+
+Every Pod has its own:
+- IP address
+- range of TCP and UDP ports
+- routing table
+
+If it's a multi-container Pod:
+- all containers share the IP.
+- containers communicate with each other via the Pod's `localhost` adapter and a port number.
+
+Pod's name will become the hostname of containers run inside it. It must be valid [DNS names](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-label-names).
+
+## Pod lifecycle
+
+A Pod after created enter the **pending** phase.
+
+Once all containers are pulled and running, the Pod enters the **running** phase.
+
+If it's a short-lived Pod, as soon as all containers
+terminate successfully, the Pod enters the **succeeded** state.
+
+### Restart policy
+
+If a long-lived Pod fail, the local kubelet may attempt to restart them, based on container's restart policy, defined in the Pod config. Options include **Always**, **OnFailure**, and **Never**.
+
+For short-lived Pod, options include **OnFailure** and **Never**.
+
+
+## Container resource sharing
+
+Pods provide a shared execution environment for containers run inside it:
+- Shared filesystem
+- Shared network stack (IP address, routing table, ports…)
+- Shared memory
+- Shared volumes
+
+
+## Scaling
+
+Pods are the minimum unit of scaling.
+
+If you need to scale an app, you add or remove Pods. You do not scale by adding more containers to existing Pods.
+
+
+## Deploying
+
+You'll rarely interact directly with Pods. You almost always deploy Pods via higher-level workload controllers (Deployments, StatefulSets, DaemonSets, Jobs, CronJobs).
+
+Controllers infuse Pods with super-powers such as self-healing, scaling, rollouts, and rollbacks.
+
+Pods are ephemeral. They can be created, terminated, or replaced at any time. A new Pod has new ID and IP address. That's the reason why:
+- applications should always store state and data outside the Pod.
+- you shouldn't rely on individual Pods
+
+
+## Pod immutability
+
+Pods are immutable. You can't update a running Pod, you always replace it with a new Pod running the updates.
+
+It follow the behaviors:
+- When updates are needed, replace all old Pods with new ones
+- When failures occur, replace failed Pods with new ones
+
+
+## Multi-container Pods
+
+Kubernetes allows you to run multiple containers within a single Pod.
+
+Containers share the same network namespace and storage, enabling them to communicate and work together seamlessly.
+
+Multi-container Pod patterns:
+- Sidecar pattern
+- Adapter pattern
+- Ambassador pattern
+- Init pattern
+
+### Sidecar Pattern
+
+A helper container enhances the functionality of the main container (e.g., logging or monitoring).
+
+An example use case is log aggregation and analysis:
+- Main Container: Runs the application (e.g., a web server like NGINX or a Java application).
+- Sidecar Container: Runs a logging agent which collects logs from from shared storage and sends them to a central logging system
+
+### Adapter Pattern
+
+A container modifies or standardizes data for the main container.
+
+An example use case is data transformation or standardization:
+- You have a primary application container that consumes data from an external source
+- And a container that transforms incoming data into a compatible format before passing it to the main container.
+
+
+### Ambassador Pattern
+
+A container acts as a proxy to external services.
+
+An example use case is database proxy:
+- Main Container: Runs an application that interacts with a database.
+- Ambassador Container: Acts as a proxy for the database, handling tasks like authentication, load balancing, or connection pooling.
+
+
+### Init pattern
+
+The init pattern runs a special init container that:
+- starts and completes before the main app container (the main app container will not start until the init container completes)
+- only run once
+- its job is to run tasks that initialise the environment for the main application container.

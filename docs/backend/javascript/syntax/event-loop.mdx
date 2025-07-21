@@ -1,0 +1,40 @@
+# Event loop
+
+## Introduction
+
+The event loop is a mechanism that allows handling asynchronous operations.
+
+Once an asynchronous operation is executed, its callback function is placed in the **callback queue**. This queue holds all the callback functions that are waiting to be executed.
+
+The JavaScript engine continue to execute the code after the async function.
+
+The event loop continuously checks the call stack and the callback queue. If the call stack is empty (i.e., there are no functions currently being executed), the event loop picks the first callback from the callback queue and pushes it onto the call stack for execution.
+
+
+## Example
+
+Here is an example of how the event loop works:
+
+```js
+console.log('Hi');
+
+setTimeout(function cb1() {
+  console.log('cb1');
+}, 5000);
+
+console.log('Bye');
+```
+
+The output of this code will be:
+
+```
+Hi
+Bye
+cb1
+```
+
+This is because the `console.log('Hi')` and `console.log('Bye')` statements are executed first, before the `console.log('cb1');`
+
+The `setTimeout()` function is called with a callback function `cb1()`. The callback function is added to the callback queue after 5 seconds.
+
+The event loop then waits for the call stack to be empty before executing the callback function. Since there are no other functions in the call stack, the callback function is executed and logs `'cb1'` to the console.

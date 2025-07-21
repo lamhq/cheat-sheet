@@ -1,0 +1,63 @@
+# Communication
+
+## Challenges
+
+Microservices use inter-process communication rather than in-process communication
+
+- inter-process: calls between different processes across a network
+- in-process: calls within a single process
+
+### Performance
+
+The overhead of an inter-process call to be significant compared to the overhead of an in-process call due to data serialization, transmission, and deserialization.
+
+This might lead you to:
+- minimize the calls between services
+- reduce the amount (size) of data being sent or received
+- pick more efficient serialization mechanisms
+- offload data to a filesystem and pass around a reference to that file location instead
+
+Developers must be aware for actions that trigger network calls to avoid hidden inter-service interactions that lead to performance bottlenecks.
+
+### Changing Interfaces
+
+In microservice communication, the service exposing an interface and the services consuming it are independently deployable units.
+
+For backward-incompatible changes to a microservice interface, either perform a lockstep deployment with consumers to ensure they adopt the new interface, or phase the rollout of the updated contract to maintain compatibility during the transition.
+
+> [!NOTE]
+> **Lockstep Deployment**: Deployment the updated microservice and all its consumers simultaneously to adopt the new interface, ensuring compatibility right away.
+
+> [!NOTE]
+> **Phased Rollout**: Gradually introduce the changes, maintain backward compatibility during the transition period (support both the old and new interface)
+
+### Error Handling
+
+Five failure modes in inter-process communication:
+- **Crash failure**: Server crashes unexpectedly.
+- **Omission failure**: Messages aren't sent or received as expected.
+- **Timing failure**: Events occur too early or too late.
+- **Response failure**: Received response is incorrect or incomplete.
+- **Arbitrary failure**: Participants can't agree on whether a failure has occurred, also known as Byzantine failure.
+
+It's to have a richer set of semantics for returning errors that can allow clients to take appropriate action (HTTP is an example).
+
+
+## Choosing communication technology
+
+First decide the [communication style](#communication-styles) you want, then look for the right technology to implement that style.
+
+Criteria to consider:
+1. **Make Backward Compatibility Easy**. For example, adding new fields should not disrupt clients. The technology should offer a way to validate the backward compatibility of our modifications.
+2. **Define Explicit Interfaces**. Consumers should clearly understand the functionality a microservice offers. Explicit schemas can help ensure a microservice's interface is well-defined.
+3. **Maintain Technology-Agnostic for APIs**. Avoiding integration technology that restrict the technology stacks we use to implement microservices.
+4. **Make Your Service Simple for Consumers**. Allow clients full freedom to integrate with in their technology choice. Providing a client library can ease adoption.
+5. **Hide Internal Implementation Detail**. Any technology that encourages exposing internal representation details should be avoided.
+
+
+## Technology Choices
+
+1. **Remote procedure calls**: Frameworks that allow for local method calls to be invoked on a remote process (SOAP, gRPC).
+2. **REST**: An architectural style where you expose resources that can be accessed using a common set of verbs (GET, POST, ...)
+3. **GraphQL**: a protocol that allows consumers to define queries that can fetch only necessary information from multiple downstream microservices.
+4. **Message brokers**: Middleware that allows for asynchronous communication via queues or topics.

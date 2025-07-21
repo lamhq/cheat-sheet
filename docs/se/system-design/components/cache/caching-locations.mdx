@@ -1,0 +1,54 @@
+# Caching Locations
+
+## Client-Side
+
+Data is cached outside the origin, typically within the consumer.
+
+Example: the client keeps an in-memory hashtable mapping item IDs to item data.
+
+Benefits:
+- Improves latency by avoiding network calls.
+- Enhances robustness (can operate even if the origin is unavailable).
+
+Drawbacks:
+- Inconsistent data across multiple clients.
+- Limited invalidation mechanisms (harder to ensure freshness).
+
+Best practice: Use a shared client-side cache (e.g., Redis or Memcached) to reduce inconsistencies and memory overhead.
+
+
+## Server-Side
+
+The origin (downstream service) maintains a cache for its consumers.
+
+Benefits:
+- Centralized cache management (avoids inconsistencies between clients).
+- More sophisticated invalidation mechanisms (e.g., write-through caching).
+
+Drawbacks:
+- Requires a network call, less effective for latency optimization.
+- Limited robustness benefits. If the origin is down, the cache is inaccessible.
+
+Implementation Options:
+- In-memory cache within the origin.
+- Reverse proxy caching.
+- Hidden Redis node.
+- Database read replicas.
+
+
+## Request Cache
+
+Stores the entire response for a specific request.
+
+Benefits:
+- Fastest caching strategy (avoids all lookups and network calls).
+
+Drawbacks:
+- Highly specific, only cache the result of a specific request, low cache hit ratio.
+
+
+## Choosing the Right Caching Location
+
+- For latency optimization: Client-side caching is best.
+- For consistency and scalability: Server-side caching is preferable.
+- For maximum speed in repeated queries: Request caching is ideal.

@@ -1,0 +1,43 @@
+# Communication Styles
+
+## Synchronous blocking
+
+A microservice makes a call to another microservice and blocks operation, waiting for the response.
+
+**Advantages**: simple and familiar to many programmers
+
+**Disadvantages**: 
+- Temporal couling between caller and downstream microservice:
+  - Failures occur if the downstream is unavailable
+  - Responses are lost if the upstream dies
+  - Can cause delays for the caller if the downstream is under significant load
+- System is vulnerable to cascading failures from downstream outages
+
+**Where to use**: for simple microservice architectures.
+
+**Where not to use**: when you have many chains of calls:
+- Any issue of involved microservices can cause the whole operation to fail.
+- Long chains can cause significant resource contention (happens when multiple services compete for limited resources like CPU, memory, or database connections. In this case is network connection).
+
+
+## Asynchronous nonblocking
+
+The caller can carry other processing without having to wait for a response.
+
+The three most common asynchronous communication styles in microservice:
+1. **Communication through common data**. A microservice changes some common data, then other microservices later make use of.
+2. **Request-response**. A microservice requests another to perform an operation. Once completed, the upstream microservice receive the response, regardless of success or failure.
+3. **Event-driven interaction**. A microservice broadcasts an event. Other microservices listen for the events they are interested in and react accordingly.
+
+> [!NOTE]
+> With `Async/Await`, the caller code is still blocked until the awaited promise is resolved. So even if the underlying technology we are using could be considered asynchronous, this is still inherently a synchronous, blocking interaction.
+
+**Advantages**: 
+- Microservices are decoupled temporarily. the downstream microservice do not need to be reachable at the same time the call is made
+- Beneficial for functionalities that take a long time to process
+
+**Disadvantages**: More complex implementation and debugging
+
+**Where to Use It**:
+- long-running processes
+- when you have long call chains that's not easily restructured

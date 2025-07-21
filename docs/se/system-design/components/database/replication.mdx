@@ -1,0 +1,29 @@
+# Replication
+
+## Overview
+
+Replication is a process where data is duplicated and stored in multiple locations to ensure redundancy and reliability.
+
+There's a primary database that only supports write operations. Secondary databases mirror the primary's dataset and only supports read operations.
+
+![](./replication/replication.drawio.svg)
+
+
+## Advantages
+
+- **Better performance**. This allows more queries to be processed in parallel across secondary nodes
+- **Reliability**. Since data is replicated across multiple locations, when a disaster happens on one of the database servers, data is still preserved.
+- **High availability**: your website remains in operation even if a database is offline as you can access data stored in another database server.
+
+
+## Failover
+
+When one of the database servers goes offline:
+- If a secondary database goes offline.
+  - If there's no other secondary database, read operations will be directed to the primary database temporarily.
+  - Otherwise, read operations are redirected to other healthy secondary databases.
+- If the primary database goes offline, a secondary database will be promoted to be the new primary.
+
+> [!CAUTION]
+> In production systems, promoting a new primary is more complicated as the data in a secondary database might not be up to date. The missing data needs to be updated by running data recovery scripts.\
+> Although some other replication methods like multi-primarys and circular replication could help, those setups are more complicated;

@@ -1,0 +1,73 @@
+import { PackageManagerTabs } from '@theme'
+
+# Vitest
+
+## Version
+
+This document is for version `3.2.4` (2025).
+
+This assumes that you are already using Vite.
+
+
+## Why Vitest
+
+- ⚡ **Fast execution** – Built on Vite, it’s optimized for speed and lightning-fast test runs.  
+- 🧪 **Native ESM support** – Fully embraces modern JavaScript with ES Modules.  
+- 🔁 **Hot module replacement (HMR)** – Live test updates without restarting.  
+- 🧠 **Smart watch mode** – Reruns only relevant tests based on code changes.  
+- 🧰 **Vite plugin integration** – Seamlessly fits into existing Vite projects.  
+- 🧵 **Comprehensive Feature Set** – Mocking, Snapshot testing, Code coverage
+- 📦 **Lightweight and minimal config** – No bulky setups; plug and play.  
+- 🌍 **Cross-platform support** – Works consistently across environments.  
+ 
+
+## Installation
+
+<PackageManagerTabs command="install -D vitest" />
+
+Add a script to `package.json` to run test:
+
+```json title="package.json"
+{
+  "scripts": {
+    "test": "vitest"
+  }
+}
+```
+
+1. Add `test` property in your Vite config.
+2. Add a reference to Vitest types using a triple slash directive at the top of your config file.
+
+```ts
+/// <reference types="vitest/config" />
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  test: {
+    // ... Specify options here.
+  },
+})
+```
+
+
+## IDE Integrations
+
+Install [Visual Studio Code extension](https://marketplace.visualstudio.com/items?itemName=vitest.explorer) to enhance your testing experience with Vitest.
+
+
+## Writing Tests
+
+```js title="sum.js"
+export function sum(a, b) {
+  return a + b
+}
+```
+
+```js title="sum.test.js"
+import { expect, test } from 'vitest'
+import { sum } from './sum.js'
+
+test('adds 1 + 2 to equal 3', () => {
+  expect(sum(1, 2)).toBe(3)
+})
+```

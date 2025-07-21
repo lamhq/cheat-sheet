@@ -1,0 +1,47 @@
+import { PackageManagerTabs } from '@theme'
+
+# React Router
+
+## Version
+
+This document is for version `7.6.3` (2025).
+
+There're three ways (modes) to use React Router, each has different usage:
+- Declarative: enables basic routing features
+- Data: adds data loading, actions, pending states, ...
+- Framework: built on top of Data Mode with a Vite plugin. Adds SSR, static rendering, code splitting, and type-safe routing.
+
+This document is for **Data** mode. Because it has necessary features and easy to integrate to existing projects.
+
+
+## Installation
+
+<PackageManagerTabs command="install react-router" />
+
+
+## Basic Usage
+
+Use React Router in the application:
+
+```tsx showLineNumbers {1-4,9-14,19} title="index.tsx"
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router";
+
+import React from "react";
+import ReactDOM from "react-dom/client";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <div>Hello World</div>,
+  },
+]);
+
+const root = document.getElementById("root");
+
+ReactDOM.createRoot(root).render(
+  <RouterProvider router={router} />
+);
+```

@@ -1,0 +1,11 @@
+{
+  "encapsulate-changes": "Encapsulate Changes",
+  "program-to-interfaces": "Program to Interfaces",
+  "composition": "Composition over Inheritance",
+  "strive-for-loose-coupling": "Strive for Lose Coupling",
+  "single-resp": "Single Responsibility",
+  "open-closed": "Open/Closed Principle",
+  "liskov": "Liskov Substitution",
+  "interface-seg": "Interface Segregation",
+  "dependency-inversion": "Dependency Inversion"
+}

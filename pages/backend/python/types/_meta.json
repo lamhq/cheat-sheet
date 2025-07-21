@@ -1,0 +1,12 @@
+{
+  "boolean": "Boolean",
+  "number": "Numbers",
+  "string": "Strings",
+  "list": "List",
+  "enum": "Enum",
+  "dict": "Dictionary",
+  "set": "Set",
+  "tuple": "Tuples",
+  "datetime": "Date time",
+  "type-hint": "Type Hint"
+}

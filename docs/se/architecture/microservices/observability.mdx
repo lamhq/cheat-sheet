@@ -1,0 +1,32 @@
+# Observability
+
+## Observability
+
+Observability is about understanding a system’s internal state from its external outputs.
+
+A highly observable system enables engineers to diagnose and resolve issues quickly.
+
+Logs, events, and metrics help increase observability, but focus on making the system understandable rather than excessive tools.
+
+
+## Monitoring
+
+Monitoring is actively watching a system for predefined issues.
+
+Traditional monitoring sets alerts based on anticipated failures. This approach has limitations in distributed systems where unforeseen issues arise.
+
+> [!TIP]
+> Monitoring is something you do, while observability is a property of the system.
+
+
+## Building Blocks
+
+Building Blocks for Observability:
+
+- **Log aggregation**: Collecting logs from multiple microservices to gain a full picture of system behavior.
+- **Metrics aggregation**: Tracking numerical data (CPU usage, response times, etc.) to detect trends and predict issues.
+- **Distributed tracing**: Tracking a flow of calls across multiple microservice boundaries to work out what went wrong and derive accurate latency information.
+- **Are you doing OK?**: Measuring system reliability (error budgets, SLAs, SLOs) to ensure it's meeting user expectations.
+- **Alerting**: Defining meaningful alerts that notify teams about important issues.
+- **Semantic monitoring**: Rethinking system health beyond technical metrics (e.g., focusing on user experience).
+- **Testing in production**: A summary of various testing in production techniques.

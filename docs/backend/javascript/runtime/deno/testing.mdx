@@ -1,0 +1,149 @@
+# Testing
+
+Deno provides a built-in test runner in both JavaScript and TypeScript without needing to install any additional dependencies or tools.
+
+
+## Writing Tests
+
+### Default format
+
+```ts
+import { assertEquals } from "jsr:@std/assert";
+
+Deno.test("simple test", () => {
+  const x = 1 + 2;
+  assertEquals(x, 3);
+});
+
+import { delay } from "jsr:@std/async";
+
+Deno.test("async test", async () => {
+  const x = 1 + 2;
+  await delay(100);
+  assertEquals(x, 3);
+});
+
+Deno.test({
+  name: "read file test",
+  permissions: { read: true },
+  fn: () => {
+    const data = Deno.readTextFileSync("./somefile.txt");
+    assertEquals(data, "expected content");
+  },
+});
+```
+
+Deno also supports test steps, which allow you to break down tests into smaller, manageable parts.
+
+This is useful for setup and teardown operations within a test.
+
+```ts
+Deno.test("database operations", async (t) => {
+  using db = await openDatabase();
+  await t.step("insert user", async () => {
+    // Insert user logic
+  });
+  await t.step("insert book", async () => {
+    // Insert book logic
+  });
+});
+```
+
+### BDD format
+
+
+```ts
+import { describe, it } from "jsr:@std/testing/bdd";
+import { expect } from "jsr:@std/expect";
+import { add } from "./add.js";
+
+describe("add function", () => {
+  it("adds two numbers correctly", () => {
+    const result = add(2, 3);
+    expect(result).toBe(5);
+  });
+
+  it("handles negative numbers", () => {
+    const result = add(-2, -3);
+    expect(result).toBe(-5);
+  });
+});
+```
+
+Check out the [documentation on JSR](https://jsr.io/@std/testing/doc/bdd/~) for more information on these functions and hooks.
+
+
+## Running Tests
+
+To run your tests, use the `deno test` subcommand.
+
+If run without a file name or directory name, all tests in the current directory (recursively) that match the glob `{*_,*.,}test.{ts, tsx, mts, js, mjs, jsx}` will be executed.
+
+```sh
+# Run all tests in the current directory and all sub-directories
+deno test
+
+# Run all tests and watch
+deno test --watch
+
+# Run all tests in the util directory
+deno test util/
+
+# Run just my_test.ts
+deno test my_test.ts
+
+# Run test modules in parallel
+deno test --parallel
+
+# Pass additional arguments to the test file that are visible in `Deno.args`
+deno test my_test.ts -- -e --foo --bar
+
+# Provide permission for deno to read from the filesystem, which is necessary
+# for the final test above to pass
+deno test --allow-read my_test.ts
+```
+
+
+### Filtering
+
+The `deno test` command allows you to run specific tests or groups of tests using the `--filter` option
+
+By test names:
+
+```sh
+deno test --filter "my" tests/
+```
+
+By a specific pattern (wrap your filter with `/`):
+
+```sh
+deno test --filter "/test-*\d/" tests/
+```
+
+
+### Using configuration file
+
+You can use Deno configuration file to include or exclude test files:
+
+```json
+{
+  "test": {
+    "include": [
+      "src/fetch_test.ts",
+      "src/signal_test.ts"
+    ]
+  }
+}
+```
+
+
+## Other features
+
+- [Skipping tests](https://docs.deno.com/runtime/fundamentals/testing/#ignoring%2Fskipping-tests)
+- [Only run specific tests](https://docs.deno.com/runtime/fundamentals/testing/#only-run-specific-tests)
+- [Customizing test output (report)](https://docs.deno.com/runtime/fundamentals/testing/#reporters)
+- [Collect test coverage](https://docs.deno.com/runtime/fundamentals/testing/#coverage)
+- [Mocking](https://docs.deno.com/runtime/fundamentals/testing/#spying%2C-mocking-(test-doubles)%2C-stubbing-and-faking-time)
+- [Snapshot testing](https://docs.deno.com/runtime/fundamentals/testing/#snapshot-testing)
+- [Stop test run on the first failure](https://docs.deno.com/runtime/fundamentals/testing/#failing-fast)
+- [Extract code snippets in documentation to test](https://docs.deno.com/runtime/fundamentals/testing/#documentation-tests)

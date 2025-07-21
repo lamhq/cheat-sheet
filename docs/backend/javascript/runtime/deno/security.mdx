@@ -1,0 +1,49 @@
+# Security
+
+## Overview
+
+You must explicitly grant access to Deno scripts to access sensitive APIs (such as file system access, network connectivity, or environment access) with command line flags or with a runtime permission prompt.
+
+```sh
+deno run --allow-env script.ts
+
+deno run --allow-env=HOME,FOO script.ts
+```
+
+During execution of a script, a user can also explicitly grant permission to specific files, directories, network addresses, environment variables, and subprocesses when prompted by the runtime
+
+The `--allow-all` flag grants all permissions to the script and should be used with caution.
+
+```sh
+deno run -A script.ts
+deno run --allow-all script.ts
+```
+
+
+## Permissions
+
+Check the [official documentation](https://docs.deno.com/runtime/fundamentals/security/#permissions) for avalable permissions.
+
+
+## Evaluation of code
+
+Code executed in a Deno runtime can execute **arbitrary code** (using `eval`, `new Function`, dynamic import or web workers).
+
+The code has the same privilege level as the caller code.
+
+
+## Subprocesses
+
+Code executing inside of a Deno runtime can not spawn subprocesses by default, this can be enabled using the `--allow-run` flag.
+
+Any subprocesses you spawn can access system resources regardless of the permissions you granted to the parent process. This is often referred to as privilege escalation.
+
+If you really need to spawn a specific executable, you can reduce the risk by limiting which programs a Deno process can start by passing specific executable names to the `--allow-run` flag:
+
+```sh
+# Allow running all subprocesses
+deno run --allow-run script.ts
+
+# Allow running "curl" and "whoami" subprocesses
+deno run --allow-run="curl,whoami" script.ts
+```

@@ -1,0 +1,12 @@
+{
+  "queue-types": "Queue types",
+  "settings": "Available settings",
+  "receiving": "Receiving messages",
+  "quotas": "Quotas",
+  "monitoring": "Monitoring",
+  "security": "Security",
+  "metadata": "Message metadata",
+  "integrations": "Integrations",
+  "tmp-queues": "Temporary queues",
+  "dead-letter-queue": "Dead-Letter Queues"
+}

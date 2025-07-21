@@ -1,0 +1,6 @@
+{
+  "python": "Python",
+  "redis": "Redis",
+  "rabbitmq": "RabbitMQ",
+  "kafka": "Kafka"
+}

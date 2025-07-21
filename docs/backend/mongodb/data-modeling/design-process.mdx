@@ -1,0 +1,188 @@
+# Schema Design Process
+
+## Overview
+
+Following the schema design process helps:
+- identify what data your application needs
+- how to best organize your data to optimize performance
+- make it easier to scale your application in the future
+
+You can design your schema iteratively and modify your schema as the needs of your application change.
+
+You may need to strike a balance between performance and simplicity.
+
+You may want to establish a simple schema to cover basic functionality, before spending time on optimizations.
+
+The schema design process consists of the following steps:
+1. **Identify your workload**. Identify the operations that your application runs most frequently
+2. **Map relationships**. Identify the relationships in your application's data and decide whether to link or embed related data.
+3. **Apply design patterns** to optimize reads and writes.
+4. **Create indexes**. Create indexes to support common query patterns
+
+
+## Identify Application Workload
+
+Knowing your application's most common queries helps you create effective indexes and minimize the number of calls the application makes to the database.
+
+Consider these factors to identify the data your application needs:
+- The information users need
+- Your business domain
+- Application logs and frequently-run queries. 
+
+Create a workload table with your application's queries:
+
+| Action | Query Type | Information | Frequency | Priority |
+|---|---|---|---|---|
+| The action that a user takes to trigger the query. | The type of query (read or write). | The document fields that are either written or returned by the query. | How frequently your application runs the query. | How critical the query is to your application. |
+
+> [!NOTE]
+> Queries that are run frequently benefit from indexes and should be optimized to avoid lookup operations.
+
+The following example shows a workload table for a blog application:
+
+| Action | Type | Information | Frequency | Priority |
+|---|---|---|---|---|
+| Submit a new article | Write | author, text | 10 per day | High |
+| Submit a comment on an article | Write | user, text | 1,000 per day (100 per article) | Medium |
+| View an article | Read | article id, text, comments | 1,000,000 per day | High |
+| View article analytics | Read | article id, comments, clicks | 10 per hour | Low |
+
+
+## Map Schema Relationships
+
+How you map relationships between data entities affects your application's performance and scalability.
+
+To link related data, you can either:
+1. Embed related data within a single document.
+2. Store related data in a separate collection and access it with a **reference**.
+
+### Embedded Data
+
+Embedded documents store related data in a single document structure.
+
+A document can contain arrays and sub-documents of related data. This allow applications to retrieve related data in a single database operation.
+
+![](https://www.mongodb.com/docs/manual/images/data-model-denormalized.bakedsvg.svg)
+
+
+### References
+
+References store relationships between data by including links, called **references**.
+
+For example, a `user_id` field in an `document` collection indicates a reference to a document in a `user` collection.
+
+![](https://www.mongodb.com/docs/manual/images/data-model-normalized.bakedsvg.svg)
+
+
+### Guidelines
+
+To decide whether to embed related data or use references, consider your application's goals:
+- **Improve queries on related data**. embed the data to avoid the need for frequent `$lookup` operations.
+- **Improve data returned from different entities**. embed the data of related entities in a single collection.
+- **Improve update performance**. Store related data in its own collection and using a reference to access it.
+
+> [!NOTE]
+> When you use a reference, you reduce your application's write workload by only needing to update the data in a single place.
+
+
+### Steps
+
+1. Identify related data
+2. Create a schema map for your related data
+3. Choose whether to embed related data or use references
+
+
+### Examples
+
+Consider the following schema map for a blog application:
+
+![](https://www.mongodb.com/docs/manual/static/cff9c2ce07f98a37acea08e825ead70d/77560/blog-schema-map.webp)
+
+**Optimize Queries for Articles**: embed related information in the articles collection to return all data needed by the application in a single operation.
+
+```js
+const article = {
+  title: "My Favorite Vacation",
+  date: ISODate("2023-06-02"),
+  text: "We spent seven days in Italy...",
+  tags: [
+    {
+      name: "travel",
+      url: "<blog-site>/tags/travel",
+    },
+    {
+      name: "adventure",
+      url: "<blog-site>/tags/adventure",
+    },
+  ],
+  comments: [
+    {
+      name: "pedro123",
+      text: "Great article!",
+    },
+  ],
+  author: {
+    name: "alice123",
+    email: "alice@mycompany.com",
+    avatar: "photo1.jpg",
+  },
+}
+```
+
+**Optimize Queries for Articles and Authors**: If your application returns article information and author information separately, consider storing articles and authors in separate collections.
+
+```js
+article = {
+  title: "My Favorite Vacation",
+  date: ISODate("2023-06-02"),
+  text: "We spent seven days in Italy...",
+  authorId: 987,
+  tags: [
+    {
+      name: "travel",
+      url: "<blog-site>/tags/travel",
+    },
+    {
+      name: "adventure",
+      url: "<blog-site>/tags/adventure",
+    },
+  ],
+  comments: [
+    {
+      name: "pedro345",
+      text: "Great article!",
+    },
+  ],
+};
+
+author = {
+  _id: 987,
+  name: "alice123",
+  email: "alice@mycompany.com",
+  avatar: "photo1.jpg",
+};
+```
+
+
+## Apply Design Patterns
+
+Schema design patterns are ways to optimize your data model for your application's access patterns.
+
+Each schema design pattern has different use cases and tradeoffs for data consistency, performance, and complexity. *For example, some schema design patterns improve write performance, while others improve read performance.*
+
+> [!CAUTION]
+> Implementing a pattern without understanding your application and the data it needs can degrade application performance and cause unnecessary complications to your schema design.
+
+
+## Create Indexes
+
+A single collection can have a maximum of 64 indexes.
+
+Too many indexes can degrade performance before that limit is reached.
+
+For collections with a high write-to-read ratio, indexes can degrade performance because each insert must also update any indexes.
+
+Steps:
+1. Identify common queries. use the `$queryStats` aggregation stage
+2. Create indexes to support common queries. Create indexes to support queries on those fields
+3. Analyze index use. Analyze your indexes' effectiveness with  `$indexStats` aggregation stage. 

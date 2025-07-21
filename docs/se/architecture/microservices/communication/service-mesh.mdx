@@ -1,0 +1,45 @@
+# Service Mesh
+
+## Overview
+
+A service mesh is a software layer that manages communication between microservices.
+
+They provide common features for inter-microservice communication, such as mutual TLS, correlation IDs, service discovery, and load balancing.
+
+Service meshes provide common functionalities that can be shared across microservices (this can be achieved by shared libraries, but microservices may have different versions or runtimes, lead to more challenges).
+
+They enable flexible changes without requiring individual microservices to update and redeploy when using shared libraries.
+
+Service meshes allow for the reuse of common inter-microservice functionality across microservices written in different programming languages.
+
+Service meshes help implement standard behavior across microservices, fostering consistency and best practices.
+
+
+## How it works
+
+1. Each microservice has a lightweight proxy (**sidecar**) that handle all traffic between services. Instead of services talking directly to each other, they send requests through these proxies, which manage routing, security, and monitoring.
+2. The **Control Plane** sets policies and configurations for service communication, while the **Data Plane** applies those rules by handling actual traffic between microservices,  including routing, retries, and encryption.
+
+![](https://www.koyeb.com/static/images/blog/service-mesh.png)
+
+## In Kubernetes
+
+When deploying microservices on Kubernetes, each microservice instance is placed in a pod, and each pod has its own local proxy.
+
+If a proxy within a pod fails, it only affects that specific pod.
+
+Many service mesh implementations rely on the **Envoy** proxy as the foundation for these locally running processes.
+
+Proxies are managed and monitored by a control plane.
+
+
+## Should i use it?
+
+Service meshes aren't for everyone:
+- They are primarily designed for Kubernetes
+- They introduce extra complexity, if you only have a few microservices (< 5), it may not be necessary or cost-effective.
+- Service mesh is not able to work as an intermediary for all calls between microservices (such as message broker).
+
+Organizations with many microservices, especially across different programming languages, should consider service meshes.
+
+Service meshes and API gateways are effective for protocols like REST, SOAP, gRPC, and similar HTTP-based communication methods.

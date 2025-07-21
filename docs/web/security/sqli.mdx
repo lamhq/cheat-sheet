@@ -1,0 +1,37 @@
+# SQL Injection
+
+SQL Injection is a serious security vulnerability where attackers manipulate database queries to gain unauthorized access.
+
+This can lead to data theft, modification, or even complete control over the system.
+
+
+## How it works
+
+1. Attackers insert malicious SQL code into input fields, such as login forms or search boxes.
+2. If the application does not properly sanitize user input, the injected SQL code gets executed by the database.
+3. This can allow attackers to retrieve sensitive data, bypass authentication, or manipulate database contents.
+
+
+## Example
+
+Consider a login form where a user enters their username and password:
+```sql
+SELECT * FROM Users WHERE Username = 'user' AND Password = 'pass';
+```
+An attacker could input:
+```sql
+' OR '1'='1
+```
+Resulting in:
+```sql
+SELECT * FROM Users WHERE Username = '' OR '1'='1' AND Password = '';
+```
+Since `1=1` is always true, the attacker gains access without valid credentials.
+
+
+## Prevention Methods
+
+- **Avoid buiding SQL statements manually** (string concatenation), use a library to prepared parameterized statements.
+- **Input Validation**: Restrict user input to expected formats.
+- **Least Privilege Principle**: Limit database permissions to reduce attack impact.
+- **Web Application Firewalls (WAFs)**: A protective barrier between users and applications, filtering out malicious requests before they reach the application.

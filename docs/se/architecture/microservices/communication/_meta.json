@@ -1,0 +1,10 @@
+[
+  "styles",
+  "common-data",
+  "request-response",
+  "event-driven",
+  "serialization",
+  "api-gateway",
+  "service-mesh",
+  "service-discovery"
+]

@@ -1,0 +1,37 @@
+# Cache
+
+## Overview
+
+A cache is a temporary storage area that stores the result of an operation so that future requests can use the stored value instead of recalculating it.
+
+Caching works best for read-heavy workloads, when data is read frequently but modified infrequently.
+
+
+## Benefits
+
+- Improve read performance. Fetching data from a cache avoids network calls and reduces load on the downstream service.
+- Increase scalability. Caching between clients and the origin service helps scale the system by reducing direct requests to the origin.
+- Ensure robustness. If the origin service is unavailable, a local cache allows continued operation.
+- Increase throughtput. System can handle more requests.
+
+
+## Limitations
+
+- Increase complexity to handle cache
+- Introduce inconsistencies where cache is not synced with data storage
+
+
+## Best Practices
+
+1. **Minimize caching layers**, cache only where necessary.
+2. Don't use cache to store **critical data**.
+3. Set up multiple cache servers across different data centers to avoid **Single point of failure**.
+4. Keep data store and cache in sync to ensure data **consistency**.
+5. **Overprovision the required memory for cache servers** to handle unexpected spikes in demand without performance degradation.
+6. **Treat caching as a performance optimization**, not a fundamental data source.
+
+> [!CAUTION]
+> The more caches between client and the data source, the more stale the data can be, the more difficult to determine where data needs to be invalidated.
+
+> [!CAUTION]
+> Be cautious with cache headers `Expires: Never` can cause permanent stale data issues

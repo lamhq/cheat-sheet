@@ -1,0 +1,8 @@
+[
+  "tcp",
+  "udp",
+  "websocket",
+  "rpc",
+  "rest",
+  "graphql"
+]

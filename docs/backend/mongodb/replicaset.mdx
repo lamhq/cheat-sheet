@@ -1,0 +1,154 @@
+# Replication
+
+## Overview
+
+A replica set refers to a collection of `mongod` processes that uphold the same dataset.
+
+By default, a replica set consists of three nodes, each holding a complete copy of the database.
+
+![](https://www.mongodb.com/docs/manual/images/replica-set-read-write-operations-primary.bakedsvg.svg)
+
+A replica set can have up to 50 nodes.
+
+
+## Primary node
+
+Write operations in MongoDB are executed on the primary node and subsequently logged in the primary's oplog.
+
+A replica set can only have one primary node.
+
+
+## Secondary nodes
+
+The secondary nodes mirror the primary's dataset. They only support read operations.
+
+
+## Replica set elections
+
+When the primary node become inaccessible, a qualified secondary node will initiate an election to become the new primary.
+
+MongoDB employs a protocol built on top of the Raft consensus algorithm to orchestrate replica set elections. It includes a voting mechanism to select which member will assume the primary role.
+
+Events can initiate an election:
+- Adding or removing a node from the replica set
+- Initializing the replica set
+- A heartbeat failure a secondary nodes and the primary (health check timeout)
+
+The replica set cannot perform write operations until the election is completed. It can still handle read operations.
+
+
+## Replica set oplog
+
+Write operations are logged in the primary's oplog. Secondary members asynchronously replicate and apply these operations.
+
+Each operation within the oplog is idempotent, meaning that whether applied once or multiple times to the target dataset, oplog operations yield the same outcome.
+
+Every member of the replica set holds a copy of the oplog.
+
+All members of the replica set exchange heartbeats (pings) with each other.
+
+Write operations may lag across nodes due to factors like network latency, hardware, workload. If a node falls behind, it will catch up or resync using the oplog.
+
+
+## Replica set arbiter
+
+A replica set arbiter is a node that participates in elections but does not store data. It is incapable of becoming a primary.
+
+Its primary role is to help maintain an odd number of voting members in a replica set to prevent deadlocks during primary elections.
+
+
+## Hidden replica set members
+
+Hidden replica set members are nodes that are part of the replica set but are not visible to client applications.
+
+They are often used for tasks like backups, reporting, or analytics, so they don't interfere with the primary workload or performance.
+
+They contain a complete copy of the database, similar to other members, ensuring data redundancy.
+
+They cannot assume the primary role.
+
+They have a `priority` value of `0`, and `hidden` is `true`.
+
+
+## Delayed replica set members
+
+Delayed replica set members are hidden replica set members that replicate data from the primary after a specified delay.
+
+They are used to maintain a historical view of the database for scenarios like data recovery or auditing, ensuring access to past states of the data.
+
+
+## Write concern
+
+The write concern determines how MongoDB confirms write operations on replica sets, it ensures that the data is written to a specified number of nodes before acknowledging the write operation.
+
+The following fields can be included in a write concern:
+```js
+{ w: <value>, j: <boolean>, wtimeout: <number> }
+```
+
+- **Unacknowledged (`w: 0`)**: The client does not wait for any acknowledgment of the write. This is faster but risky as there’s no confirmation of success.  
+- **Acknowledged (`w: 1`)**: The default setting where the primary node confirms the write before returning success.  
+- **Majority (`w: majority`)**: A write is acknowledged only after a majority of replica set members confirm it, ensuring stronger durability.  
+- **Custom (`w: n`)**: You can specify the number of nodes required to acknowledge the write.  
+
+Additional options include:  
+- **`j: true`**: Ensures that the write is committed to the journal for durability.  
+- **Timeout (`wtimeout`)**: Sets a time limit for the write operation to avoid indefinite waiting.  
+
+The choice of write concern can influence both the performance and the durability of the data:
+- **Performance**: A lower write concern (e.g., `w: 0`) can enhance performance by reducing the latency of the write operation. However, it risks data durability.
+- **Durability**: A higher write concern (e.g., `w: "majority"`) ensures that the data is durable by waiting for acknowledgments from the majority of the nodes. This might introduce a slight latency in the write operation.
+
+
+## Read preference
+
+Read preference determines how MongoDB clients route read operations to the members of a replica set.
+
+By default, MongoDB directs all read operations to the primary member.
+
+MongoDB supports five read preference modes:
+- `primary`: All read operations are directed to the primary member (default).
+- `primaryPreferred`: Reads are directed to the primary member if available; otherwise, they are routed to secondary members.
+- `secondary`: All read operations are directed to secondary members.
+- `secondaryPreferred`: Reads are directed to the available secondary members, if any; otherwise, they are routed to the primary member.
+- `nearest`: Read operations are directed to the member with the lowest network latency, irrespective of the member's status.
+
+You can also specify the following options:
+- **Tag sets**: target read operations to members that have specific tags
+- **Max staleness**: specify how outdated (or "stale") a secondary node can be when serving read operations
+
+The choice of read preference can influence both the performance and the availability of the data:
+- **Performance**: Distributing read operations to secondary members can enhance performance by reducing the load on the primary.
+- **Availability**: In case of primary unavailability, read operations can still be served by secondary members if the read preference mode allows it.
+
+
+## Read concern
+
+Read concern determines the consistency and isolation level of data read from the database.
+
+By adjusting the read concern, it's possible to control the visibility of data in read operations, thereby ensuring the desired level of consistency and isolation.
+
+Supported read concern levels:
+- `local`: Returns the most recent data available to the MongoDB instance at the start of the
+query, irrespective of the state of replication (default).
+- `available`: Returns the data that is currently available in the distributed system at the time
+of the query. This level provides the most minimal latency but does not guarantee consistency.
+- `majority`: Returns data that has been acknowledged by a majority of the replica set members.
+This ensures a high level of consistency.
+- `linearizable`: Provides the highest level of consistency by returning data that reflects all
+successful majority-acknowledged writes that completed prior to the start of the read operation.
+- `snapshot`: Returns data from a specific point in time across all replica set members.
+
+The choice of read concern can influence both the consistency and the isolation of the data:
+- **Consistency**: Higher levels of read concern (e.g., `majority` or `linearizable`) ensure
+that the data returned is consistent across the replica set members.
+- **Isolation**: By using the `snapshot` read concern, it's possible to isolate a transaction from
+concurrent writes, ensuring a consistent view of the data throughout the transaction.
+
+
+## Best practices
+
+1. Ensure the replica set has an odd number of voting members to prevent split decisions during network partitions, enabling the larger segment to accept writes.
+2. If there are even voting members, add a voting node or an arbiter to avoid deadlocks.
+3. Place at least one node in another data center to protect against regional outages.
+4. Use hidden or delayed members to support dedicated functions, such as backup or reporting.

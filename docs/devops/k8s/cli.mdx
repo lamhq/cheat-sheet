@@ -1,0 +1,157 @@
+# CLI commands
+
+## Apply
+
+Create or update objects defined in YAML file:
+```sh
+kubectl apply -f pod.yml -f deployment.yml
+```
+
+
+## Pod
+
+List all Pods:
+```sh
+kubectl get pods
+```
+
+Describle Pod:
+```sh
+kubectl describe pod <POD_NAME>
+```
+
+Delete Pod:
+```sh
+kubectl delete pod <POD_NAME>
+```
+
+Get container's log:
+```sh
+kubectl logs <POD_NAME> --container <CONTAINER_NAME>
+```
+
+Run commands in Pods:
+```sh
+kubectl exec <POD_NAME> -- <COMMAND>
+```
+
+Get shell access to a container:
+```sh
+kubectl exec -it <POD_NAME> -- sh
+```
+
+## Deployment
+
+List all deployments:
+```sh
+kubectl get deployments
+```
+
+Inspecting a Deployment:
+```sh
+kubectl get deploy <NAME>
+```
+
+Monitor the deployment progress:
+```sh
+kubectl rollout status deployment <NAME>
+```
+
+Shows the revision history of a specific Deployment.:
+```sh
+kubectl rollout history deployment <NAME>
+```
+
+Perform a rollback:
+```sh
+kubectl rollout undo deployment <NAME> --to-revision=1
+```
+
+Delete deployment:
+```sh
+kubectl delete deployment <NAME>
+```
+
+## Service
+
+List services:
+```sh
+kubectl get svc --watch
+```
+
+```sh
+kubectl get svc svc-test
+```
+
+## Node
+
+List all the nodes in cluster:
+```sh
+kubectl get nodes
+```
+
+## EndpointSlice
+
+```sh
+kubectl get endpointslices
+```
+
+```sh
+kubectl describe endpointslice svc-test-n7jg4
+```
+
+## Config
+
+View your config:
+```sh
+kubectl config view
+```
+
+## Context
+
+View current context:
+```sh
+kubectl config current-context
+```
+
+List all the contexts defined in your kubeconfig file:
+```sh
+kubectl config get-contexts
+```
+
+Switch the current Kubernetes context:
+```sh
+kubectl config use-context my-context
+```
+
+
+## Namespaces
+
+List all namespaces:
+
+```sh
+kubectl get namespaces
+```
+
+Get information about a namespace:
+
+```sh
+kubectl describe ns <NAMESPACE>
+```
+
+List all Service objects in namespace:
+
+```sh
+kubectl get svc --namespace kube-system
+```
+
+Switch to a namespace:
+
+```sh
+kubectl config set-context --current --namespace <NAMESPACE>
+```
+
+Create a new Namespace:
+```sh
+kubectl create ns hydra
+```

@@ -1,0 +1,13 @@
+{
+  "instance-types": "Instance Types",
+  "ami": "AMI",
+  "pricing": "Pricing",
+  "networking": "Networking",
+  "placement-group": "Placement Group",
+  "spot-instances": "Spot Instances",
+  "ip": "IP Addresses",
+  "logging": "Logging and Auditing",
+  "monitoring": "Monitoring",
+  "migration": "Migration",
+  "guides": "Guides"
+}

@@ -1,0 +1,19 @@
+[
+  {
+    "name": "sql",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "no-sql",
+    "type": "dir",
+    "collapsed": true
+  },
+  "choosing-db",
+  "transaction",
+  "concurrency",
+  "indexes",
+  "partitioning",
+  "sharding",
+  "replication"
+]

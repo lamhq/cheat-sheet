@@ -1,0 +1,7 @@
+{
+  "vpc": "Amazon VPC",
+  "elb": "Elastic Load Balancing",
+  "cloudfront": "Amazon CloudFront",
+  "route53": "Amazon Route 53",
+  "global-acc": "AWS Global Accelerator"
+}

@@ -1,0 +1,131 @@
+# Scalability
+
+## Overview
+
+Scalability refers to a system's ability to handle an increasing workload or amount of work. It's about how well a system can adapt to growth.
+
+Four axes of scaling:
+- **Vertical scaling**: Getting a bigger machine.
+- **Horizontal scaling**: having multiple things capable of doing the same work.
+- **Data partitioning**: Dividing work based on some attribute of the data, e.g., customer group.
+- **Functional decomposition**: Separation of work based on the type, e.g., microservice decomposition.
+
+
+## Vertical scaling
+
+Vertical scaling (aka **scaling up**), refers to increasing the capacity of a single machine (CPU, RAM, etc.) to handle more workload.
+
+Implementation:
+- Bare metal servers: purchasing new machines to upgrade
+- Virtualized infrastructure: resize a VM or buy new hardware if the VM is already maxed out
+- Cloud computing: cloud providers allow renting larger machines instantly
+
+Benefits:
+- Fast to implement (especially in the cloud).
+- Minimal code changes—most applications can use the upgraded hardware without modification.
+- Can support other scaling strategies (e.g., hosting multiple databases for microservices).
+
+Use cases:
+- Common for non distributed systems, such as database.
+- When traffic is low, vertical scaling is a great option
+
+Limitations:
+- Hardware limit: There's usually a limit on how much you can vertically scale.
+- Reliability: vertical scaling does not have failover and redundancy. If one server goes down, the system goes down with it completely.
+- Cost: Larger machines are more expensive.
+
+
+## Horizontal scaling
+
+Horizontal scaling (aka **scaling out**) involves duplicating parts of a system to handle more workload.
+
+Horizontal scaling adds more machines or instances and distributes the work among them.
+
+Implementations:
+- Load Balancing: Requests are distributed across multiple instances of a service.
+- Competing Consumer Pattern: Multiple workers consume tasks from a queue.
+- Read Replicas: Database replicas handle read requests, reducing load on the primary database.
+
+Benefits:
+- Scalability: Can handle increased workload by adding more instances.
+- Minimal Code Changes: Often requires little or no modification to the application.
+- Efficient Load Distribution: Helps reduce contention for computing resources.
+
+Limitations:
+- Cost: more machines lead to increasing costs.
+- Complex load distribution: some systems need sticky sessions, which can limit scaling options
+- Potential bottlenecks: bottlenecks may happen if the load distribution mechanism is misconfigured
+
+
+## Data Partitioning
+
+See [Database Partitioning](./components/database/partitioning.mdx).
+
+
+## Functional Decomposition
+
+Functional decomposition is a scaling strategy where a system's functionality is split into smaller, independent components that can be scaled separately.
+
+Functionalities are extracted into microservices. Each microservice can have its own infrastructure, database, and scaling strategy.
+
+Implementation:
+- Functional decomposition is often done by migrating to microservices (splitting the monolith).
+- Each microservice can use different technologies optimized for its workload.
+
+Benefits:
+- Independent Scaling: Each microservice can be scaled separately.
+- Optimized Infrastructure Costs: Small workloads can run on smaller machines, while high-load services get more resources.
+- Flexibility in Technology Choices: Different microservices can use different programming languages or databases.
+- Improved Organizational Scaling: Teams can own specific microservices, making development more efficient.
+- Potential for Partial Failure Tolerance: If one microservice fails, the rest of the system can still function.
+- Functional decomposition makes it easier to apply horizontal scaling and data partitioning.
+
+Limitations:
+- High Complexity: Splitting functionality requires significant changes to both frontend and backend.
+- Increased Maintenance Effort: More microservices mean more components to manage.
+- Data Migration Challenges: Moving data to separate microservices can be difficult.
+- Not a Short-Term Solution: Functional decomposition takes time and effort to implement.
+
+
+## Best practices
+
+### Avoid Premature Optimization
+
+Optimizing too early—before identifying real bottlenecks—can lead to wasted effort and unnecessary complexity.
+
+Optimization should be driven by actual needs, not assumptions.
+
+
+### Start Small
+
+Avoid Unnecessary Complexity.
+
+Decompose functionalities improves scalability, but also adds new infrastructure that must be managed.
+
+
+### Experimentation is key
+
+Confirm whether the proposed solution will work by conducting tests and experiments.
+
+Example: If you suspect database queries are slowing down your system, run load tests to measure performance before deciding on partitioning or sharding.
+
+
+### Combining Techniques
+
+The best strategy involves combining multiple scaling techniques to optimize performance, reliability, and efficiency.
+
+The goal isn't to scale in every possible way, but to choose the right combination based on system needs
+
+Imagine an Order microservice in an e-commerce system.  
+
+1️⃣ Step 1: Functional Decomposition  
+- The Order functionality is extracted from the monolithic system into its own microservice.  
+- This allows independent scaling of order processing.  
+
+2️⃣ Step 2: Horizontal Duplication  
+- Multiple copies of the Order microservice are deployed to handle increased traffic.  
+- A load balancer distributes requests across these instances.  
+
+3️⃣ Step 3: Geographic Sharding  
+- Orders are sharded by region (e.g., US orders go to one shard, EU orders to another).  
+- Within each region, horizontal duplication ensures redundancy and scalability.  

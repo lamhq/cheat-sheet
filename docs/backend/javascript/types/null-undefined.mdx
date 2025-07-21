@@ -1,0 +1,95 @@
+# Null and Undefined
+
+`null` and `undefined` are falsy values.
+
+## `undefined`
+
+`undefined` represents a variable that has been declared but not yet assigned a value.
+
+### Scenarios
+
+`undefined` is returned when:
+1. A variable is declared but not initialized.
+   ```js
+   let x;
+   console.log(x); // undefined
+   ```
+2. A function is called with fewer arguments than it is declared to accept, the missing parameters are `undefined`.
+   ```js
+   function greet(name?: string) {
+       console.log(name); // undefined if no argument is passed
+   }
+   greet();
+   ```
+3. A function does not explicitly return a value, it returns `undefined` by default.
+   ```js
+   function doNothing() {}
+   console.log(doNothing()); // undefined
+   ```
+4. Accessing a non-existent property of an object returns `undefined`. 
+
+    Before reading from an optional property, you'll have to check for `undefined` or use [Optional Chaining operator](../syntax/operators.mdx#optional-chaining-operator-).
+
+    ```js
+    let obj: { name?: string } = {};
+    console.log(obj.name); // undefined
+
+    if (typeof obj.name !== 'undefined') {
+      console.log(obj.name.toUpperCase());
+    }
+
+    // A safe alternative using modern JavaScript syntax:
+    console.log(obj.name?.toUpperCase());
+    ```
+5. Accessing an array element that has not been assigned a value returns `undefined`.
+   ```js
+   let arr = [1, 2];
+   console.log(arr[5]); // undefined
+   ```
+
+
+### Checking for `undefined`
+
+You can check if a variable is un`defined` using the `typeof` operator:
+
+```ts
+if (typeof myVariable === 'undefined') {
+  /* Do this if variable is undefined */
+  console.log('myVariable is undefined')
+}
+```
+
+If you use the strict equality operator (`===`) to check if a variable is `undefined`, it will throw an error if the variable is not declared yet:
+
+```js
+if (myVariable === undefined) {
+  /* Do this if variable is undefined */
+}
+```
+
+
+## `null`
+
+`null` represents the intentional absence of any object value.
+
+`null` value must be explicitly set before it can be accessed.
+
+
+### Checking for `null`
+
+```js
+if (myVariable === null) { 
+  /* Do this if variable is null */ 
+}
+```
+
+
+## JSON serialization
+
+When using `JSON.stringify` to convert an object into a JSON string:
+1. Attributes with `null` values will be included in the output as `null`.
+2. Attributes with `undefined` values will be completely omitted from the result.
+
+```ts
+JSON.stringify({ willStay: null, willBeGone: undefined }); // {"willStay":null}
+```

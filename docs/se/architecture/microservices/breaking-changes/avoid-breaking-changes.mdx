@@ -1,0 +1,90 @@
+# Avoiding Breaking Changes
+
+Tips to avoid making breaking changes:
+
+## Expansion Changes
+
+Add new things to a microservice interface; don't remove old things.
+
+
+## Tolerant Reader
+
+Avoid client code to bind too tightly to the interface of a microservice:
+- it should not bind to the extract data structure
+- it should not break if the data structure evolves (adding new fields, format changing slightly, ...)
+- it should gracefully handle unexpected or missing fields without rejecting the entire input
+
+*An `Email` microservice that send emails to customers. To send the email, the microservice needs to get `firstname`, `lastname`, and `email` from the `Customer` data. The `Email` service only care about those fields and ignore the rest.*
+
+> [!WARNING]
+> Some binding technologies (especially that used by strongly typed languages) attempts to bind all fields even unused ones, which can cause consumers to break when a field is removed.
+
+
+## Right Technology
+
+Pick technology that makes it easier to make backward-compatible changes to the interface.
+
+**Protocol buffers** (used with gRPC) assign each entry a field number, Client code relies on these numbers and can ignore newly added fields, ensuring compatibility.
+
+**Avro** allows for the schema to be sent along with the payload, allowing clients to potentially interpret a payload much like a dynamic type.
+
+
+## Explicit Interface
+
+Be explicit about what a microservice exposes.
+
+**Benefits**: 
+- this clarifies what consumers can expect
+- helps developers understand what they should not change to avoid breaking consumers
+- it makes the boundaries of information more explicit.
+
+**Schema in RPC vs. REST**: 
+
+Explicit schemas is required in **RPC**.
+
+For **REST**, it's optional. But the use of explicit schemas, like OpenAPI and JSON Schema, is becoming more common.
+
+
+**Challenges in Asynchronous Messaging**: 
+
+Asynchronous messaging protocols face challenges in having explicit schemas for events.
+
+It's more complex to define the interface for events than defining schemas for message payloads.
+
+AsyncAPI and CloudEvents may address this issue.
+
+
+## Catch Breaking Changes Early
+
+Tools to catch breaking changes before deploying to productions:
+
+### Structural breakages
+
+Using schemas can help us pick up structural changes.
+- Protolock for protocol buffers
+- json-schema-diff-validator for JSON Schema
+- openapi-diff for the OpenAPI specification
+- Confluent Schema Registry (supports JSON Schema, Avro, and protocol buffers)
+
+The tool is run in CI environment, it should fail a CI build if incompatible schemas are found, ensuring that your microservice won't get deployed.
+
+### Semantic breakages
+
+Tools like Pact can perform consumer-driven contract testing to to tackle semantic breakages.
+
+If you support multiple client libraries, testing each library with the latest service version can also help.
+
+> [!NOTE]
+> Without schemas, testing gets harder and requires extra work to catch breaking changes.
+
+
+## Semantic Versioning
+
+[Semantic Versioning](../../../development/semver.mdx) can be used to manage changes systematically and communicate compatibility effectively:
+- Assign each service a version in format `MAJOR.MINOR.PATCH`.
+- Increment the `MAJOR` version when introducing backward-incompatible changes, requiring dependent services to adapt.
+- Increment the `MINOR` version for new features that maintain backward compatibility.
+- Increment the `PATCH` version for bug fixes or minor adjustments that don't impact compatibility.
+- Specify the versions of dependent services in your application, ensuring integration works smoothly.
+
+For services with multiple endpoints, consider versioning individual endpoints for ensuring granularity.

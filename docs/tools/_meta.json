@@ -1,0 +1,37 @@
+[
+  {
+    "name": "index",
+    "label": "Tools"
+  },
+  {
+    "name": "git",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Git"
+  },
+  {
+    "name": "vscode",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Visual Studio Code"
+  },
+  {
+    "name": "macos",
+    "type": "dir",
+    "collapsed": true,
+    "label": "macOS"
+  },
+  {
+    "name": "windows",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Windows"
+  },
+  {
+    "name": "android",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Android"
+  },
+  "udemy"
+]

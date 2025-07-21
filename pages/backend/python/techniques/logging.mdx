@@ -1,0 +1,179 @@
+# Logging
+
+## Overview
+
+The `logging` module provides a flexible framework for emitting log messages from Python programs.
+
+
+## Getting started
+
+You can access logging functionality by creating a logger by calling `logging.getLogger(__name__)` then calling the logger's methods.
+
+```py
+import logging
+
+# get the logger for the current module
+logger = logging.getLogger(__name__)
+
+# create a logging handler and attach it to logger
+console_handler = logging.StreamHandler()
+logger.addHandler(console_handler)
+
+# perform logging
+logger.debug("This is a debug message")
+logger.info("This is an info message")
+logger.warning("This is a warning message")
+logger.error("This is an error message")
+logger.critical("critical message: %s", "error message")
+```
+
+
+## Logging Handlers
+
+**Logging handlers** are responsible for dispatching log messages to specific destinations.
+
+### StreamHandler
+
+This class sends logging output to streams such as `sys.stdout`, `sys.stderr`, or any file-like object.
+
+It's useful for displaying logs in the console.
+
+You can create an instance like this:
+```python
+import logging
+
+console_handler = logging.StreamHandler()
+
+logger.addHandler(console_handler)
+```
+
+### FileHandler
+
+The `FileHandler` class sends logging output to a disk file.
+
+It inherits functionality from `StreamHandler`.
+
+You can create an instance like this:
+```python
+import logging
+
+file_handler = logging.FileHandler("filename.log")
+
+logger.addHandler(file_handler)
+```
+
+
+## Logging Levels
+
+There're several log levels, each associated with a specific severity.
+
+Here are the standard log levels, in increasing order of severity:
+1. **DEBUG**: Detailed information, typically of interest only when diagnosing problems.
+2. **INFO**: Confirmation that things are working as expected.
+3. **WARNING**: An indication that something unexpected happened, or indicative of some problem in the near future (e.g., disk space low). The software is still working as expected.
+4. **ERROR**: Due to a more serious problem, the software has not been able to perform some function.
+5. **CRITICAL**: A serious error, indicating that the program itself may be unable to continue running.
+
+By default, the logging level is set to `WARNING`, meaning that only `WARNING`, `ERROR`, and `CRITICAL` messages will be logged unless you change the level.
+
+You can set the log level of the root logger like this:
+```python
+# show logs of all levels
+logging.basicConfig(level=logging.DEBUG)
+```
+
+To set the log level for a logger, you'll need to attach a log handler first, then call the `setLevel()` method before any logging operations:
+```python
+import logging
+
+logger = logging.getLogger(__name__)
+
+# create a logging handler
+console_handler = logging.StreamHandler()
+logger.addHandler(console_handler)
+
+# set log level, only INFO -> CRITICAL are shown
+logger.setLevel(logging.INFO)
+```
+
+
+You can change the log level of a module from outside. Suppose we have the following file structure:
+```
+.
+├── code
+│   ├── __init__.py
+│   └── lib.py
+└── main.py
+```
+
+```py filename="code/lib.py"
+import logging
+
+logger = logging.getLogger(__name__)
+
+def do_sth():
+    logger.debug("This is a debug message")
+    logger.info("This is an info message")
+    logger.warning("This is a warning message")
+    logger.error("This is an error message")
+    logger.critical("critical message: %s", "error message")
+```
+
+You can change the log level of the module `code/lib.py` in `main.py` to only display error and critial logs, like this:
+```py filename="main.py"
+import logging
+from code.lib import do_sth
+
+logger = logging.getLogger('code.lib')
+logger.addHandler(logging.StreamHandler())
+logger.setLevel(logging.ERROR)
+
+do_sth()
+```
+
+
+## Log format
+
+```py
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s :: %(levelname)s :: %(message)s'
+)
+logging.info("Just like that!")
+# 2019-02-17 11:40:38,254 :: INFO :: Just like that!
+```
+
+
+## Include traceback info
+
+Include traceback information in logged messages.
+
+```py
+import logging
+
+# Create or get the logger
+logger = logging.getLogger(__name__)
+
+# set log level
+logger.setLevel(logging.INFO)
+
+def divide(x, y):
+    try:
+        out = x / y
+    except ZeroDivisionError:
+        logger.exception("Division by zero problem")
+    else:
+        return out
+
+# Logs
+logger.error("Divide {x} / {y} = {c}".format(x=10, y=0, c=divide(10,0)))
+
+#> ERROR:__main__:Division by zero problem
+#> Traceback (most recent call last):
+#>   File "<ipython-input-16-a010a44fdc0a>", line 12, in divide
+#>     out = x / y
+#> ZeroDivisionError: division by zero
+#> ERROR:__main__:None
+```

@@ -1,0 +1,57 @@
+[
+  {
+    "name": "typescript",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "react-router",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Routing"
+  },
+  {
+    "name": "react-hook-form",
+    "collapsed": true,
+    "label": "Form Handling"
+  },
+  {
+    "name": "react-query",
+    "collapsed": true,
+    "label": "Asynchronous Operations"
+  },
+  {
+    "name": "auth",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Authentication"
+  },
+  {
+    "name": "jotai",
+    "collapsed": true,
+    "label": "State Management"
+  },
+  {
+    "name": "styling",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Styling"
+  },
+  {
+    "name": "joy-ui",
+    "collapsed": true,
+    "label": "UI Framework"
+  },
+  {
+    "name": "react-testing-library",
+    "collapsed": true,
+    "label": "Testing"
+  },
+  "server-comp",
+  {
+    "name": "performance",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Performance Optimization"
+  }
+]

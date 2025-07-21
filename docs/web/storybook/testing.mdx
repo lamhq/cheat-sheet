@@ -1,0 +1,56 @@
+# Testing
+
+Note: this guide is for project set up with Vitest.
+
+## Installation
+
+```sh
+npx storybook add @storybook/addon-vitest
+```
+
+Once your project is set up, you will see a testing widget in the bottom of your sidebar. After running tests, you will also see test status indicators on sidebar items.
+
+
+## Test types
+
+Storybook Test supports a variety of testing types
+
+### Render Tests
+
+- Basic stories act as smoke tests.
+- If a component renders without errors, the test passes.
+- Useful for verifying that components load correctly in different states.
+
+### Interaction Tests
+
+- Use the `play` function to simulate user behavior (focused on functionality).
+- Can include clicks, typing, form submissions, and more.
+- Base on Vitest and Testing Library, allow viewing the component in a real browser.
+- See more at [Interaction tests](https://storybook.js.org/docs/writing-tests/interaction-testing).
+
+> [!NOTE]
+> But mocking in Storybook is limited, just stick with Vitest and React Testing Library for writting component tests.
+
+### Accessibility (A11y) Tests
+
+- Automatically check for issues like poor contrast, missing ARIA labels, and keyboard navigation.
+- Requires `@storybook/addon-a11y` addon.
+- Helps ensure compliance with accessibility standards like WCAG.
+- See more at [Accessibility tests](https://storybook.js.org/docs/writing-tests/accessibility-testing)
+
+### Visual Regression Tests
+
+- Take screenshots of stories and compare them across commits (easier to review).
+- Supports cross-browser visual testing (using Chromatic cloud service)
+- When enabled, every story is automatically turned into a test.
+- Requires `@chromatic-com/storybook` addon.
+- See more at [Visual tests](https://storybook.js.org/docs/writing-tests/visual-testing)
+
+### Snapshot Tests
+
+- Capture the HTML output of a component and compare it over time.
+- Detect unintended changes in markup or styling.
+- See more at [Snapshot tests](https://storybook.js.org/docs/writing-tests/snapshot-testing).
+
+> [!NOTE]
+> Vitest already have snapshot testing.

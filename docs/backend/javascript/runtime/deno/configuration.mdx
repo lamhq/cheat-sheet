@@ -1,0 +1,113 @@
+# Configuration
+
+Configuration file is named `deno.json` or `deno.jsonc`
+
+## package.json support
+
+Deno also supports a `package.json` file for compatibility with Node.js projects.
+
+If both a `deno.json` and `package.json` file are present in the same directory, Deno use the `deno.json` file for Deno-specific configurations.
+
+
+## Dependencies
+
+The "imports" field in your `deno.json` allows you to configure an import map, which will let you set up aliases for frequently used modules:
+
+```json title="deno.json"
+{
+  "imports": {
+    "@std/assert": "jsr:@std/assert@^1.0.0",
+    "chalk": "npm:chalk@5"
+  }
+}
+```
+
+Then your script can use the bare specifier `std/assert`:
+
+```ts
+import { assertEquals } from "@std/assert";
+import chalk from "chalk";
+
+assertEquals(1, 2);
+console.log(chalk.yellow("Hello world"));
+```
+
+You can also  map a part of an import specifier to a directory:
+```ts
+{
+  "imports": {
+    // Map to an exact file
+    "foo": "./some/long/path/foo.ts",
+    // Map to a directory, usage: "bar/file.ts"
+    "bar/": "./some/folder/bar/"
+  }
+}
+```
+
+
+## Tasks
+
+Similar to `package.json`'s `script` field. Essentially shortcuts for command line invocations:
+```json
+{
+  "tasks": {
+    "start": "deno run -A --watch=static/,routes/,data/ dev.ts"
+  }
+}
+```
+
+
+## Linting
+
+The [`lint`](https://docs.deno.com/runtime/fundamentals/configuration/#linting) field is used to configure the behavior of Deno’s built-in linter.
+
+```json
+{
+  "lint": {
+    "include": ["src/"],
+    "exclude": ["src/testdata/", "src/fixtures/**/*.ts"],
+    "rules": {
+      "tags": ["recommended"],
+      "include": ["ban-untagged-todo"],
+      "exclude": ["no-unused-vars"]
+    }
+  }
+}
+```
+
+
+## Formatting
+
+The [`fmt`](https://docs.deno.com/runtime/fundamentals/configuration/#formatting) field in the deno.json file is used to configure the behavior of Deno’s built-in code formatter.
+
+```json title="deno.json"
+{
+  "fmt": {
+    "useTabs": true,
+    "lineWidth": 80,
+    "indentWidth": 4,
+    "semiColons": true,
+    "singleQuote": true,
+    "proseWrap": "preserve",
+    "include": ["src/"],
+    "exclude": ["src/testdata/", "src/fixtures/**/*.ts"]
+  }
+}
+```
+
+
+## Node modules directory
+
+If you have a `package.json` file in your project directory, Deno uses the local `node_modules` directory .
+
+You can control this behavior using the [`nodeModulesDir`](https://docs.deno.com/runtime/fundamentals/configuration/#node-modules-directory) field in the `deno.json` file.
+
+
+## TypeScript compiler options
+
+The [`compilerOptions`](https://docs.deno.com/runtime/reference/ts_config_migration/) field in the deno.json file is used to configure TypeScript compiler settings for your Deno project.
+
+
+## Reference
+
+https://docs.deno.com/runtime/fundamentals/configuration

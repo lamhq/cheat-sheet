@@ -1,0 +1,11 @@
+{
+  "comprehend": "Amazon Comprehend",
+  "kendra": "Amazon Kendra",
+  "textract": "Amazon Textract",
+  "rekognition": "Amazon Rekognition",
+  "forecast": "Amazon Forecast",
+  "speech": "Working with Text and Speech",
+  "translate": "Amazon Translate",
+  "fraud-detector": "Amazon Fraud Detector",
+  "sage-maker": "Amazon Sage Maker"
+}

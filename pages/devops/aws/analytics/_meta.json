@@ -1,0 +1,12 @@
+{
+  "lake-formation": "AWS Lake Formation",
+  "redshift": "Amazon Redshift",
+  "emr": "Amazon EMR",
+  "glue": "Amazon Glue",
+  "data-pipeline": "AWS Data Pipeline",
+  "kinesis": "Amazon Kinesis",
+  "msk": "Amazon MSK",
+  "quicksight": "Amazon QuickSight",
+  "athena": "Amazon Athena",
+  "opensearch": "Amazon OpenSearch"
+}
