@@ -1,0 +1,123 @@
+import { PackageManagerTabs } from '@theme'
+
+# Installation
+
+## Basic setup
+
+Run the below command to install and set up ESLint:
+```sh
+npm init @eslint/config@latest
+```
+
+> [!NOTE]
+> The above command supports setting up ESLint for Javascript, TypeScript on Browser and Node.js environment.
+
+A config file will be created automatically:
+
+```js title="eslint.config.js" {9,13,15}
+import js from "@eslint/js";
+import globals from "globals";
+import tseslint from "typescript-eslint";
+import { defineConfig } from "eslint/config";
+
+export default defineConfig([
+  {
+    name: 'js recommended for Node.js',
+    files: ["**/*.{js,mjs,cjs,ts,mts,cts}"],
+    plugins: { js },
+    extends: [
+      "js/recommended", 
+      tseslint.configs.recommended
+    ],
+    languageOptions: { globals: globals.node },
+  },
+]);
+```
+
+- `files` the configuration object is applied for files with extensions: js,mjs,cjs,ts,mts,cts
+- `tseslint.configs.recommended`: the shared configuration exported from `typescript-eslint`
+- `globals: globals.node`: the source code run in Node.js environment
+
+For advanced installation (React, Jest, Storybook ...), please follow the guides in the sub directory.
+
+
+## Enable ES modules
+
+Set `"type":"module"` in `package.json` to allow the ESLint config file to use ECMAScript modules (ESM) format:
+```json title="package.json"
+{
+  "type": "module"
+}
+```
+
+
+## Set up Visual Studio Code
+
+1. Install [ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
+2. Update your VS Code setting to auto fix ESLint errors on save:
+
+```json title=".vscode/settings.json"
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always"
+  }
+}
+```
+
+
+## Lint staged files on commit
+
+Install `lint-staged`:
+
+<PackageManagerTabs command="install --save-dev lint-staged" />
+
+Add `lint-staged` configuration to `package.json`:
+
+```json
+{
+  "lint-staged": {
+    "*.ts?(x)": "eslint --fix"
+  }
+}
+```
+
+Install [Husky](../../../../tools/git/husky.mdx):
+```sh
+npx husky init
+```
+
+Add a Git Hook to run `lint-staged` on commit:
+
+```sh
+echo "npx lint-staged" > .husky/pre-commit
+```
+
+
+## Running ESLint
+
+To run ESLint for a file:
+
+```sh
+npx eslint file.js 
+```
+
+Run ESLint for multiple targets:
+
+```sh
+npx eslint project-dir/ file.js 
+```
+
+Run ESLint for current directory (if using a flat configuration file):
+
+```sh
+npx eslint 
+```
+
+You can add a `lint` script to `package.json`:
+```json title="package.json"
+{
+  "scripts": {
+    "lint": "eslint",
+  }
+}
+```

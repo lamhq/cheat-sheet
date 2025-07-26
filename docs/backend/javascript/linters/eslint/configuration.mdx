@@ -1,0 +1,256 @@
+# Configuration
+
+## Configuration Files
+
+You can configure ESLint by using a **Configuration File**: a JavaScript file that specify configuration information for an entire directory and all of its subdirectories.
+
+The ESLint configuration file may be named any of the following:
+
+- `eslint.config.js`
+- `eslint.config.mjs`
+- `eslint.config.cjs`
+
+It should be placed in the root directory of your project and export an array of **configuration objects**.
+
+```js title="eslint.config.js"
+import { defineConfig } from "eslint/config";
+
+export default defineConfig([
+  {
+    rules: {
+      semi: "error",
+      "prefer-const": "error",
+    },
+  },
+]);
+```
+
+- The `defineConfig()` helper is used to define a configuration array with just one configuration object.
+- The configuration object enables two rules: `semi` and `prefer-const`.
+
+
+## Configuration Objects
+
+A **configuration object** tells ESLint:
+- Which **files** to lint (`files`)
+- Which **files to ignore** (`ignores`)
+- What **rules** to apply (`rules`)
+- What **language settings** to use (`languageOptions`)
+- Which **plugins** or **parsers** to include
+- Name of the configuration object, used in error messages and config inspector to help identify which configuration object is being used (`name`)
+
+Check out the [official doc](https://eslint.org/docs/latest/use/configure/configuration-files#configuration-objects) for the full list of properties.
+
+
+### How it work?
+
+- When you run the `eslint` command, ESLint reads your config file and applies each configuration object to matching files.
+- Matching is done using glob patterns in the `files` and `ignores` fields.
+- If a config object doesn’t specify `files` or `ignores`, it applies to any file matched by another config object.
+- ESLint merges all applicable configuration objects for each file, with later ones overriding earlier ones to create the final config.
+
+
+### Example
+
+```js title="eslint.config.js"
+export default [
+  // all JavaScript files define a custom global object defined called `MY_CUSTOM_GLOBAL`
+  {
+    files: ["**/*.js"],
+    languageOptions: {
+      globals: {
+        MY_CUSTOM_GLOBAL: "readonly",
+      },
+    },
+  },
+  // files in the `tests` directory have `it` and `describe` defined as global objects in addition to `MY_CUSTOM_GLOBAL`
+  {
+    files: ["tests/**/*.js"],
+    languageOptions: {
+      globals: {
+        it: "readonly",
+        describe: "readonly",
+      },
+    },
+  },
+];
+```
+- When running `npx eslint test/simple.js`, both configuration objects are applied, so `languageOptions.globals` are merged.
+
+
+## Using Configurations from Plugins
+
+A configuration object uses `extends` to inherit all the traits of other configurations and then modify the options.
+
+The elements of the `extends` array can be one of three values:
+- a string that specifies the name of a configuration in a plugin
+- a configuration object
+- a configuration array
+
+In this example, to use the configuration named `recommended` from `eslint-plugin-example`:
+
+```js title="eslint.config.js"
+import examplePlugin from "eslint-plugin-example";
+import { defineConfig } from "eslint/config";
+
+export default defineConfig([
+  {
+    files: ["**/*.js"],
+    plugins: {
+      example: examplePlugin,
+    },
+    extends: ["example/recommended"],
+    rules: {
+      "example/require-description": "error",
+      "example/check-values": "error",
+    },
+  },
+]);
+```
+
+- The `plugins` key specifies the plugin to be used in an object, name of the plugin is the property `name` and the value is the plugin object itself.
+- `example/recommended`: the config name, follow the format `pluginName/configName`
+- The prefix `example/` in each rule name indicates that the rule is coming from the plugin with that name rather than from ESLint itself
+- Using `extends` allow importing shared configurations and apply them to just a subset of files
+
+
+## Using a Shareable Configuration Package
+
+A sharable configuration is an npm package that exports a configuration object or array.
+
+For example, to use a shareable configuration from the package `eslint-config-example`:
+
+```js title="eslint.config.js"
+import exampleConfig from "eslint-config-example";
+import { defineConfig } from "eslint/config";
+
+export default defineConfig([
+  {
+    files: ["**/*.js"],
+    extends: [exampleConfig],
+  },
+]);
+```
+- `exampleConfig` can be either an object or an array
+
+
+## Ignoring Files
+
+You can use the `globalIgnores()` helper function to indicate patterns of files to be ignored:
+
+```js title="eslint.config.js"
+import { defineConfig, globalIgnores } from "eslint/config";
+
+export default defineConfig([
+  globalIgnores([
+    // ignore `.config` directory in the same directory with the configuration file
+    ".config/",
+
+    // recursively ignore all directories named `.config`
+    "**/.config/",
+
+    // unignore `node_modules/` directory
+    "!node_modules/",
+
+    // ignore its content but not the directory itself
+    "build/**/*",
+
+    // unignore `node_modules/mylibrary` directory
+    "!node_modules/mylibrary/",
+  ])
+]);
+```
+
+If you want to include patterns from a `.gitignore` file:
+
+```js title="eslint.config.js"
+import { defineConfig } from "eslint/config";
+import { includeIgnoreFile } from "@eslint/compat";
+import { fileURLToPath } from "node:url";
+
+const gitignorePath = fileURLToPath(new URL(".gitignore", import.meta.url));
+
+export default defineConfig([
+  includeIgnoreFile(gitignorePath, "Imported .gitignore patterns"),
+]);
+```
+
+> [!NOTE]
+> Patterns specified in files and ignores use [minimatch](https://www.npmjs.com/package/minimatch) syntax and are evaluated relative to the location of the `eslint.config.js` file
+
+More about this, see [Ignore Files](https://eslint.org/docs/latest/use/configure/ignore).
+
+
+## Debug Your Configuration
+
+### Print a File’s Calculated Configuration
+
+To print the final configuration for a file:
+```sh
+npx eslint --print-config file.js > es-config.json
+```
+
+> [!NOTE]
+> You won’t see any entries for `files`, `ignores`, or `name`, because those are only used in calculating the final configuration and so do not appear in the result.
+
+
+### Use the Config Inspector
+
+Launch the Config Inspector:
+
+```sh
+npx eslint --inspect-config 
+```
+
+![](https://eslint.org/docs/latest/assets/images/configure/config-inspector.png)
+
+You can then type in the filename in question to see which configuration objects will apply.
+
+
+## Configure Rules
+
+To configure rules inside of a configuration file, use the `rules` key along with an error level and any options you want to use:
+
+```js title="eslint.config.js"
+import { defineConfig } from "eslint/config";
+
+export default defineConfig([
+  {
+    rules: {
+      "no-unused-vars": "error",
+      "prefer-const": ["error", { ignoreReadBeforeAssign: true }],
+    },
+  },
+]);
+```
+
+To disable rules using comment:
+```js
+/* eslint-disable */
+
+alert("foo");
+
+/* eslint-enable */
+```
+
+Disable or enable warnings for specific rules:
+```js
+/* eslint-disable no-alert, no-console */
+
+alert("foo");
+console.log("bar");
+
+/* eslint-enable no-alert, no-console */
+```
+
+Disable next line with explaination:
+```js
+// eslint-disable-next-line no-console -- Here's a description about why this configuration is necessary.
+console.log("hello");
+
+/* eslint-disable-next-line no-console --
+ * Here's a very long description about why this configuration is necessary
+ * along with some additional information
+ **/
+console.log("hello");
+```

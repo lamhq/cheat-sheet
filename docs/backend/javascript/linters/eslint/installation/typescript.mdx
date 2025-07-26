@@ -1,0 +1,47 @@
+import { PackageManagerTabs } from '@theme'
+
+# TypeScript
+
+Install and configure ESLint for a TypeScript project.
+
+
+## Installation
+
+Finish the [basic setup](../installation.mdx#basic-setup) first, then run below command to install additional packages:
+
+<PackageManagerTabs command="install --save-dev typescript-eslint" />
+
+Update ESLint config file to use the two shared configurations: , 
+
+```js title="eslint.config.js" {6-11,13,14}
+import tseslint from 'typescript-eslint';
+
+export default defineConfig([
+  {
+    files: ['**/*.{ts,tsx}'],,
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+    extends: [
+      tseslint.configs.strictTypeChecked,
+      tseslint.configs.stylisticTypeChecked,
+      // ...
+    ],
+  },
+]);
+```
+- `strictTypeChecked`: a superset of `recommended` config, includes more opinionated rules, with typed linting enable, which may also catch bugs.
+- `stylisticTypeChecked`: includes additional rules that enforce consistent styling, with typed linting enable
+- `languageOptions`: required to enable typed linting
+- `parserOptions.projectService: true`: ask TypeScript's type checking service for each source file's type information
+
+> [!NOTE]
+> This configuration may differ from the official documentation as it has been updated to reflect ESLint's new usage model.
+
+
+## Caveats
+
+`typescript-eslint` does not reproduce the errors that TypeScript provides, because doing so would slow down the lint run, and duplicate the errors that TypeScript already outputs for you.

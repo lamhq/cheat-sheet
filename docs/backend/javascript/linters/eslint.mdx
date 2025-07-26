@@ -1,24 +1,29 @@
+
 # ESLint
 
 ## Version
 
-This document is for version `9.13.0` (2024).
-
-*ESLint v8.x reached end-of-life on 2024-10-05 and is no longer maintained.*
+This document is for version `9.32.0` (2025), using [flat configuration file](https://eslint.org/docs/latest/use/configure/configuration-files).
 
 
 ## Overview
 
-ESLint is an open-source JavaScript linting utility.
-
-It helps developers find and fix problems in their JavaScript code, with the goal of making code more consistent and avoiding bugs.
-
-It's widely used in both browser and server-side JavaScript projects to maintain code quality and consistency.
+ESLint is a tool for identifying and reporting on patterns found in ECMAScript/JavaScript code, with the goal of making code more consistent and avoiding bugs.
 
 
 ## Prerequisites
 
 Node.js `^18.18.0`, `^20.9.0`, or `>=21.1.0`.
+
+
+## Plugin
+
+Plugins are simply objects that conform to a specific interface that ESLint recognizes.
+
+Plugins can provide:
+- Custom rules that can be imported in ESLint config file.
+- Custom configurations that can be imported in ESLint config file.
+- Custom processors to extract JavaScript code from other kinds of files or preprocess code before linting.
 
 
 ## Reference

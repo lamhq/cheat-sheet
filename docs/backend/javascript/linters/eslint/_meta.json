@@ -1,9 +1,8 @@
 [
-  "install",
-  "react",
   {
-    "name": "configure",
+    "name": "installation",
     "type": "dir",
     "collapsed": true
-  }
+  },
+  "configuration"
 ]
