@@ -1,52 +1,27 @@
 # Getting Started
 
-## Installation
+## Using commands
 
-minikube is local Kubernetes, focusing on making it easy to learn and develop for Kubernetes.
-
-### Install minikube
-
-Install minikube on macOS (ARM64) using Homebrew:
-
+Create a deployment for a Pod:
 ```sh
-brew install minikube
+kubectl run nginx-pod --image=nginx:alpine
 ```
 
-### Install kubectl 
-
-`kubectl` is the command-line tool used to interact with Kubernetes clusters.
-
-minikube already has a pre-installed version of `kubectl` that you can use like this:
-
+Verify the created pod:
 ```sh
-minikube kubectl -- get po -A
+kubectl get pods
 ```
 
-You can make a command alias by adding this to your shell config (`~/.zshrc`):
+Forward a port to allow external access:
 ```sh
-alias kubectl="minikube kubectl --"
+kubectl port-forward nginx-pod 8080:80
 ```
 
+Access the website at http://localhost:8080/
 
-## Start cluster
-
-Start cluster with Podman (rootless mode):
-
+Delete the Pod (clean up):
 ```sh
-minikube start --driver=podman --container-runtime=containerd
-```
-
-> [!NOTE]
-> `--container-runtime=containerd` is recommended for rootless Podman
-
-To make podman the default driver:
-```sh
-minikube config set driver podman
-```
-
-To make minikube to use rootless mode:
-```sh
-minikube config set rootless true
+kubectl delete pod nginx-pod
 ```
 
 
@@ -77,10 +52,11 @@ Create pod:
 kubectl apply -f pod.yml
 ```
 
-## Connect to the app locally
+## Connect to container
 
-> [!NOTE]
-> By default, a Pod is only accessible by its internal IP address within the Kubernetes cluster. To make the container accessible from outside the Kubernetes virtual network, you have to expose the Pod as a Kubernetes Service.
+By default, a Pod is only accessible by its internal IP address within the Kubernetes cluster. 
+
+To make the container accessible from outside the Kubernetes virtual network, you have to expose the Pod as a Kubernetes Service.
 
 Create an yaml file that define the service:
 ```yml title="service.yml"
