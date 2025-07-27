@@ -4,11 +4,7 @@
     "type": "dir",
     "collapsed": true
   },
-  {
-    "name": "prettier",
-    "type": "dir",
-    "collapsed": true
-  },
+  "prettier",
   {
     "name": "biome",
     "type": "dir",

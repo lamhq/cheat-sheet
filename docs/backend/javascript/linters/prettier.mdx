@@ -1,38 +1,143 @@
+import { PackageManagerTabs } from '@theme'
+
 # Prettier
 
 ## Version
 
-This document is for version `3.3.3` (Oct 2024).
+This document is for version `3.6.2` (July 2025).
 
 
-## What is Prettier?
+## Installation
 
-Prettier is an opinionated code formatter with support for:
-- JavaScript
-- JSX
-- TypeScript
-- CSS, Less, SCSS
-- HTML
-- GraphQL
-- Markdown
-- YAML
+<PackageManagerTabs command="install --save-dev --save-exact prettier" />
+
+Create a Prettier config `.prettierrc` file:
+
+```json title=".prettierrc"
+{
+  "useTabs": false,
+  "tabWidth": 2,
+  "printWidth": 85,
+  "semi": true,
+  "singleQuote": true,
+  "trailingComma": "all"
+}
+```
+
+> [!NOTE]
+> Prettier will follow rules specified in `.gitignore` if it exists the directory where Prettier is run.
 
 
-## Why Prettier?
+## Using Prettier
 
-- **Consistent Formatting:** Ensures a uniform code style across your entire codebase.
-- **Time-Saving:** Automates formatting, reduces effort during code reviews.
-- **Improved Code Quality:** Makes your code more readable and easier to understand.
-- **Seamless Integration:** Works with many languages and integrates with most editors.
+Add a `format` script in `package.json`:
+
+```json title="package.json"
+{
+  "scripts": {
+    "format": "prettier . --write",
+  }
+}
+```
+
+Run Prettier:
+```sh
+npm run format
+```
 
 
-## Prettier vs. Linters
+## Integrating with ESLint
 
-Prettier is an opinionated code formatter that enforces a consistent style. It makes your code look good.
+<PackageManagerTabs command="install --save-dev eslint-config-prettier" />
 
-Linters catch code errors, enforce best practices, and ensure code quality. Linters make sure your code is good.
+Update ESLint config file:
+
+```js title="eslint.config.js" {2,6}
+import { defineConfig } from "eslint/config";
+import eslintConfigPrettier from "eslint-config-prettier/flat";
+
+export default defineConfig([
+  // other configs ...
+  eslintConfigPrettier,
+]);
+```
+
+- `eslint-config-prettier` export an ESLint config that turn off rules that conflict or are unnecessary with Prettier, makes sure to put it after other configs.
+
+> [!NOTE]
+> `eslint-plugin-prettier` isn't installed due to separation of concerns between linters and formatters
+
+
+## Enabling Organize Import
+
+<PackageManagerTabs command="install --save-dev prettier-plugin-organize-imports@^4.1.0" />
+
+Update Prettier config `.prettierrc` file:
+```json title=".prettierrc"
+{
+  "plugins": ["prettier-plugin-organize-imports"]
+}
+```
+
+
+## Setting up Visual Studio Code
+
+Install [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) extension (`esbenp.prettier-vscode`).
+
+Update workspace setting file:
+```json title=".vscode/settings.json"
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true
+}
+```
+
+
+## Auto Format Staged Files
+
+```sh
+npx mrm@2 lint-staged
+```
+
+This will install `husky` and `lint-staged`, then add a configuration to the project’s package.json that will automatically format supported files in a pre-commit hook.
+
+
+## Run Prettier on CI
+
+To check format with Prettier from GitHub Actions:
+
+```yml title=".github/workflows/lint.yml"
+name: Lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  format:
+    name: Run formatter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Check formatting
+        run: npx prettier . --check
+```
 
 
 ## References
 
 - https://prettier.io
+- [eslint-config-prettier](https://github.com/prettier/eslint-config-prettier)

@@ -1,0 +1,30 @@
+import { PackageManagerTabs } from '@theme'
+
+# Linter
+
+Integration with Linter
+
+## Installation
+
+<PackageManagerTabs command="install --save-dev eslint-plugin-playwright" />
+
+Update ESLint config file:
+
+```js title="eslint.config.js" {2,8}
+import { defineConfig } from "eslint/config";
+import playwright from 'eslint-plugin-playwright'
+
+export default defineConfig([
+  {
+    files: ['tests/**/*.spec.ts'],
+    extends: [
+      playwright.configs['flat/recommended']
+    ],
+  },
+]);
+```
+
+
+## References
+
+- [eslint-plugin-playwright](https://github.com/playwright-community/)

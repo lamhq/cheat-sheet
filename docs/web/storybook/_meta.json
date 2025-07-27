@@ -2,5 +2,6 @@
   "story",
   "mocking",
   "testing",
-  "addons"
+  "addons",
+  "eslint"
 ]

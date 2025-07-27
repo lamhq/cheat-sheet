@@ -6,5 +6,6 @@
   "monitoring",
   "mock-api",
   "tracing",
-  "storage"
+  "storage",
+  "linter"
 ]

@@ -3,5 +3,6 @@
   "async",
   "setup-teardown",
   "mock",
-  "snapshot"
+  "snapshot",
+  "linter"
 ]

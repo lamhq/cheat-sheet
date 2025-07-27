@@ -7,46 +7,55 @@ Install and configure ESLint for a React (TypeScript) project.
 
 ## Installation
 
-Finish the [base installation](./install.mdx).
+Finish the [basic setup](../installation.mdx#basic-setup) first, then run below command to install additional packages:
 
-Adding linter support for React:
-<PackageManagerTabs command="install --save-dev eslint-plugin-react@^7.37.3 globals@^15.14.0" />
+<PackageManagerTabs command="install --save-dev eslint-plugin-react eslint-plugin-react-hooks globals" />
 
-## Configuration
+Update ESLint config file:
 
-Add these config to `eslint.config.mjs`:
-```js
-import React from 'react';
-import tseslint from 'typescript-eslint';
+```js title="eslint.config.js" {2,3,9,12,13}
+import { defineConfig } from "eslint/config";
 import reactPlugin from 'eslint-plugin-react';
-import globals from 'globals';
+import reactHooks from 'eslint-plugin-react-hooks';
 
-export default tseslint.config(
-  // other config objects ...
-  
-  // React Typescript
+export default defineConfig([
   {
-    name: 'eslint-plugin-react',
     files: ['**/*.tsx'],
-    ...reactPlugin.configs.flat?.recommended,
-    ...reactPlugin.configs.flat?.['jsx-runtime'],
     languageOptions: {
-      ...reactPlugin.configs.flat?.recommended.languageOptions,
-      globals: {
-        ...globals.serviceworker,
-        ...globals.browser,
-      },
+      globals: globals.browser,
     },
-    settings: {
-      react: {
-        version: React.version,
-      },
-    },
-  }
-)
+    extends: [
+      reactPlugin.configs.flat.recommended,
+      reactHooks.configs['recommended-latest'],
+    ],
+  },
+]);
 ```
+- The shared configs do not preconfigure `languageOptions.globals`. For most of the cases, you probably want to configure some properties by yourself.
 
+
+## Integrate with Bundler
+
+<PackageManagerTabs command="install --save-dev eslint-plugin-react-refresh" />
+
+If you're using Vite:
+
+```js title="eslint.config.js" {2,8}
+import { defineConfig } from "eslint/config";
+import reactRefresh from "eslint-plugin-react-refresh";
+
+export default defineConfig([
+  {
+    files: ['**/*.tsx'],
+    extends: [
+      reactRefresh.configs.vite,
+    ],
+  },
+]);
+```
 
 ## References
 
 - [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react?tab=readme-ov-file#configuration-new-eslintconfigjs)
+- [eslint-plugin-react-hooks](https://www.npmjs.com/package/eslint-plugin-react-hooks)
+- [eslint-plugin-react-refresh](https://www.npmjs.com/package/eslint-plugin-react-refresh)
