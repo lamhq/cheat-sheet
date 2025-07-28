@@ -1,0 +1,41 @@
+# JavaScript
+
+## Configuration
+
+Add the below configuration object to your ESLint config file:
+
+```js title="eslint.config.js" {2,8}
+import { defineConfig } from 'eslint/config';
+import js from '@eslint/js';
+
+export default defineConfig([
+  {
+    name: 'JavaScript',
+    files: ['**/*.{js,ts,jsx,tsx}'],
+    extends: [js.configs.recommended],
+  },
+]);
+```
+- `js.configs.recommended`: ESLint’s recommended rule set for JavaScript
+- `defineConfig`: a helper utility that wraps your ESLint flat config array to provide type safety, editor autocompletion, and better tooling support
+
+
+## Lint CLI config files
+
+For tools that use a JavaScript file for configuration (e.g., ESLint, Vite), set the `globals` option to `globals.node` when linting those files, as they run in a Node.js environment:
+
+```js title="eslint.config.js" {2,9}
+import { defineConfig } from 'eslint/config';
+import globals from 'globals';
+
+export default defineConfig([
+  {
+    name: 'Config files',
+    files: ['**/*.js'],
+    languageOptions: {
+      globals: globals.node,
+    },
+  },
+]);
+```
+- `languageOptions.globals: globals.node`: Declares Node.js-specific global variables (e.g. `require`, `__dirname`, `process`) so ESLint doesn't mistakenly flag them as undefined.

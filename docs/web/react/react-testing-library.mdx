@@ -408,23 +408,22 @@ Refer to https://testing-library.com/docs/react-testing-library/cheatsheet
 
 ## Integrate with Linter
 
-<PackageManagerTabs command="install --save-dev eslint-plugin-testing-library eslint-plugin-jest-dom" />
+<PackageManagerTabs command="install --save-dev eslint-plugin-testing-library" />
 
-```js title="eslint.config.js" {2,3,9,10}
+```js title="eslint.config.js" {2,9}
 import { defineConfig } from "eslint/config";
 import testingLibrary from "eslint-plugin-testing-library";
-import jestDom from "eslint-plugin-jest-dom";
 
 export default defineConfig([
   {
+    name: 'React Testing Library',    
     files: ['**/*.test.tsx'],
     extends: [
       testingLibrary.configs['flat/react'],
-      jestDom.configs["flat/recommended"],
     ],
   },
 ]);
 ```
 
 References:
-- [eslint-plugin-testing-library](https://github.com/testing-library/eslint-plugin-testing-library?tab=readme-ov-file#shareable-configurations)
+- [eslint-plugin-testing-library](https://github.com/testing-library/eslint-plugin-testing-library?tab=readme-ov-file#react)

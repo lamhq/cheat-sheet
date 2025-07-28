@@ -13,16 +13,20 @@ Finish the [basic setup](../installation.mdx#basic-setup) first, then run below 
 
 Update ESLint config file:
 
-```js title="eslint.config.js" {2,3,9,12,13}
+```js title="eslint.config.js" {2,3,10,16,17}
 import { defineConfig } from "eslint/config";
 import reactPlugin from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 
 export default defineConfig([
   {
+    name: 'TypeScript React',
     files: ['**/*.tsx'],
     languageOptions: {
       globals: globals.browser,
+    },
+    settings: {
+      react: { version: 'detect' },
     },
     extends: [
       reactPlugin.configs.flat.recommended,
@@ -32,6 +36,7 @@ export default defineConfig([
 ]);
 ```
 - The shared configs do not preconfigure `languageOptions.globals`. For most of the cases, you probably want to configure some properties by yourself.
+- `react: { version: 'detect' }`: automatically detect the React version from your dependencies
 
 
 ## Integrate with Bundler

@@ -7,7 +7,7 @@ import { PackageManagerTabs } from '@theme'
 <PackageManagerTabs command="install --save-dev eslint-plugin-storybook" />
 
 
-## Configuration 
+## Configuration
 
 Update ESLint config file (flat config format):
 
@@ -16,6 +16,6 @@ import tseslint from 'typescript-eslint';
 import storybook from 'eslint-plugin-storybook';
 
 export default defineConfig([
-  storybook.configs['flat/recommended'],
+  ...storybook.configs['flat/recommended'],
 ]);
 ```

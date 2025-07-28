@@ -10,12 +10,13 @@ Integration with Linter
 
 Update ESLint config file:
 
-```js title="eslint.config.js" {2,8}
+```js title="eslint.config.js" {2,9}
 import { defineConfig } from "eslint/config";
 import playwright from 'eslint-plugin-playwright'
 
 export default defineConfig([
   {
+    name: 'Playwright Tests',
     files: ['tests/**/*.spec.ts'],
     extends: [
       playwright.configs['flat/recommended']

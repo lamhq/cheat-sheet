@@ -1,4 +1,5 @@
 [
+  "javascript",
   "typescript",
   "react",
   {
@@ -15,6 +16,11 @@
     "type": "custom-link",
     "link": "/backend/javascript/testing/jest/linter",
     "label": "Jest"
+  },
+  {
+    "type": "custom-link",
+    "link": "/backend/javascript/testing/vitest/linter",
+    "label": "Vitest"
   },
   {
     "type": "custom-link",

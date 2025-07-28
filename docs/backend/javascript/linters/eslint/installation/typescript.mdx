@@ -13,12 +13,13 @@ Finish the [basic setup](../installation.mdx#basic-setup) first, then run below 
 
 Update ESLint config file to use shared configurations:
 
-```js title="eslint.config.js" {7-12,14,15}
+```js title="eslint.config.js" {10,15,16}
 import { defineConfig } from "eslint/config";
 import tseslint from 'typescript-eslint';
 
 export default defineConfig([
   {
+    name: 'TypeScript',
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       parserOptions: {
@@ -29,15 +30,13 @@ export default defineConfig([
     extends: [
       tseslint.configs.strictTypeChecked,
       tseslint.configs.stylisticTypeChecked,
-      // ...
     ],
   },
 ]);
 ```
 - `strictTypeChecked`: a superset of `recommended` config, includes more opinionated rules, with typed linting enable, which may also catch bugs.
 - `stylisticTypeChecked`: includes additional rules that enforce consistent styling, with typed linting enable
-- `languageOptions`: required to enable typed linting
-- `parserOptions.projectService: true`: ask TypeScript's type checking service for each source file's type information
+- `projectService: true`: ask TypeScript's type checking service for each source file's type information
 
 > [!NOTE]
 > This configuration may differ from the official documentation as it has been updated to reflect ESLint's new usage model.
