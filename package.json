@@ -6,7 +6,8 @@
 		"dev": "rspress dev --port 5002",
 		"build": "rspress build",
 		"preview": "rspress preview --port 5002",
-		"lint": "find . -name \\*.mdx -print0 | xargs -0 -n1 markdown-link-check --quiet"
+		"lint": "find . -name \\*.mdx -print0 | xargs -0 -n1 markdown-link-check --quiet",
+		"prepare": "husky install"
 	},
 	"dependencies": {
 		"react": "^18.2.0",
@@ -14,8 +15,15 @@
 		"rspress-plugin-katex": "^0.3.0"
 	},
 	"devDependencies": {
+		"lint-staged": "^16.1.2",
 		"markdown-link-check": "^3.13.7",
 		"rspress": "^1.42.0",
-		"typescript": "5.8.2"
+		"typescript": "5.8.2",
+		"husky": "^8.0.0"
+	},
+	"lint-staged": {
+		"*.md": [
+			"bash -c 'for file in $0; do markdown-link-check \"$file\"; done'"
+		]
 	}
 }
