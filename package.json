@@ -23,7 +23,7 @@
 	},
 	"lint-staged": {
 		"*.mdx": [
-			"bash -c 'for file in $0; do markdown-link-check \"$file\"; done'"
+			"bash -c 'for file in $0; do echo \"$file\";markdown-link-check \"$file\"; done'"
 		]
 	}
 }
