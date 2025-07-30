@@ -13,58 +13,24 @@ To enable Kubernetes in Docker Desktop:
 - Click **Apply & Restart**.
 
 
-## Using minikube
-
-minikube is local Kubernetes, focusing on making it easy to learn and develop for Kubernetes.
-
-To install minikube on macOS (ARM64) using Homebrew:
-
-```sh
-brew install minikube
-```
-
-### Using kubectl
-
-minikube already has a pre-installed version of `kubectl` that you can use like this:
-
-```sh
-minikube kubectl -- get po -A
-```
-
-You can make a command alias by adding this to your shell config (`~/.zshrc`):
-```sh
-alias kubectl="minikube kubectl --"
-```
-
-> [!NOTE]
-> `kubectl` is the command-line tool used to interact with Kubernetes clusters
-
-
-### Starting cluster
-
-Start cluster with Podman (rootless mode):
-
-```sh
-minikube start --driver=podman --container-runtime=containerd
-```
-
-> [!NOTE]
-> `--container-runtime=containerd` is recommended for rootless Podman
-
-To make podman the default driver:
-```sh
-minikube config set driver podman
-```
-
-To make minikube to use rootless mode:
-```sh
-minikube config set rootless true
-```
-
-
 ## Verify installation
 
 ```sh
 kubectl version
 kubectl get all
+```
+
+
+## Setting command alias
+
+Add a command alias for `kubectl` on macOS using `zsh`.
+
+Append this line to your `~/.zshrc`:
+```sh
+alias k=kubectl
+```
+
+Reload your shell to apply changes:
+```sh
+source ~/.zshrc
 ```
