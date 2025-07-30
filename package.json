@@ -2,11 +2,13 @@
 	"name": "cheat-sheet",
 	"version": "1.0.0",
 	"description": "Albert's cheat sheet",
+	"type": "module",
 	"scripts": {
 		"dev": "rspress dev --port 5002",
 		"build": "rspress build",
 		"preview": "rspress preview --port 5002",
-		"lint": "find . -name \\*.mdx -print0 | xargs -0 -n1 markdown-link-check --quiet"
+		"lint": "find . -name \\*.mdx -print0 | xargs -0 -n1 markdown-link-check --quiet",
+    "prepare": "node .husky/install.js"
 	},
 	"dependencies": {
 		"react": "^18.2.0",
@@ -14,8 +16,13 @@
 		"rspress-plugin-katex": "^0.3.0"
 	},
 	"devDependencies": {
-		"markdown-link-check": "^3.13.7",
+		"lint-staged": "^16.1.2",
+		"markdown-link-check": "3.12.2",
 		"rspress": "^1.42.0",
-		"typescript": "5.8.2"
+		"typescript": "5.8.2",
+		"husky": "^8.0.0"
+	},
+	"lint-staged": {
+		  "*.mdx": "npx markdown-link-check"
 	}
 }
