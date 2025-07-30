@@ -4,23 +4,28 @@
 
 A Deployment is a higher-level Kubernetes object that wraps around a Pod and adds features such as self-healing, scaling, zero-downtime rollouts, and versioned rollbacks.
 
-> [!NOTE]
-> You can deploy container by define it in a Pod template. However, static Pods don't self-heal, they don't scale, and they don't allow for easy updates and rollbacks.
+> [!INFO]
+> You can deploy containers by define them in a Pod template. However, static Pods don't self-heal, they don't scale, and they don't allow for easy updates and rollbacks.
 
-There are two major components to Deployments:
-1. The spec
-2. The controller
+
+## Deployments and ReplicaSets
+
+Deployments rely heavily on another object called a ReplicaSet.
+
+A ReplicaSet is a declarative way to manage Pods. A Deployment is a declarative way to manage Pods using a ReplicaSet.
+
+ReplicaSets manage Pods and bring self-healing and scaling. Deployments manage ReplicaSets and add rollouts and rollbacks.
+
+It's not recommended to manage ReplicaSets directly, but let the Deployment controller manage them.
 
 
 ## Deployment spec
 
 A Deployment object is a high-level Kubernetes resource that describes the desired state of a stateless app.
 
-A Deployment object is defined in YAML or JSON file, called the  Deployment spec.
+It is defined in YAML or JSON file, called the Deployment spec:
 
-A basic example of a Deployment spec:
-
-```yml
+```yml {6,8,10}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -43,7 +48,7 @@ spec:
 ```
 
 - `replicas`: specifies the number of desired Pod replicas to run.
-- `selector` & `matchLabels`: Defines how the Deployment identifies the Pods it manages. In this case, it uses the label `app: my-app`
+- `matchLabels`: Defines how the Deployment identifies the Pods it manages. In this case, it uses the label `app: my-app`
 - `template`: Pod template, describes how the Pods should be created
 
 
@@ -69,15 +74,6 @@ A Deployment object only manages a single Pod template.
 
 > [!NOTE]
 > For example, an application with a front-end web service and a shopping basket service will have a different Pod template for each. As a result, it'll need two Deployment objects, one managing frontend web Pods, the other managing any shopping basket Pods.
-
-
-## Deployments and ReplicaSets
-
-Deployments rely heavily on another object called a ReplicaSet
-
-It's not recommended to manage ReplicaSets directly, but let the Deploymentcontroller manage them.
-
-ReplicaSets manage Pods and bring self-healing and scaling. Deployments manage ReplicaSets and add rollouts and rollbacks.
 
 
 ## Rolling update

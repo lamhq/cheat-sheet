@@ -8,38 +8,6 @@ kubectl apply -f pod.yml -f deployment.yml
 ```
 
 
-## Pod
-
-List all Pods:
-```sh
-kubectl get pods
-```
-
-Describle Pod:
-```sh
-kubectl describe pod <POD_NAME>
-```
-
-Delete Pod:
-```sh
-kubectl delete pod <POD_NAME>
-```
-
-Get container's log:
-```sh
-kubectl logs <POD_NAME> --container <CONTAINER_NAME>
-```
-
-Run commands in Pods:
-```sh
-kubectl exec <POD_NAME> -- <COMMAND>
-```
-
-Get shell access to a container:
-```sh
-kubectl exec -it <POD_NAME> -- sh
-```
-
 ## Deployment
 
 List all deployments:
