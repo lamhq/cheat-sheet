@@ -25,8 +25,8 @@ importers:
         specifier: ^16.1.2
         version: 16.1.2
       markdown-link-check:
-        specifier: ^3.13.7
-        version: 3.13.7
+        specifier: 3.12.2
+        version: 3.12.2
       rspress:
         specifier: ^1.42.0
         version: 1.42.0(webpack@5.98.0)
@@ -121,22 +121,6 @@ packages:
   '@nodelib/fs.walk@1.2.8':
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
-
-  '@oozcitak/dom@1.15.10':
-    resolution: {integrity: sha512-0JT29/LaxVgRcGKvHmSrUTEvZ8BXvZhGl2LASRUgHqDTC1M5g1pLmVv56IYNyt3bG2CUjDkc67wnyZC14pbQrQ==}
-    engines: {node: '>=8.0'}
-
-  '@oozcitak/infra@1.0.8':
-    resolution: {integrity: sha512-JRAUc9VR6IGHOL7OGF+yrvs0LO8SlqGnPAMqyzOuFZPSZSXI7Xf2O9+awQPSMXgIWGtgUf/dA6Hs6X6ySEaWTg==}
-    engines: {node: '>=6.0'}
-
-  '@oozcitak/url@1.0.4':
-    resolution: {integrity: sha512-kDcD8y+y3FCSOvnBI6HJgl00viO/nGbQoCINmQ0h98OhnGITrWR3bOGfwYCthgcrV8AnTJz8MzslTQbC3SOAmw==}
-    engines: {node: '>=8.0'}
-
-  '@oozcitak/util@8.3.8':
-    resolution: {integrity: sha512-T8TbSnGsxo6TDBJx/Sgv/BlVJL3tshxZP7Aq5R1mSnM5OcHY2dQaxLMu2+E8u3gN0MLOzdjurqN4ZRVuzQycOQ==}
-    engines: {node: '>=8.0'}
 
   '@remix-run/router@1.22.0':
     resolution: {integrity: sha512-MBOl8MeOzpK0HQQQshKB7pABXbmyHizdTpqnrIseTbsv0nAepwC2ENZa1aaBExNQcpLoXmWthhak8SABLzvGPw==}
@@ -650,8 +634,8 @@ packages:
   comma-separated-tokens@2.0.3:
     resolution: {integrity: sha512-Fu4hJdvzeylCfQPp9SGWidpzrMs7tTrlu6Vb8XGaRGck8QSNZJJp538Wrb60Lax4fPwR64ViY468OIUTbRlGZg==}
 
-  commander@13.1.0:
-    resolution: {integrity: sha512-/rFeCpNJQbhSZjGVwO9RFV3xPqbnERS8MmIQzCtD/zl6gpJuV/bMLuN92oG3F7d8oDEHHRrujSXNUr8fpjntKw==}
+  commander@12.1.0:
+    resolution: {integrity: sha512-Vw8qHK3bZM9y/P10u3Vib8o/DdkvA2OtPtZvD871QKjy74Wj1WSKFILMPRPSdUSx5RFK1arlJzEtA4PkFgnbuA==}
     engines: {node: '>=18'}
 
   commander@14.0.0:
@@ -1206,6 +1190,9 @@ packages:
   lodash-es@4.17.21:
     resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
 
+  lodash@4.17.21:
+    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+
   log-update@6.1.0:
     resolution: {integrity: sha512-9ie8ItPR6tjY5uYJh8K/Zrv/RMZ5VOlOWvtZdEHYSTFKZfIBPQa9tOAEeAWhd+AnIneLJ22w5fjOYtoutpWq5w==}
     engines: {node: '>=18'}
@@ -1228,8 +1215,8 @@ packages:
     resolution: {integrity: sha512-WWC0ZuMzCyDHYCasEGs4IPvLyTGftYwh6wIEOULOF0HXcqZlhwRzrK0w2VUlxWA98xnvb/jszw4ZSkJ6ADpM6Q==}
     engines: {node: '>=0.10.0'}
 
-  markdown-link-check@3.13.7:
-    resolution: {integrity: sha512-Btn3HU8s2Uyh1ZfzmyZEkp64zp2+RAjwfQt1u4swq2Xa6w37OW0T2inQZrkSNVxDSa2jSN2YYhw/JkAp5jF1PQ==}
+  markdown-link-check@3.12.2:
+    resolution: {integrity: sha512-GWMwSvxuZn+uGGydi5yywnnDZy08SGps4I/63xqvWT7lxtH4cVLnhgZZYtEcPz/QvgPg9vbH2rvWpa29owMtHA==}
     hasBin: true
 
   markdown-link-extractor@4.0.2:
@@ -2281,10 +2268,6 @@ packages:
     resolution: {integrity: sha512-G8ura3S+3Z2G+mkgNRq8dqaFZAuxfsxpBB8OCTGRTCtp+l/v9nbFNmCUP1BZMts3G1142MsZfn6eeUKrr4PD1Q==}
     engines: {node: '>=18'}
 
-  xmlbuilder2@3.1.1:
-    resolution: {integrity: sha512-WCSfbfZnQDdLQLiMdGUQpMxxckeQ4oZNMNhLVkcekTu7xhD4tuUDyAPoY8CwXvBYE6LwBHd6QW2WZXlOWr1vCw==}
-    engines: {node: '>=12.0'}
-
   xtend@4.0.2:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}
     engines: {node: '>=0.4'}
@@ -2411,23 +2394,6 @@ snapshots:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.16.0
-
-  '@oozcitak/dom@1.15.10':
-    dependencies:
-      '@oozcitak/infra': 1.0.8
-      '@oozcitak/url': 1.0.4
-      '@oozcitak/util': 8.3.8
-
-  '@oozcitak/infra@1.0.8':
-    dependencies:
-      '@oozcitak/util': 8.3.8
-
-  '@oozcitak/url@1.0.4':
-    dependencies:
-      '@oozcitak/infra': 1.0.8
-      '@oozcitak/util': 8.3.8
-
-  '@oozcitak/util@8.3.8': {}
 
   '@remix-run/router@1.22.0': {}
 
@@ -3009,7 +2975,7 @@ snapshots:
 
   comma-separated-tokens@2.0.3: {}
 
-  commander@13.1.0: {}
+  commander@12.1.0: {}
 
   commander@14.0.0: {}
 
@@ -3257,7 +3223,7 @@ snapshots:
     dependencies:
       basic-ftp: 5.0.5
       data-uri-to-buffer: 6.0.2
-      debug: 4.3.4
+      debug: 4.4.1
     transitivePeerDependencies:
       - supports-color
 
@@ -3429,14 +3395,14 @@ snapshots:
   http-proxy-agent@7.0.2:
     dependencies:
       agent-base: 7.1.4
-      debug: 4.3.4
+      debug: 4.4.1
     transitivePeerDependencies:
       - supports-color
 
   https-proxy-agent@7.0.6:
     dependencies:
       agent-base: 7.1.4
-      debug: 4.3.4
+      debug: 4.4.1
     transitivePeerDependencies:
       - supports-color
 
@@ -3610,6 +3576,8 @@ snapshots:
 
   lodash-es@4.17.21: {}
 
+  lodash@4.17.21: {}
+
   log-update@6.1.0:
     dependencies:
       ansi-escapes: 7.0.0
@@ -3633,17 +3601,17 @@ snapshots:
 
   markdown-extensions@1.1.1: {}
 
-  markdown-link-check@3.13.7:
+  markdown-link-check@3.12.2:
     dependencies:
       async: 3.2.6
       chalk: 5.4.1
-      commander: 13.1.0
+      commander: 12.1.0
       link-check: 5.4.0
+      lodash: 4.17.21
       markdown-link-extractor: 4.0.2
       needle: 3.3.1
       progress: 2.0.3
       proxy-agent: 6.5.0
-      xmlbuilder2: 3.1.1
     transitivePeerDependencies:
       - supports-color
 
@@ -4374,7 +4342,7 @@ snapshots:
     dependencies:
       '@tootallnate/quickjs-emscripten': 0.23.0
       agent-base: 7.1.4
-      debug: 4.3.4
+      debug: 4.4.1
       get-uri: 6.0.5
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.6
@@ -4475,7 +4443,7 @@ snapshots:
   proxy-agent@6.5.0:
     dependencies:
       agent-base: 7.1.4
-      debug: 4.3.4
+      debug: 4.4.1
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.6
       lru-cache: 7.18.3
@@ -4890,7 +4858,7 @@ snapshots:
   socks-proxy-agent@8.0.5:
     dependencies:
       agent-base: 7.1.4
-      debug: 4.3.4
+      debug: 4.4.1
       socks: 2.8.6
     transitivePeerDependencies:
       - supports-color
@@ -5225,13 +5193,6 @@ snapshots:
       ansi-styles: 6.2.1
       string-width: 7.2.0
       strip-ansi: 7.1.0
-
-  xmlbuilder2@3.1.1:
-    dependencies:
-      '@oozcitak/dom': 1.15.10
-      '@oozcitak/infra': 1.0.8
-      '@oozcitak/util': 8.3.8
-      js-yaml: 3.14.1
 
   xtend@4.0.2: {}
 

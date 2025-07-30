@@ -2,12 +2,13 @@
 	"name": "cheat-sheet",
 	"version": "1.0.0",
 	"description": "Albert's cheat sheet",
+	"type": "module",
 	"scripts": {
 		"dev": "rspress dev --port 5002",
 		"build": "rspress build",
 		"preview": "rspress preview --port 5002",
 		"lint": "find . -name \\*.mdx -print0 | xargs -0 -n1 markdown-link-check --quiet",
-		"prepare": "husky install"
+    "prepare": "node .husky/install.js"
 	},
 	"dependencies": {
 		"react": "^18.2.0",
@@ -16,14 +17,12 @@
 	},
 	"devDependencies": {
 		"lint-staged": "^16.1.2",
-		"markdown-link-check": "^3.13.7",
+		"markdown-link-check": "3.12.2",
 		"rspress": "^1.42.0",
 		"typescript": "5.8.2",
 		"husky": "^8.0.0"
 	},
 	"lint-staged": {
-		"*.mdx": [
-			"bash -c 'for file in $0; do echo \"$file\";markdown-link-check \"$file\"; done'"
-		]
+		  "*.mdx": "npx markdown-link-check"
 	}
 }
