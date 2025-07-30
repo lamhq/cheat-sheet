@@ -22,7 +22,7 @@
 		"husky": "^8.0.0"
 	},
 	"lint-staged": {
-		"*.md": [
+		"*.mdx": [
 			"bash -c 'for file in $0; do markdown-link-check \"$file\"; done'"
 		]
 	}
