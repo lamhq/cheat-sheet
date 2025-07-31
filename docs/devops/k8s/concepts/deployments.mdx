@@ -8,17 +8,6 @@ A Deployment is a higher-level Kubernetes object that wraps around a Pod and add
 > You can deploy containers by define them in a Pod template. However, static Pods don't self-heal, they don't scale, and they don't allow for easy updates and rollbacks.
 
 
-## Deployments and ReplicaSets
-
-Deployments rely heavily on another object called a ReplicaSet.
-
-A ReplicaSet is a declarative way to manage Pods. A Deployment is a declarative way to manage Pods using a ReplicaSet.
-
-ReplicaSets manage Pods and bring self-healing and scaling. Deployments manage ReplicaSets and add rollouts and rollbacks.
-
-It's not recommended to manage ReplicaSets directly, but let the Deployment controller manage them.
-
-
 ## Deployment spec
 
 A Deployment object is a high-level Kubernetes resource that describes the desired state of a stateless app.
@@ -31,7 +20,7 @@ kind: Deployment
 metadata:
   name: my-deployment
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: my-app
@@ -45,6 +34,10 @@ spec:
         image: nginx:1.23
         ports:
         - containerPort: 80
+        resources:
+          limits:
+            memory: "128Mi" # 128 MB
+            cpu: "200m" # 200 millicpu (20% of the CPU)
 ```
 
 - `replicas`: specifies the number of desired Pod replicas to run.
@@ -66,6 +59,17 @@ Responsibilities:
 - **Rollback**: If an update causes issues, the Deployment controller can revert to a previously stable state.
 - **Self-Healing**: If Pods go into a failed state or are unintentionally deleted, the Deployment controller recreates them to ensure consistency with the desired state.
 - **History Tracking**: It maintains a revision history of updates, allowing you to inspect and roll back to previous versions of the Deployment configuration if needed.
+
+
+## Deployments and ReplicaSets
+
+Deployments rely heavily on another object called a ReplicaSet.
+
+A ReplicaSet is a declarative way to manage Pods. A Deployment is a declarative way to manage Pods using a ReplicaSet.
+
+ReplicaSets manage Pods and bring self-healing, fault-tolerance, scaling. Deployments manage ReplicaSets and add, zero-downtime updates, rollouts and rollbacks.
+
+It's not recommended to manage ReplicaSets directly, but let the Deployment controller manage them.
 
 
 ## Deployments and Pods
@@ -112,3 +116,51 @@ deleted, makes them ideal for executing rollbacks.
 > You can use the command `kubectl get rs` to list all ReplicaSets
 
 Rollbacks follow the same rules as rolling update (defined in the `strategy` block of the Deployment object).
+
+
+## Deployment commands
+
+Create/update a Deployment:
+```sh
+kubectl apply -f deployment.yml
+```
+
+List all Deployments and their labels:
+```sh
+kubectl get deployments --show-labels
+```
+
+Get all Deployments with a specific label:
+```sh
+kubectl get deployments -l app=nginx
+```
+
+Delete deployment:
+```sh
+kubectl delete deployment <DEPLOYMENT-NAME>
+```
+
+Scale the number of replicas:
+```sh
+kubectl scale deployment <DEPLOYMENT-NAME> --replicas=5
+```
+
+Inspecting a Deployment:
+```sh
+kubectl get deploy <DEPLOYMENT-NAME>
+```
+
+Monitor the deployment progress:
+```sh
+kubectl rollout status deployment <DEPLOYMENT-NAME>
+```
+
+Show the revision history of a specific Deployment:
+```sh
+kubectl rollout history deployment <DEPLOYMENT-NAME>
+```
+
+Perform a rollback:
+```sh
+kubectl rollout undo deployment <DEPLOYMENT-NAME> --to-revision=1
+```

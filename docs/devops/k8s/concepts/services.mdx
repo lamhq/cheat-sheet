@@ -2,13 +2,11 @@
 
 ## Overview
 
-Services provide a stable and reliable network endpoint to Pods.
+A Service provides a single point of entry for accessing one or more Pods. It maintains a list of healthy Pods and load-balance traffic to them.
 
-Every Service gets its own: IP address, DNS name, port. All are never changed.
+![](https://zesty.co/wp-content/uploads/2025/03/service-1.png)
 
-Service observes changes and maintains an up-to-date list of healthy Pods and load-balance traffic to them.
-
-Services are loosely coupled with Pods via **labels** and **selectors**. For a Service to send traffic to a Pod, the Pod needs every label the Service is selecting on (Boolean AND).
+Services rely on **labels** and **selectors** to associate with Pods. For a Service to send traffic to a Pod, all labels of that Pod needs to match with the ones Service is selecting (Boolean AND).
 
 ```yml
 apiVersion: v1
@@ -22,6 +20,10 @@ spec:
     app: hello-world   <<==== Send to Pods with these labels
     env: tkb           <<==== Send to Pods with these labels
 ```
+
+Services are not ephemeral.
+
+Every Service gets its own: IP address, DNS name, port. All are never changed.
 
 Services cannot provide application-layer host and path routing. 
 

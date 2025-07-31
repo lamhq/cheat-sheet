@@ -41,7 +41,11 @@ You'll rarely interact directly with Pods. You almost always deploy Pods via hig
 
 Pods are immutable. You can't update a running Pod, you always replace it with a new Pod running the updates.
 
-Pods can be created, terminated, or replaced at any time. New pod has new ID and IP address. That's why:
+Pods are ephemeral (only lie a short time). They can be created, terminated, or replaced at any time. 
+
+Each Pod gets its own IP address. There's no way to know Pod's IP address before it's scheduled.
+
+That's why:
 - applications should always store state and data outside the Pod.
 - you shouldn't rely on individual Pods
 

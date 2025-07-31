@@ -8,38 +8,6 @@ kubectl apply -f pod.yml -f deployment.yml
 ```
 
 
-## Deployment
-
-List all deployments:
-```sh
-kubectl get deployments
-```
-
-Inspecting a Deployment:
-```sh
-kubectl get deploy <NAME>
-```
-
-Monitor the deployment progress:
-```sh
-kubectl rollout status deployment <NAME>
-```
-
-Shows the revision history of a specific Deployment.:
-```sh
-kubectl rollout history deployment <NAME>
-```
-
-Perform a rollback:
-```sh
-kubectl rollout undo deployment <NAME> --to-revision=1
-```
-
-Delete deployment:
-```sh
-kubectl delete deployment <NAME>
-```
-
 ## Service
 
 List services:
