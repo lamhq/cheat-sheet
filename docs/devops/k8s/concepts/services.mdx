@@ -8,7 +8,7 @@ A Service provides a single point of entry for accessing one or more Pods. It ma
 
 Services rely on **labels** and **selectors** to associate with Pods. For a Service to send traffic to a Pod, all labels of that Pod needs to match with the ones Service is selecting (Boolean AND).
 
-```yml
+```yml {9,10}
 apiVersion: v1
 kind: Service
 metadata:
@@ -28,52 +28,94 @@ Every Service gets its own: IP address, DNS name, port. All are never changed.
 Services cannot provide application-layer host and path routing. 
 
 
-## EndpointSlices
+## Service spec
 
-For every label selector of a Service, there're one or more EndpointSlice objects that store a list of healthy Pods matching the selector.
+Basic structure of a Service spec:
 
-Kubernetes is constantly evaluating the Service's label selector against all healthy Pods on the cluster. Any new Pods that match the selector get added to one of the Service's EndpointSlice objects, whereas any Pods that disappear get removed.
+```yml {3,6,8,10}
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+  type:
+
+  selector:
+
+  ports:
+  - port: 80
+    targetPort: 8080
+```
+
+- `name`: name of the Service
+- `metadata`: Metadata about the Service
+- `type`: type of service (ClusterIP, NodePort, LoadBalancer)
+- `selector`: labels of the Pods to send traffic to
+- `ports`: define container target port and the port for the service
+
+> [!TIP]
+> Pods inside the cluster can access the service using the address `<service_name>:<port>`. In the example above, the address would be `frontend:8080`.
 
 
-## Internal access
+## Service types
 
-ClusterIP is a type of Service that exposes an application running in a set of Pods on an internal IP address within the cluster.
-
-Every Service you create gets a ClusterIP and a Service name, registered in the cluster’s internal DNS service.
-
-Pods can use the DNS service to resolve Service names to ClusterIPs address and connect to the Pods behind it.
-
-iptables or IPVS rules are distributed across all cluster nodes to ensure traffic sent to the ClusterIP gets routed to Pods with the label the Service is selecting on.
+There're 4 types of Services:
+- ClusterIP: Exposes the Service on an internal IP in the cluster (default).
+- NodePort: Exposes the Service on each Node's IP at a static port.
+- LoadBalancer: Provision an external IP to acts as a load balancer for the service
+- ExternalName: Maps the Service to an external DNS name.
 
 
-## External access
+### ClusterIP
 
-Kubernetes has two types of Service for requests originating from outside the cluster:
-- NodePort
-- LoadBalancer
+- Exposes an IP address internally within the cluster
+- Only pods within the cluster can talk to the service
+- External world cannot directly access ClusterIP services
+- ClusterIP enable pods to communicate with other pods (common for internal microservice communication)
 
-### NodePort
-
-NodePort Services allow external clients to hit a dedicated port on every cluster node and reach the Service.
-
-NodePort Services build on top of the ClusterIP. ClusterIP registers a DNS name, virtual IP, and port with the cluster’s DNS. NodePort Services add an additional NodePort that can be used to reach the Service from outside the cluster.
+![](./clusterip.drawio.svg)
 
 ```yml
 apiVersion: v1
 kind: Service
 metadata:
-  name: skippy
+  name: my-service-1
 spec:
-  type: NodePort
-  ports:
-  - port: 8080
-    nodePort: 30050
+  type: ClusterIP
   selector:
-    app: hello-world
+    app: nginx1-pod
+  ports:
+    - port: 80
+      targetPort: 8080
 ```
 
-- Pods inside the cluster can access this Service by its name (`skippy`) on port `8080`
-- Clients can send traffic to any node on port `30050` (`<Node-IP>:30050`).
+### NodePort
+
+- Exposes the Service on each Node's IP at a static port.
+- Automatically allocates a port by default (typically in range 30000-32767)
+
+How it work?
+- Each node in the cluster listens on the same NodePort.
+- External caller connects to service using address: `<Node-IP>:<NodePort>`.
+- Traffic is proxied through the service to pods.
+
+```yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-nodeport
+spec:
+  type: NodePort
+  selector:
+    app: my-nginx-pod
+  ports:
+  - port: 8080
+    targetPort: 80
+    nodePort: 31000
+```
+- `targetPort: 80`: The **port on the pod** where the container is actually listening. The service forwards traffic here.
+- `port: 8080`: The port that the service exposes **inside the cluster**. Other pods will use this to reach the service (using address: `nginx-nodeport:8080`).
+- `nodePort: 31000`: A static port that’s opened **on every node** in the cluster. External clients can send traffic to any node’s IP on this port, and it gets routed to the service.
 
 > [!TIP]
 > You can get node's IP using the command `kubectl get nodes -o wide`
@@ -81,32 +123,67 @@ spec:
 
 ### LoadBalancer
 
-LoadBalancer Services provisions an external load balancer (provided by the cloud infrastructure) to expose your application to external traffic.
+Exposes the service externally to the outside world.
 
-When you create a Service of type LoadBalancer, Kubernetes configures the cloud provider's load balancer to route external traffic to your application's Pods.
+When you create a LoadBalancer Service, Kubernetes provisions a cloud provider's load balancer to route external traffic to your Pods.
 
-The load balancer gets a unique, publicly accessible IP address or DNS name.
+How it work?
+1. External traffic begins from a client accessing the public IP of the LoadBalancer service.
+2. The LoadBalancer routes traffic to one of the cluster nodes with the NodePort service automatically set up on each node.
+3. The NodePort service forward traffic to an internal ClusterIP service
+4. ClusterIP service matches the request to backend pods based on labels.
 
-Traffic arriving at the external load balancer (public IP or DNS) is forwarded to the Kubernetes cluster.
-
-Within the cluster, the service's ClusterIP or NodePort ensures traffic is routed to the correct Pods.
-
-The following YAML defines a new Service called `clou-lb`
-that will provision a cloud load-balancer listening on port `9000` and forward traffic on port `8080` to all Pods with the `chapter=services` label:
+The following YAML defines a new Service called `nginx-loadbalancer` that will provision a load-balancer listening on port `9000` and forward traffic on port `8080` to all Pods with the label `chapter` equal to `services`:
 
 ```yml
 apiVersion: v1
 kind: Service
 metadata:
-  name: cloud-lb
+  name: nginx-loadbalancer
 spec:
   type: LoadBalancer
+  selector:
+    chapter: services
   ports:
   - port: 9000
     targetPort: 8080
-  selector:
-    chapter: services
 ```
 
 > [!TIP]
 > You can access the load balancer using its public IP address (the `EXTERNAL-IP` field from the `kubectl get svc --watch` command) with the port defined in the YML file.
+
+
+### ExternalName
+
+Service that acts as an alias for an external service:
+- Does not route traffic to pods like other service types.
+- Creates a DNS alias (CNAME record) inside the cluster.
+- Points to an external domain name instead of internal endpoints.
+
+How It Works?
+- You define a service with `type: ExternalName`.
+- Kubernetes updates its internal DNS to map the service name to the external domain.
+- When a pod queries the service name, it gets redirected at the **DNS level**, not through a proxy.
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-db
+spec:
+  type: ExternalName
+  externalName: db.example.com
+```
+
+Use Cases:
+- Use the same service name (`db`) across dev, staging, and prod, but point to different external databases.
+- Connect to managed services like AWS RDS or Redis without hardcoding URLs.
+- Switch providers by updating the ExternalName field—no app code changes needed.
+
+Limitations:
+
+- **No port definitions**: You can’t specify ports in ExternalName services.
+- **No health checks**: Kubernetes won’t verify if the external service is up.
+- **No IP targets**: You must use a domain name, not an IP address.
+- **TLS caveats**: HTTPS may fail if the certificate doesn't match the service name (e.g., `curl` might complain about mismatched hostnames).
+- **No load balancing**: Even if the external domain resolves to multiple IPs, Kubernetes won’t balance traffic.

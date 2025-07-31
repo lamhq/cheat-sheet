@@ -41,8 +41,8 @@ spec:
 ```
 
 - `replicas`: specifies the number of desired Pod replicas to run.
-- `matchLabels`: Defines how the Deployment identifies the Pods it manages. In this case, it uses the label `app: my-app`
-- `template`: Pod template, describes how the Pods should be created
+- `matchLabels`: Pod's labels to be associated with this Deployment.
+- `template`: Pod template, describes how the Pods should be created.
 
 
 ## Deployment controller
@@ -116,51 +116,3 @@ deleted, makes them ideal for executing rollbacks.
 > You can use the command `kubectl get rs` to list all ReplicaSets
 
 Rollbacks follow the same rules as rolling update (defined in the `strategy` block of the Deployment object).
-
-
-## Deployment commands
-
-Create/update a Deployment:
-```sh
-kubectl apply -f deployment.yml
-```
-
-List all Deployments and their labels:
-```sh
-kubectl get deployments --show-labels
-```
-
-Get all Deployments with a specific label:
-```sh
-kubectl get deployments -l app=nginx
-```
-
-Delete deployment:
-```sh
-kubectl delete deployment <DEPLOYMENT-NAME>
-```
-
-Scale the number of replicas:
-```sh
-kubectl scale deployment <DEPLOYMENT-NAME> --replicas=5
-```
-
-Inspecting a Deployment:
-```sh
-kubectl get deploy <DEPLOYMENT-NAME>
-```
-
-Monitor the deployment progress:
-```sh
-kubectl rollout status deployment <DEPLOYMENT-NAME>
-```
-
-Show the revision history of a specific Deployment:
-```sh
-kubectl rollout history deployment <DEPLOYMENT-NAME>
-```
-
-Perform a rollback:
-```sh
-kubectl rollout undo deployment <DEPLOYMENT-NAME> --to-revision=1
-```

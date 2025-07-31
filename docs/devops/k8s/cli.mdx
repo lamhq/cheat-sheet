@@ -8,11 +8,67 @@ kubectl apply -f pod.yml -f deployment.yml
 ```
 
 
+## Pod
+
+List all Pods along with their labels:
+```sh
+kubectl get pod --show-labels
+```
+
+Describle Pod:
+```sh
+kubectl describe pod <POD_NAME>
+```
+
+Forward a port in container to local machine:
+```sh
+kubectl port-forward <POD_NAME> <EXTERNAL_PORT>:<CONTAINER_PORT>
+```
+
+Run commands in Pods:
+```sh
+kubectl exec <POD_NAME> -- <COMMAND>
+```
+
+Get shell access to a container:
+```sh
+kubectl exec -it <POD_NAME> -- sh
+```
+
+
+## Deployment commands
+
+Create/update a Deployment:
+```sh
+kubectl apply -f deployment.yml
+```
+
+List all Deployments and their labels:
+```sh
+kubectl get deployment --show-labels
+```
+
+Get all Deployments with a specific label:
+```sh
+kubectl get deployment -l app=nginx
+```
+
+Delete deployment:
+```sh
+kubectl delete deployment <DEPLOYMENT-NAME>
+```
+
+Scale the number of replicas:
+```sh
+kubectl scale deployment <DEPLOYMENT-NAME> --replicas=5
+```
+
+
 ## Service
 
 List services:
 ```sh
-kubectl get svc --watch
+kubectl get service
 ```
 
 ```sh
