@@ -3,6 +3,7 @@
   "deployments",
   "services",
   "config-map",
+  "secrets",
   "ingress",
   "namespaces"
 ]
