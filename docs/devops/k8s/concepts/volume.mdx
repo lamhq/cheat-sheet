@@ -1,0 +1,237 @@
+# Volume
+
+## Overview
+
+A volume can be used to hold data and state for Pods and containers.
+
+A Pod can have multiple Volumes attached to it.
+
+A Volume references a storage location, each must have a unique name.
+
+A Volume Mount references a Volume and mounts it to a specific path in the container.
+
+
+## Volume types
+
+- **emptyDir**: empty directory that exists as long as the Pod is running. Useful for sharing files between containers in a Pod.
+- **hostPath**: mounts a directory from the host node's filesystem into the container. Not recommended for production use.
+- **nfs**: An NFS (Network File System) share mounted into the Pod.
+- **configMap/secret**: Mounts a ConfigMap or Secret as a file or directory.
+- **persistentVolumeClaim**: Mounts a Persistent Volume (PV) into the Pod.
+- **Cloud**: mount a cloud storage from Cloud provider (AWS, Azure, GCP, etc.)
+
+
+### emptyDir
+
+```yaml title="emptydir.pod.yaml"
+apiVersion: v1
+kind: Pod
+metadata:
+  name: emptydir-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: shared-html
+      mountPath: /usr/share/nginx/html
+  - name: updater
+    image: alpine:latest
+    command: ["/bin/sh", "-c"]
+    args:
+    - |
+      while true; do
+        echo "<html><body><h1>$(date)</h1></body></html>" > /html/index.html;
+        sleep 5;
+      done
+    volumeMounts:
+    - name: shared-html
+      mountPath: /html
+  volumes:
+  - name: shared-html
+    emptyDir: {}
+```
+
+- The `emptyDir` volume is shared between both containers.
+- Alpine writes `index.html` with the current date every 5 seconds.
+- nginx automatically serves the updated file from the shared volume.
+
+
+### hostPath
+
+A web server that serves files from the host's `/html` directory:
+
+```yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-hostpath-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: host-html
+      mountPath: /usr/share/nginx/html
+      readOnly: true
+  
+  volumes:
+  - name: host-html
+    hostPath:
+      path: /html
+      type: DirectoryOrCreate
+```
+
+
+## Persistent Volume
+
+A PersistentVolume (PV) is a cluster-wide storage unit provisioned by an administrator with a lifecycle independent from a Pod. 
+- Available to a Pod even if it gets rescheduled to a different node.
+- Associated with a Pod using a PersistentVolumeClaim. 
+
+A Persistent VolumeClaim (PVC) is a request for a storage unit (PV).
+
+![](./pv.drawio.svg)
+
+### Defining a PersistentVolume
+
+```yml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: aws-ebs-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  awsElasticBlockStore:
+    volumeID: vol-0abcd1234efgh5678
+    fsType: ext4
+```
+- `volumeID`: EBS volume ID
+- `ReadWriteOnce`: Volume can be mounted as read-write by a single node.
+- `persistentVolumeReclaimPolicy: Retain`: Volume is not deleted when the PVC is deleted.
+
+
+### Defining a Persistent VolumeClaim
+
+```yml {4}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+```
+
+
+### Using a PersistentVolumeClaim
+
+```yml {11,13,15}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+    - name: my-container
+      image: nginx
+      volumeMounts:
+        - mountPath: /usr/share/nginx/html
+          name: my-storage
+  volumes:
+    - name: my-storage
+      persistentVolumeClaim:
+        claimName: my-pvc
+```
+
+
+## StorageClass
+
+A StorageClass (SC) is a type of storage template that can be used to dynamically provision storage.
+
+- Used to define different classes of storage
+- Act as a type of storage template
+- Support dynamic provisioning of PersistentVolumes
+
+How it work?
+
+1. Administrators don't have to create PVs in advance
+2. PVC can reference StorageClass
+3. Kubernetes uses StorageClass to provision a PV
+4. The created PV is then bound to the PVC.
+
+
+Define a local storage StorageClass:
+```yml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Retain
+```
+- `kubernetes.io/no-provisioner` tells Kubernetes not to dynamically provision volumes—because you're managing them manually.
+- `WaitForFirstConsumer` ensures the volume is only bound when a pod is scheduled, which helps with node affinity.
+
+To make this work, we also need to manually define a PersistentVolume that matches this StorageClass:
+```yml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-pv
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Block
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-storage
+  local:
+    path: /data/storage
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - your-node-name
+```
+- `local.path`: Path to the local disk on the node.
+- `nodeAffinity`: Ensures the volume is only used on the specified node (`your-node-name` should match the actual node hostname).
+- `storageClassName`: Must match the StorageClass you created (`local-storage`).
+- `accessModes`: `ReadWriteOnce` means one node can write to it at a time.
+
+Define a PVC that uses the StorageClass:
+```yml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: local-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: local-storage
+```
+
+
+## Viewing a Pod's Volume
+
+```sh
+kubectl describe pod [pod-name]
+```

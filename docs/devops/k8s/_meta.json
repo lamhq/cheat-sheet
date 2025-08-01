@@ -1,12 +1,17 @@
 [
   "installation",
   "getting-started",
-  "architecture",
   {
     "name": "concepts",
     "type": "dir",
     "collapsed": true
   },
   "cli",
-  "config"
+  "architecture",
+  {
+    "name": "snippets",
+    "label": "Snippets",
+    "type": "dir",
+    "collapsed": true
+  }
 ]

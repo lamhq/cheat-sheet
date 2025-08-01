@@ -2,37 +2,17 @@
 
 ## Overview
 
-The process of building and running an app on Kubernetes:
-1. Write your app/code
-2. Package it as a container image
-3. Wrap the container image in a Pod
-4. Run it on Kubernetes
+A Pod is a set of containers that run your application, similar to a machine hosting multiple applications, each running on a different port.
 
-A Pod is a group of one or more containers that run your application.
-
-Pods are the smallest deployable units of computing that you can create and manage.
-
-
-## Scheduling
+Pods are the smallest units in Kubernetes object model that you create or deploy.
 
 A Pod can only be scheduled to a single node.
-
-Every container in a Pod is guaranteed to be scheduled to the
-same node.
 
 
 ## Networking
 
-Every Pod has its own:
-- IP address
-- range of TCP and UDP ports
-- routing table
+The Pod's name will become the hostname of containers run inside it. It must be valid [DNS names](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-label-names).
 
-If it's a multi-container Pod:
-- all containers share the IP.
-- containers communicate with each other via the Pod's `localhost` adapter and a port number.
-
-Pod's name will become the hostname of containers run inside it. It must be valid [DNS names](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-label-names).
 
 ## Pod lifecycle
 
@@ -40,23 +20,7 @@ A Pod after created enter the **pending** phase.
 
 Once all containers are pulled and running, the Pod enters the **running** phase.
 
-If it's a short-lived Pod, as soon as all containers
-terminate successfully, the Pod enters the **succeeded** state.
-
-### Restart policy
-
-If a long-lived Pod fail, the local kubelet may attempt to restart them, based on container's restart policy, defined in the Pod config. Options include **Always**, **OnFailure**, and **Never**.
-
-For short-lived Pod, options include **OnFailure** and **Never**.
-
-
-## Container resource sharing
-
-Pods provide a shared execution environment for containers run inside it:
-- Shared filesystem
-- Shared network stack (IP address, routing table, ports…)
-- Shared memory
-- Shared volumes
+For short-lived Pods, after all containers in a Pod terminate successfully, the Pod enters the **succeeded** state.
 
 
 ## Scaling
@@ -68,29 +32,33 @@ If you need to scale an app, you add or remove Pods. You do not scale by adding 
 
 ## Deploying
 
-You'll rarely interact directly with Pods. You almost always deploy Pods via higher-level workload controllers (Deployments, StatefulSets, DaemonSets, Jobs, CronJobs).
+You'll rarely interact directly with Pods. You almost always deploy Pods via higher-level workload **controllers** (Deployments, StatefulSets, DaemonSets, Jobs, CronJobs).
 
-Controllers infuse Pods with super-powers such as self-healing, scaling, rollouts, and rollbacks.
-
-Pods are ephemeral. They can be created, terminated, or replaced at any time. A new Pod has new ID and IP address. That's the reason why:
-- applications should always store state and data outside the Pod.
-- you shouldn't rely on individual Pods
+**Controllers** infuse Pods with super-powers such as self-healing, scaling, rollouts, and rollbacks.
 
 
 ## Pod immutability
 
 Pods are immutable. You can't update a running Pod, you always replace it with a new Pod running the updates.
 
-It follow the behaviors:
-- When updates are needed, replace all old Pods with new ones
-- When failures occur, replace failed Pods with new ones
+Pods are ephemeral (only lie a short time). They can be created, terminated, or replaced at any time. 
+
+Each Pod gets its own IP address. There's no way to know Pod's IP address before it's scheduled.
+
+That's why:
+- applications should always store state and data outside the Pod.
+- you shouldn't rely on individual Pods
+
+When an update occured, all old Pods are updated with new ones.
+
+When failures occur, failed Pods are replaced with new ones.
 
 
 ## Multi-container Pods
 
 Kubernetes allows you to run multiple containers within a single Pod.
 
-Containers share the same network namespace and storage, enabling them to communicate and work together seamlessly.
+Containers in a Pod share the same IP address, memory, volumes, routing table. They communicate with each other via the Pod's `localhost` adapter and a port number.
 
 Multi-container Pod patterns:
 - Sidecar pattern
