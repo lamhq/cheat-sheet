@@ -8,5 +8,10 @@
   },
   "cli",
   "architecture",
-  "config"
+  {
+    "name": "snippets",
+    "label": "Snippets",
+    "type": "dir",
+    "collapsed": true
+  }
 ]
