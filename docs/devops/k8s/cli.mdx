@@ -17,22 +17,22 @@ kubectl get pod --show-labels
 
 Describle Pod:
 ```sh
-kubectl describe pod <POD_NAME>
+kubectl describe pod [pod-name]
 ```
 
 Forward a port in container to local machine:
 ```sh
-kubectl port-forward <POD_NAME> <EXTERNAL_PORT>:<CONTAINER_PORT>
+kubectl port-forward [pod-name] [external-port]:[container-port]
 ```
 
 Run commands in Pods:
 ```sh
-kubectl exec <POD_NAME> -- <COMMAND>
+kubectl exec [pod-name] -- [command]
 ```
 
 Get shell access to a container:
 ```sh
-kubectl exec -it <POD_NAME> -- sh
+kubectl exec -it [pod-name] -- sh
 ```
 
 
@@ -55,12 +55,12 @@ kubectl get deployment -l app=nginx
 
 Delete deployment:
 ```sh
-kubectl delete deployment <DEPLOYMENT-NAME>
+kubectl delete deployment [deployment-name]
 ```
 
 Scale the number of replicas:
 ```sh
-kubectl scale deployment <DEPLOYMENT-NAME> --replicas=5
+kubectl scale deployment [deployment-name] --replicas=5
 ```
 
 
@@ -128,7 +128,7 @@ kubectl get namespaces
 Get information about a namespace:
 
 ```sh
-kubectl describe ns <NAMESPACE>
+kubectl describe ns [namespace]
 ```
 
 List all Service objects in namespace:
@@ -140,7 +140,7 @@ kubectl get svc --namespace kube-system
 Switch to a namespace:
 
 ```sh
-kubectl config set-context --current --namespace <NAMESPACE>
+kubectl config set-context --current --namespace [namespace]
 ```
 
 Create a new Namespace:

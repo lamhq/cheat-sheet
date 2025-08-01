@@ -2,6 +2,7 @@
   "pods",
   "deployments",
   "services",
+  "volume",
   "config-map",
   "secrets",
   "ingress",

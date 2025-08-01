@@ -54,7 +54,7 @@ spec:
 - `ports`: define container target port and the port for the service
 
 > [!TIP]
-> Pods inside the cluster can access the service using the address `<service_name>:<port>`. In the example above, the address would be `frontend:8080`.
+> Pods inside the cluster can access the service using the address `[service-name]:[port]`. In the example above, the address would be `frontend:8080`.
 
 
 ## Service types
@@ -96,7 +96,7 @@ spec:
 
 How it work?
 - Each node in the cluster listens on the same NodePort.
-- External caller connects to service using address: `<Node-IP>:<NodePort>`.
+- External caller connects to service using address: `[Node-IP]:[NodePort]`.
 - Traffic is proxied through the service to pods.
 
 ```yml
