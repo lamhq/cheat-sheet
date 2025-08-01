@@ -87,6 +87,149 @@ spec:
 ```
 
 
+## Persistent Volume
+
+A PersistentVolume (PV) is a cluster-wide storage unit provisioned by an administrator with a lifecycle independent from a Pod. 
+- Available to a Pod even if it gets rescheduled to a different node.
+- Associated with a Pod using a PersistentVolumeClaim. 
+
+A Persistent VolumeClaim (PVC) is a request for a storage unit (PV).
+
+![](./pv.drawio.svg)
+
+### Defining a PersistentVolume
+
+```yml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: aws-ebs-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  awsElasticBlockStore:
+    volumeID: vol-0abcd1234efgh5678
+    fsType: ext4
+```
+- `volumeID`: EBS volume ID
+- `ReadWriteOnce`: Volume can be mounted as read-write by a single node.
+- `persistentVolumeReclaimPolicy: Retain`: Volume is not deleted when the PVC is deleted.
+
+
+### Defining a Persistent VolumeClaim
+
+```yml {4}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+```
+
+
+### Using a PersistentVolumeClaim
+
+```yml {11,13,15}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+    - name: my-container
+      image: nginx
+      volumeMounts:
+        - mountPath: /usr/share/nginx/html
+          name: my-storage
+  volumes:
+    - name: my-storage
+      persistentVolumeClaim:
+        claimName: my-pvc
+```
+
+
+## StorageClass
+
+A StorageClass (SC) is a type of storage template that can be used to dynamically provision storage.
+
+- Used to define different classes of storage
+- Act as a type of storage template
+- Support dynamic provisioning of PersistentVolumes
+
+How it work?
+
+1. Administrators don't have to create PVs in advance
+2. PVC can reference StorageClass
+3. Kubernetes uses StorageClass to provision a PV
+4. The created PV is then bound to the PVC.
+
+
+Define a local storage StorageClass:
+```yml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Retain
+```
+- `kubernetes.io/no-provisioner` tells Kubernetes not to dynamically provision volumes—because you're managing them manually.
+- `WaitForFirstConsumer` ensures the volume is only bound when a pod is scheduled, which helps with node affinity.
+
+To make this work, we also need to manually define a PersistentVolume that matches this StorageClass:
+```yml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-pv
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Block
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-storage
+  local:
+    path: /data/storage
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - your-node-name
+```
+- `local.path`: Path to the local disk on the node.
+- `nodeAffinity`: Ensures the volume is only used on the specified node (`your-node-name` should match the actual node hostname).
+- `storageClassName`: Must match the StorageClass you created (`local-storage`).
+- `accessModes`: `ReadWriteOnce` means one node can write to it at a time.
+
+Define a PVC that uses the StorageClass:
+```yml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: local-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: local-storage
+```
+
+
 ## Viewing a Pod's Volume
 
 ```sh
