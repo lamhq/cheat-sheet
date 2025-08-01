@@ -2,6 +2,7 @@
   "pods",
   "deployments",
   "services",
+  "config-map",
   "ingress",
   "namespaces"
 ]
