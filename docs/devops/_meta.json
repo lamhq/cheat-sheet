@@ -17,5 +17,10 @@
     "type": "dir",
     "collapsed": true
   },
-  "github-pages"
+  "github-pages",
+  {
+    "name": "github-actions",
+    "type": "dir",
+    "collapsed": true
+  }
 ]

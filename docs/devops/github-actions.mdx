@@ -1,0 +1,156 @@
+# GitHub Actions
+
+## Introduction
+
+GitHub Actions is a **continuous integration and continuous delivery (CI/CD) platform** that allows you to automate your build, test, and deployment pipeline.
+
+Example Use Cases:
+- Run tests automatically on code changes
+- Build and deploy applications
+- Publish npm or Docker packages
+- Lint code with ESLint or Prettier
+- Scan code for vulnerabilities
+- Automate license and dependency checks
+- Label and triage issues and PRs
+- Close stale issues
+- Post comments based on conditions
+- Run scheduled tasks or cron jobs
+- Trigger workflows from external events
+
+
+## Workflow templates
+
+Node.js workflow template:
+
+```yml
+name: Node.js CI with pnpm
+
+on:
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run tests
+        run: pnpm test
+```
+
+Preconfigured workflow templates:
+
+- CI: [Continuous Integration workflows](https://github.com/actions/starter-workflows/tree/main/ci)
+- Deployments: [Deployment workflows](https://github.com/actions/starter-workflows/tree/main/deployments)
+- Automation: [Automating workflows](https://github.com/actions/starter-workflows/tree/main/automation)
+- Code Scanning: [Code Scanning workflows](https://github.com/actions/starter-workflows/tree/main/code-scanning)
+- Pages: [Pages workflows](https://github.com/actions/starter-workflows/tree/main/pages)
+
+
+## Components
+
+You can configure a GitHub Actions workflow to be triggered when an event occurs in your repository.
+
+Your workflow contains one or more jobs which can run in sequential order or in parallel.
+
+Each job will run inside its own virtual machine runner, or inside a container, and has one or more steps that either run a script that you define or run an action
+
+An action is a reusable extension that can simplify your workflow.
+
+
+### Workflows
+
+Workflows are defined by a YAML file inside `.github/workflows` directory.
+
+A repository can have multiple workflows.
+
+Workflows can be triggered by an event in your repository, manually, or at a defined schedule.
+
+You can [reference a workflow within another workflow](https://docs.github.com/en/actions/using-workflows/reusing-workflows).
+
+
+### Events
+
+An event is a specific activity in a repository that triggers a workflow run. For example:
+
+- creates a pull request
+- opens an issue
+- pushes a commit to a repository.
+
+See the complete list of events [here](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows).
+
+
+### Jobs
+
+A job is a set of steps in a workflow that is executed on the same runner.
+
+Each step is either a shell script that will be executed, or an action that will be run.
+
+By default, jobs run in parallel. You can configure a job to depend on another job, so that it will only run after the other job has completed.
+
+You can use a matrix to run the same job multiple times, each with a different combination of variables—like operating systems or language versions.
+
+
+### Actions
+
+An action is a pre-defined, reusable set of jobs or code that performs specific tasks within a workflow, reducing the amount of repetitive code you write in your workflow files.
+
+You can write your own actions, or find an existing one in the GitHub Marketplace.
+
+Actions can perform tasks such as:
+- Pulling your Git repository from GitHub
+- Setting up the correct toolchain for your build environment
+- Setting up authentication to your cloud provider
+- Executing shell commands
+
+
+### Runners
+
+A runner is a server that runs your workflows.
+
+Each runner can run a single job at a time.
+
+GitHub provides Ubuntu Linux, Microsoft Windows, and macOS runners.
+
+If you need a different operating system or require a specific hardware configuration, you can [host your own runners](https://docs.github.com/en/actions/how-tos/managing-self-hosted-runners).
+
+
+## Continuous integration
+
+GitHub Actions offers workflows that can build the code in your repository and run your tests.
+
+GitHub runs your CI tests and provides the results of each test in the pull request, so you can see whether the change in your branch introduces an error. 
+
+When all CI tests in a workflow pass, the changes you pushed are ready to be reviewed by a team member or merged.
+
+
+## Continuous Deployment
+
+You can set up a GitHub Actions workflow to deploy your software product.
+
+GitHub Actions provides features that give you more control over deployments:
+- use environments to require approval for a job to proceed
+- restrict which branches can trigger a workflow
+- limit access to secrets
+
+
+## References
+
+- [GitHub Actions documentation](https://docs.github.com/en/actions)
