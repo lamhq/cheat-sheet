@@ -4,6 +4,11 @@
     "label": "Backend Development"
   },
   {
+    "name": "graphql",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
     "name": "javascript",
     "type": "dir",
     "collapsed": true,
@@ -32,11 +37,6 @@
   },
   {
     "name": "kafka",
-    "type": "dir",
-    "collapsed": true
-  },
-  {
-    "name": "graphql",
     "type": "dir",
     "collapsed": true
   }
