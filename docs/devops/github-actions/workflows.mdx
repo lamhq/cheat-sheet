@@ -1,0 +1,51 @@
+# Workflows
+
+## Reusable workflows
+
+A reusable workflow in GitHub Actions is a workflow file that can be called by other workflows, even across repositories. It helps you avoid duplication, centralize logic, and standardize CI/CD processes.
+
+You can:
+- Pass custom values from the caller workflow with `inputs`
+- Securely pass sensitive data. with `secrets`
+
+For example:
+
+```yml title=".github/workflows/reusable.yml"
+on:
+  workflow_call:
+    inputs:
+      config-path:
+        required: true
+        type: string
+    secrets:
+      token:
+        required: true
+
+jobs:
+  run-labeler:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/labeler@v5
+        with:
+          repo-token: ${{ secrets.token }}
+          configuration-path: ${{ inputs.config-path }}
+```
+
+Other workflows can invoke it using:
+```yml
+jobs:
+  use-reusable:
+    uses: your-org/your-repo/.github/workflows/reusable.yml@main
+    with:
+      config-path: .github/labeler.yml
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+Use cases:
+- ✅ **CI/CD pipelines**: Centralize build, test, and deployment steps.
+- 🔒 **Security checks**: Run scans and enforce policies before releases.
+- 🧹 **Code quality**: Automate linting, formatting, and compliance.
+- 📦 **Package publishing**: Push to registries like npm, PyPI, or Docker.
+- 🏷️ **PR labeling & issue triage**: Auto-manage contributions.
+- 🏢 **Org-wide governance**: Apply consistent rules across teams.
