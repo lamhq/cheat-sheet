@@ -72,18 +72,25 @@ When multiple consumer groups subscribe to the same topic, each receives a copy 
 
 Within a consumer group, each message is processed by only one consumer, enabling load balancing by distributing the workload across consumers.
 
+![](./consumer-groups.drawio.svg)
+
+
 
 ### Partition assignment
 
-Each partition in a topic is consumed by exactly one consumer in the group. A consumer can consume messages from multiple partitions. This allow for parallel processing across the consumer group.
+Each partition in a topic is consumed by exactly one consumer in the group (partitions can't be shared across consumers).
+
+A consumer can consume messages from multiple partitions. This allow for parallel processing across the consumer group.
 
 For example, let's say you have:
 - 4 partitions
 - 2 consumers in a group
 
 Kafka might assign:
-- Consumer A → Partitions 0 and 2
-- Consumer B → Partitions 1 and 3
+- Consumer A → Partitions 0 and 1
+- Consumer B → Partitions 2 and 3
+
+![](./partition-assignment.drawio.svg)
 
 If you have more consumers than partitions, some consumers won't receive any messages. It's important to balance the number of partitions and consumers to ensure efficient message processing.
 
