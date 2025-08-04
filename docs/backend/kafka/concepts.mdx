@@ -1,0 +1,97 @@
+# Concepts
+
+## Brokers
+
+A broker is a server that manage data.
+
+It receives data from producers, stores it, and serves it to consumers.
+
+Data is replicated across multiple brokers to ensure high availability and fault tolerance.
+
+
+## Cluster
+
+A cluster is a group of brokers working together to manage and distribute data.
+
+One broker acts as the controller to handle administrative tasks, while others manage data storage and retrieval.
+
+Clusters can be expanded without downtime.
+
+
+## Topics
+
+A topic is a stream of messages belonging to a particular category.
+
+*For example, a topic could be used to store temperature readings from sensors.*
+
+
+## Partitions
+
+A topic are split into partitions, which are distributed across brokers.
+
+Partition distribution:
+- Each broker may host zero or more partitions for a given topic.
+- If the number of partitions equals the number of brokers, each broker will typically host one partition.
+- If the number of partitions is fewer than the number of brokers, some brokers won't have any partitions for that topic.
+
+Partition replication:
+- Each partition is replicated to other nodes.
+- There's a leader node for handling requests and follower nodes for replication.
+- A follower acts as normal consumer, pulls messages and up-dates its own data store.
+- If the leader fails, one of the follower will automatically become the new leader.
+
+More partitions can increase throughput but also may increase the latency of the queue.
+
+
+## Producers
+
+Producers are the publisher of messages to one or more Kafka topics.
+
+Producers send data to Kafka brokers. Every time a producer publishes a message, the message will be appended to a partition.
+
+Producer can send messages to a specific partition.
+
+
+## Consumers
+
+Consumers read data from brokers by subscribing to one or more Kafka topics and reads messages from partitions.
+
+
+## Consumer Groups
+
+A consumer group is a group of consumers that work together to consume a topic.
+
+A consumer may belong to one consumer group.
+
+*For example, in Microservices architecture, all instances of a service will be in the same consumer group.*
+
+
+### Behavior
+
+When multiple consumer groups subscribe to the same topic, each receives a copy of the message, enabling each group to process the message base on its own purpose.
+
+Within a consumer group, each message is processed by only one consumer, enabling load balancing by distributing the workload across consumers.
+
+
+### Partition assignment
+
+Each partition in a topic is consumed by exactly one consumer in the group. A consumer can consume messages from multiple partitions. This allow for parallel processing across the consumer group.
+
+For example, let's say you have:
+- 4 partitions
+- 2 consumers in a group
+
+Kafka might assign:
+- Consumer A → Partitions 0 and 2
+- Consumer B → Partitions 1 and 3
+
+If you have more consumers than partitions, some consumers won't receive any messages. It's important to balance the number of partitions and consumers to ensure efficient message processing.
+
+
+## Consumer Offsets
+
+A **consumer offset** is a marker that indicates the position of the last event consumed by a consumer in a partition.
+
+Kafka tracks offsets to ensure that consumers can resume from where they left off in case of a failure or restart.
+
+If one of the consumers crashes, no messages are lost.
