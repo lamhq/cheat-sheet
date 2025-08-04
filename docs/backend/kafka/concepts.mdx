@@ -69,7 +69,7 @@ Why are they important?
 
 How are they updated?
 - Automatic: Offset is committed periodically (e.g., every 5 seconds). Might lead to duplicate processing if a failure happens before commit.
-- Manual: Consumers commit only after processing is truly complete.
+- Manual: Once the messages are processed, consumer will send an acknowledgement to the broker. Once Kafka receives an acknowledgement, it changes the offset to the new value
 
 
 ## Consumer Groups
