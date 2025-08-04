@@ -27,7 +27,7 @@ A topic is a stream of messages belonging to a particular category.
 
 ## Partitions
 
-A topic are split into partitions, which are distributed across brokers.
+A topic are split into partitions. A partition is a linearly ordered sequence of messages, where each message is identified by their index (called as offset).
 
 Partition distribution:
 - Each broker may host zero or more partitions for a given topic.
@@ -54,7 +54,22 @@ Producer can send messages to a specific partition.
 
 ## Consumers
 
-Consumers read data from brokers by subscribing to one or more Kafka topics and reads messages from partitions.
+Consumers read data from brokers by subscribing to one or more Kafka topics and reads messages sequentially from partitions.
+
+
+## Consumer Offsets
+
+A consumer offset is a marker that indicates the position of the last message a consumer has successfully read from a partition.
+
+Consumer offsets are stored internally in a Kafka topic named `__consumer_offsets`.
+
+Why are they important?
+- Make sure each message is processed only once (no duplicates, no losses)
+- Help consumers resume reading after crashes or restarts.
+
+How are they updated?
+- Automatic: Offset is committed periodically (e.g., every 5 seconds). Might lead to duplicate processing if a failure happens before commit.
+- Manual: Consumers commit only after processing is truly complete.
 
 
 ## Consumer Groups
@@ -90,20 +105,3 @@ Kafka might assign:
 ![](./consumer-groups.drawio.svg)
 
 If you have more consumers than partitions, some consumers won't receive any messages. It's important to balance the number of partitions and consumers to ensure efficient message processing.
-
-
-## Consumer Offsets
-
-A consumer offset is a marker that indicates the position of the last message a consumer has successfully read from a partition.
-
-Consumer offsets are stored internally in a Kafka topic named `__consumer_offsets`.
-
-Why Are They Important?
-- Make sure each message is processed only once (no duplicates, no losses)
-- Help consumers resume reading after crashes or restarts.
-
-How are they updated?
-- Automatic: Offset is committed periodically (e.g., every 5 seconds). Might lead to duplicate processing if a failure happens before commit.
-- Manual: Consumers commit only after processing is truly complete.
-
-Can also be stored externally if needed (e.g., in a database).
