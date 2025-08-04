@@ -117,8 +117,10 @@ Run this command
 
 Create a topic:
 ```sh
-./kafka-topics.sh --bootstrap-server localhost:9092 --create --topic test-topic
+./kafka-topics.sh --bootstrap-server localhost:9092 --create --topic test-topic --partitions 2 --replication-factor 1
 ```
+- `--partitions 2`: split topic to 2 partitions
+
 
 ## Sending events
 
@@ -128,9 +130,29 @@ Create a topic:
 
 After entering some text, press `Ctrl+C` to exit.
 
+To distribute messages across partitions, you've to use keyed message, and Kafka will use the hash of the key to determine the partition:
+
+```sh
+./kafka-console-producer.sh \
+  --bootstrap-server localhost:9092 \
+  --topic my-new-topic \
+  --property "parse.key=true" \
+  --property "key.separator=:"
+```
+
+Then, enter messages like:
+```
+key1:Hello from partition X
+key2:Another message
+```
+
 
 ## Consuming events
 
 ```sh
-./kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-topic --from-beginning
+./kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-topic --group group-1 --from-beginning
 ```
+- `--group group-1`: specify the consumer group to `group-1`
+
+> [!NOTE]
+> Consumers in the same group don't process the same message
