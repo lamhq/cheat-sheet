@@ -105,3 +105,19 @@ Kafka might assign:
 ![](./consumer-groups.drawio.svg)
 
 If you have more consumers than partitions, some consumers won't receive any messages. It's important to balance the number of partitions and consumers to ensure efficient message processing.
+
+
+## Bootstrap server
+
+Kafka Bootstrap Server is a **list of broker addresses** (host:port pairs) that a client uses to establish an initial connection with a Kafka cluster.
+
+If one broker in the list is down, Kafka will try the next one in the list.
+
+Once connected, the client fetches **metadata** about the cluster: all brokers, topics, partitions, leader broker of each partition.
+
+You don’t need to list every broker, just a few healthy ones. After bootstrapping, the client communicates directly with the appropriate brokers (not necessarily the ones listed in `bootstrap.servers`)
+
+For example, the below command connects to the cluster and create a topic named `samples`:
+```sh
+kafka-topics.sh --bootstrap-server localhost:9092 --create --topic samples --partitions 1 --replication-factor 1
+```
