@@ -18,6 +18,16 @@ One broker acts as the controller to handle administrative tasks, while others m
 Clusters can be expanded without downtime.
 
 
+## Messages
+
+A message in Kafka is a record that consists of:
+
+- **key** is optional, can be used to determine the partition within a topic where the message will be sent.
+- **value** is the actual data payload
+- **timestamp** denotes the time at which the message was produced.
+- **headers** (introduced in later versions) allow for attaching metadata to messages in a key-value format.
+
+
 ## Topics
 
 A topic is a stream of messages belonging to a particular category.
@@ -36,7 +46,7 @@ Partition distribution:
 
 Partition replication:
 - Each partition is replicated to other nodes.
-- There's a leader node for handling requests and follower nodes for replication.
+- There's a **leader** node that handles all read and write requests for the partition, and **follower** nodes for replication.
 - A follower acts as normal consumer, pulls messages and up-dates its own data store.
 - If the leader fails, one of the follower will automatically become the new leader.
 
@@ -121,3 +131,12 @@ For example, the below command connects to the cluster and create a topic named 
 ```sh
 kafka-topics.sh --bootstrap-server localhost:9092 --create --topic samples --partitions 1 --replication-factor 1
 ```
+
+
+## Serialization and Deserialization
+
+To efficiently transmit and store messages, Kafka employs serialization and deserialization.
+
+Serialization converts the key and value objects into bytes for storage or transmission
+
+Deserialization converts these bytes back into objects for consumption.
