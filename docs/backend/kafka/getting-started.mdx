@@ -135,7 +135,7 @@ To distribute messages across partitions, you've to use keyed message, and Kafka
 ```sh
 ./kafka-console-producer.sh \
   --bootstrap-server localhost:9092 \
-  --topic my-new-topic \
+  --topic test-topic \
   --property "parse.key=true" \
   --property "key.separator=:"
 ```
