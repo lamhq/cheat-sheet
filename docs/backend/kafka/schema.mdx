@@ -1,0 +1,191 @@
+# Schema Registry
+
+## Overview
+
+Schema Registry is a service that manages and stores schemas for data serialization formats like Avro, JSON Schema, and Protobuf.
+
+It's commonly used with Kafka to ensure data compatibility and evolution.
+
+> [!INFO]
+> A schema defines the structure of message data. It defines allowed data types, their format, and relationships
+
+
+## Key Features & Benefits
+
+Schema Registry enhances system reliability and scalability by standardizing schema management for producers and consumers.
+
+Core Advantages:
+- **Centralized schema storage** for easy tracking and version control  
+- **Schema contexts** to organize schemas into logical sub-registries  
+- **Schema ID validation** to ensure data format consistency and prevent corruption  
+- **Compatibility checks** between producers and consumers to avoid data loss  
+- **Schema versioning** for seamless updates without breaking legacy support  
+- **Simplified development** with less custom code and easier onboarding
+
+
+```
+┌─────────────┐    ┌──────────────────┐    ┌─────────────┐
+│  Producer   │───▶│  Schema Registry │◀───│  Consumer   │
+│             │    │                  │    │             │
+└─────────────┘    └──────────────────┘    └─────────────┘
+       │                     │                     │
+       ▼                     ▼                     ▼
+┌─────────────┐    ┌──────────────────┐    ┌─────────────┐
+│   Kafka     │    │    Schemas       │    │   Kafka     │
+│   Topic     │    │   (Avro/JSON)    │    │   Topic     │
+└─────────────┘    └──────────────────┘    └─────────────┘
+```
+
+## Workflow
+
+Producer:
+
+1. Registers or retrieves schema from Schema Registry
+2. Gets unique schema ID for the registered schema
+3. Serializes data using the schema
+4. Creates message with schema ID + serialized data
+5. Sends message to Kafka topic
+
+Consumer:
+
+1. Consumes message from Kafka topic
+2. Extracts schema ID from message header
+3. Fetches schema from Schema Registry using schema ID
+4. Deserializes message data using the retrieved schema
+5. Processes the deserialized data
+
+
+## Schema Evolution
+
+Schema evolution refers to the ability to change a data schema over time (adding, removing, or modifying fields) without breaking compatibility with existing data or applications.
+
+It ensures that producers and consumers can still communicate even as the schema updates.
+
+Schema Registry makes evolving schemas safe and manageable by:
+
+- **Version Control**: Tracks and stores multiple schema versions, allowing smooth transitions and rollback if needed.
+- **Compatibility Checks**: Ensures new schema versions remain readable by existing consumers (backward compatibility) or producers (forward compatibility).
+- **Validation**: Automatically validates schema changes before they're applied, preventing incompatible updates.
+- **Centralized Management**: Keeps all schemas organized in one place, making it easier to coordinate changes across teams and services.
+
+
+## Data serialization
+
+A schema defines the format of the serialized data and is used to validate the data as it is being deserialized.
+
+A Kafka topic contains messages, and each message is a key-value pair. Either the message key or the message value, or both, can be serialized as Avro, JSON, or Protobuf format.
+
+
+## Apache Avro
+
+Apache Avro is a data serialization framework that provides data structures, remote procedure call (RPC), compact binary data format.
+
+Avro schemas are defined in JSON format.
+
+You can either send a schema with every message or storing it in Schema Registry for use by consumers and producers.
+
+### Key Features
+
+- Supports complex nested data types
+- Can generate classes for statically typed languages
+
+
+### Modes
+
+Avro provides three different approaches for working with data, each with its own trade-offs:
+
+- Generic Mode: where you use AVRO just to validation, but don't do codegen
+- Specific Mode: where you use an avsc file and the codegen tool to generate code
+- Reflection Mode: the inver of Specific mode, based on a class create an avsc file
+
+### Types
+
+Primitive types:
+- null
+- double
+- float
+- int
+- long
+- boolean
+- string
+- bytes
+
+```json
+{
+  "type": "record",
+  "name": "User",
+  "namespace": "com.example",
+  "fields": [
+    { "name": "username", "type": "string" },
+    { "name": "age", "type": "int" },
+    { "name": "isActive", "type": "boolean" },
+    { "name": "score", "type": "float" }
+  ]
+}
+```
+
+Avro provides several complex types for representing structured data:
+- record
+- enum
+- array
+- map
+- union
+- fixed
+
+```json
+{
+  "type": "record",
+  "name": "Address",
+  "fields": [
+    {"name": "street", "type": "string"},
+    {"name": "city", "type": "string"},
+    {"name": "zipcode", "type": "string"}
+  ]
+}
+```
+
+```json
+{
+  "type": "enum",
+  "name": "Status",
+  "symbols": ["ACTIVE", "INACTIVE", "PENDING", "SUSPENDED"]
+}
+```
+
+```json
+{
+  "type": "array",
+  "items": "string"
+}
+```
+
+```json
+{
+  "type": "map",
+  "values": "int"
+}
+```
+
+```json
+["null", "string", "int"]
+```
+
+```json
+{
+  "type": "fixed",
+  "name": "UUID",
+  "size": 16
+}
+```
+
+
+## Subjects
+
+A subject is used to identify and retrieve schemas from the registry.
+
+When a schema evolves, new versions are tied to the same subject.
+
+The name of the subject depends on the configured [subject name strategy](https://docs.confluent.io/platform/current/schema-registry/fundamentals/serdes-develop/index.html#sr-schemas-subject-name-strategy), which by default is `TopicNameStrategy`.
+
+> [!NOTE]
+> With `TopicNameStrategy`, the schema for the record values in `mytopic` should be registered under the subject `mytopic-value`. And the schema for the record keys in `mytopic` should be registered under the subject `mytopic-key`.

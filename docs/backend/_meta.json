@@ -4,6 +4,11 @@
     "label": "Backend Development"
   },
   {
+    "name": "graphql",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
     "name": "javascript",
     "type": "dir",
     "collapsed": true,
@@ -20,19 +25,19 @@
     "collapsed": true
   },
   {
+    "name": "markdown",
+    "type": "dir",
+    "collapsed": true
+  },
+  "yaml",
+  {
     "name": "mongodb",
     "type": "dir",
     "collapsed": true
   },
   {
-    "name": "graphql",
+    "name": "kafka",
     "type": "dir",
     "collapsed": true
-  },
-  {
-    "name": "markdown",
-    "type": "dir",
-    "collapsed": true
-  },
-  "yaml"
+  }
 ]
