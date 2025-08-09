@@ -1,0 +1,142 @@
+# Concepts
+
+## Brokers
+
+A broker is a server that manage data.
+
+It receives data from producers, stores it, and serves it to consumers.
+
+Data is replicated across multiple brokers to ensure high availability and fault tolerance.
+
+
+## Cluster
+
+A cluster is a group of brokers working together to manage and distribute data.
+
+One broker acts as the controller to handle administrative tasks, while others manage data storage and retrieval.
+
+Clusters can be expanded without downtime.
+
+
+## Messages
+
+A message in Kafka is a record that consists of:
+
+- **key** is optional, can be used to determine the partition within a topic where the message will be sent.
+- **value** is the actual data payload
+- **timestamp** denotes the time at which the message was produced.
+- **headers** (introduced in later versions) allow for attaching metadata to messages in a key-value format.
+
+
+## Topics
+
+A topic is a stream of messages belonging to a particular category.
+
+*For example, a topic could be used to store temperature readings from sensors.*
+
+
+## Partitions
+
+A topic are split into partitions. A partition is a linearly ordered sequence of messages, where each message is identified by their index (called as offset).
+
+Partition distribution:
+- Each broker may host zero or more partitions for a given topic.
+- If the number of partitions equals the number of brokers, each broker will typically host one partition.
+- If the number of partitions is fewer than the number of brokers, some brokers won't have any partitions for that topic.
+
+Partition replication:
+- Each partition is replicated to other nodes.
+- There's a **leader** node that handles all read and write requests for the partition, and **follower** nodes for replication.
+- A follower acts as normal consumer, pulls messages and up-dates its own data store.
+- If the leader fails, one of the follower will automatically become the new leader.
+
+More partitions can increase throughput but also may increase the latency of the queue.
+
+
+## Producers
+
+Producers are the publisher of messages to one or more Kafka topics.
+
+Producers send data to Kafka brokers. Every time a producer publishes a message, the message will be appended to a partition.
+
+Producer can send messages to a specific partition.
+
+
+## Consumers
+
+Consumers read data from brokers by subscribing to one or more Kafka topics and reads messages sequentially from partitions.
+
+
+## Consumer Offsets
+
+A consumer offset is a marker that indicates the position of the last message a consumer has successfully read from a partition.
+
+Consumer offsets are stored internally in a Kafka topic named `__consumer_offsets`.
+
+Why are they important?
+- Make sure each message is processed only once (no duplicates, no losses)
+- Help consumers resume reading after crashes or restarts.
+
+How are they updated?
+- Automatic: Offset is committed periodically (e.g., every 5 seconds). Might lead to duplicate processing if a failure happens before commit.
+- Manual: Once the messages are processed, consumer will send an acknowledgement to the broker. Once Kafka receives an acknowledgement, it changes the offset to the new value
+
+
+## Consumer Groups
+
+A consumer group is a group of consumers that work together to consume a topic.
+
+A consumer may belong to one consumer group.
+
+*For example, in Microservices architecture, all instances of a service will be in the same consumer group.*
+
+
+### Message Delivery
+
+When multiple consumer groups subscribe to the same topic, each receives a copy of the message, enabling each group to process the message base on its own purpose.
+
+Within a consumer group, each message is processed by only one consumer, enabling load balancing by distributing the workload across consumers.
+
+
+### Partition assignment
+
+Each partition in a topic is consumed by exactly one consumer in the group (partitions can't be shared across consumers).
+
+A consumer can consume messages from multiple partitions. This allow for parallel processing across the consumer group.
+
+For example, let's say you have:
+- 4 partitions
+- 2 consumers in a group
+
+Kafka might assign:
+- Consumer 1 → Partitions 0 and 1
+- Consumer 1 → Partitions 2 and 3
+
+![](./consumer-groups.drawio.svg)
+
+If you have more consumers than partitions, some consumers won't receive any messages. It's important to balance the number of partitions and consumers to ensure efficient message processing.
+
+
+## Bootstrap server
+
+Kafka Bootstrap Server is a **list of broker addresses** (host:port pairs) that a client uses to establish an initial connection with a Kafka cluster.
+
+If one broker in the list is down, Kafka will try the next one in the list.
+
+Once connected, the client fetches **metadata** about the cluster: all brokers, topics, partitions, leader broker of each partition.
+
+You don’t need to list every broker, just a few healthy ones. After bootstrapping, the client communicates directly with the appropriate brokers (not necessarily the ones listed in `bootstrap.servers`)
+
+For example, the below command connects to the cluster and create a topic named `samples`:
+```sh
+kafka-topics.sh --bootstrap-server localhost:9092 --create --topic samples --partitions 1 --replication-factor 1
+```
+
+
+## Serialization and Deserialization
+
+To efficiently transmit and store messages, Kafka employs serialization and deserialization.
+
+Serialization converts the key and value objects into bytes for storage or transmission
+
+Deserialization converts these bytes back into objects for consumption.

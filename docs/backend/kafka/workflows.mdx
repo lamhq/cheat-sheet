@@ -1,0 +1,25 @@
+# Workflows
+
+Kafka provides both pub-sub and queue based messaging system. In both cases, producers simply send the message to a topic and consumer can choose any one type of messaging system depending on their need.
+
+## Pub-Sub Messaging Workflow
+
+- **Producers** send messages to a **topic**
+- **Kafka brokers** store messages across topic **partitions** evenly.
+- **Consumers** subscribe to topics and get the **current offset** .
+- Consumers **poll Kafka periodically** for new messages.
+- Kafka forwards messages to consumers for **processing**.
+- On acknowledgment, Kafka updates the offset.
+- This flow **repeats until the consumer stops**.
+- Consumers can also **rewind or skip** to a specific offset at any time.
+
+
+## Queue Messaging Workflow
+
+- **Producers** send messages to a topic
+- **Kafka** stores messages across configured **partitions**.
+- A **consumer** subscribes to a topic with a **Group ID** (e.g., Topic-01 / Group-1).
+- Kafka follows **Pub-Sub flow** until additional consumers join the same Group ID.
+- Once new consumer arrives, Kafka distributing messages across consumers, until the number of consumers reach the number of partition of the topic.
+- Once **consumer count > partition count**, extra consumers remain **idle** until a partition is freed.
+- This mechanism defines a **Consumer Group**, balancing load efficiently across consumers.
