@@ -41,7 +41,7 @@ npm install -g serverless
 
 ## Setting up AWS credentials
 
-Refer to [AWS CLI guide](./aws/cli.md#configure).
+Refer to [AWS CLI guide](./aws/dev-tools/aws-cli.mdx#configure).
 
 
 ## Initialize new project

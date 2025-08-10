@@ -7,7 +7,7 @@
 		"dev": "rspress dev --port 5002",
 		"build": "rspress build",
 		"preview": "rspress preview --port 5002",
-		"lint": "find . -name \\*.mdx -print0 | xargs -0 -n1 markdown-link-check --quiet",
+		"lint": "find pages -name \\*.md -print0 | tr '\\0' '\\n' | node lint-mdx.js",
     "prepare": "node .husky/install.js"
 	},
 	"dependencies": {
@@ -23,6 +23,6 @@
 		"husky": "^8.0.0"
 	},
 	"lint-staged": {
-		  "*.mdx": "npx markdown-link-check"
+		"*.mdx": "npx markdown-link-check"
 	}
 }

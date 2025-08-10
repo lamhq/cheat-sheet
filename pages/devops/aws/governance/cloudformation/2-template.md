@@ -247,7 +247,7 @@ With constraints, you can describe allowed input values so that AWS CloudFormati
 
 ## Validate templates before using them
 
-For the AWS CLI or AWS CloudFormation API, use the [aws cloudformation validate-template](aws cloudformation validate-template) command or ValidateTemplate action.
+For the AWS CLI or AWS CloudFormation API, use the `aws cloudformation validate-template` command or ValidateTemplate action.
 
 
 ## Manage all stack resources through AWS CloudFormation
