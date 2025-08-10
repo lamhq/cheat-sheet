@@ -21,11 +21,11 @@ To migrate EC2 instances to another region, follow these step:
 1. Create a snapshot
 1. Copy the snapshot to another region
 1. Create an AMI image from the copied snapshot
-1. Go to [Amazon EC2 console]((https://console.aws.amazon.com/ec2/)) > **Images** > **AMIs**, select an image and click `Launch instance from AMI`
+1. Go to [Amazon EC2 console](https://console.aws.amazon.com/ec2/) > **Images** > **AMIs**, select an image and click `Launch instance from AMI`
 
 To copy a snapshot to another region:
 
-1. Open the [Amazon EC2 console]((https://console.aws.amazon.com/ec2/)).
+1. Open the [Amazon EC2 console](https://console.aws.amazon.com/ec2/).
 2. In the navigation pane, choose **Snapshots**.
 3. Select the snapshot you want to copy, and then choose **Actions**, **Copy snapshot**.
 4. In the **Copy Snapshot** dialog box, enter a brief description for the snapshot copy in the **Description** field.
