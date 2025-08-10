@@ -1,7 +1,8 @@
 [
   "workflows",
-  "environment",
-  "variables",
   "artifacts",
+  "environments",
+  "variables",
+  "secrets",
   "runners"
 ]
