@@ -44,17 +44,27 @@ const rl = readline.createInterface({
   terminal: false,
 });
 
+let hasErrors = false;
+
 rl.on('line', async (filePath) => {
   try {
     const errors = await checkLink(filePath);
     if (errors.length > 0) {
+      hasErrors = true;
       console.error(`${errors.length} dead links found in ${filePath}:`);
       errors.forEach(err => {
         console.log(`- ${err.link} at ${filePath}#${err.line}`);
       });
-      console.log("\n")
+      console.log("\n");
     }
   } catch (err) {
+    hasErrors = true;
     console.error(`Failed to lint ${filePath}: ${err.message}`);
+  }
+});
+
+rl.on('close', () => {
+  if (hasErrors) {
+    process.exit(1);
   }
 });
