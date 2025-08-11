@@ -1,0 +1,67 @@
+# Jobs
+
+## Setting an ID and name
+
+Use `jobs.<job_id>` to give your job a unique identifier.
+
+Use `jobs.<job_id>.name` to set a name for the job, which is displayed in the GitHub UI.
+
+```yml
+jobs:
+  my_first_job:
+    name: My first job
+  my_second_job:
+    name: My second job
+```
+
+
+## Defining prerequisite jobs
+
+Use `jobs.<job_id>.needs` to identify any jobs that must complete successfully before this job will run.
+
+```yml
+jobs:
+  job1:
+  job2:
+    needs: job1
+  job3:
+    needs: [job1, job2]
+```
+
+You can also make a job [always](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-jobs#example-not-requiring-successful-dependent-jobs) run after other jobs have completed, regardless of whether they were successful.
+
+
+## Using actions
+
+In the workflow editor, you can search and browse actions from the sidebar.
+
+You can add an action to your workflow by referencing the action in your workflow file. Actions can be in:
+- The [same repository](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/find-and-customize-actions#adding-an-action-from-the-same-repository) as the workflow file
+- Any [public repository](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/find-and-customize-actions#adding-an-action-from-a-different-repository)
+- A published [Docker container image](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/find-and-customize-actions#referencing-a-container-on-docker-hub) on Docker Hub
+
+An action often accepts or requires inputs and generates outputs that you can use:
+```yml
+name: "Example"
+description: "Receives file and generates output"
+inputs:
+  file-path: # id of input
+    description: "Path to test script"
+    required: true
+    default: "test-file.js"
+outputs:
+  results-file: # id of output
+    description: "Path to results file"
+```
+
+
+## Running scripts
+
+You can run scripts and shell commands in steps using the `run` key:
+```yml
+jobs:
+  example-job:
+    runs-on: ubuntu-latest
+    steps:
+      - run: npm install -g bats
+```

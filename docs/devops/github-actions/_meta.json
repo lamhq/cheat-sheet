@@ -1,5 +1,6 @@
 [
   "workflows",
+  "jobs",
   "artifacts",
   "environments",
   "variables",
