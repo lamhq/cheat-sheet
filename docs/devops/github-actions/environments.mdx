@@ -1,5 +1,7 @@
 # Environments
 
+## Overview
+
 Environments are used to describe a general deployment target like `production`, `staging`, or `development`
 
 You can use environments to:
@@ -13,3 +15,19 @@ Each job in a workflow can reference a single environment.
 Any protection rules configured for the environment must pass before a job referencing the environment is sent to a runner.
 
 The job can access the environment's secrets only after the job is sent to a runner.
+
+
+## Using an environment in a workflow
+
+You need to create an [environment](https://docs.github.com/en/actions/how-tos/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment#creating-an-environment) before you can use it in a workflow.
+
+The chosen job will now be subject to any rules configured for the specified environment.
+
+You optionally can specify a deployment URL for the environment.
+
+```yml
+jobs:
+  JOB-ID:
+    environment: ENVIRONMENT-NAME
+    url: URL
+```
