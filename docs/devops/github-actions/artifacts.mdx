@@ -1,7 +1,48 @@
 # Workflow artifacts
 
-## About workflow artifacts
+## About
 
 An artifact is a file or collection of files produced during a workflow run.
 
 Artifacts allow you to persist data after a job has completed, and share that data with another job in the same workflow.
+
+
+## Creating artifacts
+
+```yml
+name: Node CI
+
+on: [push]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: npm install, build, and test
+        run: |
+          npm install
+          npm run build --if-present
+          npm test
+      
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-without-markdown
+          retention-days: 5
+          path: |
+            dist
+            !dist/**/*.md
+```
+
+
+## Using artifacts
+
+```yml
+- name: Download a single artifact
+  uses: actions/download-artifact@v4
+  with:
+    name: dist-without-markdown
+```

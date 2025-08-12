@@ -5,6 +5,7 @@
   "environments",
   "variables",
   "secrets",
+  "caching",
   "runners",
   "oidc"
 ]
