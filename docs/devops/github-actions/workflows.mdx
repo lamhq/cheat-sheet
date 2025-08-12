@@ -198,10 +198,55 @@ jobs:
       token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-Use cases:
-- ✅ **CI/CD pipelines**: Centralize build, test, and deployment steps.
-- 🔒 **Security checks**: Run scans and enforce policies before releases.
-- 🧹 **Code quality**: Automate linting, formatting, and compliance.
-- 📦 **Package publishing**: Push to registries like npm, PyPI, or Docker.
-- 🏷️ **PR labeling & issue triage**: Auto-manage contributions.
-- 🏢 **Org-wide governance**: Apply consistent rules across teams.
+A reusable workflow may generate outputs:
+```yml
+name: Reusable workflow
+
+on:
+  workflow_call:
+    # Map the workflow outputs to job outputs
+    outputs:
+      firstword:
+        description: "The first output string"
+        value: ${{ jobs.example_job.outputs.output1 }}
+      secondword:
+        description: "The second output string"
+        value: ${{ jobs.example_job.outputs.output2 }}
+
+jobs:
+  example_job:
+    name: Generate output
+    runs-on: ubuntu-latest
+    # Map the job outputs to step outputs
+    outputs:
+      output1: ${{ steps.step1.outputs.firstword }}
+      output2: ${{ steps.step2.outputs.secondword }}
+    steps:
+      - id: step1
+        run: echo "firstword=hello" >> $GITHUB_OUTPUT
+      - id: step2
+        run: echo "secondword=world" >> $GITHUB_OUTPUT
+```
+
+To use the outputs in the caller workflow:
+```yml
+name: Call a reusable workflow and use its outputs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  job1:
+    uses: octo-org/example-repo/.github/workflows/called-workflow.yml@v1
+
+  job2:
+    runs-on: ubuntu-latest
+    needs: job1
+    steps:
+      - run: echo ${{ needs.job1.outputs.firstword }} ${{ needs.job1.outputs.secondword }}
+```
+
+
+## References
+
+- [Workflow syntax](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax)
