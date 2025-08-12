@@ -28,7 +28,7 @@ The largest IP range you can have is a `/16`, which provides you with **65,536**
 - `10.0.0.0/16` -> 65,536 possible addresses (`10.0.0.0` - `10.0.255.255`)
 - `10.0.0.0/28` -> 16 possible addresses (`10.0.0.0` - `10.0.0.15`)
 
-You can use [CIDR.xyz](cidr.xyz) to calculate IP address ranges.
+You can use [CIDR.xyz](https://cidr.xyz) to calculate IP address ranges.
 
 
 ## Private IP address ranges
