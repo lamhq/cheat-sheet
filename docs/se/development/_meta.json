@@ -1,5 +1,9 @@
 [
-  "version-control",
+  {
+    "name": "version-control",
+    "type": "dir",
+    "collapsed": true
+  },
   "branching-models",
   "semver"
 ]

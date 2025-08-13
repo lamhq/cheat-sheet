@@ -4,12 +4,6 @@
     "label": "Tools"
   },
   {
-    "name": "git",
-    "type": "dir",
-    "collapsed": true,
-    "label": "Git"
-  },
-  {
     "name": "vscode",
     "type": "dir",
     "collapsed": true,
