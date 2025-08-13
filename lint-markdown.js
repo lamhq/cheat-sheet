@@ -1,6 +1,6 @@
-import readline from 'readline';
-import fs from 'fs';
-import path from 'path';
+import readline from "readline";
+import fs from "fs";
+import path from "path";
 
 /**
  * Check for dead relative links in a markdown file.
@@ -29,7 +29,7 @@ async function checkLink(filePath) {
       // Skip absolute URLs and anchors
       if (/^(https?:\/\/|#)/.test(link)) continue;
 
-      const resolvedPath = path.resolve(dir, link.split('#')[0]); // Remove anchor if present
+      const resolvedPath = path.resolve(dir, link.split("#")[0]); // Remove anchor if present
       if (!fs.existsSync(resolvedPath)) {
         errors.push({ line: lineNumber, link });
       }
@@ -39,33 +39,63 @@ async function checkLink(filePath) {
   return errors;
 }
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  terminal: false,
-});
-
-let hasErrors = false;
-
-rl.on('line', async (filePath) => {
-  console.log(filePath)
+/**
+ * Process a file and check for dead links.
+ * @param {string} filePath - Path to the markdown file.
+ * @returns {Promise<boolean>} - True if there are errors, false otherwise.
+ */
+async function processFile(filePath) {
   try {
     const errors = await checkLink(filePath);
     if (errors.length > 0) {
-      hasErrors = true;
       console.error(`${errors.length} dead links found in ${filePath}:`);
-      errors.forEach(err => {
+      errors.forEach((err) => {
         console.log(`- ${err.link} at ${filePath}#${err.line}`);
       });
-      console.log("\n");
+      console.log(); // print new line
+      return true; // has errors
     }
   } catch (err) {
-    hasErrors = true;
     console.error(`Failed to lint ${filePath}: ${err.message}`);
+    return true; // has errors
   }
-});
+  return false; // no errors
+}
 
-rl.on('close', () => {
-  if (hasErrors) {
-    process.exit(1);
+/**
+ * Main function to process files and check for dead links.
+ * @returns {Promise<void>}
+ */
+async function main() {
+  const args = process.argv.slice(2);
+  let hasErrors = false;
+
+  if (args.length > 0) {
+    for (const filePath of args) {
+      const errored = await processFile(filePath);
+      if (errored) hasErrors = true;
+    }
+  } else {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      terminal: false,
+    });
+
+    const filePaths = [];
+
+    for await (const line of rl) {
+      filePaths.push(line);
+    }
+
+    for (const filePath of filePaths) {
+      const errored = await processFile(filePath);
+      if (errored) hasErrors = true;
+    }
   }
-});
+
+  if (hasErrors) {
+    process.exitCode = 1;
+  }
+}
+
+main();
