@@ -2,10 +2,10 @@ name: Check Markdown links
 
 on:
   pull_request:
-    branches: [main]
+    branches: main
 
   push:
-    branches: [main]
+    branches: main
 
 jobs:
   markdown-link-check:

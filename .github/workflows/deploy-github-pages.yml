@@ -1,11 +1,8 @@
 name: Deploy Rspress site to Github Pages
 
 on:
-  # pull_request:
-  #   branches: [ $default-branch ]
-
   push:
-    branches: [ $default-branch ]
+    branches: main
 
   workflow_dispatch:
 
