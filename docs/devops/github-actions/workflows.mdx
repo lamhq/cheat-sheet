@@ -1,0 +1,261 @@
+# Workflows
+
+## Triggering a workflow
+
+### Declaring Events
+
+Use the `on` key to specify what [events](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows) trigger your workflow:
+
+- `push`: Triggered when code is pushed to a branch.
+- `pull_request`: Runs when a pull request is opened, updated, or merged.
+- `release`: Fires when a release is published or edited.
+- `workflow_run`: allows you to execute a workflow based on execution or completion of another workflow
+- `workflow_dispatch`: Allows manual triggering via the GitHub UI or API.
+- `repository_dispatch`: Enables external systems to trigger workflows via API.
+
+Using a single event:
+```yaml
+on: push
+```
+
+Using multiple events:
+```yaml
+on: [push, pull_request]
+```
+
+
+### Using Event Activity Types
+
+You can use activity types to further control when your workflow will run.
+
+Syntax: `on.<event_name>.types`.
+
+For example, if you specify the created activity type for the `label` event, your workflow will run when a label is `created` but not when a label is edited or deleted:
+
+```yml
+on:
+  label:
+    types:
+      - created
+```
+
+
+### Using filters
+
+Some events have filters that give you more control over when your workflow should run.
+
+For example, the `push` event has a `branches` filter:
+```yml
+on:
+  push:
+    branches:
+      - main
+      - 'releases/**'
+```
+
+You can use filters to include/exclude specific [branches, tags, paths](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow#using-filters-to-target-specific-branches-for-pull-request-events).
+
+
+### Using conditionals
+
+You can use conditionals to further control whether jobs or steps in your workflow will run.
+
+Job level:
+```yml
+jobs:
+  run_if_label_matches:
+    if: github.event.label.name == 'bug'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'The label was bug'
+```
+
+Step level:
+```yml
+jobs:
+  state_event_type:
+    runs-on: ubuntu-latest
+    steps:
+    - name: if is issue
+      if: github.event.issue
+      run: |
+        echo An issue was closed
+```
+
+
+### Triggering from another workflow
+
+Events triggered by the `GITHUB_TOKEN` (except `workflow_dispatch` and `repository_dispatch`) will not create a new workflow run.
+
+To [trigger a workflow from within a workflow run](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow#triggering-a-workflow-from-a-workflow), you can use a **GitHub App installation access token** or a **personal access token** to trigger events that require a token.
+
+You can use [`workflow_run`](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow#using-filters-to-target-specific-branches-for-workflow-run-events) event to specify what branches the triggering workflow must run on in order to trigger your workflow. 
+
+
+### Defining inputs for manually triggered workflows
+
+When using the `workflow_dispatch` event, you can optionally specify [inputs](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow#defining-inputs-for-manually-triggered-workflows) that are passed to the workflow.
+
+```yaml
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+```
+
+
+### Using environments to manually trigger jobs
+
+If you want to manually trigger a specific job in a workflow, you can create an [environment](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow#using-environments-to-manually-trigger-workflow-jobs) that requires approval from a specific team or user. Then, reference the environment name in a job in your workflow.
+
+
+## Workflows and jobs concurrency
+
+By default, workflows execute concurrently.
+
+You can use the `concurrency` keyword to limit the number of concurrent workflow or job runs.
+
+Workflow level:
+```yml
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+```
+
+Job level:
+```yml
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: example-group
+      cancel-in-progress: true
+```
+
+If `cancel-in-progress` is set to `true`, the workflow will cancel any currently running job or workflow in the same concurrency group. You can use expressions in value of `cancel-in-progress`.
+
+A [concurrency group](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency#using-concurrency-in-different-scenarios) can be any string or expression.
+
+You can you a [fallback value](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency#example-using-a-fallback-value) in the group name if you have a property that is only defined for specific events.
+
+
+## Choosing where to run jobs
+
+You can use `jobs.<job_id>.runs-on` to define the type of [machine to run the job on](https://docs.github.com/en/actions/how-tos/write-workflows/choose-where-workflows-run/choose-the-runner-for-a-job).
+
+You can also run jobs in a [container](https://docs.github.com/en/actions/how-tos/write-workflows/choose-where-workflows-run/run-jobs-in-a-container).
+
+
+## Reusable workflows
+
+A reusable workflow is a workflow file that can be called by other workflows (even across repositories).
+
+It helps you avoid duplication, centralize logic, and standardize CI/CD processes.
+
+You can:
+- Pass custom values from the caller workflow with `inputs`
+- Securely pass sensitive data. with `secrets`
+
+For example:
+
+```yml title=".github/workflows/reusable.yml"
+on:
+  workflow_call:
+    inputs:
+      config-path:
+        required: true
+        type: string
+    secrets:
+      token:
+        required: true
+
+jobs:
+  run-labeler:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/labeler@v5
+        with:
+          repo-token: ${{ secrets.token }}
+          configuration-path: ${{ inputs.config-path }}
+```
+
+To invoke it:
+```yml
+jobs:
+  use-reusable:
+    uses: your-org/your-repo/.github/workflows/reusable.yml@main
+    with:
+      config-path: .github/labeler.yml
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+A reusable workflow may generate outputs:
+```yml
+name: Reusable workflow
+
+on:
+  workflow_call:
+    # Map the workflow outputs to job outputs
+    outputs:
+      firstword:
+        description: "The first output string"
+        value: ${{ jobs.example_job.outputs.output1 }}
+      secondword:
+        description: "The second output string"
+        value: ${{ jobs.example_job.outputs.output2 }}
+
+jobs:
+  example_job:
+    name: Generate output
+    runs-on: ubuntu-latest
+    # Map the job outputs to step outputs
+    outputs:
+      output1: ${{ steps.step1.outputs.firstword }}
+      output2: ${{ steps.step2.outputs.secondword }}
+    steps:
+      - id: step1
+        run: echo "firstword=hello" >> $GITHUB_OUTPUT
+      - id: step2
+        run: echo "secondword=world" >> $GITHUB_OUTPUT
+```
+
+To use the outputs in the caller workflow:
+```yml
+name: Call a reusable workflow and use its outputs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  job1:
+    uses: octo-org/example-repo/.github/workflows/called-workflow.yml@v1
+
+  job2:
+    runs-on: ubuntu-latest
+    needs: job1
+    steps:
+      - run: echo ${{ needs.job1.outputs.firstword }} ${{ needs.job1.outputs.secondword }}
+```
+
+
+## Workflow status badge
+
+You can add a workflow [status badge](https://docs.github.com/en/actions/how-tos/monitor-workflows/add-a-status-badge) to your repository's README to show the status of your workflow runs:
+
+```md
+![example workflow](https://github.com/github/docs/actions/workflows/main.yml/badge.svg?branch=feature-1)
+```
+
+
+## References
+
+- [Workflow syntax](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax)

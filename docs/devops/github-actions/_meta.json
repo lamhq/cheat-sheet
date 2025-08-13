@@ -1,0 +1,15 @@
+[
+  "workflows",
+  "jobs",
+  "artifacts",
+  "environments",
+  "variables",
+  "secrets",
+  "expressions",
+  "contexts",
+  "docker",
+  "caching",
+  "runners",
+  "oidc",
+  "nodejs"
+]

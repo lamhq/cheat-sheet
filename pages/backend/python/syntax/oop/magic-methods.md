@@ -173,4 +173,4 @@ print(alice('Bob'))  # Output: Hi Bob
 
 ## Context Manager Support
 
-See [Context Manager](./context-manager.md) section.
+See [Context Manager](../context-manager.md) section.

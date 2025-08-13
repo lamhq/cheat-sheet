@@ -1,0 +1,105 @@
+# Docker service
+
+## Overview
+
+Docker service containers allow you to connect services (databases, web services, memory caches, etc.) to your workflow.
+
+You can configure service containers for each job in a workflow. GitHub creates a Docker container for each service configured in the workflow. Steps in a job can communicate with those containers.
+
+
+## PostgreSQL service container
+
+To create a [PostgreSQL service container](https://docs.github.com/en/actions/tutorials/use-containerized-services/create-postgresql-service-containers) and connect to it:
+
+```yml {25,38,40}
+name: PostgreSQL Service Example
+on: push
+
+jobs:
+  # Label of the runner job
+  runner-job:
+    # You must use a Linux environment when using service containers or container jobs
+    runs-on: ubuntu-latest
+
+    # Service containers to run with `runner-job`
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
+
+    steps:
+      - name: Connect to PostgreSQL
+        # Runs a script that creates a PostgreSQL table, populates
+        # the table with data, and then retrieves the data
+        run: node client.js
+        # Environment variables used by the `client.js` script to create
+        # a new PostgreSQL table.
+        env:
+          # The hostname used to communicate with the PostgreSQL service container
+          POSTGRES_HOST: localhost
+          # The default PostgreSQL port
+          POSTGRES_PORT: 5432
+```
+
+In above example, the job is running on the runner machine, so we need to map the container port to the host machine in order to connect to the PostgreSQL service at `localhost:5432`.
+
+For the full example, refer to [Creating PostgreSQL service containers](https://docs.github.com/en/actions/tutorials/use-containerized-services/create-postgresql-service-containers). 
+
+
+## Connecting to service containers
+
+If your jobs are running inside a container, the hostname of the service container is automatically mapped to the label name.
+
+For example, if you create a service container with the label `redis`, the hostname of the service container is `redis`:
+```yml
+name: Redis container example
+on: push
+
+jobs:
+  # Label of the container job
+  container-job:
+    # Containers must run in Linux based operating systems
+    runs-on: ubuntu-latest
+    # Docker Hub image that `container-job` executes in
+    container: node:20-bookworm-slim
+
+    # Service containers to run with `container-job`
+    services:
+      # Label used to access the service container
+      redis:
+        # Docker Hub image
+        image: redis
+        # Set health checks to wait until redis has started
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Connect to Redis
+        # Runs a script that creates a Redis client, populates
+        # the client with data, and retrieves data
+        run: node client.js
+        # Environment variable used by the `client.js` script to create a new Redis client.
+        env:
+          # The hostname used to communicate with the Redis service container
+          REDIS_HOST: redis
+          # The default Redis port
+          REDIS_PORT: 6379
+```
+
+When running jobs directly on the runner machine, the host name is `localhost`. You need to map ports on the service container to the host (runner machine). See [PostgreSQL service container](#postgresql-service-container).

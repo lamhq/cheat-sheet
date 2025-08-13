@@ -1,0 +1,89 @@
+# Expressions
+
+## Literals
+
+These are the basic data types you can use in expressions:
+- **Boolean**: `true`, `false`
+- **Null**: `null`
+- **Number**: `123`, `-9.2`, `0xff`, `2.99e-2`
+- **String**: `'Hello'`, `'It''s open source!'` (use single quotes and escape with `''`)
+
+
+## Operators
+
+Used for comparisons and logic:
+
+| Operator | Description                  |
+|----------|------------------------------|
+| `==`     | Equal                        |
+| `!=`     | Not equal                    |
+| `<`, `>`, `<=`, `>=` | Numeric comparisons |
+| `&&`     | Logical AND                  |
+| `||`     | Logical OR                   |
+| `!`      | Logical NOT                  |
+| `.`      | Property access              |
+| `[]`     | Index access                 |
+| `()`     | Grouping                     |
+
+
+## Functions
+
+These built-in functions help manipulate and evaluate data:
+
+| Function       | Purpose                                      |
+|----------------|----------------------------------------------|
+| `startsWith()` | Checks if a string starts with a substring   |
+| `endsWith()`   | Checks if a string ends with a substring     |
+| `contains()`   | Checks if a string contains a substring      |
+| `format()`     | Formats strings like `format('{0} {1}', a, b)` |
+| `join()`       | Joins array elements into a string           |
+| `toJSON()`     | Converts object to JSON string               |
+| `fromJSON()`   | Parses JSON string into object/value         |
+
+
+## Status Check Functions
+
+These are used in `if:` conditions to control step/job execution:
+| Function     | Description                                      |
+|--------------|--------------------------------------------------|
+| `success()`  | True if all previous steps succeeded             |
+| `failure()`  | True if any previous step failed                 |
+| `cancelled()`| True if the workflow was cancelled               |
+| `always()`   | Always returns true (useful for cleanup steps)   |
+
+
+## Object Filters
+
+Object filters are a specific syntax used within expressions to extract individual values from a nested array of objects.
+
+The syntax for an object filter is `*.property`, where `*` acts as a wildcard for all elements in an array, and `property` is the key you want to extract from each object.
+
+For example, consider an event that contains an array of labels:
+```yml
+{
+  "issue": {
+    "labels": [
+      {
+        "name": "bug"
+      },
+      {
+        "name": "documentation"
+      }
+    ]
+  },
+}
+```
+
+To get an array of just the label names, you would use an object filter like this:
+
+```yml
+${{ contains(github.event.issue.labels.*.name, 'bug') }}
+```
+- `github.event.issue.labels` is the array of label objects
+- `*.name` part filters this array to produce a new array containing only the `name` property of each label object
+- `contains()` function then checks if this new array includes the string 'bug'
+
+Use Cases:
+- **Conditional job execution**: You can use object filters in `if` statements to control whether a job or step runs. For instance, you could configure a job to run only when a pull request has a specific label, like `tests-required`.
+- **Accessing dynamic data**: Object filters are essential for accessing dynamic data from events, like the names of files that have changed in a pull request or the names of assignees on an issue.
+- **Manipulating outputs**: Some third-party actions use object filters to process and remap data from JSON objects.

@@ -1,0 +1,41 @@
+# Environments
+
+## Overview
+
+Environments are used to describe a general deployment target like `production`, `staging`, or `development`
+
+You can use environment protection rules to:
+- require approval for a job to proceed
+- restrict which branches and tags can deploy to this environment
+- restrict access to secrets and variables for workflow that use this environment
+
+Each job in a workflow can reference a single environment.
+
+Any protection rules configured for the environment must pass before a job referencing the environment is sent to a runner.
+
+The job can access the environment's secrets only after the job is sent to a runner.
+
+
+## Using an environment in a workflow
+
+You need to create an [environment](https://docs.github.com/en/actions/how-tos/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment#creating-an-environment) before you can use it in a workflow.
+
+The chosen job will now be subject to any rules configured for the specified environment.
+
+You optionally can specify a deployment URL for the environment.
+
+```yml
+jobs:
+  JOB-ID:
+    environment: ENVIRONMENT-NAME
+    url: URL
+```
+
+
+## Deployment
+
+When a workflow job that references an environment runs, it creates a deployment object with the `environment` property set to the name of your environment.
+
+You can [track](https://docs.github.com/en/get-started/exploring-integrations/github-extensions-and-integrations#team-communication-tools) deployments that use environments through Microsoft Teams or Slack.
+
+You can create custom deployment protection rules with [GitHub Apps](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/create-custom-protection-rules).

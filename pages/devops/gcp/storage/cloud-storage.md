@@ -2,7 +2,7 @@
 
 ## Overview
 
-A service that offers durable and highly available [object storage](../aws/storage#object-storage).
+A service that offers durable and highly available [object storage](../../aws/storage.md#object-storage).
 
 Has no minimum fee, pay only for what you use. 
 

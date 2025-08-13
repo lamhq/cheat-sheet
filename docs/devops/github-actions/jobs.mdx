@@ -1,0 +1,179 @@
+# Jobs
+
+## Setting an ID and name
+
+Use `jobs.<job_id>` to give your job a unique identifier.
+
+Use `jobs.<job_id>.name` to set a name for the job, which is displayed in the GitHub UI.
+
+```yml
+jobs:
+  my_first_job:
+    name: My first job
+  my_second_job:
+    name: My second job
+```
+
+You can also set the default shell and working directory for:
+- all jobs in the [workflow](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/set-default-values-for-jobs#setting-default-shell-and-working-directory)
+- all steps in a specific [job](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/set-default-values-for-jobs#setting-default-values-for-a-specific-job)
+
+
+## Defining prerequisite jobs
+
+Use `jobs.<job_id>.needs` to identify any jobs that must complete successfully before this job will run.
+
+```yml
+jobs:
+  job1:
+  job2:
+    needs: job1
+  job3:
+    needs: [job1, job2]
+```
+
+You can also make a job [always](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-jobs#example-not-requiring-successful-dependent-jobs) run after other jobs have completed, regardless of whether they were successful.
+
+
+## Using actions
+
+In the workflow editor, you can search and browse actions from the sidebar.
+
+You can add an action to your workflow by referencing the action in your workflow file. Actions can be in:
+- The [same repository](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/find-and-customize-actions#adding-an-action-from-the-same-repository) as the workflow file
+- Any [public repository](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/find-and-customize-actions#adding-an-action-from-a-different-repository)
+- A published [Docker container image](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/find-and-customize-actions#referencing-a-container-on-docker-hub) on Docker Hub
+
+An action often accepts or requires inputs and generates outputs that you can use:
+```yml
+name: "Example"
+description: "Receives file and generates output"
+inputs:
+  file-path: # id of input
+    description: "Path to test script"
+    required: true
+    default: "test-file.js"
+outputs:
+  results-file: # id of output
+    description: "Path to results file"
+```
+
+
+## Composite Actions
+
+Composite actions are a way to bundle multiple steps into a single reusable action.
+
+Instead of repeating the same steps across workflows, you can define them once and reuse them like a function. This keeps your workflows clean, modular, and maintainable.
+
+A composite action:
+- Is defined with `runs: using: "composite"`
+- Lives in its own directory with an `action.yml` file
+- Can accept inputs and produce outputs
+
+Create a file like `.github/actions/say-hello/action.yml`:
+
+```yaml
+name: "Say Hello"
+description: "Greets the user"
+inputs:
+  name:
+    required: true
+    description: "Name to greet"
+runs:
+  using: "composite"
+  steps:
+    - name: Say hello
+      run: echo "Hello, ${{ inputs.name }}!"
+```
+
+In your workflow file (e.g., `.github/workflows/main.yml`):
+
+```yaml
+name: Greet Workflow
+
+on: [push]
+
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use composite action
+        uses: ./.github/actions/say-hello
+        with:
+          name: "John"
+```
+
+
+## Running scripts
+
+You can run scripts and shell commands in steps using the `run` key:
+```yml
+    steps:
+      - run: npm install -g bats
+```
+
+```yml
+    steps:
+      - shell: bash
+        run: |
+          value=`cat math-homework.txt`
+          expr $value \* 9 > math-homework.txt
+```
+
+
+## Job Outputs
+
+You can define outputs of a job and use them in another.
+
+```yml
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.step1.outputs.test }}
+      output2: ${{ steps.step2.outputs.test }}
+    steps:
+      - id: step1
+        run: echo "test=hello" >> "$GITHUB_OUTPUT"
+      - id: step2
+        run: echo "test=world" >> "$GITHUB_OUTPUT"
+```
+
+```yml
+jobs:
+  # Assume job1 is defined as above
+  job2:
+    runs-on: ubuntu-latest
+    needs: job1
+    steps:
+      - env:
+          OUTPUT1: ${{needs.job1.outputs.output1}}
+          OUTPUT2: ${{needs.job1.outputs.output2}}
+        run: echo "$OUTPUT1 $OUTPUT2"
+```
+
+## Running variations of jobs
+
+Run job with different parameters defined in a matrix.
+
+A matrix strategy lets you use variables to create multiple job runs that are based on the combinations of the variables.
+
+```yml
+jobs:
+  example_matrix:
+    strategy:
+      matrix:
+        version: [10, 12, 14]
+        os: [ubuntu-latest, windows-latest]
+```
+
+Matrices can be created dynamically using [contexts](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/run-job-variations#using-contexts-to-create-matrices) expression syntax.
+
+You can use the [output](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/run-job-variations#using-an-output-to-define-two-matrices) from one job to define matrices for multiple jobs.
+
+You can use `jobs.<job_id>.strategy.matrix.include` and `jobs.<job_id>.strategy.matrix.exclude` to [expand](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/run-job-variations#expanding-or-adding-matrix-configurations) or [exclude](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/run-job-variations#excluding-matrix-configurations) matrix configurations.
+
+You can use `jobs.<job_id>.strategy.fail-fast` and `jobs.<job_id>.continue-on-error` to control how job [failures](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/run-job-variations#handling-failures) are handled.
+
+To set the maximum number of jobs that can run [simultaneously](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/run-job-variations#defining-the-maximum-number-of-concurrent-jobs) when using a matrix job strategy, use `jobs.<job_id>.strategy.max-parallel`.
