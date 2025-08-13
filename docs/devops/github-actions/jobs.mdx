@@ -59,6 +59,52 @@ outputs:
 ```
 
 
+## Composite Actions
+
+Composite actions are a way to bundle multiple steps into a single reusable action.
+
+Instead of repeating the same steps across workflows, you can define them once and reuse them like a function. This keeps your workflows clean, modular, and maintainable.
+
+A composite action:
+- Is defined with `runs: using: "composite"`
+- Lives in its own directory with an `action.yml` file
+- Can accept inputs and produce outputs
+
+Create a file like `.github/actions/say-hello/action.yml`:
+
+```yaml
+name: "Say Hello"
+description: "Greets the user"
+inputs:
+  name:
+    required: true
+    description: "Name to greet"
+runs:
+  using: "composite"
+  steps:
+    - name: Say hello
+      run: echo "Hello, ${{ inputs.name }}!"
+```
+
+In your workflow file (e.g., `.github/workflows/main.yml`):
+
+```yaml
+name: Greet Workflow
+
+on: [push]
+
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use composite action
+        uses: ./.github/actions/say-hello
+        with:
+          name: "John"
+```
+
+
 ## Running scripts
 
 You can run scripts and shell commands in steps using the `run` key:
