@@ -1,4 +1,4 @@
-name: Check Markdown links
+name: Lint Markdown files
 
 on:
   pull_request:
@@ -8,15 +8,23 @@ on:
     branches: main
 
 jobs:
-  markdown-link-check:
+  check-markdown-links:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: tcort/github-action-markdown-link-check@v1
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
       with:
-        use-quiet-mode: 'yes'
-        use-verbose-mode: 'yes'
-        config-file: 'mlc_config.json'
-        folder-path: 'docs'
-        max-depth: -1
-        file-extension: '.mdx'
+        node-version: 22
+        cache: 'pnpm'
+
+    - name: Install pnpm
+      run: corepack enable
+
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
+
+    - name: Lint
+      run: pnpm run lint
