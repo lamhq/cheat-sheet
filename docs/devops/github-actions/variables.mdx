@@ -1,0 +1,110 @@
+# Variables
+
+## About
+
+Commands that run in actions or workflow steps can create, read, and modify variables.
+
+You can set your own custom variables or use the default environment variables.
+
+
+## Defining variables
+
+You can set a custom variable in two ways:
+1. Define an [environment variable](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-variables#defining-environment-variables-for-a-single-workflow) using the `env` key in the workflow file.
+2. Define a [configuration variable](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-variables#defining-configuration-variables-for-multiple-workflows) at organization, repository, or environment level
+
+Defining environment variables in workflow code:
+```yml
+name: Greeting on variable day
+
+on:
+  workflow_dispatch
+
+env:
+  DAY_OF_WEEK: Monday
+
+jobs:
+  greeting_job:
+    runs-on: ubuntu-latest
+    env:
+      Greeting: Hello
+    steps:
+      - name: "Say Hello Mona it's Monday"
+        run: echo "$Greeting $First_Name. Today is $DAY_OF_WEEK!"
+        env:
+          First_Name: Mona
+```
+
+
+## Accessing variable values
+
+You can access environment variable values using the `env` context and configuration variable values using the `vars` context.
+```yml
+env:
+  DAY_OF_WEEK: Monday
+
+jobs:
+    steps:
+      - name: "Say Hello Mona it's Monday"
+        if: ${{ env.DAY_OF_WEEK == 'Monday' }}
+```
+
+Use the `vars` context:
+```yml
+on:
+  workflow_dispatch:
+env:
+  # Setting an environment variable with the value of a configuration variable
+  env_var: ${{ vars.ENV_CONTEXT_VAR }}
+
+jobs:
+  display-variables:
+    name: ${{ vars.JOB_NAME }}
+    # You can use configuration variables with the `vars` context for dynamic jobs
+    if: ${{ vars.USE_VARIABLES == 'true' }}
+    runs-on: ${{ vars.RUNNER }}
+    environment: ${{ vars.ENVIRONMENT_STAGE }}
+    steps:
+    - name: Use variables
+      run: |
+        echo "repository variable : $REPOSITORY_VAR"
+        echo "organization variable : $ORGANIZATION_VAR"
+        echo "overridden variable : $OVERRIDE_VAR"
+        echo "variable from shell environment : $env_var"
+      env:
+        REPOSITORY_VAR: ${{ vars.REPOSITORY_VAR }}
+        ORGANIZATION_VAR: ${{ vars.ORGANIZATION_VAR }}
+        OVERRIDE_VAR: ${{ vars.OVERRIDE_VAR }}
+        
+    - name: ${{ vars.HELLO_WORLD_STEP }}
+      if: ${{ vars.HELLO_WORLD_ENABLED == 'true' }}
+      uses: actions/hello-world-javascript-action@main
+      with:
+        who-to-greet: ${{ vars.GREET_NAME }}
+```
+
+The `env` context is not required for the variables referenced within the run command:
+```yml
+run: echo "$Greeting $First_Name. Today is $DAY_OF_WEEK!"
+```
+
+You can detect the [operating system](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-variables#detecting-the-operating-system) using `${{ runner.os }}` context.
+
+
+## Passing values between steps
+
+If you generate a value in one step of a job, you can use the value in subsequent steps of the same job by assigning the value to an existing or new environment variable and then writing this to the `GITHUB_ENV` environment file. 
+
+```yml
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate a value
+        run: |
+          GENERATED_VALUE="Hello from step 1"
+          echo "MY_ENV_VAR=$GENERATED_VALUE" >> $GITHUB_ENV
+
+      - name: Use the value in another step
+        run: echo "The value is: $MY_ENV_VAR"
+```

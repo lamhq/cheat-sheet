@@ -1,0 +1,80 @@
+# OIDC
+
+## Overview
+
+OpenID Connect allows your workflows access resources in cloud providers, without needing to create credentials in the cloud provider and store them as long-lived GitHub secrets.
+
+It does this by exchanging short-lived tokens directly from your cloud provider.
+
+Benefits:
+- No cloud secrets: no need to create cloud credentials ans store them as long-lived GitHub secrets
+- Authentication and authorization management: more granular control over how workflows can access cloud resources using your cloud provider's mechanisms
+- Rotating credentials: your cloud provider issues a short-lived access token
+
+How integration works:
+1. You establish an OIDC trust relationship in the cloud provider
+2. When your job runs, GitHub's OIDC provider auto-generates an OIDC token
+3. A step or action in the workflow job request a token from GitHub’s OIDC provider
+4. The cloud provider validates the claims in the token, it then provides a short-lived cloud access token
+
+![](https://docs.github.com/assets/cb-63262/mw-1440/images/help/actions/oidc-architecture.webp)
+
+
+## AWS
+
+This [guide](https://github.com/aws-actions/configure-aws-credentials#configure-aws-credentials-for-github-actions) explains how to configure AWS to trust GitHub's OIDC as a federated identity, and use `aws-actions/configure-aws-credentials` action to authenticate to AWS.
+
+### Adding the identity provider to AWS
+
+Follow AWS [documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc.html):
+- For the provider URL: Use https://token.actions.githubusercontent.com
+- For the "Audience": Use `sts.amazonaws.com` if you are using the official action.
+
+### Create an IAM Role
+
+Create an IAM Role in your AWS account with a trust policy that allows GitHub Actions to assume it:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Federated": "arn:aws:iam::<AWS_ACCOUNT_ID>:oidc-provider/token.actions.githubusercontent.com"
+      },
+      "Action": "sts:AssumeRoleWithWebIdentity",
+      "Condition": {
+        "StringEquals": {
+          "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
+          "token.actions.githubusercontent.com:sub": "repo:<GITHUB_ORG>/<GITHUB_REPOSITORY>:ref:refs/heads/<GITHUB_BRANCH>"
+        }
+      }
+    }
+  ]
+}
+```
+
+Attach permissions to the IAM Role that allow it to access the AWS resources you need.
+
+### Update your GitHub Actions workflow
+
+Add `aws-actions/configure-aws-credential` action to your workflow:
+```yml
+# Need ID token write permission to use OIDC
+permissions:
+  id-token: write
+jobs:
+  run_job_with_aws:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@main # Or a specific version
+        with:
+          role-to-assume: <Role ARN you created in step 2>
+          aws-region: <AWS Region you want to use>
+      - name: Additional steps
+        run: |
+          # Your commands that require AWS credentials
+          aws sts get-caller-identity 
+```
