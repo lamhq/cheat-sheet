@@ -2,14 +2,18 @@
 
 ## Install dependencies
 
+Install for development:
 ```sh
 pnpm i
+```
 
-# install for production, packages listed in `devDependencies` won't be installed
-# default value is `NODE_ENV === 'production'`
+Install for production (`NODE_ENV === 'production'`), packages listed in `devDependencies` won't be installed:
+```sh
 pnpm i -P
+```
 
-# pnpm-lock.yaml is not updated
+Install in CI environment, `pnpm-lock.yaml` is not updated:
+```sh
 pnpm i --frozen-lockfile
 ```
 
