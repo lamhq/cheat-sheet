@@ -24,9 +24,15 @@ strategy:
     node-version: ['18.x', '20.x']
 
 steps:
-- uses: actions/checkout@v4
+- name: Checkout code
+  uses: actions/checkout@v4
 
-- name: Use Node.js ${{ matrix.node-version }}
+- name: Set up pnpm
+  uses: pnpm/action-setup@v2
+  with:
+    version: 10.12.3
+
+- name: Set up Node.js ${{ matrix.node-version }}
   uses: actions/setup-node@v4
   with:
     node-version: ${{ matrix.node-version }}
@@ -37,14 +43,10 @@ steps:
 
 ## Installing dependencies
 
-Install `pnpm` with Corepack (Node.js ≥16.10):
-```yml
-- run: corepack enable
-```
-
 Install dependencies with exact version specified in `pnpm-lock.yaml`:
 ```yml
-- run: pnpm install --frozen-lockfile
+- name: Install dependencies
+  run: pnpm install  # --frozen-lockfile option will be automatically added if you run it on CI
 ```
 
 
