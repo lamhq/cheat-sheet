@@ -47,6 +47,7 @@ const rl = readline.createInterface({
 let hasErrors = false;
 
 rl.on('line', async (filePath) => {
+  console.log(filePath)
   try {
     const errors = await checkLink(filePath);
     if (errors.length > 0) {
