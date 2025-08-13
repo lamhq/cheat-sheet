@@ -5,7 +5,10 @@
   "environments",
   "variables",
   "secrets",
+  "expressions",
+  "contexts",
   "caching",
   "runners",
-  "oidc"
+  "oidc",
+  "nodejs"
 ]
