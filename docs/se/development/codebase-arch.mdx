@@ -1,0 +1,43 @@
+# Codebase Architecture
+
+## Overview
+
+Codebase Architecture refers to the organization of a software project's source code.
+
+A well-designed architecture makes it easier to onboard new developers, scale features, and avoid technical debt.
+
+## Common Architectural Styles
+
+### Multirepo
+
+Each project or service has its own repository.
+
+Pros:
+- **Autonomous Teams**. Teams can work independently on their own repos without interfering with others
+- **Isolation of Projects**. Easier to manage dependencies and avoid unintended side effects.
+- **Simplified Access Control**. You can restrict access to sensitive repositories without exposing the entire codebase.
+
+Cons:
+- **Cross-Service Changes**. Changes across repos can't be atomic, requiring multiple commits per repository
+- **Introduce overhead when maintaining multiple repositories**. Requires maintaining awareness of all repositories and their respective functions.
+- **Onboarding complexity**: Assigning new team members to the correct repositories may take additional time and effort.
+- **Lack of standardization**: Teams may adopt different tools and coding conventions, making it difficult to enforce consistency.
+
+### Monorepo
+
+All code for multiple projects lives in a single repository.
+
+Pros:
+- Organize related applications and packages in a single repository
+- Easily share code and dependencies
+
+Cons:
+-
+
+### Modular
+
+Code is split into reusable modules or packages, often with clear boundaries. Encourages separation of concerns and easier testing.
+
+### Layered
+
+Organizes code into layers such as presentation, business logic, and data access. Helps maintain structure and clarity in large applications.
