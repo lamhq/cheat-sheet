@@ -6,5 +6,9 @@
   },
   "branching-models",
   "semver",
-  "codebase-arch"
+  {
+    "name": "codebase-arch",
+    "type": "dir",
+    "collapsed": true
+  }
 ]
