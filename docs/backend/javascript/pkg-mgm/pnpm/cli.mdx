@@ -2,14 +2,18 @@
 
 ## Install dependencies
 
+Install for development:
 ```sh
 pnpm i
+```
 
-# install for production, packages listed in `devDependencies` won't be installed
-# default value is `NODE_ENV === 'production'`
+Install for production (`NODE_ENV === 'production'`), packages listed in `devDependencies` won't be installed:
+```sh
 pnpm i -P
+```
 
-# pnpm-lock.yaml is not updated
+Install in CI environment, `pnpm-lock.yaml` is not updated:
+```sh
 pnpm i --frozen-lockfile
 ```
 
@@ -25,7 +29,7 @@ pnpm add -D <pkg>
 pnpm add -g <pkg>
 ```
 
-## Upgrade package list
+## Upgrade packages
 
 Update package versions in `package.json` to latest version (based on the specified range):
 ```sh
@@ -76,7 +80,7 @@ Runs the `start` script defined in `package.json`:
 pnpm start
 ```
 
-## Executing project dependency
+## Executing local package
 
 Execute a shell command in scope of a project.
 
@@ -99,7 +103,7 @@ pnpx create-react-app ./my-app
 ```
 
 
-## Migrating from other package managers
+## Migrate to PNPM
 
 Generate a `pnpm-lock.yaml` from another package manager's lockfile.
 

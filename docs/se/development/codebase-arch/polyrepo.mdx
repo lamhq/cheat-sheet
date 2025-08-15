@@ -1,0 +1,35 @@
+# Polyrepo
+
+## Overview
+
+Each project / service / component has its own repository.
+
+Each repo often has a single build artifact, and simple build pipeline.
+
+Suitable for projects where each component or service is independent or loosely coupled.
+
+![](https://monorepo.tools/images/polyrepo-practice.svg)
+
+## Use cases
+
+- **Distinct Teams and Ownership**: When different teams own and manage distinct projects, a multirepo provides clear ownership and autonomy.
+- **Diverse technology stacks**: It allows teams to use the best tools and languages for their specific projects without being restricted to a single, company-wide stack.
+- **Independent release cycles**: Teams can release their projects on their own schedule without having to coordinate with other teams.
+- **Granular Security and Access Control**: Access to each project must be controlled individually, ensuring that developers only have access to the repository they need.
+
+
+## Benefits
+
+- **Autonomous Teams**. Each team can work independently with different libraries and release cycles.
+- **Isolation of Projects**. Easier to manage dependencies and avoid unintended side effects.
+- **Security**. You can restrict access to sensitive repositories without exposing the entire codebase.
+
+
+## Challenges
+
+- **Costly cross-repo changes**. Changes across repos can't be atomic, requiring multiple commits per repository. Plus coordination effort of versioning and releasing packages.
+- **Significant code duplication**. Teams write their own implementations of common services and components in each repo. This wastes up-front time, but also increases the burden of maintenance, security, and quality control as the components and services change.
+- **Cumbersome code sharing**. Require setting up a separated repository for the shared code: tooling, build pipeline, committers, package publishing.
+- **Overhead when maintaining multiple repositories**. Requires maintaining awareness of all repositories and their respective functions.
+- **Onboarding complexity**: Assigning new team members to the correct repositories may take additional time and effort.
+- **Inconsistent tooling and standards**: Teams may adopt different tools for testing, building, deploying, and coding conventions. Inconsistency creates mental overhead of remembering which commands to use from project to project.
