@@ -1,0 +1,145 @@
+# Workspace
+
+## Overview
+
+PNPM Workspace is a feature that allows you to manage multiple interdependent packages within a single repository (monorepo).
+
+It's ideal for projects that contain multiple apps, libraries, or services that share dependencies or tooling.
+
+
+## Why Use Workspace?
+
+- Speed: Faster installs than npm or Yarn due to content-addressable storage
+- Disk Efficiency: Shared dependencies reduce duplication across packages
+- Local Linking: Use `workspace:*` to link packages without publishing them
+- Clean Structure: Centralized configuration and tooling across packages
+- Better Dev Experience: Easier refactoring, testing, and CI/CD setup
+
+
+## Key Features
+
+- **Built-in Monorepo Support**: No need for extra tools like Lerna.
+- **Workspace Protocol (`workspace:`)**: Ensures local packages are linked directly.
+- **Efficient Dependency Management**: Shared dependencies are hoisted to the root, reducing duplication.
+- **Running Scripts**: Run commands across all packages.
+- **Strict Resolution**: Prevents phantom dependencies by enforcing exact matches.
+- **Publishing Support**: Automatically replaces `workspace:` references with actual versions during publish.
+
+
+## How It Work?
+
+pnpm uses a `pnpm-workspace.yaml` file at the root of your repo to define which folders contain packages. Each package has its own `package.json`, and dependencies between them can be linked using the `workspace:` protocol.
+
+When you run `pnpm install`, it:
+
+- Resolves dependencies across all packages.
+- Hoists shared dependencies to the root `node_modules`.
+- Links local packages together using symlinks.
+
+
+## Scaffolding Workspace
+
+Initialize the Monorepo:
+
+```sh
+mkdir my-monorepo && cd my-monorepo
+pnpm init
+```
+
+Create `pnpm-workspace.yaml` with below content:
+```yml
+packages:
+  - 'apps/*'
+  - 'packages/*'
+```
+
+Create package folders:
+```sh
+mkdir packages apps
+mkdir packages/utils apps/web-app
+```
+
+Initialize each package:
+```sh
+cd packages/utils
+pnpm init
+# Repeat for other packages
+```
+
+Then you will have this structure:
+
+```
+my-monorepo/
+├── pnpm-workspace.yaml
+├── package.json
+├── node_modules/
+├── apps/
+│   └── web-app/
+│       └── package.json
+└── packages/
+    └── utils/
+        └── package.json (name: "@your-org/utils")
+```
+
+
+## Linking packages
+
+Workspace Protocol allows packages within a monorepo to reference each other locally, without needing to publish them to a registry like npm.
+
+To install `utils` package as a dependency of `web-app`:
+```bash
+cd apps/web-app
+pnpm add @your-org/utils --workspace
+```
+
+This will add a dependency to `web-app/package.json`:
+```json title="package.json"
+"dependencies": {
+  "@your-org/utils": "workspace:*"
+}
+```
+
+Now, `web-app` uses the local version of `utils`, and you can develop both side-by-side without publishing anything.
+
+You can also specify exact versions:
+```json
+"@your-org/utils": "workspace:^1.0.0"
+```
+- Package version is defined using the `version` field in `package.json`
+
+
+## Running scripts
+
+To run a script inside a specific package:
+
+```bash
+pnpm --filter <package-name> run <script-name>
+```
+- Package name is defined using the `name` field in `package.json`
+
+Example:
+```bash
+pnpm --filter web-app run build
+```
+- This runs the `build` script defined in `apps/web-app/package.json`.
+
+To run a script across **all packages** in the workspace:
+
+```bash
+pnpm -r run <script-name>
+```
+
+Run in all packages under `apps/`:
+```bash
+pnpm --filter 'apps/**' run dev
+```
+
+Run in packages that depend on `utils`:
+```bash
+pnpm --filter '...utils' run build
+```
+
+Use `pnpm exec` to run binaries from dependencies:
+```bash
+pnpm --filter web-app exec jest
+```

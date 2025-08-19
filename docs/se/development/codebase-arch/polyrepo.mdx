@@ -10,6 +10,7 @@ Suitable for projects where each component or service is independent or loosely 
 
 ![](https://monorepo.tools/images/polyrepo-practice.svg)
 
+
 ## Use cases
 
 - **Distinct Teams and Ownership**: When different teams own and manage distinct projects, a multirepo provides clear ownership and autonomy.
@@ -27,9 +28,9 @@ Suitable for projects where each component or service is independent or loosely 
 
 ## Challenges
 
-- **Costly cross-repo changes**. Changes across repos can't be atomic, requiring multiple commits per repository. Plus coordination effort of versioning and releasing packages.
-- **Significant code duplication**. Teams write their own implementations of common services and components in each repo. This wastes up-front time, but also increases the burden of maintenance, security, and quality control as the components and services change.
-- **Cumbersome code sharing**. Require setting up a separated repository for the shared code: tooling, build pipeline, committers, package publishing.
+- **Costly cross-repo changes**. Changes across repos can't be atomic, requiring multiple commits per repository. Plus difficulty in coordinating changes across repositories.
+- **Introducing potential bugs**. Some bugs can only occur at the point of integration rather than when code is changed.
+- **Cumbersome code sharing**. Require setting up a separated repository for the shared code: tooling, build pipeline, committers, package publishing. Increases the burden of maintenance, security, and quality control.
+- **Inconsistent tooling and standards**: Teams may adopt different tools (scripts, test, build, lint, deploy) and conventions that makes development experience varies too greatly.
 - **Overhead when maintaining multiple repositories**. Requires maintaining awareness of all repositories and their respective functions.
 - **Onboarding complexity**: Assigning new team members to the correct repositories may take additional time and effort.
-- **Inconsistent tooling and standards**: Teams may adopt different tools for testing, building, deploying, and coding conventions. Inconsistency creates mental overhead of remembering which commands to use from project to project.
