@@ -1,5 +1,6 @@
 [
   "cli",
   "recipes",
-  "nodejs"
+  "nodejs",
+  "workspace"
 ]

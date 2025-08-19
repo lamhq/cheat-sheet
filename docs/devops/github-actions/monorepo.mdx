@@ -1,0 +1,27 @@
+# Monorepo Workflow
+
+```yml title=".github/workflows/package-x.yml"
+name: Package X CI
+
+defaults:
+  run:
+    working-directory: packages/package-x
+
+on:
+  push:
+    branches: main
+    paths:
+      - 'packages/package-x/**'
+  
+  pull_request:
+    branches: main
+    paths:
+      - 'packages/package-x/**'
+
+jobs:
+  build:
+
+  test:
+
+  lint:
+```

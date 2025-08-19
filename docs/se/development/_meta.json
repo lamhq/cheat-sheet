@@ -5,5 +5,10 @@
     "collapsed": true
   },
   "branching-models",
-  "semver"
+  "semver",
+  {
+    "name": "codebase-arch",
+    "type": "dir",
+    "collapsed": true
+  }
 ]

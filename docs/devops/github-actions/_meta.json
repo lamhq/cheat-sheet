@@ -11,5 +11,6 @@
   "caching",
   "runners",
   "oidc",
-  "nodejs"
+  "nodejs",
+  "monorepo"
 ]
