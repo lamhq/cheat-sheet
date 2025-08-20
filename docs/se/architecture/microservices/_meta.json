@@ -47,11 +47,5 @@
     "collapsed": true,
     "label": "Observability"
   },
-  "resiliency",
-  {
-    "name": "ui",
-    "type": "dir",
-    "collapsed": true,
-    "label": "User Interface"
-  }
+  "resiliency"
 ]
