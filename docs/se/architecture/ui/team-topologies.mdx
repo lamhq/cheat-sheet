@@ -1,0 +1,60 @@
+# Team Topologies
+
+Different approach for organizing frontend teams:
+
+## Layered Teams
+
+A traditional structure, where teams are divided by technical layer (aka, Siloed teams).
+
+For example, one team handles frontend (UI/UX), another handles backend (APIs, databases).
+
+Pros:
+- Easier to manage technical consistency within a layer.
+
+Cons:
+- High coordination overhead. These teams must constantly coordinate, which slows things down and leads to miscommunication.
+- Slower delivery due to cross-team dependencies.
+- Risk of mismatched features. Backend-only teams may not fully understand what users actually need.
+
+
+## Stream-Aligned Teams
+
+A stream-aligned team is a cross-functional group that owns **end-to-end delivery** of a specific product or domain.
+
+For example, one team might own everything related to the "Shopping Cart" feature—UI, backend, data, and user feedback.
+
+Pros:
+- **Closer to the user**. They can respond faster to feedback and build what actually matters.
+- **No cross-team dependencies**. They don’t need to wait for another team to make backend changes or UI updates, leading to faster delivery, fewer misunderstandings.
+
+
+## Dedicated Frontend Teams
+
+### Sharing Specialists
+
+Dedicated frontend teams exist because finding specialists for a specific role is tough (UI designers, iOS, Android, web developers, ...).
+
+Best practices for deploying specialists:
+- Embedding them in teams for continuous collaboration.
+- Splitting specialist's time across multiple teams if their expertise doesn't need full-time presence.
+- Creating an **enabling team** to help other teams become self-sufficient.
+
+> [!CAUTION]
+> Many organizations place specialists in separate teams, but this creates silos and reduces collaboration.
+
+> [!NOTE]
+> Enabling teams are specialized teams whose primary role is to support and empower others by providing expertise instead of delivering features. Like an internal consultancy, they guide teams toward self-sufficiency in specific areas.
+
+
+### Ensuring Consistency
+
+A dedicated frontend team ensures a uniform look and feel across a product (fonts, colors, and interaction patterns).
+
+> [!TIP]
+> Organizations can use **enabling teams** and **shared resources** (CSS style guide, UI components) to maintain design consistency.
+
+**Is consistency always necessary?**
+
+Amazon chooses team autonomy over UI consistency. Early versions of Amazon's shopping site had different design styles for various widgets.
+
+AWS prioritizes speed over consistency, and despite UI inconsistencies between its products, it remains a market leader.

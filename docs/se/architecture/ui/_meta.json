@@ -1,8 +1,11 @@
 [
   "mono-fe",
-  "micro-fe",
-  "page-decomp",
-  "widget-decomp",
+  {
+    "name": "micro-fe",
+    "type": "dir",
+    "collapsed": true
+  },
   "cag",
-  "bff"
+  "bff",
+  "team-topologies"
 ]
