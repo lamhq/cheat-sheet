@@ -5,7 +5,7 @@
 Widget-Based Decomposition divides UI into smaller, independent **widgets**, each responsible for specific functionality.
 
 - The decomposition is done at the widget level.
-- There's a container application that manages navigation and defines which widgets appear on the UI.
+- There's a shell app that manages navigation and defines which widgets appear on the UI.
 - A widget may interact with backend microservices.
 
 Example: Spotify uses separate widgets to display playlists, artists, and user-following details.
@@ -31,7 +31,7 @@ Communication between widgets is achieved using Browser custom event, similar to
 
 ## Challenges
 
-- **Complex orchestration**: Requires a robust shell to manage loading, rendering, and communication.
+- **Complex orchestration**: Requires a complex shell app to manage loading, rendering, and communication.
 - **Performance overhead**: Multiple bundles and runtime coordination can slow things down.
 
 Regarding SPAs:

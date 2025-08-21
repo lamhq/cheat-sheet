@@ -1,0 +1,74 @@
+# Integration
+
+## Overview
+
+Integration refers to the process of assembling different microfrontends into one cohesive application.
+
+The Shell app is the central app that decides:
+- **When** to load each microfrontend
+- **Where** to display it in the UI
+
+
+## Integration Requirements
+
+1. **Framework-Agnostic**. The integration mechanism must remain independent of any specific frontend framework or library (e.g., React, Vue, Angular), ensuring flexibility and interoperability.
+2. **Dynamic Runtime Loading**. Microfrontend source code should be loaded dynamically at runtime, avoiding the need to bundle all modules upfront in the host application.
+3. **Shared Dependency Support**. Dependencies can be shared across microfrontends to reduce duplication and maintain consistency.
+4. **Singleton Loading of Shared Dependencies**. Shared dependencies should be loaded only once to prevent conflicts and optimize performance.
+5. **Version Isolation for Shared Libraries**. Multiple versions of the same shared dependency can coexist and be loaded separately when necessary. For dependencies intended to be singletons, only one version should be loaded across the entire application.
+
+
+## Integration Strategies
+
+Common strategies:
+- **Build-Time Integration** (Compile-Time Integration): The shell app loads the microfrontend **before** it's loaded in the browser.
+- **Run-Time Integration** (Client-Side Integration): The shell app loads the microfrontend **after** it's loaded in the browser.
+- **Server-side composition**: Stitching together different microfrontend-rendered HTML fragments on the server before sending them to the client.
+
+There's no one-size-fits-all solution—each method has trade-offs, and the best choice depends on your app's needs.
+
+
+## Build-Time Integration
+
+The shell app loads the microfrontend **before** it's loaded in the browser.
+
+Example Workflow:
+1. The **Product List** team publishes their app as an **NPM package**.
+2. The **Container** team installs it as a dependency.
+3. **Container** team build their app, which also includes the **Product List** app in its source code.
+
+Pros:
+- Easy to set up and understand.
+- Feels familiar—like using any third-party library.
+
+Cons:
+- Any change to the microfrontend requires **rebuilding and redeploying** the shell app.
+- **Tight coupling**: shell app depends to the microfrontend's source code, not the interface.
+
+
+## Run-Time Integration
+
+The shell app loads the microfrontend dynamically **after** it's loaded in the browser. The shell app doesn't bundle the ProductList code during build.
+
+This is the recommended approach.
+
+Example Workflow:
+1. **ProductList Team** builds their microfrontend.
+2. Instead of publishing it to NPM (like in build-time), they deploy it to a **static URL**
+3. When a user visits the main site, the **Container app** loads first.
+4. If the user visits a page of the **ProductList** app, the shell app then fetches and executes the ProductsList's code.
+
+Pros:
+- **Independent Deployments**: You can update or redeploy the microfrontend app without touching the shell app.
+- **Version Flexibility**: The Container can load different versions of the microfrontend app.
+- **Loose Coupling**: The shell app doesn't have direct access to the microfrontend's internal code, preserving modularity.
+
+Cons:
+- **Complex Setup**: Requires more advanced tooling and configuration for dynamic loading, shared dependencies, etc.
+
+### Why use Webpack Module Federation?
+
+- **Runtime Code Sharing:** Applications can expose and consume code from one another without needing to publish to a registry. This simplifies development and deployment.
+- **Dependency Management:** It prevents redundant downloads by sharing a single copy of common libraries across all microfrontends, which significantly reduces bundle size and improves performance.
+- **Independent Deployment:** Teams can build and deploy their specific microfrontends without affecting or coordinating with other teams, leading to faster release cycles.
+- **Framework Agnostic:** It allows microfrontends built with different JavaScript frameworks (e.g., React and Vue) to work together seamlessly.

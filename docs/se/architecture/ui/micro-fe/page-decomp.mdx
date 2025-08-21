@@ -2,13 +2,13 @@
 
 ## Overview
 
-The web application is divided into distinct Microfrontend apps, each responsible for rendering pages belong to its own feature.
+The web application is divided into distinct applications, each responsible for rendering pages belong to its own feature.
 
 - The decomposition is done at the page level.
-- A **shell or container app** loads the correct micro-app based on the route prefix.
-- Each micro-app is responsible for its own routing, logic, and rendering for its page.
+- A shell app loads the correct Microfrontend based on the route prefix.
+- Each Microfrontend is responsible for its own routing, logic, and rendering for its page.
 
-For example, in a web app with multiple pages:
+For example, consider a web app with multiple pages:
 - `/products/*` → Product Catalog App
 - `/categories/*/products` → Product Catalog App
 - `/cart/*` → Shopping Cart App
@@ -33,3 +33,110 @@ For example, in a web app with multiple pages:
 
 - Large applications with clearly separated features.
 - Organizations with multiple teams working on different distinct parts of the app.
+
+
+## Structure
+
+### Microfrontend
+
+1. Each **Microfrontend** is responsible for rendering its own pages, providers, components, and other application-specific elements.  
+2. It exposes a `render()` function that handles mounting the micro frontend to the DOM.  
+
+```js title="marketing/src/bootstrap.js"
+export function render(element, options) {
+  const root = createRoot(element);
+  root.render(<App {...options} />);
+}
+```
+- `element`: The DOM node where the Microfrontend will be injected.
+- `options`: Optional configuration passed to the Microfrontend for rendering.
+
+
+### Shell App
+
+1. For each Microfrontends, the shell app imports the `render()` function and invokes it to integrate the Microfrontends into its layout.
+2. How the shell app import the `render()` function will be explained in the next section.
+
+```js title="shell/src/bootstrap.js"
+import { render } from '...';
+
+export default function MarketingApp() {
+  const ref = useRef(null);
+
+  // Render the microfrontend once
+  useEffect(() => {
+    render(ref.current, options);
+  }, []);
+
+  return <div ref={ref} />;
+}
+```
+
+
+## Integration
+
+This guide uses [run-time integration](./integration.mdx#run-time-integration).
+
+### Microfrontend
+
+1. The micro frontend exposes a module containing the `render()` function to the web using the **Webpack Module Federation** plugin.  
+2. During the build process, Webpack bundles the exposed module into a dedicated JavaScript file.  
+3. This JavaScript file is then hosted on a web server and made accessible via a URL:
+
+```
+https://{domain}/{app-name}/{version}/remoteEntry.js
+```
+- `{domain}`: The domain where the JavaScript file is deployed.
+- `{app-name}`: Identifier for the microfrontend (e.g., "marketing").
+- `{version}`: Specific version of the microfrontend, allowing the shell app to load different versions as needed.
+
+```js title="marketing/webpack.prod.js"
+module.exports = {
+  plugins: [
+    new ModuleFederationPlugin({
+      name: 'marketing',
+      filename: 'remoteEntry.js',
+      exposes: {
+        './MarketingApp': './src/bootstrap',
+      },
+    }),
+  ],
+};
+```
+
+
+### Shell App
+
+1. The shell application obtains the URL of the JavaScript file containing the exposed module from the Microfrontend and uses it to configure the **Webpack Module Federation** plugin.  
+2. Leveraging this plugin, the shell app can dynamically load the micro frontend at runtime, using the same import syntax as it would for a standard module.
+
+```js title="shell/webpack.prod.js"
+const domain = process.env.PRODUCTION_DOMAIN;
+
+module.exports = {
+  plugins: [
+    new ModuleFederationPlugin({
+      name: 'shell',
+      remotes: {
+        marketing: `marketing@https://${domain}/marketing/latest/remoteEntry.js`,
+        auth: `auth@https://${domain}/auth/latest/remoteEntry.js`,
+      },
+    }),
+  ],
+};
+```
+
+```js title="shell/src/bootstrap.js"
+import { render } from 'marketing/MarketingApp';
+
+export default function MarketingApp() {
+  const ref = useRef(null);
+
+  // Render the microfrontend once
+  useEffect(() => {
+    render(ref.current, options);
+  }, []);
+
+  return <div ref={ref} />;
+}
+```
