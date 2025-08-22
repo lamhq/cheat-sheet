@@ -12,10 +12,7 @@ The Shell app is the central app that decides:
 ## Integration Requirements
 
 1. **Framework-Agnostic**. The integration mechanism must remain independent of any specific frontend framework or library (e.g., React, Vue, Angular), ensuring flexibility and interoperability.
-2. **Dynamic Runtime Loading**. Microfrontend source code should be loaded dynamically at runtime, avoiding the need to bundle all modules upfront in the host application.
-3. **Shared Dependency Support**. Dependencies can be shared across microfrontends to reduce duplication and maintain consistency.
-4. **Singleton Loading of Shared Dependencies**. Shared dependencies should be loaded only once to prevent conflicts and optimize performance.
-5. **Version Isolation for Shared Libraries**. Multiple versions of the same shared dependency can coexist and be loaded separately when necessary. For dependencies intended to be singletons, only one version should be loaded across the entire application.
+2. **Dynamic Runtime Loading**. Microfrontends should be loaded on demand at runtime, avoiding the need to bundle all modules upfront in the host application.
 
 
 ## Integration Strategies

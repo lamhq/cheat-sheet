@@ -191,3 +191,20 @@ if (process.env.NODE_ENV === 'development') {
 
 
 ### Shell App
+
+1. Configure **Webpack Module Federation** plugin with the local addresses of all Microfrontends
+2. Launch all Microfrontends before starting the shell app
+
+```js title="shell/webpack.dev.js"
+module.exports = {
+  plugins: [
+    new ModuleFederationPlugin({
+      name: 'shell',
+      remotes: {
+        marketing: `marketing@http://localhost:8082/remoteEntry.js`,
+        auth: `auth@http://localhost:8083/remoteEntry.js`,
+      },
+    }),
+  ],
+};
+```

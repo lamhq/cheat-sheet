@@ -1,5 +1,7 @@
 [
   "page-decomp",
   "widget-decomp",
-  "integration"
+  "integration",
+  "development",
+  "sharing-dep"
 ]
