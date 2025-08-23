@@ -11,21 +11,36 @@
 
 ### Microfrontends
 
-Each Microfrontend is packaged as a single JavaScript file and deployed to a web server (or CDN), the location of the `remoteEntry.js` file follows the format:
+With Module Federation, each Microfrontend's build output includes a `remoteEntry.js` file, which acts as the entry point for integrating that Microfrontend into the host (or shell) application.
+
+Each Microfrontend is hosted on a web server or CDN, following a standardized URL structure:
 
 ```
-https://{domain}/{app-name}/{version}/remoteEntry.js
+https://{domain}/{app-name}/{version}/
 ```
 - `{domain}`: The domain of the web server.
 - `{app-name}`: Identifier for the microfrontend (e.g., "marketing").
 - `{version}`: the version of the microfrontend, allowing the shell app to load different versions as needed.
 
-All `remoteEntry.js` files are hosted at the same domain to simplify deployment.
+To ensure that `remoteEntry.js` correctly loads its associated modules, the `publicPath` must be configured in the Webpack output settings:
+
+```js title="marketing/webpack.prod.js"
+module.exports = {
+  output: {
+    publicPath: '/marketing/latest/',
+  },
+};
+```
 
 To avoid caching issues on production, the cache need to be cleared after deploy (for example, by issuing a CloudFront invalidation request).
 
 
 ### Shell app
+
+The shell app is also deployed on the same domain as Microfrontends, but with a different path:
+```
+https://{domain}/shell/{version}/
+```
 
 The domain is stored as an environment variable on the shell app's CI server and referenced in its Webpack configuration to resolve the location of each microfrontend's `remoteEntry.js` file:
 
@@ -33,6 +48,9 @@ The domain is stored as an environment variable on the shell app's CI server and
 const domain = process.env.PRODUCTION_DOMAIN;
 
 module.exports = {
+  output: {
+    publicPath: '/shell/latest/',
+  },  
   plugins: [
     new ModuleFederationPlugin({
       name: 'shell',
