@@ -79,16 +79,9 @@ This guide uses [run-time integration](./integration.mdx#run-time-integration).
 
 ### Microfrontend
 
-1. The micro frontend exposes the `bootstrap` module containing the `render()` function to the web using the **Webpack Module Federation** plugin.  
-2. During the build process, Webpack bundles the `bootstrap` module into a dedicated JavaScript file.  
-3. This JavaScript file is then hosted on a web server and made accessible via a URL:
-
-```
-https://{domain}/{app-name}/{version}/remoteEntry.js
-```
-- `{domain}`: The domain where the JavaScript file is deployed.
-- `{app-name}`: Identifier for the microfrontend (e.g., "marketing").
-- `{version}`: Specific version of the microfrontend, allowing the shell app to load different versions as needed.
+1. The Microfrontend exposes the module containing the `render()` function using **Webpack Module Federation** plugin.  
+2. During the build process, Webpack bundles the module into a dedicated JavaScript file: `remoteEntry.js`.  
+3. The `remoteEntry.js` file is then hosted on a web server and made accessible via a URL.
 
 ```js title="marketing/webpack.prod.js"
 module.exports = {
@@ -107,8 +100,8 @@ module.exports = {
 
 ### Shell App
 
-1. The shell application obtains the URL of the JavaScript file containing the `bootstrap` module from the Microfrontend and uses it to configure the **Webpack Module Federation** plugin.  
-2. Leveraging this plugin, the shell app can dynamically load the micro frontend at runtime, using the same import syntax as it would for a standard module.
+1. The shell application need to know the location of the `remoteEntry.js` file of each Microfrontend.  
+2. It uses **Webpack Module Federation** plugin to dynamically load the Microfrontend at runtime.
 
 ```js title="shell/webpack.prod.js"
 const domain = process.env.PRODUCTION_DOMAIN;
@@ -147,9 +140,8 @@ export default function MarketingApp() {
 ### Microfrontend
 
 1. Launch the Microfrontend locally using Webpack Dev Server.
-2. Use the **HtmlWebpackPlugin** to automatically insert the bundled script into the HTML file.
-3. In the Webpack entry point, import the `bootstrap` module.
-4. Within the `bootstrap` module, invoke the `render()` function directly when running in development mode.
+2. In the Webpack entry point (`src/index/js`), import the `bootstrap` module.
+3. Within the `bootstrap` module, invoke the `render()` function directly when running in development mode.
 
 ```js title="marketing/webpack.dev.js"
 module.exports = {
@@ -208,3 +200,85 @@ module.exports = {
   ],
 };
 ```
+
+
+## Communication
+
+Interaction between the shell application and its microfrontends is handled through **callback functions**, which are passed as arguments to—and return values from—the `render()` function.
+
+### Microfrontend
+
+To **send data back to the shell app**, the `render()` function can:
+- Return initial data directly when invoked.
+- Accept a callback function as a parameter, and invoke it whenever the internal data changes.
+
+```js title="microfrontend.js"
+export function render(onDataChange) {
+  const initialData = { status: 'ready', timestamp: Date.now() };
+
+  // Send initial data back to shell app
+  // (Pattern 1: return initial data directly)
+  if (typeof onDataChange !== 'function') {
+    return initialData;
+  }
+
+  // Simulate internal state change after 2 seconds
+  setTimeout(() => {
+    const updatedData = { status: 'updated', timestamp: Date.now() };
+    onDataChange(updatedData); // (Pattern 2: invoke callback on change)
+  }, 2000);
+
+  return initialData;
+}
+```
+
+```js title="shell-app.js"
+import { render } from './microfrontend.js';
+
+// Provide a callback to receive updates
+const initialData = render((data) => {
+  console.log('Shell app received updated data:', data);
+});
+
+console.log('Shell app received initial data:', initialData);
+```
+
+To **receive data from the shell app**, the `render()` function can:
+- Accept initial data as an argument during invocation.
+- Return a callback function that receives updated data from the shell app whenever changes occur.
+
+```js title="microfrontend.js"
+export function render(initialData) {
+  let internalState = initialData || {};
+
+  console.log('Microfrontend received initial data:', internalState);
+
+  // Return a callback for the shell app to send updates later
+  return function receiveUpdate(newData) {
+    internalState = { ...internalState, ...newData };
+    console.log('Microfrontend received updated data:', internalState);
+  };
+}
+```
+
+```js title="shell-app.js"
+import { render } from './microfrontend.js';
+
+// Send initial data during render
+const updateCallback = render({ user: 'lac', theme: 'dark' });
+
+// Later, push updated data to microfrontend
+setTimeout(() => {
+  updateCallback({ theme: 'light', notifications: true });
+}, 2000);
+```
+
+
+### Shell App
+
+Similar to the microfrontend, the shell app can send and receive data from the microfrontend.
+
+
+## Deployment
+
+The shell app need to know the location of the `remoteEntry.js` file of each microfrontend at build time

@@ -29,7 +29,7 @@ new ModuleFederationPlugin({
 - `eager`: loads the shared module immediately.
 - `requiredVersion`: enforces version compatibility.
 
-You can also use the package list in `package.json` to avoid listing each dependency manually across all Microfrontends:
+You can use the dependencies listed in `package.json` to avoid manually updating the shared dependency list whenever you add or remove a package:
 
 ```js title="webpack.dev.js"
 const packageJson = require('./package.json');

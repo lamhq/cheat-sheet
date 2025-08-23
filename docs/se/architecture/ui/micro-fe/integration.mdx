@@ -11,8 +11,17 @@ The Shell app is the central app that decides:
 
 ## Integration Requirements
 
-1. **Framework-Agnostic**. The integration mechanism must remain independent of any specific frontend framework or library (e.g., React, Vue, Angular), ensuring flexibility and interoperability.
-2. **Dynamic Runtime Loading**. Microfrontends should be loaded on demand at runtime, avoiding the need to bundle all modules upfront in the host application.
+1. **Zero coupling between microfrontends**
+   - No importing of functions/objects/classes/... from other microfrontends.
+   - No shared state
+   - Can use shared libraries through Module Federation.
+2. **Near-zero coupling between container and Microfrontends**
+   - Shell app shouldn't assume that a Microfrontend is using a particular framework.
+   - Any necessary communication done with callbacks or simple events
+3. CSS from one Microfrontend shouldn't affect another
+4. Version control (monorepo vs polyrepo) shouldn't have any impact on the overall project
+5. The shell app can decide to use a specific version (or the latest) of a Microfrontend
+6. **Dynamic Runtime Loading**. Microfrontends should be loaded on demand at runtime, avoiding the need to bundle all modules upfront in the host application.
 
 
 ## Integration Strategies
