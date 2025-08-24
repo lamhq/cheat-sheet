@@ -1,0 +1,40 @@
+# Routing & Navigation
+
+This guide apply for Page-Based Decomposition.
+
+## How Routing Libraries work
+
+There're two core components implemented in every Routing Library:
+
+1. **History Object**  
+   - Tracks the current path the user is visiting.
+   - Can update the path (e.g., when navigating to a new page).
+   - Comes in different types:  
+     - **Browser History**: Uses the browser’s address bar (e.g., `/marketing/pricing`).  
+     - **Hash History**: Uses the hash portion of the URL (e.g., `/#/pricing`).  
+     - **Memory History**: Stores the path in memory, not visible in the address bar.
+
+2. **Router**  
+   - Decides what content to show based on the current path from the history object.
+
+
+## Requirements
+
+1. Microfrontends can add/remove pages/routes any time. This shoudn't require redeploying the shell app.
+2. Navigation should work when running Microfrontends inside the shell app and in isolation (development).
+3. Routing mechanism should allow showing multiple Microfrontends at the same time.
+4. Use the existing routing libraries, don't build your own (e.g., React Router, Vue Router, etc).
+5. Different Microfrontends can use different routing libraries.
+6. Not all Microfrontends require navigation.
+
+
+## Solution
+
+1. The shell app only decide which Microfrontend to load. Each Microfrontend will decide which page to show.
+2. The shell app uses **browser history** to control the main URL.
+3. Each Microfrontend uses **memory history** to manage its own internal routing and sync their internal paths with the shell app.
+
+Using browser history in multiple apps can cause:
+- ❌ Conflicting updates to the address bar.
+- ❌ Race conditions between different routing libraries.
+- ❌ Inconsistent behavior due to different implementations of browser history
