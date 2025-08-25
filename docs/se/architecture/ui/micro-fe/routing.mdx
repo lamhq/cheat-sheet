@@ -1,7 +1,5 @@
 # Routing & Navigation
 
-This guide apply for Page-Based Decomposition.
-
 ## How Routing Libraries work
 
 There're two core components implemented in every Routing Library:
@@ -38,3 +36,52 @@ Using browser history in multiple apps can cause:
 - ❌ Conflicting updates to the address bar.
 - ❌ Race conditions between different routing libraries.
 - ❌ Inconsistent behavior due to different implementations of browser history
+
+
+## Syncing History
+
+To sync history of each Microfrontend with the shell app:
+
+1. The shell app provides a callback function to each Microfrontend via its `render()` method.
+2. Upon navigation, the Microfrontend invokes this callback with the updated path to keep the shell app in sync.
+
+```js title="shell/src/bootstrap.js"
+import { render } from '...';
+
+export default function MarketingApp() {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    render(ref.current, {
+      // callback function to be called when the Microfrontend navigates
+      onMfeNavigate: ...,
+    });
+  }, []);
+
+  return <div ref={ref} />;
+}
+```
+
+
+To sync history of the shell app to Microfrontend:
+
+1. The shell app passes the current path to the Microfrontend via the `render()` function as the initial path.  
+2. The `render()` function returns a callback that the shell app invokes whenever its history changes.
+
+```js title="shell/src/bootstrap.js"
+import { render } from '...';
+import { useLocation } from 'react-router-dom';
+
+export default function MarketingApp() {
+  const ref = useRef(null);
+  const location = useLocation();
+
+  useEffect(() => {
+    const { onShellNavigate } = render(ref.current, {
+      initialPath: location.pathname,
+    });
+  }, []);
+
+  return <div ref={ref} />;
+}
+```
