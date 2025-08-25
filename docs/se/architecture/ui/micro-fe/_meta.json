@@ -1,10 +1,13 @@
 [
-  "page-decomp",
+  {
+    "name": "page-decomp",
+    "type": "dir",
+    "collapsed": true
+  },
   "widget-decomp",
   "integration",
-  "deployment",
-  "development",
   "sharing-dep",
-  "styling",
-  "routing"
+  "development",
+  "deployment",
+  "styling"
 ]

@@ -1,0 +1,61 @@
+# Integration
+
+This guide uses [run-time integration](./integration.mdx#run-time-integration).
+
+## Microfrontend
+
+1. The Microfrontend exposes the module containing the `render()` function using **Webpack Module Federation** plugin.
+2. The plugin will add a `remoteEntry.js` file to the build output of the Microfrontend.
+3. Output files are then hosted on a web server and made accessible via a URL.
+
+```js title="marketing/webpack.prod.js"
+module.exports = {
+  plugins: [
+    new ModuleFederationPlugin({
+      name: 'marketing',
+      filename: 'remoteEntry.js',
+      exposes: {
+        './MarketingApp': './src/bootstrap',
+      },
+    }),
+  ],
+};
+```
+
+
+## Shell App
+
+1. The shell application need to know the location of all `remoteEntry.js` files.
+2. The **Webpack Module Federation** plugin is used to dynamically load the `remoteEntry.js` file at runtime.
+3. The `remoteEntry.js` file will load the Microfrontend source code and its dependencies.
+
+```js title="shell/webpack.prod.js"
+const domain = process.env.PRODUCTION_DOMAIN;
+
+module.exports = {
+  plugins: [
+    new ModuleFederationPlugin({
+      name: 'shell',
+      remotes: {
+        marketing: `marketing@https://${domain}/marketing/latest/remoteEntry.js`,
+        auth: `auth@https://${domain}/auth/latest/remoteEntry.js`,
+      },
+    }),
+  ],
+};
+```
+
+```js title="shell/src/bootstrap.js"
+import { render } from 'marketing/MarketingApp';
+
+export default function MarketingApp() {
+  const ref = useRef(null);
+
+  // Render the microfrontend once
+  useEffect(() => {
+    render(ref.current, options);
+  }, []);
+
+  return <div ref={ref} />;
+}
+```

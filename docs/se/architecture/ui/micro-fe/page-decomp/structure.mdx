@@ -1,0 +1,36 @@
+# Structure
+
+## Microfrontend
+
+1. Each Microfrontend is responsible for rendering its own pages, providers, components, and other application-specific elements.  
+2. It exposes a `render()` function that handles mounting the micro frontend to the DOM.  
+
+```js title="marketing/src/bootstrap.js"
+export function render(element, options) {
+  const root = createRoot(element);
+  root.render(<App {...options} />);
+}
+```
+- `element`: The DOM node where the Microfrontend will be injected.
+- `options`: Optional configuration passed to the Microfrontend for rendering.
+
+
+## Shell App
+
+1. For each Microfrontends, the shell app imports the `render()` function and invokes it to integrate the Microfrontends into its layout.
+2. The `render()` function is made available by Webpack Module Federation.
+
+```js title="shell/src/bootstrap.js"
+import { render } from '...';
+
+export default function MarketingApp() {
+  const ref = useRef(null);
+
+  // Render the microfrontend once
+  useEffect(() => {
+    render(ref.current, options);
+  }, []);
+
+  return <div ref={ref} />;
+}
+```
