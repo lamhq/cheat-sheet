@@ -1,0 +1,49 @@
+# Authentication
+
+## Requirements
+
+1. The authentication mechanism should be consistent across all Microfrontends.
+2. Protected Microfrontends should not be loaded if user is unauthenticated.
+3. Unauthenticated users must be redirected to the authentication page when accessing protected routes.
+
+
+## Solution
+
+1. The shell app centrally manages authentication logic and state. It avoids code duplication across Microfrontends.
+2. Protection is performed at route level, defined in the shell app.
+3. Authentication state are shared and updated via arguments and callbacks passed through the `render()` function
+
+For example, in the Auth Microfrontend, if a user successfully sign in, the Microfrontend will invoke a callback `onSignIn` provided by the shell app to notify the shell app. The shell app will update it internal state and notify other Microfrontends about the auth event.
+
+```js title="auth/src/bootstrap.js"
+export function render(element, { onSignIn }) {
+  const root = createRoot(element);
+  root.render(<App onSignIn={onSignIn} />);
+}
+
+function App({ onSignIn }) {
+  return (
+    <Button onClick={onSignIn}>Sign In</Button>
+  )
+}
+```
+
+```js title="shell/src/bootstrap.js"
+import { render } from '...';
+
+export default function MarketingApp() {
+  const ref = useRef(null);
+  const [isSignedIn, setIsSignedIn] = useState(false);
+
+  // Render the microfrontend once
+  useEffect(() => {
+    render(ref.current, {
+      onSignIn: () => {
+        setIsSignedIn(true);
+      }
+    });
+  }, []);
+
+  return <div ref={ref} />;
+}
+```

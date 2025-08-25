@@ -3,5 +3,6 @@
   "integration",
   "communication",
   "development",
-  "routing"
+  "routing",
+  "auth"
 ]

@@ -37,16 +37,16 @@ There's no one-size-fits-all solution—each method has trade-offs, and the best
 
 The shell app loads the microfrontend **before** it's loaded in the browser.
 
-Example Workflow:
+### Example Workflow
 1. The **Product List** team publishes their app as an **NPM package**.
 2. The **Container** team installs it as a dependency.
 3. **Container** team build their app, which also includes the **Product List** app in its source code.
 
-Pros:
+### Pros
 - Easy to set up and understand.
 - Feels familiar—like using any third-party library.
 
-Cons:
+### Cons
 - Any change to the microfrontend requires **rebuilding and redeploying** the shell app.
 - **Tight coupling**: shell app depends to the microfrontend's source code, not the interface.
 
@@ -57,18 +57,18 @@ The shell app loads the microfrontend dynamically **after** it's loaded in the b
 
 This is the recommended approach.
 
-Example Workflow:
+### Example Workflow
 1. **ProductList Team** builds their microfrontend.
 2. Instead of publishing it to NPM (like in build-time), they deploy it to a **static URL**
 3. When a user visits the main site, the **Container app** loads first.
 4. If the user visits a page of the **ProductList** app, the shell app then fetches and executes the ProductsList's code.
 
-Pros:
+### Pros
 - **Independent Deployments**: You can update or redeploy the microfrontend app without touching the shell app.
 - **Version Flexibility**: The Container can load different versions of the microfrontend app.
 - **Loose Coupling**: The shell app doesn't have direct access to the microfrontend's internal code, preserving modularity.
 
-Cons:
+### Cons
 - **Complex Setup**: Requires more advanced tooling and configuration for dynamic loading, shared dependencies, etc.
 
 ### Why use Webpack Module Federation?
