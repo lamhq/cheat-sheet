@@ -5,7 +5,7 @@ A microservice emit events, other microservices consume and react to accordingly
 The microservice publishing an event doesn't know which services will consume it, coupling is greatly reduced.
 
 > [!NOTE]
-> With request-response, the sender knows what should be done and instructs the other service, indicating a stronger domain coupling due to the requester's awareness of the downstream service's capabilities.
+> With request-driven, the sender knows what should be done and instructs the other service, indicating a stronger domain coupling due to the requester's awareness of the downstream service's capabilities.
 
 ## Implementation
 
@@ -33,7 +33,7 @@ Where information needs to be broadcast and downstream microservices can work in
 
 Where loose coupling is preferred.
 
-FYI, more teams replacing request-response interactions with event-driven interactions.
+FYI, more teams replacing request-driven interactions with event-driven interactions.
 
 > [!NOTE]
 > Microservice architecture can contain a mix of different styles of interaction, so it's not necessary to go all in with event-driven collaboration.
@@ -42,6 +42,6 @@ FYI, more teams replacing request-response interactions with event-driven intera
 
 Increase complexity:
 - manage messages publishing and subscribing
-- hadnling long-running async request-response
+- hadnling long-running async request-driven
 - monitoring, request tracing with correlation IDs, debugging, replicating errors
 - require rewire your brain to be accustomed to this communication style
