@@ -33,7 +33,7 @@ Uses Layer 7 routing (application-level) to intelligently forward requests.
 - **Potential Bottleneck**. All traffic flows through the gateway. If it's not designed to scale well, it can slow down the entire system.
 - **Single Point of Failure**. If the gateway crashes, clients lose access to all backend services. To avoid this, it must be deployed in a highly available setup.
 - **Operational Overhead**. The gateway itself is another component that needs to be developed, configured, deployed, and maintained.
-- **Risk of Becoming a "Fat API Gateway"**. Putting too much business logic into the gateway turns it into a complex monolith, defeating the purpose of microservices. It should stick to gateway-specific tasks only.
+- **Risk of Becoming a "God Gateway"**. Putting too much business logic into the gateway turns it into a complex monolith, defeating the purpose of microservices. It should stick to gateway-specific tasks only.
 - **Added Latency**. Every request now has an extra network hop through the gateway. While aggregation can reduce perceived latency, the gateway must be optimized to keep actual latency low.
 
 

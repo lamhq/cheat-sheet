@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Backend for Frontend (BFF)** is an architectural approach where a **dedicated backend** (API Gateway) is created for each frontend client (web, mobile, desktop, or third-party integrations).
+**Backend for Frontend (BFF)** is an architectural pattern where a **dedicated backend** (API Gateway) is created for each frontend client (web, mobile, desktop, or third-party integrations).
 
 Instead using a single generic API gateway which often over-fetches or under-fetches, each frontend gets its own tailored backend that:
 - Acts as a middle layer between the UI and microservices
@@ -17,7 +17,7 @@ Instead using a single generic API gateway which often over-fetches or under-fet
 1. **Tailored Data & Experience** Each clients get data formatted and aggregated exactly it needs for its UI/UX.
 2. **Simplifies Frontend Logic**. Moves data transformation, aggregation, and presentation logic from client to its BFF.
 3. **Independent Evolution**. Each BFF and its client can evolve independently without impacting each other and backend services.
-4. **Avoids the "Fat API Gateway"**. Prevent the API Gateway from becoming a overly complex and a bottleneck to serve all clients.
+4. **Avoids the "God Gateway"**. Prevent the API Gateway from becoming a overly complex and a bottleneck to serve all clients.
 
 
 ## Challenges
@@ -44,3 +44,8 @@ GraphQL is often considered an ideal fit to implement a BFF:
 
 > [!NOTE]
 > Server-side changes will still be needed if you need to expose new types or add fields to existing types.
+
+
+## References
+
+- [Backends for Frontends](https://learn.microsoft.com/en-us/azure/architecture/patterns/backends-for-frontends)

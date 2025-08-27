@@ -5,6 +5,7 @@
   "event-driven",
   "serialization",
   "api-gateway",
+  "cag",
   "bff",
   "service-mesh",
   "service-discovery"
