@@ -1,0 +1,130 @@
+# Routing & Navigation
+
+## How Routing Libraries work
+
+There're two core components implemented in every routing library:
+
+1. **History Object**  
+   - Tracks the current path the user is visiting.
+   - Can update the path (e.g., when navigating to a new page).
+   - Comes in different types:  
+     - **Browser History**: Uses the browser’s address bar (e.g., `/marketing/pricing`).  
+     - **Hash History**: Uses the hash portion of the URL (e.g., `/#/pricing`).  
+     - **Memory History**: Stores the path in memory, not visible in the address bar.
+
+2. **Router**  
+   - Decides what content to show based on the current path from the history object.
+
+
+## Requirements
+
+1. Microfrontends can add/remove pages/routes any time. This shoudn't require redeploying the shell app.
+2. Navigation should work when running Microfrontends inside the shell app and in isolation (development).
+3. Routing mechanism should allow showing multiple Microfrontends at the same time.
+4. Use the existing routing libraries, don't build your own (e.g., React Router, Vue Router, etc).
+5. Different Microfrontends can use different routing libraries.
+6. Not all Microfrontends require navigation.
+
+
+## Solution
+
+1. The shell app only decide which Microfrontend to load. Each Microfrontend will decide which page to show.
+2. The shell app uses **browser history** to control the main URL.
+3. When running Microfrontends inside the shell app, each Microfrontend uses **memory history** to manage its own internal routing and sync their internal paths with the shell app.
+4. When running Microfrontends in isolation, each Microfrontend will use **browser history** for easier development.
+
+Using browser history in multiple apps can cause:
+- ❌ Conflicting updates to the address bar.
+- ❌ Race conditions between different routing libraries.
+- ❌ Inconsistent behavior due to different implementations of browser history
+
+
+## Pages Rendering
+
+Each Microfrontend will decide which page to show:
+
+```js title="auth/src/App.js"
+import { render } from '...';
+
+export default function App() {
+  return (
+    <Router location={location} navigator={history}>
+      <Routes>
+        <Route path="/auth/signin" element={<Signin onSignIn={onSignIn} />} />
+        <Route path="/auth/signup" element={<Signup onSignIn={onSignIn} />} />
+      </Routes>
+    </Router>
+  )
+}
+```
+
+## Lazy loading Microfrontends
+
+The shell app only decide which Microfrontend to load (on-demand):
+
+```js title="shell/src/App.js"
+const MarketingLazy = lazy(() => import('./components/MarketingApp'));
+const AuthLazy = lazy(() => import('./components/AuthApp'));
+
+export default function App() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Routes>
+        <Route path="/auth/*" element={
+          <AuthLazy onSignIn={handleSignIn} />
+        } />
+        <Route path="/marketing" element={<MarketingLazy />} />
+      </Routes>
+    </Suspense>
+  );
+}
+```
+
+
+## Syncing History
+
+To sync history of each Microfrontend with the shell app:
+
+1. The shell app provides a callback function to each Microfrontend via its `render()` method.
+2. Upon navigation, the Microfrontend invokes this callback with the updated path to keep the shell app in sync.
+
+```js title="shell/src/MarketingApp.js"
+import { render } from '...';
+
+export default function MarketingApp() {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    render(ref.current, {
+      // callback function to be called when the Microfrontend navigates
+      onMfeNavigate: ...,
+    });
+  }, []);
+
+  return <div ref={ref} />;
+}
+```
+
+
+To sync history of the shell app to Microfrontend:
+
+1. The shell app passes the current path to the Microfrontend via the `render()` function as the initial path.  
+2. The `render()` function returns a callback that the shell app invokes whenever its history changes.
+
+```js title="shell/src/MarketingApp.js"
+import { render } from '...';
+import { useLocation } from 'react-router-dom';
+
+export default function MarketingApp() {
+  const ref = useRef(null);
+  const location = useLocation();
+
+  useEffect(() => {
+    const { onShellNavigate } = render(ref.current, {
+      initialPath: location.pathname,
+    });
+  }, []);
+
+  return <div ref={ref} />;
+}
+```

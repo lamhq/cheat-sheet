@@ -1,0 +1,35 @@
+# Page-Based Decomposition
+
+## Overview
+
+The web application is divided into distinct applications, each responsible for rendering pages belong to its own feature.
+
+- The decomposition is done at the page level.
+- A shell app loads the correct Microfrontend based on the route prefix.
+- Each Microfrontend is responsible for its own routing, logic, and rendering for its page.
+
+For example, consider a web app with multiple pages:
+- `/products/*` → Product Catalog App
+- `/categories/*/products` → Product Catalog App
+- `/cart/*` → Shopping Cart App
+- `/checkout/*` → Checkout App
+
+
+## Benefits
+
+- **Clear ownership**: Each team owns a full page, making development and deployment easier.
+- **Simplified Integration**: there's less need for deep UI coordination when working with pages.
+- **Scalability**: Easier to scale development across large teams or organizations.
+- **Isolation**: Fewer cross-team dependencies; easier to test and maintain.
+
+
+## Challenges
+
+- **Limited composition**: Harder to mix UI from multiple apps on the same page (for example, a dashboard).
+- **Redundant code**: Shared widgets may be duplicated across pages (tag list, search bar, etc).
+
+
+## Where to Use It?
+
+- Large applications with clearly separated features.
+- Organizations with multiple teams working on different distinct parts of the app.

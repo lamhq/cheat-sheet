@@ -1,0 +1,79 @@
+# Integration
+
+## Overview
+
+Integration refers to the process of assembling different microfrontends into one cohesive application.
+
+The Shell app is the central app that decides:
+- **When** to load each microfrontend
+- **Where** to display it in the UI
+
+
+## Integration Requirements
+
+1. **Zero coupling between microfrontends**
+   - No importing of functions/objects/classes/... from other microfrontends.
+   - No shared state
+   - Can use shared libraries through Module Federation.
+2. **Near-zero coupling between container and Microfrontends**
+   - Shell app shouldn't assume that a Microfrontend is using a particular framework.
+   - Any necessary communication done with callbacks or simple events
+3. Version control (monorepo vs polyrepo) shouldn't have any impact on the overall project
+4. The shell app can decide to use a specific version (or the latest) of a Microfrontend
+5. **Dynamic Runtime Loading**. Microfrontends should be loaded on demand at runtime, avoiding the need to bundle all modules upfront in the host application.
+
+
+## Integration Strategies
+
+Common strategies:
+- **Build-Time Integration** (Compile-Time Integration): The shell app loads the microfrontend **before** it's loaded in the browser.
+- **Run-Time Integration** (Client-Side Integration): The shell app loads the microfrontend **after** it's loaded in the browser.
+- **Server-side composition**: Stitching together different microfrontend-rendered HTML fragments on the server before sending them to the client.
+
+There's no one-size-fits-all solution—each method has trade-offs, and the best choice depends on your app's needs.
+
+
+## Build-Time Integration
+
+The shell app loads the microfrontend **before** it's loaded in the browser.
+
+### Example Workflow
+1. The **Product List** team publishes their app as an **NPM package**.
+2. The **Container** team installs it as a dependency.
+3. **Container** team build their app, which also includes the **Product List** app in its source code.
+
+### Pros
+- Easy to set up and understand.
+- Feels familiar—like using any third-party library.
+
+### Cons
+- Any change to the microfrontend requires **rebuilding and redeploying** the shell app.
+- **Tight coupling**: shell app depends to the microfrontend's source code, not the interface.
+
+
+## Run-Time Integration
+
+The shell app loads the microfrontend dynamically **after** it's loaded in the browser. The shell app doesn't bundle the ProductList code during build.
+
+This is the recommended approach.
+
+### Example Workflow
+1. **ProductList Team** builds their microfrontend.
+2. Instead of publishing it to NPM (like in build-time), they deploy it to a **static URL**
+3. When a user visits the main site, the **Container app** loads first.
+4. If the user visits a page of the **ProductList** app, the shell app then fetches and executes the ProductsList's code.
+
+### Pros
+- **Independent Deployments**: You can update or redeploy the microfrontend app without touching the shell app.
+- **Version Flexibility**: The Container can load different versions of the microfrontend app.
+- **Loose Coupling**: The shell app doesn't have direct access to the microfrontend's internal code, preserving modularity.
+
+### Cons
+- **Complex Setup**: Requires more advanced tooling and configuration for dynamic loading, shared dependencies, etc.
+
+### Why use Webpack Module Federation?
+
+- **Runtime Code Sharing:** Applications can expose and consume code from one another without needing to publish to a registry. This simplifies development and deployment.
+- **Dependency Management:** It prevents redundant downloads by sharing a single copy of common libraries across all microfrontends, which significantly reduces bundle size and improves performance.
+- **Independent Deployment:** Teams can build and deploy their specific microfrontends without affecting or coordinating with other teams, leading to faster release cycles.
+- **Framework Agnostic:** It allows microfrontends built with different JavaScript frameworks (e.g., React and Vue) to work together seamlessly.

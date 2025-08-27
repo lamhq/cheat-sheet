@@ -1,6 +1,8 @@
 # Monolithic Frontend
 
-The monolithic frontend pattern is an architecture where all UI state and behavior is defined in the UI itself, while it makes calls to microservices to fetch data or execute operations.
+## Overview
+
+The Monolithic Frontend pattern refers to a traditional architecture where the entire frontend of an application is built, maintained, and deployed as a single codebase.
 
 This pattern is commonly used in single-page applications (SPAs), often developed by a dedicated frontend team.
 
@@ -8,14 +10,15 @@ This pattern is commonly used in single-page applications (SPAs), often develope
 ## How It Works?
 
 1. The UI independently handles its state and logic.
-2. It requests data from microservices
-3. The microservices return data in JSON format, which the UI uses to update the display.
+2. It requests data from Microservices.
+3. The Microservices return data in JSON format, which is used to display in the UI.
 
 
 ## Benefits
 
-- Ideal when you want all frontend logic in one deployable unit.
-- Works well for a single team developing both the frontend and microservices.
+- Easier to set up for small teams or MVPs.
+- Simplified tooling and configuration.
+- Straightforward testing and debugging.
 
 
 ## Drawbacks
@@ -23,6 +26,11 @@ This pattern is commonly used in single-page applications (SPAs), often develope
 - **Difficult to scale**: If multiple teams need to work on the frontend, there can be conflicts.
 - **Limited customization**: The UI cannot easily tailor responses for different devices (e.g., a mobile app may receive too much unnecessary data).
 - **Layered architecture risk**: If multiple teams work on different layers, this can make communication and coordination difficult.
+
+
+## When to use?
+- Ideal when you want all frontend logic in one deployable unit.
+- Works well for a single team developing both the frontend and microservices.
 
 
 ## Alternatives

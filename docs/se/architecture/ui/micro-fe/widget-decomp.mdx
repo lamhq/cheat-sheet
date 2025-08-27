@@ -4,16 +4,9 @@
 
 Widget-Based Decomposition divides UI into smaller, independent **widgets**, each responsible for specific functionality.
 
-It allows different teams to work on separate components without disrupting the overall system.
-
-
-## How it work?
-
-Each widget in a graphical interface functions independently.
-
-A widget may interact with backend microservices.
-
-There is a central application that manages navigation and defines which widgets appear on the UI.
+- The decomposition is done at the widget level.
+- There's a shell app that manages navigation and defines which widgets appear on the UI.
+- A widget may interact with backend microservices.
 
 Example: Spotify uses separate widgets to display playlists, artists, and user-following details.
 
@@ -29,18 +22,17 @@ Avoiding iFrames, they have issues related to sizing and communication difficult
 Communication between widgets is achieved using Browser custom event, similar to Event-Driven Communication in Microservices.
 
 
-## Advantages
+## Benefits
 
-Allows multiple stream-aligned teams to contribute to the same UI.
-
-It's more flexible than **page-based decomposition**, widgets from different teams can appear on the same page.
-
-It enables **enabling teams** to provide reusable widgets for stream-aligned teams.
-
-Useful if you are building a rich web-based user interface, or breaking an SPA into micro frontend.
+- Allows multiple stream-aligned teams to contribute to the same UI.
+- It's more flexible than **page-based decomposition**, widgets from different teams can appear on the same page.
+- It enables [frontend teams](../team-topologies.mdx#dedicated-frontend-teams) to provide reusable widgets for stream-aligned teams.
 
 
-## Concerns
+## Challenges
+
+- **Complex orchestration**: Requires a complex shell app to manage loading, rendering, and communication.
+- **Performance overhead**: Multiple bundles and runtime coordination can slow things down.
 
 Regarding SPAs:
 - Require setting up the separate bundling for each widget (one-time cost)

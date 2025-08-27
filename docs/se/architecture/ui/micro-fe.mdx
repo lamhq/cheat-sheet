@@ -1,0 +1,63 @@
+# Micro Frontends
+
+## Overview
+
+The micro frontend pattern is an approach that divides a monolithic frontend application into multiple smaller applications, with each one responsible for a distinct feature or section of the product.
+
+
+## Example
+
+Imagine an online store with:
+- A **Product Listing Page**
+- A **Shopping Cart Page**
+
+In a traditional setup, both features live inside one big codebase (a monolithic Single Page Application).
+
+With Microfrontends:
+- The **Product Listing** becomes its own standalone app.
+- The **Shopping Cart** becomes another separate app.
+- Each app can be built using different frameworks (e.g., React for one, Angular for the other).
+- They communicate indirectly via APIs, not directly with each other.
+
+
+## Key Characteristics
+
+- **Feature Isolation**: Each Microfrontend handles one major feature.
+- **Independent Deployment**: Teams can deploy their parts without affecting others.
+- **Tech Flexibility**: Different teams can use different tools or frameworks.
+- **No Direct Communication**: Apps interact through shared APIs, not internal calls.
+
+
+## Benefits
+
+- **Isolation**: Multiple teams can work in parallel without stepping on each other’s toes.
+- **Maintainability**: Smaller apps are easier to understand and modify.
+- **Scalability**: Easier to scale development across large organizations.
+- **Resilience**: One app breaking doesn’t necessarily crash the whole system.
+
+
+## Challenges
+
+- **Consistent User Experience**. Maintaining a unified look and feel across microfrontends requires strict design guidelines and shared component libraries.
+- **Handling shared dependencies**. Shared dependencies can lead to bundle bloat if not handled carefully.
+
+
+## When to use?
+
+- When the frontend becomes too large for a single team to manage effectively.
+- When teams want independent ownership over their UI components.
+
+
+## Terms
+
+- **Microfrontend**: A small, self-contained, and independently deployable part of a web application's user interface.
+- **Shell Application (or Host)**: The main application that loads and orchestrates microfrontends.
+- **Integration**: The process of composing multiple microfrontends into a single, cohesive user experience.
+
+
+## Implementation
+
+Approaches to implement Micro Frontend:
+
+1. **Page-based decomposition**: The frontend is split into separate pages managed by different teams.
+2. **Widget-based decomposition**: Different UI components are assembled onto a single screen.

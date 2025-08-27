@@ -9,6 +9,9 @@ A Central Aggregating Gateway is an architectural pattern that sits between user
 3. It combines the results into a single optimized response.
 4. The UI receives only the necessary information.
 
+![](https://learn.microsoft.com/en-us/azure/architecture/patterns/_images/gateway-aggregation.png)
+
+
 ## Benefits
 
 - **Batch requests:** Instead of making separate calls for retrieving data for different items, the gateway processes everything in one batch.
@@ -46,3 +49,8 @@ If using a third party API gateway solution:
 - Make sure to have your filtering and aggregation logic elsewhere
 
 If a gateway grows **too complex**, a dedicated team might be needed. Changes require **frontend, gateway, and backend teams** to coordinate—making **development painfully slow**.
+
+
+## References
+
+- [Central Aggregating Gateway](https://learn.microsoft.com/en-us/azure/architecture/patterns/gateway-aggregation)

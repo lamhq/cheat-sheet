@@ -1,0 +1,68 @@
+# Development
+
+How to develop Microfrontends and the shell app locally.
+
+## Microfrontend
+
+1. Launch the Microfrontend locally using Webpack Dev Server.
+2. In the Webpack entry point (`src/index/js`), import the `bootstrap` module.
+3. Within the `bootstrap` module, invoke the `render()` function directly when running in development mode.
+
+```js title="marketing/webpack.dev.js"
+module.exports = {
+  mode: 'development',
+  entry: './src/index.js',
+  output: {
+    publicPath: 'http://localhost:8082/',
+  },
+  devServer: {
+    port: 8082,
+  },
+  plugins: [
+    new ModuleFederationPlugin({
+      // existing config...
+    }),
+    new HtmlWebpackPlugin({
+      template: './public/index.html',
+    }),
+  ],
+};
+```
+
+```js title="marketing/src/index.js"
+import('./bootstrap');
+```
+
+```js title="marketing/src/bootstrap.js"
+// If we are in development and in isolation,
+// call render immediately
+if (process.env.NODE_ENV === 'development') {
+  const devRoot = document.querySelector('#marketing-dev-root');
+  if (devRoot) {
+    render(devRoot, defaultOptions);
+  }
+}
+```
+
+> [!CAUTION]
+> It's required to call `import('./bootstrap')` in the entry point script to ensure that shared dependencies are available when the `bootstrap` module is loaded in the browser.
+
+
+## Shell App
+
+1. Configure **Webpack Module Federation** plugin with the local addresses of all Microfrontends
+2. Launch all Microfrontends before starting the shell app
+
+```js title="shell/webpack.dev.js"
+module.exports = {
+  plugins: [
+    new ModuleFederationPlugin({
+      name: 'shell',
+      remotes: {
+        marketing: `marketing@http://localhost:8082/remoteEntry.js`,
+        auth: `auth@http://localhost:8083/remoteEntry.js`,
+      },
+    }),
+  ],
+};
+```

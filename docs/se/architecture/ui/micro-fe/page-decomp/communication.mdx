@@ -1,0 +1,75 @@
+# Communication
+
+Interaction between the shell application and its microfrontends is handled through **callback functions**, which are passed as arguments and return values of the `render()` function.
+
+## Microfrontend
+
+To **send data to the shell app**, the `render()` function can:
+- Return the data after being invoked (initial value).
+- Accept a callback function as a parameter, and invoke it whenever the internal data changes.
+
+```js title="microfrontend.js"
+export function render(onDataChange) {
+  const initialData = { status: 'ready', timestamp: Date.now() };
+
+  // Send initial data back to shell app
+  // (Pattern 1: return initial data directly)
+  if (typeof onDataChange !== 'function') {
+    return initialData;
+  }
+
+  // Simulate internal state change after 2 seconds
+  setTimeout(() => {
+    const updatedData = { status: 'updated', timestamp: Date.now() };
+    onDataChange(updatedData); // (Pattern 2: invoke callback on change)
+  }, 2000);
+
+  return initialData;
+}
+```
+
+```js title="shell-app.js"
+import { render } from './microfrontend.js';
+
+// Provide a callback to receive updates
+const initialData = render((data) => {
+  console.log('Shell app received updated data:', data);
+});
+
+console.log('Shell app received initial data:', initialData);
+```
+
+To **receive data from the shell app**, the `render()` function can:
+- Accept initial data as an argument during invocation.
+- Return a callback function that receives updated data from the shell app whenever changes occur.
+
+```js title="microfrontend.js"
+export function render(initialData) {
+  let internalState = initialData || {};
+
+  console.log('Microfrontend received initial data:', internalState);
+
+  // Return a callback for the shell app to send updates later
+  return function receiveUpdate(newData) {
+    internalState = { ...internalState, ...newData };
+    console.log('Microfrontend received updated data:', internalState);
+  };
+}
+```
+
+```js title="shell-app.js"
+import { render } from './microfrontend.js';
+
+// Send initial data during render
+const updateCallback = render({ user: 'lac', theme: 'dark' });
+
+// Later, push updated data to microfrontend
+setTimeout(() => {
+  updateCallback({ theme: 'light', notifications: true });
+}, 2000);
+```
+
+
+## Shell App
+
+Similar to the microfrontend, the shell app can send and receive data from the microfrontend.

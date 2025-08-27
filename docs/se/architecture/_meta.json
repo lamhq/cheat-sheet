@@ -5,5 +5,11 @@
     "name": "microservices",
     "type": "dir",
     "collapsed": true
+  },
+  {
+    "name": "ui",
+    "type": "dir",
+    "collapsed": true,
+    "label": "User Interface"
   }
 ]

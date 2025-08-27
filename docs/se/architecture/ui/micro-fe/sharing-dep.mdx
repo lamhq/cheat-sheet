@@ -1,0 +1,59 @@
+# Sharing Dependencies
+
+## Requirements
+
+1. **Shared Dependency Support**. Dependencies can be shared across microfrontends to reduce size, faster load time and maintain consistency.
+2. **Singleton Loading of Shared Dependencies**. Shared dependencies should be loaded only once to prevent conflicts and optimize performance.
+3. **Version Isolation for Shared Libraries**. Multiple versions of the same shared dependency can coexist and be loaded separately when necessary. For dependencies intended to be singletons, only one version should be loaded across the entire application.
+
+
+## Webpack Module Federation
+
+Module Federation allows multiple builds to dynamically share code at runtime.
+
+Configure `shared` in ModuleFederationPlugin:
+
+```js
+new ModuleFederationPlugin({
+  name: 'host',
+  remotes: {
+    remoteApp: 'remoteApp@http://localhost:3001/remoteEntry.js',
+  },
+  shared: {
+    react: { singleton: true, eager: true, requiredVersion: '^18.0.0' },
+    'react-dom': { singleton: true, eager: true, requiredVersion: '^18.0.0' },
+  },
+});
+```
+- `singleton`: ensures only one instance of the dependency is loaded.
+- `eager`: loads the shared module immediately.
+- `requiredVersion`: enforces version compatibility.
+
+You can use the dependencies listed in `package.json` to avoid manually updating the shared dependency list whenever you add or remove a package:
+
+```js title="webpack.dev.js"
+const packageJson = require('./package.json');
+
+module.exports = {
+  plugins: [
+    new ModuleFederationPlugin({
+      name: 'shell',
+      shared: {
+        ...packageJson.dependencies,
+        react: {
+          singleton: true,
+          requiredVersion: packageJson.dependencies.react,
+        },
+        'react-dom': {
+          singleton: true,
+          requiredVersion: packageJson.dependencies['react-dom'],
+        },
+        'react-router-dom': {
+          singleton: true,
+          requiredVersion: packageJson.dependencies['react-router-dom'],
+        },
+      },
+    }),
+  ],
+};
+```
