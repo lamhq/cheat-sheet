@@ -2,60 +2,46 @@
 
 ## Overview
 
-The CAP Theorem (aka Brewer’s Theorem) in distributed systems states that "when **network partitioning** occurs, a system cannot be both consistent and highly available".
+The CAP Theorem (aka Brewer’s Theorem) states that "when **network partitioning** occurs, a system cannot be both consistent (C) and available (A)".
+
+It helps engineers understand the trade-offs when designing distributed systems.
 
 > [!NOTE]
 > A **Network Partition** refers to a break in the network that prevents communication between nodes in a distributed system.
 
 **CAP** stands for:
-1. **Consistency** (C): every read receives the most recent write or an error (all nodes see the same data)
-2. **Availability** (A): every request receives a response (the system remains operational and does not reject requests)
-3. **Partition Tolerance** (P): the system continues to operate even if communication between its parts is impossible.
-
-The CAP theorem helps engineers understand the trade-offs between consistency, availability, and partition tolerance.
+1. **Consistency** (C): every read receives the most recent write (all nodes have the same data at any time)
+2. **Availability** (A): every request receives a response (may not be the most recent data)
+3. **Partition Tolerance** (P): system continues to operate even if communication between nodes is lost or delayed
 
 
-## Sacrificing Consistency
+## Sacrificing Consistency (AP)
 
-The system continues to accept requests even when nodes cannot synchronize due to a network partition.
+Sacrifice strong consistency during a partition to ensure the system always responds.
 
-Some nodes may serve outdated (stale) data because they haven't received the latest updates.
+The system continues to accept requests, but nodes cannot synchronize due to a network partition.
 
-The system loses consistency but maintains availability and partition tolerance.
-
-This setup is called an **AP** system (Availability + Partition Tolerance).
+Some nodes may serve outdated data because they haven't received the latest updates.
 
 If the system keeps accepting writes, they have to be resynchronized in the future. The longer the partition lasts, the more difficult this resynchronization can become.
 
 > [!NOTE]
-> In real life, even without a network failure, replication is not instantaneous, meaning some users may still see old data.
+> In real life, because of network latency, replication is not instantaneous, meaning some users may still see old data even no network failure.
 
-## Sacrificing Availability
 
-During a network partition, nodes cannot synchronize, but they're still functioning (Partition Tolerance). The only option is to reject requests to remains consistent and partition tolerant (CP).
+## Sacrificing Availability (CP)
 
-The service must degrade functionality until the partition is resolved and nodes can resynchronize.
+Sacrifice availability during a partition to ensure all accessible data is consistent.
+
+That means rejecting requests to remains consistent and partition tolerant (CP).
+
+
+## How about AC system?
+
+In theory, an AC system assumes that network partitions never happen, which is impossible in a distributed system. So CA systems are impossible.
 
 > [!CAUTION]
-> Maintaining consistency in distributed systems is extremely difficult. Transactional reads across multiple nodes are required to ensure consistency, but they're slow, a read can block the entire system. Locks are difficult to implement in a distributed system.
-
-> [!TIP]
-> Don't try to invent a CP system yourself. Instead, pick a data store or lock service that offers these characteristics (Consul, for example).
-
-## Sacrificing Partition Tolerance?
-
-Sacrificing partition tolerance means the system must stop functioning entirely when a partition happens.
-
-In distributed systems, multiple nodes communicating over a network, and network failures are inevitable.
-
-Since partition tolerance is a must in distributed systems, CA systems are impossible.
-
-
-## Misunderstanding
-
-Some explanations tell you that you must pick two among Consistency, Availability, and Partition Tolerance. However, they are incorrect.
-
-In fact, in the theorem, Network Partitioning is assumed as a given condition you must accept, and your choice is only between consistency and availability.
+> Some explanations tell you that you must pick two among Consistency, Availability, and Partition Tolerance. However, they are incorrect. In fact, in the theorem, Network Partitioning is assumed as a given condition you must accept, and your choice is only between consistency and availability.
 
 
 ## Example
@@ -81,36 +67,18 @@ When the network partition is resolved, we must address the conflict between nod
 
 ## AP or CP?
 
-### AP systems
-- Prioritize availability and partition tolerance
-- May serve stale (outdated) data.
-- More easily and are simpler to build
-- Best for applications where availability is more important than strict consistency (e.g., social media feeds, caching, product catalogs)
+The right choice depends on the business impact of temporary inconsistencies.
 
-### CP systems
-- Prioritize consistency and partition tolerance
-- May reject requests during network failures.
-- Require more work due to the complexity of maintaining consistency across distributed nodes.
-- Best for applications where consistency is critical (e.g., banking, financial transactions, authentication systems)
+A system can mix AP and CP components depending on business requirements.
 
-> [!NOTE]
-> No matter how consistent our systems might be, they can't fix all the problems, especially when we’re keeping records of the real world (for example, product stock).
-
-### Guides
-
-- The right choice depends on the business impact of temporary inconsistencies.
-- A system can mix AP and CP components depending on business requirements
-  - Listing products: Stale product listings are acceptable
-  - Inventory management: Selling an item that is out of stock would cause problems
-
-### Examples
+For example, in an E-commerce system:
+- Listing products: Stale product listings are acceptable
+- Inventory management: Selling an item that is out of stock would cause problems
 
 Inventory System:
 - If an inventory record is outdated by five minutes, is that acceptable?
-- If yes, then an AP system might be the best choice.
-- Users can still browse products, even if stock levels are slightly delayed.
+- If yes, then an AP system might be the best choice. Users can still browse products, even if stock levels are slightly delayed.
 
 Banking System:
 - If a customer’s account balance is outdated, is that acceptable?
-- No, because financial transactions require strict consistency.
-- A CP system is necessary to ensure accurate balances, even if some requests fail during a partition.
+- No, because financial transactions require strict consistency. A CP system is necessary to ensure accurate balances, even if some requests fail during a partition.
