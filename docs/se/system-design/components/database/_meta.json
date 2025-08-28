@@ -13,7 +13,10 @@
   "transaction",
   "concurrency",
   "indexes",
-  "partitioning",
-  "sharding",
+  {
+    "name": "partitioning",
+    "type": "dir",
+    "collapsed": true
+  },
   "replication"
 ]
