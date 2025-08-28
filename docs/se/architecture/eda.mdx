@@ -1,12 +1,12 @@
-# Event-Driven Architectures
+# Event-Driven Architecture
 
 ## Overview
 
-Event-Driven Architectures are a powerful design paradigm where the flow and actions within a system are determined by the occurrence of specific events.
+Event-Driven Architectures (EDA) is an architecture paradigm where the flow and actions within a system are determined by the occurrence of specific events.
 
 It's is especially useful in distributed systems and applications that require scalability, responsiveness, and decoupled communication.
 
-Event-Driven Architectures use asynchronous communication, leads to loosely coupled components.
+EDA use asynchronous communication, leads to loosely coupled components.
 
 
 ## Components
@@ -17,12 +17,28 @@ Event-Driven Architectures use asynchronous communication, leads to loosely coup
 - Event Broker: Accepts events and either pushes to (or is pulled from by) consumers
 
 
+## Benefits
+
+1. **Decoupling**. Publishers and subscribers are completely independent.
+2. **Scalability**. Publishers, subscribers, and brokers can scale independently.
+3. **Resilience**. If a subscriber down, events can be queued and retained for later processing.
+4. **Responsiveness**. The publisher can quickly fire an event and move on, not waiting for downstream processing.
+
+
+## Challenges
+
+1. **Single point of failure**. The broker can be a single point of failure if not made highly available.
+2. **Debugging & Tracing Distributed Flows**. Understand the E2E flow of an operation triggered by an event can be complex.
+3. **Eventual Consistency** Data consistency across services is achieved over time, not instantaneously. UX must be designed to handle this.
+4. **Idempotency**. Subscribers must often be designed to handle duplicate messages gracefully.
+
+
 ## Patterns
 
 There are several event-driven architecture patterns:
 1. Event notification: it's a notification that something has occurred
 2. Event-carried state transfer: similar to Event Notification but also contains the state
-3. Event sourcing: when every single change of state  is a submitted event such that the events make up the state of the whole system
+3. Event sourcing: when every single change of state is a submitted event such that the events make up the state of the whole system
 4. Command and Query Responsibility Segregation (CQRS): a pattern to segregate reading and writing. The informational events are segregated from the actual commands to make changes
 
 
@@ -60,31 +76,6 @@ Data is continuously pushed to a stream and consumers need to pull that data.
 **Orchestration** is when there is a central system controlling the interactions.
 
 *You may design a single order orchestrator that calls each service in the right order and ensures each action is taken as appropriate.*
-
-
-## Pitfalls
-
-### Duplicated Events
-
-In an event-driven system, events can be delivered to consumers at least once.
-
-Events needs to be handled using the concept of idempotency.
-
-Idempotency is a concept that ensures that performing the same operation multiple times has the same effect as performing it once.
-
-For example, if an order processing service receives an order creation event twice, it should create the order only once (even if the event is duplicated).
-
-### Variable Latency
-
-Latency varies between services and over time.
-
-This is a side effect of distributed systems and asynchronous workflows.
-
-### Eventual Consistency
-
-There isn't a centralized atomic database
-
-Data is eventually consistent when it's asynchronously processed and stored.
 
 
 ## Use Cases

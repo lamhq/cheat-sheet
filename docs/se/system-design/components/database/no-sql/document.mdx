@@ -1,7 +1,16 @@
 # Document Database
 
-Document stores are for storing and retrieving a document consisting of nested objects (such as XML, JSON, and YAML).
+## Overview
 
-In a key-value store, the value is opaque. But the document stores exploit the tree structure of the value to offer richer operations.
+Stores data in document format (e.g. JSON, BSON).
 
-MongoDB is a popular example of a document store.
+Each document is a self-contained and can have its own structure (flexible schema).
+
+Good for hierarchical data, related data that is often embedded in a document to reduce the need for complex joins.
+
+Use cases:
+- Content Management System (CMS)
+- Product Catalog
+- User Profiles
+
+Options: MongoDB, Couchbase, Amazon DocumentDB
