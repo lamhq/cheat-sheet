@@ -16,7 +16,9 @@
   "base-model",
   "eventual-consistency",
   "consistent-hashing",
+  "mat-view",
   "cqrs",
+  "event-sourcing",
   "bote",
   {
     "name": "case-studies",

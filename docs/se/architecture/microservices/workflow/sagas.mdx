@@ -87,7 +87,7 @@ Orchestrated sagas use a central coordinator (orchestrator) to:
 - call the appropriate services
 - handle failures and compensating action.
 
-Orchestrated sagas make heavy use of request-response interactions.
+Orchestrated sagas make heavy use of request-driven interactions.
 
 **Advantages:**  
 - The business process is clearly modeled in one place, making it easy to understand.  
@@ -136,7 +136,7 @@ Events are broadcast, allowing microservices to react to them. It’s possible t
 
 **Orchestration** suits when a single team owns the entire saga, while **choreography** is ideal for scenarios involving multiple teams.
 
-Orchestration relies on request-response calls, whereas choreography makes more extensive use of events.
+Orchestration relies on request-driven calls, whereas choreography makes more extensive use of events.
 
 
 ## Sagas vs. Distributed Transactions

@@ -1,4 +1,4 @@
-# Request-Response Communication
+# Request-Driven Communication
 
 ## Overview
 
@@ -23,7 +23,7 @@ Using a queue allows buffering multiple requests, which prevents overwhelming th
 
 Upon receiving a response, the initiating microservice might need to correlate it with the original request, such as storing request state into a database.
 
-All forms of request-response communication require time-out handling to prevent blocking.
+All forms of request-driven communication require time-out handling to prevent blocking.
 
 ## Where to Use It?
 

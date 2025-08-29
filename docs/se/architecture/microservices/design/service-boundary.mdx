@@ -148,3 +148,24 @@ Example: a service accesses another microservice's database and changing it dire
 - Avoid direct access to another service's database or internals.  
 - Emphasize proper documentation and contracts for APIs.  
 - Adopt techniques like domain-driven design and event-driven communication patterns.  
+
+
+## Microservice Boundary Checklist
+
+Checklist for evaluating microservice boundaries:
+
+1. Single Responsibility.
+   - Does each service do "one thing" well, focus on a cohesive set of responsibilities?
+2. Appropriate Size.
+   - Are services not too big (mini-monoliths) and not too small (nanoservices with excessive chattiness)?
+3. Communication. Avoid "chatty" interactions.
+   - If two services constantly talk to each other, should they be one?
+4. Data Ownership & Isolation.
+   - Does each service own its data?
+   - Is data duplication minimized or managed?
+5. Independent Deployability.
+   - Can each service be deployed without requiring changes or redeployments in other services?
+6. Team Autonomy
+   - Can a small team independently develop, test, deploy their service?
+7. Alignment with Business
+   - Do service boundary make sense from a business capability or domain perspective?

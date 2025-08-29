@@ -1,30 +1,39 @@
 # Choosing Database
 
-When choosing databases, it's better to think about the use case and pick the datastore suitable for your application.
+## Best Practices
 
-Instead of implementing operations externally through application-level logic, datastores with in-built operations are preferred.
-
-> [!DETAILS]
-> These datastores provide native support for tasks such as filtering, aggregation, and complex querying, which leads to optimized performance, reduced development effort, and lower latency.
-
-## Analytics Use Cases
-
-For analytics use cases, a tabular columnar database is highly effective for querying and processing large datasets efficiently. 
-
-Its column-oriented storage design accelerates operations like aggregations and filtering, making it well-suited for business intelligence, data warehousing, and reporting tasks.
+1. **Use the Right Tool for the Right Job**. Don't default to one database type for everything, leverage different database technologies based on specific application needs
+2. **Focus on the Data Type & Access Patterns**. Match the database to how data is structured and used 
+3. **Understand the Trade-offs**. Some systems may prioritize **Availability** over **Consistency**, especially in user-facing apps where uptime is critical.
+4. **Consider Development Team Competence**. Even the best database is useless if your team can’t manage it effectively.
 
 
-## Handling Unstructured Data
+## Questions to Ask
 
-NoSQL databases excel at handling unstructured or semi-structured data, suitable for applications requiring high scalability, flexible schemas, and rapid development, such as:
-- content management systems
-- real-time analytics
-- Internet of Things (IoT) data storage
-- social networks
-- applications with large volumes of diverse data formats
+1. What Data Consistency Level Is Required?
+   - **Strong consistency (ACID)**: Needed for critical operations like financial transactions.
+   - **Eventual consistency**: Acceptable for use cases like product recommendations or social feeds.
+2. How Flexible Does the Schema Need to Be?
+   - **Predictable and stable schema** → Use relational databases.
+   - **Dynamic and evolving schema** → Use NoSQL databases like document stores.
+3. What Are the Data Volume and Workload Characteristics?
+   - **Low volume**: Relational or lightweight NoSQL may suffice.
+   - **High volume / write-heavy**: NoSQL databases built for horizontal scaling are better suited.
+4. What Are the Read Requirements and Query Complexity?
+   - **Complex joins and normalized data** → Favor SQL databases.
+   - **Simple key lookups or denormalized documents** → Favor NoSQL.
+5. What Is the Desired Deployment Structure?
+   - **Centralized**: Simpler setup, but may limit scalability.
+   - **Distributed across regions**: Requires databases that support replication and partition tolerance.
+6. Are There Performance Requirements?
+   - If your service needs **low latency** for reads/writes, consider in-memory databases or optimized NoSQL solutions.
+7. What Are the Scalability Requirements?
+   - If you expect **rapid growth**, choose databases that support horizontal scaling (e.g., Cassandra, MongoDB).
+8. What Are the Availability Requirements?
+   - For services that must be **always available**, prioritize databases that support **high availability** and **partition tolerance**.
 
 
-## Database Decision Tree
+## Data Model Decision Tree
 
 - Structured Data
   - OLTP workload: ACID, transactions
@@ -62,22 +71,31 @@ Reference: [SQL vs. NoSQL Database: When to Use, How to Choose](https://www.ml4d
 
 ![](https://www.ml4devs.com/images/illustrations/sql-vs-nosql-comparision.webp)
 
+
+### Data Model
+
+RDBMS databases are used for normalized structured (tabular). Data strictly adhering to a relational schema. Not all data fits into strict RDBMS schema.
+
+NoSQL datastores excel at handling unstructured or semi-structured data, suitable for applications requiring high scalability, flexible schemas, and rapid development, such as:
+- content management systems
+- real-time analytics
+- Internet of Things (IoT) data storage
+- social networks
+- applications with large volumes of diverse data formats
+
+
+### Transaction Guarantees
+
+All RDBMS databases support ACID transactions
+
+Most NoSQL datastores offer BASE transactions. Only a few NoSQL datastores are ACID-complaint.
+
+
 ### Scaling
 
 RDBMS scale vertically. You need to upgrade hardware (more powerful CPU, higher storage capacity) to handle the increasing load. RDBMS did not scale horizontally for Big Data.
 
 NoSQL datastores offer horizontal scale at various CAP Theorem tradeoffs. NoSQL is better at handling partitioned data, so you can scale by adding more machines.
-
-
-### Data Model
-
-- RDBMS databases are used for normalized structured (tabular). Data strictly adhering to a relational schema. Not all data fits into strict RDBMS schema.
-- NoSQL datastores are used for non-relational data, e.g. key-value, document tree, graph. 
-
-### Transaction Guarantees
-
-- All RDBMS databases support ACID transactions
-- Most NoSQL datastores offer BASE transactions. Only a few NoSQL datastores are ACID-complaint.
 
 
 ### Performance

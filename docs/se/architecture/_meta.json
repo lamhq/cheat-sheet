@@ -1,15 +1,15 @@
 [
   "monolith",
-  "eda",
   {
     "name": "microservices",
     "type": "dir",
     "collapsed": true
   },
+  "eda",
+  "mono-fe",
   {
-    "name": "ui",
+    "name": "micro-fe",
     "type": "dir",
-    "collapsed": true,
-    "label": "User Interface"
+    "collapsed": true
   }
 ]

@@ -1,0 +1,51 @@
+# Backend for Frontend
+
+## Overview
+
+**Backend for Frontend (BFF)** is an architectural pattern where a **dedicated backend** (API Gateway) is created for each frontend client (web, mobile, desktop, or third-party integrations).
+
+Instead using a single generic API gateway which often over-fetches or under-fetches, each frontend gets its own tailored backend that:
+- Acts as a middle layer between the UI and microservices
+- Communicates with core microservices to fetch, aggregate and transform data
+- Delivers optimized responses for its specific frontend needs
+
+![](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj_FCcZAAtIN2J-RiKpVXPaaLxd3l4GKDHKGS4Yxn1PdSpfwNDtQthqxMgfePOE0UnNXtUT98CJh4yp6ybgSc0HsM_iH0fyiOnPy3d7w8RIjQi5q3RgRYtAXnuN5p-HZwZxkVVKyDivmx0L7WvdWe-7C_RbSEXasK-lEv4VBhmlV7ZLfKgWcPwIXbIn/s1600/2u3blbb30l6540amgwd4.webp)
+
+
+## Benefits
+
+1. **Tailored Data & Experience** Each clients get data formatted and aggregated exactly it needs for its UI/UX.
+2. **Simplifies Frontend Logic**. Moves data transformation, aggregation, and presentation logic from client to its BFF.
+3. **Independent Evolution**. Each BFF and its client can evolve independently without impacting each other and backend services.
+4. **Avoids the "God Gateway"**. Prevent the API Gateway from becoming a overly complex and a bottleneck to serve all clients.
+
+
+## Challenges
+
+1. **Increased Number of Deployable Units**. Each BFF is a separate backend service that need to develop, test, deploy, monitor and scale.
+2. **Risk of Code Duplication**. Multiple BFFs can perform similar data aggregation, orchestration logic. Some solutions to consider:
+   - Use shared libraries to encapsulate common logic and reduce duplication. But it can introduce strong coupling, making upgrades difficult
+   - Extract duplicated business-related logic into a dedicated microservice.
+3. **Added Latency**. BFF adds one more hop in the network.
+
+
+## When to use
+
+1. When different UI require unique backend logic tailored to their needs
+2. If frontend teams and backend teams are highly separated, BFF can help frontend teams maintain control over their API needs without relying heavily on backend teams for modifications.
+
+
+## Implementation
+
+GraphQL is often considered an ideal fit to implement a BFF:
+- **Over-fetching and Under-fetching:** GraphQL solves this by allowing the client to specify exactly what data it wants in a single request.
+- **Rapid Development:** GraphQL allows frontend teams to iterate quickly on UI changes without requiring corresponding changes to the backend API.
+- **Data Aggregation:** GraphQL can efficiently aggregate data from multiple downstream microservices
+
+> [!NOTE]
+> Server-side changes will still be needed if you need to expose new types or add fields to existing types.
+
+
+## References
+
+- [Backends for Frontends](https://learn.microsoft.com/en-us/azure/architecture/patterns/backends-for-frontends)
