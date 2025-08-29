@@ -1,0 +1,87 @@
+# Event Sourcing
+
+## Overview
+
+The Event Sourcing pattern is a software design approach where state changes are captured as a sequence of (immutable) events, rather than storing just the latest state of an object.
+
+Each event represents a fact, something that happened (e.g., a user created, updated, or deleted an item).
+
+These events are stored sequentially in an append-only log, called Event Store.
+
+The current state of an entity is derived by replaying its events from the Event Store.
+
+Event sourcing is commonly combined with the [CQRS pattern](./cqrs.mdx) by performing the data management tasks in response to the events, and by materializing views from the stored events.
+
+
+## Benefits
+
+1. **Improve performance and scalability**.
+   - Allows continue processing without waiting for background tasks.
+   - Avoid database locking for writes and reads.
+2. **Simplify implementation and management**. The application just need to record events, which are simple objects, no direct update a data store.
+3. **Easy to understand**. Events reflect domain logic, unlike complex database tables that only show current state and can be hard to interpret.
+4. **Concurrency Conflict Reduction**. Concurrency issues are reduced since events don’t directly modify data, though domain models must still guard against from requests that might result in an inconsistent state.
+5. **Auditability**. Events can be used to:
+   - audit changes to the system
+   - regenerate the current state at any time
+   - analyze application performance
+   - detect user behavior trends
+   - assist in testing and debugging
+6. **Decoupled Architecture**. Decoupling command handlers that trigger events, and tasks that respond to them. Allow multiple tasks can respond to the same event.
+
+
+## Challenges
+
+1. **Eventual Consistency**. System state may lag behind real-time due to delays in event publishing and handling; design must tolerate temporary inconsistency.
+2. **Versioning Events**. In case of there're multiple versions of events, handlers must support all event versions
+3. **Event Ordering**. Event order is vital. Use timestamps or incremental IDs to ensure correct sequencing and avoid conflicts.
+4. **Querying Events**. There's no standard approach for reading events.
+5. **Cost of Rebuilding State**. Long event streams slow down state recovery. Use snapshots to speed up by storing intermediate states.
+6. **Conflicts**. Conflicts can still occur due to eventual consistency. App must reconcile overlapping operations like inventory changes and orders.
+7. **Idempotency**. Events may be processed more than once. Consumers must avoid duplicate updates—only one should succeed in aggregating data.
+8. **Circular Logic**. Avoid event chains that trigger new events endlessly—can lead to infinite loops.
+
+
+## When to Use It?
+
+1. **To capture intent and meaning**  
+  Store not just what changed, but *why*—e.g., events like `MovedHome`, `ClosedAccount`, or `Deceased` reflect real-world actions.
+
+2. **To avoid conflicting updates**  
+  Since events are logged rather than directly updating data, it reduces the risk of data conflicts in concurrent systems.
+
+3. **To restore or audit system state**  
+  Replay events to rebuild state, roll back changes, or maintain a full history—ideal for multi-step workflows or debugging.
+
+4. **When events are already part of your app’s flow**  
+  If your system naturally emits events, adopting Event Sourcing requires minimal extra effort.
+
+5. **To decouple input from processing**  
+  Improves UI responsiveness and allows other systems (like payroll or analytics) to react to events independently.
+
+6. **To support flexible data models**  
+  Easily adapt materialized views or read models as requirements evolve—especially useful with **CQRS**.
+
+7. **When eventual consistency is acceptable**  
+  Works well with CQRS if you're okay with delays in updating read models or rehydrating state from event streams.
+
+
+## CQRS with Event Sourcing
+
+An example workflow for E-commerce Order Placement:
+
+1. Command Side (Write Model)
+   - A user places an order → `PlaceOrderCommand` is sent.
+   - The command handler processes it and emits an `OrderPlacedEvent`.
+
+2. Event Store
+   - The `OrderPlacedEvent` is saved in the **event store** (append-only log).
+   - This event becomes the source of truth for the system.
+
+3. Event Handlers (Projection Builders)
+   - A **read model updater** listens for `OrderPlacedEvent`.
+   - It updates a **materialized view** (e.g., `OrdersView` in a NoSQL DB or cache) with order details.
+
+4. Query Side (Read Model)
+   - When another user or service queries for orders, the system reads from `OrdersView`, not the event store.
+   - This view is optimized for fast reads and can be shaped to fit UI needs.
