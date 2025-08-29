@@ -10,6 +10,13 @@ Message brokers facilitate asynchronous communication between microservices. Ins
 
 Brokers may provide **queues** and **topics**.
 
+Popular message brokers:
+- Kafka
+- RabbitMQ
+- ActiveMQ
+- Amazon SNS, EventBridge
+- Kinesis (AWS)
+
 
 ## Consumers
 
@@ -61,27 +68,3 @@ Message brokers provide capabilities that can be useful for asynchronous communi
 
 > [!CAUTION]
 > While brokers may guarantee exactly once delivery, it is still recommended to design consumers to gracefully handle potential duplicate messages.
-
-
-## Choices
-
-Popular message brokers:
-- RabbitMQ
-- ActiveMQ
-- Kafka
-- Simple Queue Service (AWS)
-- Simple Notification Service (AWS)
-- Kinesis (AWS)
-
-
-### Kafka
-
-Kafka is widely used for handling large-scale data in stream processing pipelines, enabling real-time processing.
-
-Kafka is designed for very large-scale use, supporting up to fifty thousand producers and consumers within a single cluster.
-
-Kafka allows messages to be stored for a configurable period or indefinitely, enabling reprocessing previous messages.
-
-Kafka includes built-in stream processing, enable some tasks can be done inside Kafka itself.
-
-*For example, using KSQL, you can define SQL-like statements to process topics on the fly, creating dynamic materialized database views with Kafka topics as the data source rather than a database.*
