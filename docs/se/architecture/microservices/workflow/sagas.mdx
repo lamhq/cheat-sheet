@@ -68,40 +68,26 @@ Choreography-based Saga makes extensive use of events.
 - Ideal when workflow involves multiple teams.
 
 
-## No atomicity
+## Compensating Transaction pattern
 
-Saga does not provide atomicity like traditional database transactions.
+To roll back in a saga, a compensating transaction is needed to undo previous changes.
 
-The saga itself isn't atomic. However, each step can still follow ACID rules if needed.
+A compensating transaction reverses the effects of a previously successfully completed local transaction within a Saga:
+- It's the "undo" operation for a specific step in a distributed business process.
+- It's triggered when a subsequent step in a Saga fails, requiring the overall business operation to be rolled back.
 
+**Goal**: To ensure that if the entire Saga cannot complete, the system is returned to a consistent state (from a business perspective)
 
-### Failure Recovery
+The compensating transaction don't necessarily restore the exact state like a database rollback does, it might perform business operations that semantically negate the effect of the original transaction.
+- *For example, if an order confirmation email was sent, a rollback can’t undo it. Instead, a **compensating transaction** sends a second email informing the customer of the cancellation. We also keep a record of aborted orders in the system.*
 
-Failures can be handled in two ways:
+### Characteristics
 
-- **Backward recovery**: Rolls back failed transactions using compensating actions to undo previous changes.
-- **Forward recovery**: Allows the system to to continue processing from the point of failure.
-
-
-### Business failures
-
-Saga allows us to recover from business failures, not technical failures.
-
-> For example, if we try and take payment from the customer but the customer has insufficient funds, then this is a business failure that the saga should be expected to handle.
->
-> On the other hand, if the Payment Gateway times out or throws a 500 Internal Service Error, then this is a technical failure that we need to handle separately.
-
-
-## Saga rollbacks
-To roll back in a saga, a **compensating transaction** is needed to undo previous changes.
-
-A compensating transaction is a new transaction that reverts the changes made by the original transaction, but we can't make it as the original transaction didn’t occur.
-
-Since full rollback isn’t always possible, compensating transactions are called semantic rollbacks.
-
-It's important to persist rollback information in the system.
-
-*For example, if an order confirmation email was sent, a rollback can’t undo it. Instead, a **compensating transaction** sends a second email informing the customer of the cancellation. We also keep a record of aborted orders in the system.*
+1. **Specific to an Operation**. Each local transaction in a Saga should have a corresponding compensating transaction
+2. **Idempotent by Design**. Executing Compensating transactions multiple times should have the same effect as executing it once.
+3. **Can Also Fail**. A compensating transaction is also a distributed operation and could potentially fail. Failures need to be handled (through retries or manual intervention).
+4. **Eventual Consistency**. The process of compensation brings the system back to a consistent state eventually
+5. **Data for Compensation**. A compensating transaction often need information from original transaction to perform its operation.
 
 
 ## Minimizing rollbacks
