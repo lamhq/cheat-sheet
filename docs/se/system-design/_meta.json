@@ -19,6 +19,8 @@
   "mat-view",
   "cqrs",
   "event-sourcing",
+  "txn-outbox",
+  "cdc",
   "bote",
   {
     "name": "case-studies",

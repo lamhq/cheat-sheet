@@ -1,0 +1,48 @@
+# Change Data Capture
+
+## Overview
+
+CDC is a **data integration pattern** that identifies and captures data changes in a source system and delivers them to downstream systems.
+
+Instead of scanning entire datasets repeatedly, CDC focuses only on the data that has changed.
+
+Databases that offer built-in CDC features include:
+- **CockroachDB**: A distributed SQL database built for high availability and global scalability.  
+- **Azure Cosmos DB**: A fully managed NoSQL database designed for low-latency, planet-scale applications.  
+- **Amazon DynamoDB Streams**: A real-time change data stream feature for DynamoDB that enables event-driven processing.
+
+CDC tools include:
+- **Debezium**: Log-based CDC for databases like MySQL, PostgreSQL, MongoDB
+- **Kafka Connect**: Pluggable architecture; integrates well with Debezium
+- **AWS DMS**: Managed service for database migration and CDC
+
+
+## How It Works
+
+CDC can be implemented in several ways:
+- **Transaction Logs**: Monitor changes from the database's transaction log (commit log).
+- **Database Triggers**: Capture changes using built-in database features.
+- **Timestamps or Version Columns**: Track rows that have been modified since the last read.
+
+Once changes are captured, they’re typically sent to:
+- Data warehouses for analytics
+- Message brokers for event-driven systems
+- Other databases for replication
+
+
+## Benefits
+
+- **Real-Time Sync**: Keeps systems updated instantly.
+- **Efficiency**: Reduces load by avoiding full table scans.
+- **Event-Driven Architecture**: Enables reactive systems that respond to data changes.
+- **Audit & Compliance**: Maintains a history of changes for traceability.
+
+
+## Transactional Outbox pattern
+
+CDC is an excellent way to implement the 'Message Relay' for  [Transactional Outbox](./txn-outbox.mdx) pattern:
+
+1. Microservice writes business data and an event to its Outbox Table in one local transaction
+2. A CDC tool monitors the database transaction log for new rows inserted into the Outbox Table
+3. When a new event record is committed to the Outbox Table, CDC captures it and publishes it to the Message Broker
+4. This eliminates polling and provides near real-time, low-overhead event detection on the source database
