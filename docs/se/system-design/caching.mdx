@@ -1,0 +1,42 @@
+# Caching
+
+## Overview
+
+Caching is a technique for improving system performance by storing copies of frequently accessed data in a temporary, high-speed storage location to serve future requests faster.
+
+Its primary goal is to serve the subsequent requests for the same data from the cache rather than repeatedly performing the expensive operations (querying database, calling external API, complex calculations, etc).
+
+
+## Benefits
+
+- **Improve read performance**. Fetching data from a cache avoids network calls and reduces load on the downstream service.
+- **Better scalability**. Caching between clients and the origin service helps scale the system by reducing direct requests to the origin.
+- **Improved Availability**. If the origin service is unavailable, a local cache allows continued operation.
+- **Increased throughput**. System can handle more requests.
+
+
+## Challenges
+
+- Increase complexity to handle cache
+- Introduce inconsistencies where cache is not synced with data storage
+
+
+## Best Practices
+
+1. **Minimize caching layers**, cache only where necessary.
+2. Don't use cache to store **critical, sensitive data**.
+3. Set up multiple cache servers across different data centers to avoid **Single point of failure**.
+4. Keep data store and cache in sync to ensure data **consistency**.
+5. **Overprovision the required memory for cache servers** to handle unexpected spikes in demand without performance degradation.
+6. **Treat caching as a performance optimization**, not a fundamental data source.
+
+> [!CAUTION]
+> The more cache layers between client and the data source, the more stale the data can be, the more difficult to determine where data needs to be invalidated.
+
+> [!CAUTION]
+> Be cautious with cache headers `Expires: Never` can cause permanent stale data issues
+
+
+## Use cases
+
+Caching works best for read-heavy workloads, when data is read frequently but modified infrequently.

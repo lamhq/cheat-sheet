@@ -3,11 +3,6 @@
   "server",
   "proxy",
   "load-balancer",
-  {
-    "name": "cache",
-    "type": "dir",
-    "collapsed": true
-  },
   "cdn",
   "message-broker"
 ]

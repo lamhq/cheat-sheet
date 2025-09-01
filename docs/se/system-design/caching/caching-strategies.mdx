@@ -11,14 +11,15 @@ It checks the key in cache, and if it's not there, the application fetches it fr
 
 ![](https://codeahoy.com/img/cache-aside.png)
 
-Pros:
+**Benefits**:
 - Cache only what's needed
 - Data model in cache can be different than the data model in database.
 
-Cons:
-- Cache misses are expensive due to the extra penalty of loading, and updating data in the cache.
-- Stale data can occur when the cache is inconsistent with the database.
-- Managing the cache increases the complexity for the application.
+**Challenges**:
+- **Complexity in Application Code**. The logic for checking the cache, fetching from DB, and populating the cache resides in the application
+- **Data Staleness & Cache Invalidation**. Cached data can become stale if the source data in the database changes. Requires a strategy to invalidate or update the cache
+- **Cache Miss Penalty**. The first request for uncached data (a miss) will incur both the cache check AND the database fetch
+- **"Thundering Herd" Problem**. If a popular cached item expires, many concurrent requests might miss the cache simultaneously and all hit the database at once
 
 
 ## Read-Through
@@ -29,11 +30,11 @@ It's a common pattern in ORM frameworks.
 
 ![](https://codeahoy.com/img/read-through.png)
 
-Pros:
+**Benefits**:
 - Cache only what's needed
 - Transparent to the application
 
-Cons:
+**Challenges**:
 - Data model must be the same with database.
 - Cache misses are expensive
 - Data staleness
@@ -47,14 +48,14 @@ Client interact with a cache API that also update the cache when data is written
 
 Typically used in server-side caching, where updates happen within the same transaction.
 
-Pros:
+**Benefits**:
 - Cache always remains consistent with the database
 
-Cons:
+**Challenges**:
 - Writes are expensive: every write operation update both the cache and the database
 - Redudant data: we write data to cache that never be read
 
-Where to use?
+**Where to use?**
 - When data consistency is critical.
 - When using server-side caching (e.g., Redis, Memcached).
 - When read performance is more important than write speed.
