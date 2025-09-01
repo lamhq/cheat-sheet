@@ -18,5 +18,10 @@
     "name": "partitioning",
     "type": "dir",
     "collapsed": true
-  }
+  },
+  "mat-view",
+  "cqrs",
+  "event-sourcing",
+  "txn-outbox",
+  "cdc"
 ]
