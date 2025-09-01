@@ -1,0 +1,7 @@
+[
+  "mat-view",
+  "cqrs",
+  "event-sourcing",
+  "txn-outbox",
+  "cdc"
+]

@@ -1,4 +1,9 @@
 [
+  "scalability",
+  "high-availability",
+  "eventual-consistency",
+  "cap-theorem",
+  "base-model",
   {
     "name": "components",
     "type": "dir",
@@ -21,11 +26,12 @@
     "type": "dir",
     "collapsed": true
   },
-  "scalability",
-  "high-availability",
-  "eventual-consistency",
-  "cap-theorem",
-  "base-model",
+  {
+    "name": "patterns",
+    "type": "dir",
+    "label": "Patterns",
+    "collapsed": true
+  },
   "bote",
   {
     "name": "case-studies",
