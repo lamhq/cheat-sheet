@@ -10,12 +10,17 @@
     "type": "dir",
     "collapsed": true
   },
+  {
+    "name": "data-mng",
+    "type": "dir",
+    "label": "Data Management",
+    "collapsed": true
+  },
   "scalability",
   "high-availability",
   "cap-theorem",
   "base-model",
   "eventual-consistency",
-  "consistent-hashing",
   "mat-view",
   "cqrs",
   "event-sourcing",
