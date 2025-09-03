@@ -13,5 +13,6 @@
     "label": "Snippets",
     "type": "dir",
     "collapsed": true
-  }
+  },
+  "helm"
 ]

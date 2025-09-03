@@ -1,0 +1,29 @@
+# Helm
+
+Here’s a breakdown of what Helm Charts are and why they matter:
+
+## Overview
+
+Helm is a package manager for Kubernetes, designed to simplify the deployment and management of applications.
+
+It bundles all the Kubernetes manifests (like Deployments, Services, ConfigMaps, Secrets) into a single, reusable package called a **Chart**.
+
+
+## Helm Chart
+
+A typical Helm Chart includes:
+- `Chart.yaml`: Metadata about the chart
+- `values.yaml`: Default configuration values
+- `templates/`: Directory containing Kubernetes manifest templates
+- Optional `charts/`: Dependencies
+- Optional `README.md`: Documentation
+
+
+## Benefits
+
+- **Simplified complex application deployments**: Instead of manually applying many YAML files, you install one chart
+- **Enables reusability and sharing**. Easily deploy the same application across different environments (dev, staging, prod) with different configurations
+- **Manages release lifecycle of application**. Make it easy for versioning, upgrades, rollbacks
+- **Parameterization**: Customize deployments using `values.yaml`
+- **Dependency Management**: Handle app dependencies cleanly
+- **CI/CD Integration**: Works well with GitOps tools like ArgoCD and FluxCD
