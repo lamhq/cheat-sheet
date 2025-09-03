@@ -3,5 +3,6 @@
   "cqrs",
   "event-sourcing",
   "txn-outbox",
-  "cdc"
+  "cdc",
+  "sidecar"
 ]
