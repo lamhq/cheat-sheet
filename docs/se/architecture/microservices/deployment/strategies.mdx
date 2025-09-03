@@ -1,0 +1,69 @@
+# Deployment Strategies
+
+## Rolling Deployment
+
+Gradually replace replaces old versions of a microservice with new ones, either one at a time or in small batches.
+
+The orchestrator (e.g. Kubernetes) ensures a minimum number of instances are always running
+
+**Benefits**:
+- **No Downtime**: Because the number of running instances remains stable, the service continues to handle traffic.
+- **Resource Efficient**: No need to double your infrastructure like in Blue-Green deployments.
+- **Simple to Implement**: Most orchestrators support this natively.
+
+**Drawbacks**:
+- **Version Overlap**: Old and new versions run simultaneously, which can cause issues if there are breaking changes in APIs or database schemas.
+- **Rollback Complexity**: Reverting a failed deployment means doing another rolling deployment in reverse, which can be slow and error-prone.
+
+
+## Blue-Green Deployment
+
+Deploy a new version alongside the old version in a separate, identical environment, then switch traffic instantly
+
+- **Blue Environment**: The current live production version (v1)
+- **Green Environment**: The new version (v2), is deployed and tested in parallel
+
+**How It Works**:
+1. Your current version (v1) is running in the **blue** environment and handling all traffic.
+2. You deploy the new version (v2) to the **green** environment, which is not yet receiving traffic.
+3. You run tests on the green environment to ensure everything works—without impacting users.
+4. Once you're confident, you **flip the router or load balancer** so all traffic goes to the green environment. Now v2 is live.
+5. If something goes wrong, you can instantly roll back by redirecting traffic back to the blue environment.
+
+**Benefits**:
+- **Zero Downtime**: Users don’t experience interruptions.
+- **Thorough Testing**: You test the new version in a real production-like setup.
+- **Safe Rollback**: You can revert instantly if issues arise.
+
+
+**Drawbacks**:
+- **Double Infrastructure Cost**: You need to maintain two full environments, which can be expensive.
+- **Complexity**: Managing two environments and ensuring they stay in sync can be tricky.
+
+
+## Canary Deployment
+
+Gradually release the new version to a small subset of users/requests first, before rolling it out to everyone
+
+The small initial group acts as a "canary in a coal mine" to detect issues
+
+> [!INFO]
+> The term comes from coal mining, where miners used canaries to detect toxic gases—if the bird was affected, it signaled danger.
+
+**How It Works**
+
+1. You deploy **version 2** of your microservice alongside the existing **version 1**.
+2. Configure your **router, API gateway, or service mesh** to send a small portion (e.g., 1–5%) of live traffic to version 2.
+3. Monitor the new version using metrics (Error rates, LatencyBusiness KPIs)
+4. If version 2 performs well, increase traffic gradually (1% → 25% → 50% → 100%)
+5. If issues arise, route all traffic back to version 1. This limits the blast radius of any bugs or regressions.
+
+**Benefits**:
+- **Lowest Risk, minimizes impact**: Only a small group of users is affected if something goes wrong.
+- **Real-World Validation**: You test the new version with actual production traffic.
+- **Flexible Rollout**: You control the pace of deployment.
+
+**Drawbacks**:
+- **Most omplex Setup**: Requires advanced traffic routing tools like **Istio**, **NGINX**, or **Envoy**.
+- **Monitoring Overhead**: You need robust observability tools to detect issues early.
+- **State Management**: If version 2 changes shared resources (like databases), rollback can be tricky.
