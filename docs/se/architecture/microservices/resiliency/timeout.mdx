@@ -1,0 +1,18 @@
+# Timeout
+
+## Overview
+
+Timeout Pattern provides that should not wait for a service response for an indefinite amount of time, throw an exception instead of waiting too long.
+
+In microservices, It used to prevent service calls from taking too long to complete.
+
+It sets a maximum time limit for the service call to complete, if the time limit is exceeded, the call is considered to have "timed out".
+
+
+## Best practices
+
+1. Apply time-outs to all calls to external services.
+2. Set an overall time-out for an entire operation.
+3. Choose a reasonable default time-out.
+4. Monitor when time-outs occur and adjust accordingly.
+5. Base time-out values on typical response times of downstream services.

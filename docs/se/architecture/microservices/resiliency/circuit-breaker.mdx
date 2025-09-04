@@ -1,0 +1,73 @@
+# Circuit Breaker
+
+## Overview
+
+A circuit breaker prevent cascading failures by automatically stopping requests to a failing service, useful when one service depends on another.
+
+> [!INFO]
+> It's inspired by **electrical circuit breakers**, which stop the flow of electricity when a fault is detected—protecting the system from damage.
+
+
+## Explanation
+
+- Microservices often depend on each other.
+- If one service fails, it can cause other services to fail too.
+- This chain reaction is called a cascading failure.
+- The Circuit Breaker Pattern detects repeated failures and temporarily blocks requests to the failing service.
+- This gives the failing service time to recover and prevents the rest of the system from being overwhelmed.
+
+
+## How it work
+
+1. Circuit Breaker monitors the communication between the services and follows the errors that occur in the communication.
+2. When the error in the system exceeds a certain threshold value, Circuit Breaker turn on and cut off communication, and returning previously determined error messages.
+3. While Circuit Breaker is open, it continues to monitor the communication traffic.
+4. If the requested service starts to return successful results, it becomes closed.
+
+
+## States
+
+Circuit breakers can be in one of three states:
+
+1. **Closed**: The circuit breaker is not open and all requests are executed.
+2. **Open**: The Circuit Breaker is open and it prevents the application from repeatedly trying to execute an operation while an error occurs.
+3. **Half-Open**: The Circuit Breaker executes a few operations to identify if an error still occurs. If errors occur, then the circuit breaker will be opened, if not it will be closed.
+
+
+## Benefits
+
+- **Prevents system slowdowns**. If a failing service responds slowly, it can impact the entire system. Circuit breakers stop unnecessary requests to that service.
+- **Stops unnecessary retries**. Instead of continually sending requests to a broken service, the circuit breaker ensures that requests stop temporarily.
+- **Ensures recovery monitoring**. After a set period, the system tests the failed service with a few requests. If responses are healthy, the circuit breaker closes, and normal traffic resumes.
+
+
+## Best Practices
+
+1. Define what counts as a failure (e.g., time-outs or 5XX HTTP errors).
+2. Set a threshold for failures before the circuit breaker activates.
+3. Allow automatic recovery by periodically testing the service and closing the circuit breaker when it's stable.
+4. Consider manual activation for maintenance, preventing unnecessary failures during planned downtime.
+
+
+## Circuit Breaker + Retry
+
+How **Retry** and **Circuit Breaker** patterns can be used together to make microservice communication more resilient and efficient:
+
+Set up Retry:
+- A client sends a request to an API Gateway.
+- The API Gateway forwards the request to internal microservices.
+- The system uses the **Retry** pattern to handle failures by repeating failed requests until success
+
+Apply Circuit Breaker:
+- The system adds a **Circuit Breaker** on top of the Retry logic.
+- After 10 consecutive failures, the circuit opens.
+- The API Gateway stops sending requests to the failing service and immediately returns an error to the client
+
+Recovery:
+- The Circuit Breaker has a check interval to see if the service is back.
+- If the service responds successfully, the circuit closes, and traffic resumes.
+- If it’s still down, the circuit stays open and blocks further requests.
+
+Benefits:
+- **Retry** pattern handles temporary glitches by retrying failed requests.
+- **Circuit Breaker** pattern prevents wasteful retries when a service is persistently down.

@@ -1,0 +1,17 @@
+# Redundancy
+
+Redundancy means having extra copies or instances of a critical component to reduce the risk of failure.
+
+If a microservice instance fails, redundancy ensures another instance is available to continue handling requests.
+
+## Benefits
+
+- **Prevents service disruptions:** If one instance fails, others can take over, ensuring continuous operation.
+- **Protects against resource unavailability:** If a critical component (like a database or server) goes offline, redundancy minimizes downtime.
+- **Enhances scalability:** Redundant systems not only prevent failures but also help scale workloads efficiently.
+
+## Considerations
+
+- Identify which parts of a system are most vulnerable to failure.
+- Prioritize redundancy for components that would severely disrupt operations if they fail.
+- More redundancy requires more infrastructure, increasing expenses.

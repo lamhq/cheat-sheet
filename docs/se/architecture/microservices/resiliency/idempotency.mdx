@@ -1,0 +1,34 @@
+# Idempotency
+
+Idempotency refers to operations that produce the same result no matter how many times they are executed.
+
+Idempotency is a critical principle in designing fault-tolerant, scalable systems, ensuring that retrying operations won't cause unintended consequences.
+
+For example, consider a non-idempotent operation "Adding Points":
+```xml
+<credit>
+  <amount>100</amount>
+  <forAccount>1234</forAccount>
+</credit>
+```
+
+If processed multiple times, it adds 100 points repeatedly.
+
+An idempotent version, which includes a reference to a specific order:
+```xml
+<credit>
+  <amount>100</amount>
+  <forAccount>1234</forAccount>
+  <reason>
+    <forPurchase>4567</forPurchase>
+  </reason>
+</credit>
+```
+This ensures that the points are only applied once for each unique order.
+
+
+## Benefits
+
+Due to asynchronous processing, there is a small chance that the same message may be processed more than once. By handling events idempotently, duplicate effects are prevented, enhancing system reliability.
+
+> [!CAUTION] For REST API, some HTTP verbs (e.g., GET, PUT) are expected to be idempotent, but this depends on the implementation in the underlying service.
