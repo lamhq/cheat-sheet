@@ -6,6 +6,7 @@
   "ci",
   "cd",
   "progressive-delivery",
+  "gitops",
   {
     "name": "docker",
     "type": "dir",

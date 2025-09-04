@@ -1,0 +1,65 @@
+# GitOps
+
+## Overview
+
+GitOps is a DevOps practice that uses a Git repository as the single source of truth for both infrastructure and application configurations.
+
+It's an operational framework that takes DevOps, CI/CD and IaC best practices.
+
+
+## How It Works
+
+4 main steps of GitOps workflow:
+
+1. **Define the Desired State in Git**. Teams write declarative configs for applications and infrastructure, stored in a Git repo.
+2. **Submit Change through Pull Request**. Changes are proposed via pull requests, reviewed and approved by the team.
+3. **Automated Synchronization**. A cluster operator detects changes in Git and updates the system to match.
+4. **Continuous Feedback and Monitoring**. The system is continuously monitored, including logging, monitoring, and alerting for system health and flag any drift (differences) from the desired state.
+
+*For example, for a high-traffic event like Black Friday, the team anticipates increased load on the Product microservices. They update the replica count in the configuration files and submit a pull request. Once merged, the GitOps operator automatically scales the services in the cluster.*
+
+*The system is continuously monitored. If issues arise, hotfixes are made by updating Git, and the operator syncs the changes. Rollbacks are simple: just revert the Git commit, and the cluster follows suit.*
+
+
+## Key Principles
+
+1. **Declarative Configuration**. The entire system state is described declaratively in files (e.g. Kubernetes YAML)
+2. **Version Control as the Single Source of Truth**. Git holds the desired state. No manually applying change using CLI tools.
+3. **Automated Synchronization (Pull-Based)**. An automated agent inside the cluster continuously pulls changes from Git and applies them (e.g. Argo CD, Flux)
+4. **Continuous Reconciliation**. The agent constantly compares the live state with the state in Git and corrects any drift
+
+
+## Benefits
+
+- **Reliable**: Changes are tracked and reversible.
+- **Secure**: No manual intervention or exposed credentials.
+- **Scalable**: Works across teams and environments.
+- **Automated**: Reduces human error and speeds up delivery.
+
+
+## Tools
+
+Cloud-native GitOps tools are designed to facilitate the GitOps workflow, particularly in Kubernetes ensuring that the state of your cluster matches the configuration defined in a Git repository.
+
+Cloud-Native GitOps tools:
+- ArgoCD: An opensource, declarative GitOps tool focused on continuous delivery for Kubernetes.
+- Jenkins X: Combines CI/CD with GitOps principles, designed for Kubernetes.
+- Flux: Lightweight and simple GitOps operator that syncs Kubernetes manifests from Git.
+- Codefresh
+- Tekton
+
+Cloud Serverless GitOps tools:
+- AWS Proton
+- Azure Arc
+- Google Config Sync
+
+
+## GitOps vs. Traditional CI/CD
+
+| Feature                  | Traditional CI/CD         | GitOps                          |
+|--------------------------|---------------------------|----------------------------------|
+| Deployment Trigger       | Push from pipeline         | Pull by cluster agent            |
+| Source of Truth          | CI/CD pipeline config      | Git repository                   |
+| Rollback                 | Manual or scripted         | Git revert                       |
+| Observability            | External monitoring        | Git history + cluster sync       |
+| Complexity               | Often tightly coupled      | Decoupled and declarative        |
