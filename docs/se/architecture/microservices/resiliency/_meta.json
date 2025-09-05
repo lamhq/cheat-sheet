@@ -1,0 +1,10 @@
+[
+  "retry",
+  "circuit-breaker",
+  "bulkhead",
+  "timeout",
+  "fallback",
+  "isolation",
+  "redundancy",
+  "idempotency"
+]

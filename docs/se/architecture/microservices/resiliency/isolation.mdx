@@ -1,0 +1,23 @@
+# Isolation
+
+Isolation ensures that one service's failure doesn't negatively impact another.
+
+
+## Benefits
+
+- **Minimizes disruptions**: If a downstream microservice goes offline, upstream services can continue operating if middleware or buffering systems are in place.
+- **Increases autonomy**: Isolated services require less coordination between teams, allowing independent development and evolution.
+- **Reduces failure spread**: If services run on the same machine or share infrastructure, a failure in one can affect others. Proper isolation ensures failures remain contained.
+
+## Isolation Types
+
+1. **Logical isolation**: Services don't communicate directly, reducing dependency risks.
+2. **Physical isolation**: Services run on separate hosts, preventing resource contention (e.g., one service consuming all CPU).
+3. **Database isolation**: Each microservice has its own database infrastructure, avoiding shared failures.
+
+
+## Drawbacks
+
+- **Increased infrastructure costs**: Running services on independent machines requires more resources.
+- **Additional complexity**: Managing isolated systems introduces new failure points, such as middleware dependencies.
+- **Operational overhead**: More isolated services mean more tools needed for monitoring, scaling, and management.

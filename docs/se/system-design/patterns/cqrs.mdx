@@ -1,0 +1,93 @@
+# CQRS
+
+## Overview
+
+Command Query Responsibility Segregation (CQRS) is a design pattern that segregates read and write operations for a data store into separate data models.
+
+This approach allows each model to be optimized independently and can improve the performance, scalability, and security of an application.
+
+Read Database options:
+- Apache Cassandra
+- MongoDB
+- Redis
+- Amazon DynamoDB
+- Amazon Cosmos DB
+
+
+## How it work?
+
+The application's code is divided into two distinct paths
+- The Command Path handles write operations, such as creating, updating, or deleting data
+- The Query Path handles read operations and is optimized for querying and displaying data to users
+
+![](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*TaPzEj91HM06UgZoajqGwA.png)
+
+
+## Why CQRS?
+
+**Reads** and **Writes** often have very different characteristics and requirements. A single data model optimized for one can be suboptimal for the other.
+
+Writes (Commands):
+- Need strong consistency (ACID)
+- Involve business logic and validation rules
+- Less frequent but more complex
+
+Reads (Queries):
+- Need low latency
+- Involve complex joins and normalized data
+- Much higher volume
+
+
+## Benefits
+
+1. **Independent Scaling**. Read and Write databases can be scaled independently.
+2. **Optimized Data Models**. Allow different data models (or schema) for read and write operations.
+3. **Improved Query Performance & Simpler queries**. Data model optimized for queries can use denormalized data, avoid complex joins and transformations.
+4. **Increased Security**. Allow only the appropriate domain entities or operations have permission to perform write actions on the data.
+5. **Separation of concerns**. Separating the read and write responsibilities results in cleaner, more maintainable models.
+
+
+## Challenges
+
+1. **Increased complexity**. It can introduce significant complexity into the application design
+2. **Eventually consistent**. The read data might not show the most recent changes immediately.
+3. **Synchronization Logic**. Need to implement and maintain the synchronization mechanism from the write store to the read store.
+
+
+## Where to use?
+
+1. Read and write workloads have different scaling needs.
+2. When you have complex business logic and validation rules for writes, and different read models for various queries.
+3. When you need to optimize performance for both reads and writes.
+4. When you need to minimize conflicts and improve performance by separating the concerns of reading and writing data.
+
+This pattern might not be suitable when:
+
+1. The domain or the business rules are simple.
+2. A simple CRUD-style user interface and data access operations are sufficient.
+
+
+## Best Practices
+
+1. Physically separate read and write databases
+2. Optimize read-side schema for queries (Materialized Views is an excellent way to implement read models)
+3. Use different database technologies if make sense
+
+
+## Synchronization Techniques
+
+1. Database Replication
+   - The read models share the same database technology and schema.
+   - You can use built-in database replication features to create read only replicas.
+   - Queries are directed to read replicas.
+2. Change Data Capture (CDC)
+   - CDC tools can monitor transaction log of the write database and automatically publish events for data changes, simplify application code.
+3. Event Sourcing
+   - The write model does not store the current state of the data, instead it stores a sequence of events that describe the changes to the data.
+   - The current state is derived by replaying events
+   - Ideal for buidling/updating Materialized Views
+
+
+## References
+
+- [CQRS - Microsoft](https://learn.microsoft.com/en-us/azure/architecture/patterns/cqrs)

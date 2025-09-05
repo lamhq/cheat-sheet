@@ -1,0 +1,59 @@
+# Data Partitioning
+
+## Overview
+
+Data Partitioning is the process of dividing a large database into smaller, more manageable and independent pieces called partitions.
+
+Each partition can often be managed and accessed separately.
+
+Goal: Distribute data to improve availability, scalability and performance
+
+Often transparent to client applications (they see a single logical database)
+
+
+## Benefits
+
+1. **Scalability**: Distribute data and load across multiple servers (horizontal scaling for data)
+2. **Availability**: Failure of one partition/server doesn't affect others
+3. **Performance**: Queries can operate on smaller data subsets; allow parallel processing across partitions
+4. **Manageability**: Smaller partitions are easier to back up, index and maintain
+5. **Security**: Isolate sensitive data in specific partitions
+
+
+## Challenges
+
+1. **Complexity of maintainance**. Backup and recovery procedures become more difficult when dealing with multiple partitions.
+2. **Potential Wasted Space**. If partitions are not evenly distributed, some may be underutilized, leading to wasted storage.
+3. **Expensive Cross-Partition Queries**. Querying data from all partitions can be resource-intensive and slow.  
+4. **Difficulty Ensuring Uniqueness**. Maintaining unique constraints across partitions is more complex and error-prone.
+
+
+## Types of Partitioning
+
+### Horizontal Partitioning (Sharding)
+
+Splits the table into rows.
+
+Each partition has the same schema and contains a subset of the rows.
+
+### Vertical Partitioning
+
+Splits the table into columns.
+
+Each partition contains a subset of the columns.
+
+Frequently accessed columns are stored in one partition, while less frequently accessed columns are stored in another.
+
+Benefit: improve performance of queries that often accessing only a subset of columns.
+
+### Functional Partitioning (Domain/Context-Based)
+
+Divides data based on how it's used by different business functions or bounded contexts within app
+
+Data is segregated according to its usage domain
+
+Aligns closely with how we decompose microservices by business capability or DDD subdomains
+
+Example: Product data in one set of tables/schema, Order data in another, Customer data in yet another.
+
+This is often a natural outcome of the Database-per-Service pattern & Polyglot Persistence

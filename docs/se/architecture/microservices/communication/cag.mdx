@@ -1,0 +1,40 @@
+# Central Aggregating Gateway
+
+## Overview
+
+A Central Aggregating Gateway is an architectural pattern that sits between the UI (or client) and microservices, helping to filter and combine multiple requests into a single response.
+
+
+## How it works
+
+1. The UI sends one request to the aggregating gateway.
+2. The gateway fetches data from multiple microservices.
+3. It combines the results into a single optimized response.
+4. The UI receives only the necessary information.
+
+![](https://learn.microsoft.com/en-us/azure/architecture/patterns/_images/gateway-aggregation.png)
+
+
+## Benefits
+
+- **Batch requests**. Instead of making separate calls for retrieving data for different items, the gateway processes everything in one batch.
+- **Reduce Latency**. Fewer network calls mean lower bandwidth use and faster responses.
+- **Optimized data fetching**. The gateway ensures that the UI only gets relevant information, reducing unnecessary data transmission.
+
+
+## Challenges
+
+1. **Ownership**. The gateway should be owned by the UI team. This may be impossible if they don't have the skills to build a backend.
+2. **Bottleneck for delivery**. The gateway can become a bottleneck for delivery when multiple teams contribute to it, that require coordination between those teams, slowing things down (the backend for frontend pattern can help resolve this issue).
+3. **Different UI need unique data**. The gateway need to be able to serves all UI needs. Over time, the gateway becomes **bloated** as more APIs are added.
+4. **Complexity**. Aside from the call aggregation and filtering, gateways also handle: API key management, authentication, routing. If a gateway grows too complex, a **dedicated gateway team** might be needed. Requiring coordinate between frontent, gateway, backend team makes development painfully slow.
+
+
+## When to use?
+
+A client needs to communicate with multiple backend services to perform an operation, with latency is a concern.
+
+
+## References
+
+- [Gateway Aggregation pattern](https://learn.microsoft.com/en-us/azure/architecture/patterns/gateway-aggregation)

@@ -1,0 +1,46 @@
+# Bulkhead
+
+## Overview
+
+Bulkhead pattern is used to isolate failures of one component from affecting the others, in a distributed system.
+
+> [!INFO]
+> Based on the concept of a "bulkhead" in ships, they are made not as a whole, but by shielding from certain areas, if there is happens a flood or fire, the relevant compartment is closed and isolated.
+
+Examples:
+- **Separate connection pools for each downstream service**: Prevents one failing connection from affecting others.
+- **Microservice separation**: Ensures that an outage in one service doesn't cascade to others.
+- **Load shedding**: Bulkheads allow systems to reject requests strategically to prevent overload.
+
+
+## Explaination
+
+Imagine a scenario:
+
+- Users send a flood of HTTP requests to **Service A**.
+- Due to a software bug, **Service A** becomes unresponsive.
+- Requests to **Service A** pile up, consuming all CPU threads and resources.
+- Requests to **Service B** are stuck in the same queue, waiting behind Service A's traffic.
+- Result: no users get served, even though some services are working fine.
+
+The Bulkhead Pattern divides system resources (like threads, queues, or memory) into isolated pools:
+- Service A gets its own resource pool.
+- Service B gets a separate pool.
+- If Service A fails, it only affects its own pool, Service B continues to run smoothly.
+
+
+## Implementation
+
+To apply this pattern, you define resource limits for each service:
+- Set maximum threads and memory usage per service.
+- In platforms like Kubernetes, these limits are configured in:
+  - Deployment specs
+  - ReplicaSet configurations
+
+
+## When to use
+
+- When a service has a high load and there is a risk of resource contention with other service instances.
+- When a service depends on one or more downstream services, and there is a risk of cascading failures.
+- If a downstream service becomes unavailable or experiences a
+performance issue.

@@ -1,0 +1,59 @@
+# Principles
+
+System Design Principles.
+
+## Why is it matter?
+
+Software projects vary in complexity, and engineers often fall into the trap of overengineering (adding unnecessary layers, abstractions, or features).
+
+Design principles act as a compass, helping teams stay focused on what's essential and avoid building bloated systems.
+
+
+## KISS
+
+*"Keep It Simple, Stupid"*. Aka, "Keep It Simple and Straightforward".
+
+Simplicity is the primary goal. Avoid unnecessary complexity in design and implementation
+
+Benefit: Simple systems are easier to understand, maintain, and debug.
+
+How to apply:
+- Use clear, meaningful names for components and methods.
+- Maintain separation of concerns across layers and modules.
+- Remove features that don't serve current requirements.
+
+Ask yourself:
+- Is this the simplest way to achieve this functionality?
+- Is there any unnecessary complexity we can remove from our design?
+
+
+## YAGNI
+
+*"You Ain't Gonna Need It"*.
+
+Don't implement functionality based on future speculation.
+
+Benefit: Avoids wasted effort on features that may never be used.
+
+How to apply:
+- Build only what’s necessary to solve today’s problems.
+- Do not add complexity for requirements that aren't actually present and clearly defined right now.
+
+Ask yourself:
+- Is it a concrete and current requirement? (if not, we won't build it)
+
+
+## DRY
+
+*"Don't Repeat Yourself"*.
+
+Every piece of knowledge must have a single, unambiguous, authoritative representation within a system (only exist once, no duplicates, no confusion).
+
+Benefit: Promotes maintainability, reduces errors and minimizes complexity
+
+How to apply:
+- Centralize logic, configuration, and design elements.
+- Refactor repeated code into reusable functions or modules.
+
+Ask yourself:
+- Are there any duplicated logic or core functionalities across different modules?

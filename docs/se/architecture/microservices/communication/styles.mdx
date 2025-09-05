@@ -26,7 +26,7 @@ The caller can carry other processing without having to wait for a response.
 
 The three most common asynchronous communication styles in microservice:
 1. **Communication through common data**. A microservice changes some common data, then other microservices later make use of.
-2. **Request-response**. A microservice requests another to perform an operation. Once completed, the upstream microservice receive the response, regardless of success or failure.
+2. **Request-driven**. A microservice requests another to perform an operation. Once completed, the upstream microservice receive the response, regardless of success or failure.
 3. **Event-driven interaction**. A microservice broadcasts an event. Other microservices listen for the events they are interested in and react accordingly.
 
 > [!NOTE]

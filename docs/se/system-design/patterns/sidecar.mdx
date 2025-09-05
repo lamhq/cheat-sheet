@@ -1,0 +1,29 @@
+# Sidecar
+
+## Overview
+
+A design pattern is a design pattern where a helper container (Sidecar) runs alongside the main application container within the same Kubernetes Pod.
+
+The main container runs core business logic, the sidecar container run a separate process that provides supporting or common functionality.
+
+Because the sidecar runs in the same Pod, it share the same network, storage volume and life cycle.
+
+The sidecar pattern abstract away common functionalities from application code into a separate reusable container.
+
+
+## Benefits
+
+1. **Decoupling & Separation of Concerns**. Moves cross-cutting logic out of app code, keep microservices focused on its business purpose
+2. **Reusability**. The same sidecar container can be attached to many different microservices without any code changes in those services
+3. **Language Independence**. It can be written in different languages than the main app
+4. **Independent Updates**. You can update the functionality of the sidecar without having to rebuild or redeploy your main app container
+
+
+## Challenges
+
+1. **Complexity**. Manage more containers and increase resource usage of each pod (e.g., CPU, memory)
+
+
+## References
+
+- [Sidecar pattern](https://learn.microsoft.com/en-us/azure/architecture/patterns/sidecar)

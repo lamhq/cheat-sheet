@@ -1,0 +1,32 @@
+# Request-Driven Communication
+
+## Overview
+
+A microservice requests an action from a downstream service and expects a response with the result.
+
+## Implementation: Synchronous (blocking)
+
+A synchronous call opens a network connection to the downstream microservice to send the request.
+
+This connection remains open while the upstream microservice waits for the response.
+
+The responding microservice is unaware of the requester.
+
+
+## Implementation: Asynchronous (nonblocking)
+
+A request is sent as a message over a message broker, not directly to the downstream service.
+
+The downstream microservice retrieves and processes messages from the queue at its own pace. It must know where to send the response back (e.g. the original queue it read from).
+
+Using a queue allows buffering multiple requests, which prevents overwhelming the downstream service during peak loads. 
+
+Upon receiving a response, the initiating microservice might need to correlate it with the original request, such as storing request state into a database.
+
+All forms of request-driven communication require time-out handling to prevent blocking.
+
+## Where to Use It?
+
+Suitable when a respose is needed before further processing.
+
+When a microservice wants to know if a call didn't work so that it can carry out some sort of compensating action, like a retry.

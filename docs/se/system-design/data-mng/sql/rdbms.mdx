@@ -1,0 +1,38 @@
+# Relational Databases (RDBMS)
+
+## Overview
+
+Stores data in structured tables with pre-defined schema (columns with specific data types).
+
+Use SQL for data definition and manipulation.
+
+Enforces relationships between tables using primary and foreign keys.
+
+Optimized for [OLTP](../sql.mdx#OLTP) workloads.
+
+Guarantees [ACID properties](../transaction.mdx#ACID-properties) for transactions.
+
+RDBMSs are row-oriented databases.
+
+Excellent choice for **highly structured data**, **strong consistency**, and **complex relational queries**.
+
+> [!NOTE]
+> Traditional RDBMS cannot handle the massive scale needed for Big Data analytics.
+
+
+## Options
+
+Available RDBMSs options include:
+- Cloud Agnostic: PostgreSQL, MySQL, Oracle, SQL Server
+- AWS: Amazon RDS (hosted PostgreSQL and MySQL)
+- Microsoft Azure: Azure SQL Database (hosted SQL Server)
+- Google Cloud: Cloud SQL (hosted PostgreSQL and MySQL), Cloud Spanner
+
+
+## When to use RDBMS?
+
+1. **Strong Data Consistency & ACID Compliance Required**. Relational databases guarantee ACID properties for transactions.
+2. **Data is Highly Structured & Predictable**. Well-defined schema, clear relationships, data doesn't change structure frequently
+3. **Complex Queries & Joins are Needed**. Leveraging the power of SQL for reporting or data analysis across related tables
+4. **Normalization is Important**. Reducing data redundancy and ensuring data integrity 
+5. **Moderate or Predictable Workloads**. Relational database is a reliable choice for steady traffic, known access patterns, vertical scaling needs

@@ -2,27 +2,48 @@
 
 ## Overview
 
-API gateways map external requests to internal microservices, often acting as a reverse proxy.
+An **API gateway** is a server that acts as a single entry point for all external requests to internal microservices.
 
-They can implement various features, including security mechanisms (e.g., API keys), request logging, rate limiting, ...
+Instead of clients needing to know and communicate with dozens of services, they just talk to the gateway.
 
-Commonly used for managing access to microservices via the public internet, they may be unnecessary if no third-party involvement is required.
+Uses Layer 7 routing (application-level) to intelligently forward requests.
+
+API Gateway options:
+- Kong Gateway
+- Express Gateway
+- Amazon API Gateway
+
+![](https://jstobigdata.com/wp-content/uploads/2021/01/Single_Api_Gateway.svg)
 
 
-## Where to Use?
+## Key Functions
 
-For exposing microservices in Kubernetes, reverse proxies or specialized products like Ambassador can be useful.
+- Routing. Directs requests to the correct microservice.
+- Authentication & Authorization
+- SSL Certificate validation
+- Rate limiting
+- Logging & Monitoring
+- Protocol Translation: Converts client-friendly formats (e.g., REST) into internal formats (e.g., gRPC).
 
-If many third-party users need access, dedicated API management solutions may be more suitable.
+
+## Benefits
+
+- **Client Decoupling**. Clients don't need to know the internal structure of microservices. This simplifies backend refactoring and evolution.
+- **Centralized Cross-Cutting Concerns**. Common tasks like authentication, logging, rate limiting, and monitoring can be handled in one place.
+- **Security and Access Management**: With a single entry point, it's easier to secure, monitor, and manage access to backend services.
+
+
+## Challenges
+
+- **Potential Bottleneck**. All traffic flows through the gateway. If it's not designed to scale well, it can slow down the entire system.
+- **Single Point of Failure**. If the gateway crashes, clients lose access to all backend services. To avoid this, it must be deployed in a highly available setup.
+- **Operational Overhead**. The gateway itself is another component that needs to be developed, configured, deployed, and maintained.
+- **Risk of Becoming a "God Gateway"**. Putting too much business logic into the gateway turns it into a complex monolith, defeating the purpose of microservices. It should stick to gateway-specific tasks only.
+- **Added Latency**. Every request now has an extra network hop through the gateway. While aggregation can reduce perceived latency, the gateway must be optimized to keep actual latency low.
 
 
 ## What to Avoid
 
-Avoid using API gateways for **call aggregation** and **protocol rewriting**, as this can introduce unintended business logic. 
-
-- **Call aggregation** is better handled by GraphQL or Backend-for-Frontend (BFF) patterns.
-- **Protocol rewriting** (e.g., converting SOAP to REST) misplaces behavior that should be managed within microservices.
-
-Placing too much behavior in API gateways leads to restricted control and more complicated change management.
-
-Using API gateways for inter-microservice calls can introduce additional network hops and increase latency. Service meshes are much better placed to solve this problem.
+1. Using API gateways for **call aggregation**. It is better handled by GraphQL or Backend-for-Frontend (BFF) patterns.
+2. Placing too much behavior in API gateways leads to restricted control and more complicated change management.
+3. Using API gateways for inter-microservice calls. It can introduce additional network hops and increase latency. Service meshes are much better placed to solve this problem.

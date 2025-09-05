@@ -1,4 +1,11 @@
 [
+  "principles",
+  {
+    "name": "concepts",
+    "type": "dir",
+    "label": "Concepts",
+    "collapsed": true
+  },
   {
     "name": "components",
     "type": "dir",
@@ -10,13 +17,23 @@
     "type": "dir",
     "collapsed": true
   },
-  "scalability",
-  "high-availability",
-  "cap-theorem",
-  "base-model",
-  "eventual-consistency",
-  "consistent-hashing",
-  "cqrs",
+  {
+    "name": "data-mng",
+    "type": "dir",
+    "label": "Data Management",
+    "collapsed": true
+  },
+  {
+    "name": "caching",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "patterns",
+    "type": "dir",
+    "label": "Patterns",
+    "collapsed": true
+  },
   "bote",
   {
     "name": "case-studies",

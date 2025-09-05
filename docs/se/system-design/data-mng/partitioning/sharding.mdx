@@ -1,0 +1,178 @@
+# Sharding
+
+## Overview
+
+Sharding is a specific type of Horizontal Data Partitioning.
+
+It divides a database into smaller, faster, manageable speicies called shards.
+
+Each shard is a independent database instance that holds a subset of the data, but has the same schema.
+
+A shard key is used to determine which shard stores a particular row of data.  
+
+A routing mechanism (sharding logic) directs application queries to the appropriate shard.
+
+
+## Benefits
+
+1. **Enables horizontal scaling**: scale the data tier by adding more shard as data grow, overcomes single hardware limits.
+2. **Provide High Availability**: Outages in one shard don’t affect the entire system.
+3. **Improves query performance**:
+   - Queries are faster since they only search a subset of data
+   - Shard can be located closer to user in different regions
+4. **Higher throughput**: Read/write operations scale better across multiple shards.
+
+
+## Challenges
+
+1. **Complex management**: Queries must be correctly routed to the right shard.
+2. **Expensive operation**: Cross shard operations are expensive (e.g., joining)
+3. **Data consistency**: Ensuring data consistency across shards can be challenging
+4. **Merging shards is difficult**: If data distribution changes, rebalancing shards can be challenging.
+5. **Poor sharding strategy can hurt performance**: Uneven distribution can overload some shards while others remain underutilized.
+
+
+## Sharding strategies
+
+### Geo-Based Sharding
+
+Data is sharded based on geographical location, which can help reduce latency and comply with data residency regulations.
+
+**Pros**:
+- Reduces latency for geographically distributed users
+- Helps with compliance
+- Easy to add new shards
+
+**Cons**:
+- Uneven distribution - some shards may be too big to handle
+- Is not approrpiate to some systems 
+
+**Example**:
+
+An e-commerce platform uses `country_code` as the sharding key to group user and order data by region:
+- U.S. users are stored in the North America shard
+- German users in Europe
+- Japanese users in Asia-Pacific.
+
+When a user from Japan logs in, the application routes the request to the Asia-Pacific shard. This shard handles all operations related to the user's data.
+
+
+### Hash-Based Sharding
+
+A hash function is applied to a sharding key (e.g., user ID) to determine the shard where the data should be stored. This ensures a more even distribution of data.
+
+**Pros**:
+- Provides a balanced distribution of data across shards
+- Works well for key-value data
+
+**Cons**:
+- Adding new shards is difficult due to changing hash function require re-deploying the application
+- Not a good solution if database grows quickly
+- Weak consistency (no foreign keys)
+- Can make range queries more complex and less efficient
+
+**Example**:
+
+Using the user ID to distribute user data across multiple servers.
+
+There're 4 shards. The hash function is `user_id % 4`.
+
+Anytime accessing the data, a hash function is used to find the corresponding shard:
+- If the result equals to `0`, **shard 0** is used to store and fetch data
+- If the result equals to `1`, **shard 1** is used
+- The same logic applies to other shards.
+
+![](./sharding/hash.drawio.svg)
+
+
+### Range-Based Sharding
+
+Data is divided into shards based on a specific range of values.
+
+For example, you might shard data based on date ranges or alphabetical ranges.
+
+**Pros**:
+- Simple to implement and understand.
+
+**Cons**:
+- Can lead to uneven data distribution if the data is not uniformly distributed.
+
+
+### Directory-Based Sharding
+
+A lookup table (directory) is used to map each piece of data to a specific shard. This allows for flexible and dynamic sharding.
+
+**Pros**:
+- Highly flexible and can adapt to changing data patterns.
+
+**Cons**:
+- The directory can become a single point of failure and may require additional maintenance.
+
+
+### Composite Sharding
+
+Combines multiple sharding strategies, such as range-based and hash-based sharding, to leverage the benefits of both.
+
+**Pros**:
+- Can handle complex and diverse data distribution requirements.
+
+**Cons**:
+- More complex to implement and manage.
+
+
+## Sharding key
+
+The most important factor to consider when implementing a sharding strategy is the choice of the sharding key (partition key).
+
+Sharding key consists of one or more columns that determine how data is distributed.
+
+When choosing a sharding key, one of the most important criteria is to choose a key that can evenly distributed data.
+
+
+## Shard router
+
+A shard router is a component in a sharded database. It acts as an intermediary between client applications and the sharded database, directing queries to the appropriate shard(s) based on the sharding key.
+
+![](./sharding/router.drawio.svg)
+
+**Pros**:
+- This helps simplify adding new shards, since we extract the logic of locating shards from the application to a separate service.
+
+**Cons**:
+- The shard router can become a single point of failure if not configured to be highly available.
+
+
+## Celebrity problem (hotspot)
+
+Hotspot occurs when a particular shard receives a disproportionately high amount of traffic compared to others.
+
+This can lead to performance bottlenecks and uneven load distribution.
+
+> [!DETAILS]  
+> 
+> For example, imagine a social media platform where data for Katy Perry, Justin Bieber, and Lady Gaga all ends up on the same shard.   
+> That shard becomes overwhelmed with read operations.  
+> To solve this, we may need to allocate a separate shard for each celebrity. And depending on traffic, each shard might even need further partitioning.
+
+
+## Resharding data
+
+Resharding data is needed when a single shard could no longer hold more data due to rapid growth.
+
+Certain shards might experience shard exhaustion faster than others due to uneven data distribution.
+
+When shard exhaustion happens, it requires updating the sharding function and moving data around.
+
+[Consistent hashing](./consistent-hashing.mdx) is a commonly used technique to solve this problem.
+
+
+## De-normalization
+
+Once a database has been sharded across multiple servers, it is hard to perform join operations across database shards.
+
+A common workaround is to de-normalize the database so that queries can be performed in a single table.
+
+
+## References
+
+- [Sharding](https://learn.microsoft.com/en-us/azure/architecture/patterns/sharding)

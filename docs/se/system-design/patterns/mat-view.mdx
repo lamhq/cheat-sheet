@@ -1,0 +1,36 @@
+# Materialized View
+
+## Overview
+
+The Materialized View pattern is an architectural approach to improve query performance by creating pre-populated, "materialized" views of data in a format optimized for the query needs.
+
+Instead of querying multiple data stores directly, you maintain a read-optimized copy of the data that's updated periodically or in response to changes.
+
+In Microservices architecture, it helps eliminates the need for expensive, synchronous cross-service calls for reads
+
+![](https://learn.microsoft.com/en-us/azure/architecture/patterns/_images/materialized-view-pattern-diagram.png)
+
+
+## Benefits
+
+1. Query Performance & Reduced Latency
+2. Reduced Complex Joins or Cross-service calls in Microservices
+3. Data Optimized for Queries
+4. Reduced Load on Data Source
+
+
+## Challenges
+
+1. Data Duplication. You now have copies of data in multiple places.
+2. Data Synchronization Frequency. How often to refresh the view?
+   - Regenerate the view when source data changes can lead to overhead if the source data changes rapidly. 
+   - Alternatively, consider using a scheduled task, an external trigger, or a manual action to regenerate the view.
+3. Storage Costs: The potential for high storage costs if a large number of views are created.
+
+
+## Where to use?
+
+1. Read-heavy applications
+2. The source data is not in an ideal format for querying.
+3. The data is difficult or slow to query directly.
+4. Querying the data requires complex joins or other computationally intensive operations.

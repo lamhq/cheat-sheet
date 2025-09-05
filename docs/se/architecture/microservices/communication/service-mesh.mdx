@@ -2,38 +2,37 @@
 
 ## Overview
 
-A service mesh is a software layer that manages communication between microservices.
+A service mesh is a dedicated infrastructure layer for managing service-to-service communication. It provides common features for service communication, such as mutual TLS, correlation IDs, service discovery, and load balancing.
 
-They provide common features for inter-microservice communication, such as mutual TLS, correlation IDs, service discovery, and load balancing.
-
-Service meshes provide common functionalities that can be shared across microservices (this can be achieved by shared libraries, but microservices may have different versions or runtimes, lead to more challenges).
-
-They enable flexible changes without requiring individual microservices to update and redeploy when using shared libraries.
-
-Service meshes allow for the reuse of common inter-microservice functionality across microservices written in different programming languages.
-
-Service meshes help implement standard behavior across microservices, fostering consistency and best practices.
+A service mesh is essentially the sidecar pattern applied at scale across the entire application, specifically for managing service to service communication.
 
 
 ## How it works
 
-1. Each microservice has a lightweight proxy (**sidecar**) that handle all traffic between services. Instead of services talking directly to each other, they send requests through these proxies, which manage routing, security, and monitoring.
-2. The **Control Plane** sets policies and configurations for service communication, while the **Data Plane** applies those rules by handling actual traffic between microservices,  including routing, retries, and encryption.
+A service mesh has two main components:
+
+**Data Plane**:
+- Is a network of Sidecar Proxies deployed alongside every microservice instance
+- All traffic is intercepted and routed by the proxies. The application just make simple HTTP requests to other services.
+- Can perform: load balancing, traffic routing, retries, and encryption, authentication, ...
+- A popular options is **Envoy**
+
+**Control Plane**:
+- Configures and manages the proxies in the data plane by distributing policies and rules.
 
 ![](https://www.koyeb.com/static/images/blog/service-mesh.png)
 
-## In Kubernetes
 
-When deploying microservices on Kubernetes, each microservice instance is placed in a pod, and each pod has its own local proxy.
+## Benefits
 
-If a proxy within a pod fails, it only affects that specific pod.
+1. **Simplify application code**. The service mesh offloads complex networking logic from your services into the sidecar proxies
+2. **Traffic Management**. Advanced routing (canary releases, A/B testing), load balancing, traffic splitting
+3. **Resilience**. Automatic retries, timeouts, and circuit breaking for all inter-service calls, without any application code changes
+4. **Security**. Enforces encrypted communication between services (mutual TLS - mTLS) and access control policies
+5. **Observability**. Automatically generates detailed metrics, logs, and traces for all network traffic between services
 
-Many service mesh implementations rely on the **Envoy** proxy as the foundation for these locally running processes.
 
-Proxies are managed and monitored by a control plane.
-
-
-## Should i use it?
+## When to use this pattern
 
 Service meshes aren't for everyone:
 - They are primarily designed for Kubernetes

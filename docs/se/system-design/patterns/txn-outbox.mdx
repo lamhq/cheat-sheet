@@ -1,0 +1,35 @@
+# Transactional Outbox
+
+## Dual-write Problem
+
+The dual-write problem is where an application needs to update a database and send a message/event at the same time. If one operation succeeds and the other fails, you end up with inconsistent data.
+
+
+## Overview
+
+Transactional Outbox pattern is a design pattern that solves the dual-write problem, ensures both database update and event publishing are handled atomically.
+
+
+## How It Works
+
+Instead of sending the event directly after a database update, the service writes the event to a special **outbox table** in the same database transaction.
+
+A separate process reads from the outbox and publishes the events to a message broker.
+
+This guarantees that the event is only published if the database transaction succeeds.
+
+
+## Benefits
+
+- **Atomicity**: Database update and event creation happen in a single transaction.
+- **Reliability**: Events won’t be lost due to network or broker failures.
+- **Decoupling**: Service does not depend on message broker anymore.
+- **Improved performance**: The main transactions only handle database operations.
+- **Idempotency**: Helps avoid duplicate messages by tracking processed events.
+
+
+## Use Cases
+
+- Microservices that need to notify other services after a data change.
+- Event sourcing systems.
+- Systems requiring high reliability and consistency across services.

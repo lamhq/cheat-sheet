@@ -47,5 +47,10 @@
     "collapsed": true,
     "label": "Observability"
   },
-  "resiliency"
+  {
+    "name": "resiliency",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Resiliency"
+  }
 ]

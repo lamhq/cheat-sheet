@@ -1,0 +1,23 @@
+# Retry
+
+## Overview
+
+The Retry pattern repeats a request if it fails or times out.
+
+It allows a service to handle temporary failures when calling a downstream services.
+
+
+## Drawbacks
+
+- If a service is **persistently failing** or unavailable for a long time, it leads to an **excessive number of failed requests**, consume resources.
+- Too many retries can worsen performance:
+  - 404 Not Found → No retry needed (the resource doesn't exist)
+  - 503 Service Unavailable → Retry might be useful (server may be temporarily overloaded)
+  - 504 Gateway Timeout → Retry might be useful (network delay could resolve itself)
+
+
+## Best Practices
+
+- Implement additional strategies such as Circuit Breaker or Fallback Logic.
+- Introduce a delay before retrying to prevent overwhelming a struggling service.
+- Have a time budget for user-facing operations, reduce unnecessary retries.

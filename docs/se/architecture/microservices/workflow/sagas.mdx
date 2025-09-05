@@ -2,71 +2,104 @@
 
 ## Overview
 
-The SAGA pattern is used for managing long-lived transactions that span multiple microservices.
+A Saga is a sequence of local transactions distributed across multiple microservices.
 
-Unlike two-phase commit, sagas coordinates multiple state changes without the need for locking resources.
+Each local transaction updates data within a single service (using its own ACID).
 
+When a local transaction completes, it triggers the next local transaction
 
-## How it work?
+If any local transaction fails: The saga executes compensating transactions to undo the work done by preceding successful local transactions.
 
-The SAGA pattern divides a transaction into smaller steps (saga steps), each managed independently within a microservice.
+The Saga pattern is crucial for managing long-running, multi-step business transactions in a distributed system.
 
-A saga step can either commit or rollback independently.
-
-Successful steps trigger the next, while failures roll back previous changes, ensuring eventual consistency in distributed systems.
-
-
-## No atomicity
-
-Saga does not provide atomicity like traditional database transactions.
-
-Since a long-lived transaction (LLT) is split into smaller steps, the saga itself isn't atomic. However, each step can still follow ACID rules if needed.
-
-Sagas give visibility into the transaction state, but handling failures and consistency is up to the system.
-
-### Failure Recovery
-
-Since sagas consist of multiple transactions, handling failures is crucial (recover when a failure happens).
-
-Recovery can happen in two ways:  
-
-- **Backward recovery**: Rolls back failed transactions using compensating actions to undo previous changes.  
-- **Forward recovery**: Allows the system to to continue processing from the point of failure. We need to be able to retry transactions by persisting enough information.
-
-Depending on the business process, one or both strategies may be triggered.
+Unlike [two-phase commit](./dtx.mdx#two-phase-commit), sagas coordinates multiple state changes without the need for locking resources.
 
 
-### Business failures
+## Implementations
 
-Saga allows us to recover from business failures, not technical failures. 
+There're two styles of saga implementation: **Orchestration-based Saga** and **Choreography-based Saga**.
 
-> For example, if we try and take payment from the customer but the customer has insufficient funds, then this is a business failure that the saga should be expected to handle. 
-> 
-> On the other hand, if the Payment Gateway times out or throws a 500 Internal Service Error, then this is a technical failure that we need to handle separately.
+### Orchestration-based Saga
+
+Orchestration-based Saga use a central orchestrator service to coordinate and manage the individual sagas or microservices that make up a transaction.
+
+The orchestrator is responsible for executing the transaction and ensuring that each step are performed in the correct order.
+
+If any of the sagas fail to complete their step, the orchestrator can use the compensating transactions to roll back the changes and restore the system to its original state.
+
+Orchestration-based Saga make heavy use of request-driven interactions.
+
+**Benefits:**
+1. **Easy to understand and maintained**.
+   - The business process is clearly modeled in one place.
+   - Easier to debug the system, add or modify transactions
+
+**Challenges:**
+1. The orchestrator tightly couples with all services
+2. The orchestrator can become a single point of failure or bottlenecks (if heavily loaded).
+
+**Where to use?**:
+- Good for complex workflows with a lots of steps.
+- Ideal when a single team owns the entire workflow.
 
 
-## Saga rollbacks
-To roll back in a saga, a **compensating transaction** is needed to undo previous changes.
+### Choreography-based Saga
 
-A compensating transaction is a new transaction that reverts the changes made by the original transaction, but we can't make it as the original transaction didn’t occur.
+Each microservice communicates with the other microservices by exchanging events using a message broker.
 
-Since full rollback isn’t always possible, compensating transactions are called semantic rollbacks.
+Each microservices run its own local transaction, publishes events to trigger transaction in the next service.
 
-It's important to persist rollback information in the system.
+If a service encountered an error, it could publish a failure event to the message broker. The previous services woud execute a compensating transaction to undo the changes.
 
-*For example, if an order confirmation email was sent, a rollback can’t undo it. Instead, a **compensating transaction** sends a second email informing the customer of the cancellation. We also keep a record of aborted orders in the system.*
+Choreography-based Saga makes extensive use of events.
+
+**Benefits**:
+1. **Decentralized and flexible**. Services are independent, only reacting to received events, reducing domain coupling.
+2. **Avoid Single Point of Failure**. Since there is no orchestrator, responsibilities are distributed across the saga participants.
+
+**Challenges**:
+1. **Complex to manage**. Adding new steps into the workflow may cause confusing.
+2. **Hard to track & debug**. Understanding the overall business process requires piecing together individual service behaviors.
+   - **Correlation ID** can be passed in all saga-related events to track the state of the workflow. When a service reacts to an event, it extracts and passing the ID to subsequent events.
+3. **Risk of cyclic events**. Poorly designed event flows can lead to infinite loops where services continuously trigger each other.
+
+**Where to use?**
+- Good for simple workflows that don't require too much steps.
+- Ideal when workflow involves multiple teams.
+
+
+## Compensating Transaction pattern
+
+To roll back in a saga, a compensating transaction is needed to undo previous changes.
+
+A compensating transaction reverses the effects of a previously successfully completed local transaction within a Saga:
+- It's the "undo" operation for a specific step in a distributed business process.
+- It's triggered when a subsequent step in a Saga fails, requiring the overall business operation to be rolled back.
+
+**Goal**: To ensure that if the entire Saga cannot complete, the system is returned to a consistent state (from a business perspective)
+
+The compensating transaction don't necessarily restore the exact state like a database rollback does, it might perform business operations that semantically negate the effect of the original transaction.
+- *For example, if an order confirmation email was sent, a rollback can’t undo it. Instead, a **compensating transaction** sends a second email informing the customer of the cancellation. We also keep a record of aborted orders in the system.*
+
+### Characteristics
+
+1. **Specific to an Operation**. Each local transaction in a Saga should have a corresponding compensating transaction
+2. **Idempotent by Design**. Executing Compensating transactions multiple times should have the same effect as executing it once.
+3. **Can Also Fail**. A compensating transaction is also a distributed operation and could potentially fail. Failures need to be handled (through retries or manual intervention).
+4. **Eventual Consistency**. The process of compensation brings the system back to a consistent state eventually
+5. **Data for Compensation**. A compensating transaction often need information from original transaction to perform its operation.
 
 
 ## Minimizing rollbacks
 
 You can simplify rollback operations by pulling forward steps that are most likely to fail, reducing the need for triggering complex compensating transactions.
 
-For example, imagine an online store where a customer places an order, triggering multiple steps:  
-1. **Charge payment**  
-2. **Check inventory**  
-3. **Reserve shipping slot**  
+For example, imagine an online store where a customer places an order, triggering multiple steps:
+1. **Charge payment**
+2. **Check inventory**
+3. **Reserve shipping slot**
 
-If payment fails, rolling back inventory and shipping reservations would be needed. Instead, by **checking inventory first**, you avoid unnecessary rollback if an item is out of stock, reducing compensating transactions.  
+If payment fails, rolling back inventory and shipping reservations would be needed. Instead, by **checking inventory first**, you avoid unnecessary rollback if an item is out of stock, reducing compensating transactions.
 
 
 ## Fail-forward situations
@@ -76,71 +109,11 @@ Some failures may require a rollback (fail backward), others may be fail forward
 *For example, when processing an order, if for whatever reason we can’t dispatch the package, it seems very odd to roll the whole order back. Instead, we’d probably just retry the dispatch, and if that fails, we’d require human intervention to resolve the situation.*
 
 
-## Implementing Sagas
-
-Two styles of saga implementation: **Orchestrated sagas** and **Choreographed sagas**.
-
-### Orchestrated sagas
-
-Orchestrated sagas use a central coordinator (orchestrator) to:
-- define the order of execution
-- call the appropriate services
-- handle failures and compensating action.
-
-Orchestrated sagas make heavy use of request-response interactions.
-
-**Advantages:**  
-- The business process is clearly modeled in one place, making it easy to understand.  
-
-**Downsides:**  
-- The orchestrator tightly couples with all services, increasing dependencies.  
-- Services may lose autonomy as logic shifts to the orchestrator instead of staying within each service (they become passive, acting only on commands from the orchestrator instead of managing their own logic and data).
-- If the orchestrator fails or bottlenecks, the entire process can stall, affecting all dependent services (Single Point of Failure).
-
-For example, we have `Order Processor` that manage the whole Order Processing workflow:
-
-![](./sagas/orchestrated-sagas.drawio.svg)
-
-
-### Choreographed sagas
-
-A choreographed saga distributes responsibility across multiple services, using events for collaboration.
-
-Events are broadcast, allowing microservices to react to them. It’s possible that multiple microservices may react to the same event.
-
-![](./sagas/choreographed-sagas.drawio.svg)
-
-> In the example, when the `Warehouse` service receives that first `Order Placed` event, it knows its job is to reserve the appropriate stock and fire an event once that is done.
->
-> If the stock couldn’t be received, the `Warehouse` would need to raise an appropriate event, which might lead to the order being aborted.
-> 
-> When the `Payment Taken` event is fired by the `Payment Gateway`, it causes reactions in both the `Loyalty` and `Warehouse` microservices. The `Warehouse` reacts by dispatching the package, while the `Loyalty` microservice reacts by awarding points.
-
-**Advantages**:  
-- Services are independent, only reacting to received events, reducing domain coupling.  
-- Distributed implementation helps avoiding concerns about centralization of logic.
-
-**Downsides**:  
-- Understanding the overall business process requires piecing together individual service behaviors.  
-- No built-in saga state tracking, triggering compensating actions become difficult.  
-
-**Solution**:  
-- Use a **correlation ID** in all saga-related events.  
-- When a service reacts to an event, it extracts and passing the ID to subsequent events.  
-- A **dedicated service** monitors events, providing a view of the state, handling fulfillment issues.  
-
-
-### Choreographed or orchestration?
-
-**Choreographed sagas** introduce event-driven collaboration, requiring a mindset shift but enabling a loosely coupled architecture, which often outweigh the challenges.  
-
-**Orchestration** suits when a single team owns the entire saga, while **choreography** is ideal for scenarios involving multiple teams.
-
-Orchestration relies on request-response calls, whereas choreography makes more extensive use of events.
-
-
 ## Sagas vs. Distributed Transactions
 
-Distributed transactions come with some significant challenges and should be avoided.
-
 Modeling business processes as sagas avoids distributed transaction challenges and enhances clarity for developers by modeling business processes explicitly and reducing tight coupling between services.
+
+
+## References
+
+- [Saga distributed transactions pattern](https://learn.microsoft.com/en-us/azure/architecture/patterns/saga)
