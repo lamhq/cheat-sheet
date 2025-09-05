@@ -1,5 +1,7 @@
 # Distributed Tracing
 
+## Overview
+
 Distributed tracing is a technique for tracking requests as they move through multiple microservices in a system. It captures detailed traces of interactions (how services connect, bottlenecks, duration).
 
 
@@ -32,15 +34,16 @@ Sampling: Since capturing every trace would overwhelm the system, sampling strat
 - Fixed-rate sampling (e.g., Jaeger captures only 1 in 1,000 calls by default).
 - Dynamic sampling (used by Honeycomb & Lightstep) adjusts sampling rates, collecting more data for errors while limiting data for common operations.
 
-## Implementations
 
-Distributed tracing requires instrumenting microservices to capture spans, using an agent to forward data, and setting up a collector to analyze traces:
-- Each operation within a microservice is recorded as a span (a traceable unit of work).
-- Standard APIs like **OpenTracing** or **OpenTelemetry** help automate span collection for common activities like HTTP calls. To provide richer trace data, additional coding is often necessary.
-- A local forwarding agent periodically sends spans to the collector.
-- The collector aggregates spans and reconstructs full traces of request flows across microservices.
+## Implementations
 
 Recommended tools:
 - **Jaeger** – A popular open-source distributed tracing tool.
 - **Lightstep & Honeycomb** – Commercial solutions offering advanced tracing & high-cardinality support.
 - **OpenTelemetry** – A widely adopted open API specification that ensures standardized tracing and better interoperability across different tools.
+
+**Open Telemetry** is an open-source project that provides a set of APIs for collecting and exporting telemetry data; traces, metrics, and logs.
+
+**Zipkin** is a distributed tracing system that collects and stores trace data from microservices, provides a web Ul for viewing and analyzing trace data.
+
+To use Open Telemetry with Zipkin, Open Telemetry SDK is used to collect trace data, and send data to a Zipkin server for storage and visualization.
