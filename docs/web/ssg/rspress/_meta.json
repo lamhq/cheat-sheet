@@ -2,5 +2,6 @@
   "routing",
   "content",
   "customization",
-  "ui-components"
+  "ui-components",
+  "math"
 ]

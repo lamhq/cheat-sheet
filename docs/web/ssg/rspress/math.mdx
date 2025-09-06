@@ -1,0 +1,32 @@
+import { PackageManagerTabs } from '@theme';
+
+# Math
+
+Enable writting Mathematical Expressions.
+
+Install Katex plugin for Rspress:
+
+<PackageManagerTabs command="install --save-dev rspress-plugin-katex" />
+
+Update config:
+
+```js title="rspress.config.ts"
+import { defineConfig } from 'rspress/config';
+import katex from 'rspress-plugin-katex';
+
+export default defineConfig({
+  plugins: [katex()],
+});
+```
+
+With an expression in Markdown file:
+
+````md
+```math
+\left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)
+```
+````
+
+```math
+\left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)
+```

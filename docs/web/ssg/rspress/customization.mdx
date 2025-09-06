@@ -159,22 +159,6 @@ export default defineConfig({
 ```
 
 
-## Change page layout
-
-You can set the layout of a page to use Home page layout and define the content through frontmatter
-
-```
----
-pageType: home
----
-```
-
-https://rspress.dev/guide/default-theme/home-page
-
-Note: there's an issue with hot reloading for the homepage
-
-Other layouts to use: `docs`, `custom`.
-
 ## Add global component
 
 You can add some custom global components to the page, like **Back to top** button.
@@ -240,8 +224,50 @@ description: This is description
 This will add `<meta name="description" content="This is description">` to `<head>` tag.
 
 
-## Add custom tags
+## Add custom HTML
 
 You can add custom html through `builderConfig.html.tags`  configuration item.
 
 https://rspress.dev/guide/basic/ssg#adding-custom-site-content
+
+
+## Disable Search Engine
+
+Disable Search Engine from indexing the site (for private doc):
+
+```js title="rspress.config.ts"
+import { defineConfig } from 'rspress/config';
+
+export default defineConfig({
+  builderConfig: {
+    html: {
+      tags: [
+        // tells search engines not to index the page
+        {
+          tag: 'meta',
+          attrs: {
+            name: 'robots',
+            content: 'noindex'
+          },
+        }
+      ],
+    },
+  },
+});
+```
+
+## Fix Unicode Heading
+
+Problem: for headings that contain Unicode characters, the outline anchors will be html-encoded, lead to wrong link in the outline side bar. 
+
+To fix the issue, [disable the Rust compiler](https://rspress.rs/guide/basic/use-mdx#disabling-the-rust-version-compiler) of Rspress:
+
+```js title="rspress.config.ts"
+import { defineConfig } from 'rspress/config';
+
+export default defineConfig({
+  markdown: {
+    mdxRs: false,
+  }
+});
+```  
