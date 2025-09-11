@@ -1,0 +1,55 @@
+# System Requirements
+
+## Types of Software Requirements
+
+Three main types of software requirements:
+- Functional Requirements
+- Non-Functional Requirements
+- System Constraints
+
+They are called **architectural drivers** because they guide the design from countless possibilities to a solution that meets the client's needs.
+
+### Functional Requirements
+
+Functional Requirements define what the system does (its behavior and capabilities).
+
+They don’t determine system architecture. Generally any architecture can achieve any feature.
+
+Examples:
+- When a rider logs in, the app shows nearby drivers within a 5-mile radius.
+- After a ride ends, the system charges the rider and pays the driver (minus fees).
+
+
+### Non-Functional Requirements
+
+Non-Functional Requirements (aka Quality Attributes) describe how the system performs rather than what it does.
+
+Quality attributes dictate the software architecture of our system. And different architectures provide us with different quality attributes.
+
+Examples:
+- Scalability: Can handle growing user base.
+- Availability: System is accessible when needed.
+- Reliability: Performs consistently without failure.
+- Security: Protects user data and transactions.
+- Performance: Responds quickly and efficiently.
+
+### System Constraints
+
+These are limitations or boundaries that shape the design process.
+
+Constraints may force us to make certain trade offs and sacrifices in our design and shift us towards certain software architectural decisions.
+
+Examples:
+- Tight deadlines
+- Limited budget
+- Small development team
+
+
+## Gathering Requirements
+
+A methodical way of gathering requirements and capturing the important features of the desired system is through **use cases** and **user flows**.
+
+Steps to capture all the functional requirements are as follows:
+1. Identify all the actors/users in our system
+2. Capture and describe all the possible use-cases/scenarios
+3. Expand each use case through flow of events (using Sequence Diagram). In each event, capture the actions and take note of the data that flows with it to and from the system.
