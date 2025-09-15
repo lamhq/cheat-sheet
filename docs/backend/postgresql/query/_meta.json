@@ -6,10 +6,9 @@
   "coalesce",
   "cte",
   "distinct",
-  "duplicated",
   "explain",
   "nullif",
   "window",
-  "fts",
-  "optimization"
+  "full-text-search",
+  "performance"
 ]
