@@ -31,6 +31,11 @@
   },
   "yaml",
   {
+    "name": "postgresql",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
     "name": "mongodb",
     "type": "dir",
     "collapsed": true
