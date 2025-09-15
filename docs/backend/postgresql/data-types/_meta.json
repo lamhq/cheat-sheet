@@ -1,0 +1,15 @@
+[
+  "boolean",
+  "character",
+  "numeric",
+  "integer",
+  "range-type",
+  "json",
+  "array",
+  "date",
+  "time",
+  "interval",
+  "timestamp",
+  "serial",
+  "sequence"
+]

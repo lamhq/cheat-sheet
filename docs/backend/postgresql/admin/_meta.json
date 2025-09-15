@@ -1,0 +1,9 @@
+[
+  "config",
+  "connection",
+  "role",
+  "database",
+  "privileges",
+  "backup",
+  "pg-admin"
+]

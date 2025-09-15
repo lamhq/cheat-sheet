@@ -1,0 +1,40 @@
+[
+  {
+    "name": "data-types",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Data Types"
+  },
+  {
+    "name": "syntax",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Syntax"
+  },
+  {
+    "name": "ddl",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Data Definition Language"
+  },
+  {
+    "name": "dml",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Data Manipulation Language"
+  },
+  {
+    "name": "query",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Querying"
+  },
+  "indexes",
+  {
+    "name": "admin",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Administration"
+  },
+  "tips"
+]

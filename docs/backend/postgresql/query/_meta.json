@@ -1,0 +1,15 @@
+[
+  "all",
+  "any",
+  "case",
+  "cast",
+  "coalesce",
+  "cte",
+  "distinct",
+  "duplicated",
+  "explain",
+  "nullif",
+  "window",
+  "fts",
+  "optimization"
+]
