@@ -1,0 +1,7 @@
+[
+  "delete",
+  "insert",
+  "select-into",
+  "update",
+  "upsert"
+]

@@ -1,0 +1,14 @@
+[
+  "all",
+  "any",
+  "case",
+  "cast",
+  "coalesce",
+  "cte",
+  "distinct",
+  "explain",
+  "nullif",
+  "window",
+  "full-text-search",
+  "performance"
+]
