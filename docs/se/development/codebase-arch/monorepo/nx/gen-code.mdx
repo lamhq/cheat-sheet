@@ -1,0 +1,27 @@
+# Generate Code
+
+## Use Nx Console
+
+Nx Console provides a visual interface to find and run generators:
+
+![](https://nx.dev/documentation/shared/images/nx-console/nx-console-gen-code.avif)
+
+
+## Using command line
+
+Syntax: `nx g <plugin-name>:<generator-name> [options]`.
+
+Generate a React library in `packages/mylib`:
+```sh
+nx g @nx/react:lib packages/mylib
+```
+
+Specify just the generator name and Nx will prompt you to pick between the installed plugins that provide a generator with that name:
+```sh
+nx g lib packages/mylib
+```
+
+To see a list of available generators in `@nx/react` plugin:
+```sh
+nx list @nx/react
+```

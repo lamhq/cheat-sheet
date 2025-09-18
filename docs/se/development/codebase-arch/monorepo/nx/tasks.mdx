@@ -1,0 +1,75 @@
+# Tasks
+
+## Overview
+
+Nx provides a powerful task runner that allows you to:
+- **run multiple targets** for multiple projects in **parallel**
+- define task pipelines to run tasks **in correct order**
+- only run tasks for changed projects
+- speed up task execution with **caching**
+
+You can view and run tasks using Nx Console extension.
+
+
+## Define Tasks
+
+Tasks can be from:
+- existing `package.json` scripts
+- inferred from plugins
+- defined in a `project.json` file
+
+**Root-Level Tasks** are tasks that apply to the entire codebase rather than a single project. You can define them in the root-level `package.json` or `project.json` as follows:
+
+```json title="project.json"
+{
+  "name": "myorg",
+  ...
+  "targets": {
+    "docs": {
+      "command": "node ./generateDocsSite.js"
+    }
+  }
+}
+```
+
+
+## Run Tasks
+
+Syntax: `nx <task name> <project name> <options>`
+
+Run `build` task for `my-app` project in watch mode:
+```sh
+npx nx build my-app --watch
+```
+
+Run the build task for all projects in the repo:
+```sh
+npx nx run-many -t build
+```
+
+Run the `build`, `lint` and `test` task for all projects in the repo:
+```sh
+npx nx run-many -t build lint test
+```
+
+Run the build, lint, and test tasks only on the project-a and project-b projects:
+```sh
+npx nx run-many -t build lint test -p project-a project-b
+```
+
+Run tasks on projects [affected](https://nx.dev/ci/features/affected) by a PR:
+```sh
+npx nx affected -t test
+```
+
+
+## Defining a Task Pipeline
+
+Require one task to be run before another.
+
+Nx can automatically detect the dependencies between projects. 
+
+Learn more about:
+
+- [What a task pipeline is all about](https://nx.dev/concepts/task-pipeline-configuration)
+- [How to configure a task pipeline](https://nx.dev/recipes/running-tasks/defining-task-pipeline)
