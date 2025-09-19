@@ -18,7 +18,19 @@ Tasks can be from:
 - inferred from plugins
 - defined in a `project.json` file
 
-**Root-Level Tasks** are tasks that apply to the entire codebase rather than a single project. You can define them in the root-level `package.json` or `project.json` as follows:
+### Root-Level Tasks
+
+Root-Level Tasks can be defined in the root-level `package.json` or `project.json` as follows:
+
+```json title="package.json"
+{
+  "name": "myorg",
+  "scripts": {
+    "docs": "echo 'hello'"
+  },
+  "nx": {}
+}
+```
 
 ```json title="project.json"
 {
@@ -29,6 +41,69 @@ Tasks can be from:
       "command": "node ./generateDocsSite.js"
     }
   }
+}
+```
+
+To run a the task:
+```sh
+nx run myorg:docs
+nx docs myorg
+```
+
+
+### Continuous Tasks
+
+Labeling a task as continuous tells Nx to not wait for the process to exit, and it will be run alongside its dependents.
+
+```json title="apps/myapp/project.json"
+{
+  "targets": {
+    "serve": {
+      "continuous": true
+    }
+  }
+}
+```
+
+
+## Customize inferred tasks
+
+Nx plugins can detect your tooling configuration files (e.g. `vite.config.ts` or `.eslintrc.json`) and automatically configure runnable tasks.
+
+For example:
+- `@nx/jest` plugin will automatically create a `test` task for projects that use Jest.
+- `@nx/vite` create `build`, `serve`, `preview` tasks for projects that use Vite.
+
+The task names can be configured in the `nx.json` file:
+
+```json title="nx.json"
+{
+  ...
+  "plugins": [
+    {
+      "plugin": "@nx/vite/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "testTargetName": "test",
+        "serveTargetName": "serve",
+        "previewTargetName": "preview",
+        "serveStaticTargetName": "serve-static"
+      }
+    },
+    {
+      "plugin": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "lint"
+      }
+    },
+    {
+      "plugin": "@nx/jest/plugin",
+      "options": {
+        "targetName": "test"
+      }
+    }
+  ],
+  ...
 }
 ```
 
@@ -62,14 +137,56 @@ Run tasks on projects [affected](https://nx.dev/ci/features/affected) by a PR:
 npx nx affected -t test
 ```
 
+Learn more about:
+- [Pass arguments when running tasks](https://nx.dev/recipes/running-tasks/pass-args-to-commands)
+- [Workspace Watching](https://nx.dev/recipes/running-tasks/workspace-watching)
 
-## Defining a Task Pipeline
+
+## Task Pipeline
 
 Require one task to be run before another.
 
 Nx can automatically detect the dependencies between projects. 
 
+### Defining Task Pipeline
+
+Run the `build` target of all dependencies first:
+
+```json title="nx.json"
+{
+  ...
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"]
+    }
+  }
+}
+```
+
+Ensures that `tests` only run after the `build` is complete:
+```json title="nx.json"
+{
+  ...
+  "targetDefaults": {
+    "test": {
+      "dependsOn": ["build"]
+    }
+  }
+}
+```
+
+### Visualize Task Dependencies
+
+You can visualize the actual task graph by running:
+```sh
+nx graph
+```
+
+Alternatively you can use the Nx Console extension in VSCode. Right-click on the project and select `Focus task in Nx Graph`.
+
+![](https://nx.dev/documentation/shared/recipes/running-tasks/task-graph-context-menu.webp)
+
+
 Learn more about:
 
-- [What a task pipeline is all about](https://nx.dev/concepts/task-pipeline-configuration)
 - [How to configure a task pipeline](https://nx.dev/recipes/running-tasks/defining-task-pipeline)
