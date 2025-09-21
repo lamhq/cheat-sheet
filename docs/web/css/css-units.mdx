@@ -1,0 +1,110 @@
+# CSS Units
+
+## Percentage
+
+The Percentage `%` unit is relative to the parent element's dimensions (for most common CSS properties).
+
+**How it works**:
+- `width`/`height`: relative to parent's `width`/`height`.
+- `padding`/`margin`: relative to parent's **`width`** (not height).
+- `font-size`: relative to parent's **`font-size`**.
+- `line-height`: relative to its **own `font-size`**.
+- If the parent's width isn't set, `%` might not behave as expected.
+- For vertical sizing (`height: %`), the parent must have a defined height, otherwise the browser can't calculate it.
+
+
+## `vh`, `vw`
+
+`vh` (Viewport Height) and `vw` (Viewport Width) are relative to the size of the browser's viewport, which is the visible area of the browser window.
+
+`1vh` = 1% of the viewport height.
+
+`vh` is ideal for elements that always take up a certain proportion of the screen's vertical space (hero section or a header).
+
+`vw` is commonly used to make elements span the full width of the screen, or to create typography that scales fluidly as the viewport changes size.
+
+> [!WARNING]
+> `100vw` can sometimes cause a horizontal scrollbar because it includes the width of the vertical scrollbar in the calculation.
+
+
+## `rem`
+
+`rem` is relative to the **font size of the root HTML element** (`<html>`).
+
+Most browsers set the font size of the `<html>` element to `16px`. So `1rem` would equal `16px`.
+
+**Key characteristic:** `rem` provides a consistent and predictable scaling across your entire document.
+
+**Use it for**:
+- Font sizes. Because it respects user preferences. If a user has changed their default font size, `rem` will adjust accordingly, ensuring a better user experience.
+
+
+## `em`
+
+When using `em` unit for `font-size`, its value is relative to the **font size** of the **parent element**.
+
+For `margin`, `padding`, `width`, and `height`, its value scales with the **element**'s font size, not the parent.
+
+**Key characteristic**:
+- Its value can change depending on where it's used in the document structure.
+- `em` can lead to a compounding effect. If you have nested elements, and each uses `em` for its font size, the size will be multiplied down the hierarchy, which can sometimes be hard to manage.
+
+**Example:**
+- If a parent `div` has a font size of 20px, and a child `p` element inside it has `font-size: 1.5em;`, the `p` element's font size would be `30px` (1.5 * 20px).
+- If that `p` element then contained a `span` with `font-size: 0.8em;`, the `span`'s font size would be `24px` (0.8 * 30px).
+
+**Use it when**:
+- You want an element's padding or margin to scale with its own font size.
+
+**It may not be suitable for**:
+- Font sizing due to the compounding effect
+
+
+## Choosing the right units
+
+### Font Sizes
+
+Use `rem`.
+
+Because `rem` units adapt to the user's browser settings. If a user has changed their default font size, `rem` will adjust accordingly.
+
+> [!NOTE]
+> `px` will lock the font size in place, potentially overriding the user's accessibility preferences.
+
+
+### Width
+
+Consider Percentages(`%`) and `ch`.
+
+Percentages is good starting point, often used in combination with a `max-width`.
+
+**Character Unit (`ch`)**: is excellent for setting the `max-width` on paragraphs to ensure readability, as it's recommended to keep lines of text at around 75 characters or less.
+
+
+### Height
+
+You can use percentages, `rem`, or `vh` (viewport height).
+
+> [!WARNING]
+> Before setting a fixed `height`, consider using `min-height` instead. This ensures that if the content requires more vertical space, it will be accommodated without causing layout problems
+
+> [!CAUTION]
+> Be cautious with `vh` on mobile devices, as it can be inconsistent due to things like the on-screen keyboard.
+
+
+### Padding & Margin
+
+Use `em` if you want the padding or margin to scale with the font size of the element it's applied to.
+
+*For example, using `em` for button padding allows the padding to grow or shrink when you change the button's font size.*
+
+Use `rem` if you want the spacing to be consistent across different elements.
+
+*For example, setting a `margin-top` of `1rem` on all text elements will ensure they have the same spacing regardless of their individual font sizes.*
+
+
+### What about Pixels?
+
+Pixels can be useful for very small, precise values like a shadow offset.
+
+It's not recommended for font sizes, padding, or margins.
