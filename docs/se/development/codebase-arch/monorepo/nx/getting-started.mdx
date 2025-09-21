@@ -13,19 +13,11 @@ brew install nx
 Install [Nx Console extension](https://code.visualstudio.com/) for VSCode.
 
 
-## Start a new project
+## Creating workspace
 
-### Empty project
+Whether you're launching a new project or integrating Nx into an existing one, my recommended way is to start with a clean Nx workspace and gradually add projects as you go.
 
-Create a `package.json` file:
-
-```json title="package.json"
-{
-  "name": "my-workspace",
-  "version": "1.0.0",
-  "private": true
-}
-```
+Begin by setting up a PNPM workspace using this [step-by-step guide](../../../../../backend/javascript/pkg-mgm/pnpm/workspace.mdx#scaffolding-workspace).
 
 Add Nx to your workspace:
 
@@ -33,31 +25,28 @@ Add Nx to your workspace:
 nx init
 ```
 
-You can incrementally add functionality, like:
-- configure caching
-- adding Nx plugins
-- optimizing your CI
 
-> When running `nx init` in a directory without a `package.json` file, Nx will be installed in the `.nx/installation` directory. Then you can run Nx via a global Nx installation or the `nx` and `nx.bat` scripts that were created.
+## Adding project
 
+Install necessary Nx [plugins](https://nx.dev/plugin-registry) based on your tech stack.
 
-### From presets
+> [!TIP]
+> To know which plugins to install, you can run `nx import` to [import the existing repository](https://nx.dev/recipes/adopting-nx/import-project) to a test repository. Nx will automatically detect and install the required plugins.
 
-```sh
-npx create-nx-workspace@latest
-```
+Use the code generators provided by the installed plugins to scaffold a new project.
 
-This interactive command will create a new workspace directory and let you choose a preset that matches your technology stack.
+> [!TIP]
+> As you evolve your codebase from its templates, you can take full advantage of Nx's capabilities without needing to learn all its configuration to tweak your existing codebase to work with it.
 
+Migrate the content of your `package.json` into the newly generated project:
+- Update the `scripts` section to use `nx exec` for running commands
 
-## Add Nx to an existing project
+Move your existing codebase into the new project structure.
 
-```sh
-nx@latest init
-```
+Migrate any tooling configurations (e.g., TypeScript, ESLint, Prettier) into the new project.
 
 
-## Explore the Project
+## Explore Workspace
 
 Your workspace is a collection of projects.
 
