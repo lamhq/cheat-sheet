@@ -1,0 +1,58 @@
+# Installation
+
+## Creating a React App
+
+### Using frameworks
+
+1. Next.js (App Router)
+   - A Full-stack web framework that support server-side rendering (SSR), and static-site generation (SSG)
+   - Next.js app can be deployed to any hosting provider that supports Node.js
+   - Next.js also supports static export which doesn't require a server.
+    ```sh
+    npx create-next-app@latest
+    ```
+2. Expo (for native apps)
+   - Lets you create universal Android, iOS, and web apps with truly native UIs
+   ```sh
+   npx create-expo-app@latest
+   ```
+
+### From scratch
+
+1. Install a build tool to scaffold a client-only, single-page app (SPA). You can use Vite, Parcel or Rsbuild
+   ```sh
+   npm create vite@latest my-app -- --template react
+   ```
+2. Set up [Routing](https://react.dev/learn/build-a-react-app-from-scratch#routing)
+3. Select a [Data Fetching](https://react.dev/learn/build-a-react-app-from-scratch#data-fetching) library
+   > [!NOTE] 
+   > Fetching data directly in components can lead to slower loading times due to network request waterfalls, it's recommended to prefetch data in router loaders or on the server. This allows a page’s data to be fetched all at once as the page is being displayed.
+4. Configure [Code Splitting](https://react.dev/learn/build-a-react-app-from-scratch#code-splitting)
+5. Support other [rendering strategies](https://react.dev/learn/build-a-react-app-from-scratch#improving-application-performance) to improve performance
+
+
+## Add React to an Existing Project
+
+Learn more at the [official doc](https://react.dev/learn/add-react-to-an-existing-project).
+
+
+## Set up
+
+### Linting & Formatting
+
+https://react.dev/learn/editor-setup
+
+
+### Using TypeScript
+
+https://react.dev/learn/typescript
+
+
+### React Developer Tools
+
+https://react.dev/learn/react-developer-tools
+
+
+### React Compiler
+
+https://react.dev/learn/react-compiler
