@@ -1,6 +1,7 @@
 [
   "flex-layout",
   "grid-layout",
+  "css-units",
   "sass",
   "css-modules",
   {
