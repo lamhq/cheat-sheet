@@ -55,9 +55,9 @@
   },
   "server-comp",
   {
-    "name": "performance",
+    "name": "techniques",
     "type": "dir",
     "collapsed": true,
-    "label": "Performance Optimization"
+    "label": "Techniques"
   }
 ]

@@ -39,6 +39,7 @@
   {
     "name": "storybook",
     "type": "dir",
+    "label": "UI Docs",
     "collapsed": true
   },
   {
@@ -48,15 +49,15 @@
     "label": "End-to-end Test"
   },
   {
-    "name": "design-patterns",
-    "type": "dir",
-    "label": "Design Patterns",
-    "collapsed": true
-  },
-  {
     "name": "security",
     "type": "dir",
     "collapsed": true,
     "label": "Security"
+  },
+  {
+    "name": "patterns",
+    "type": "dir",
+    "label": "Architectures & Patterns",
+    "collapsed": true
   }
 ]
