@@ -1,4 +1,8 @@
 [
+  "installation",
   "thinking-in-react",
-  "installation"
+  "describe-the-ui",
+  "render-process",
+  "events",
+  "state"
 ]
