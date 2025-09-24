@@ -4,5 +4,6 @@
   "describe-the-ui",
   "render-process",
   "events",
-  "state"
+  "state",
+  "reducer"
 ]
