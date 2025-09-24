@@ -19,36 +19,19 @@ Side effects should go in event handlers (functions triggered by user actions, l
 If no suitable handler exists, use `useEffect` to run the side effect after rendering, but it should be the last resort.
 
 
-## How it work?
+## Effect
 
-Effects are pieces of code that will be run by React in certain conditions.
+Effects let you run some code after rendering so that you can synchronize your component with some system outside of React.
 
 - By default, Effects run after every render.
-- Most Effects should only re-run when it's dependencies change.
+- If specifying dependencies, effects should only re-run when it's dependencies change.
 - Some Effects need to specify how to clean up what they were doing.
 
-You can tell React to **skip unnecessarily re-running the Effect** by specifying an array of dependencies as the second argument to the `useEffect` call.
+Effects let you specify side effects that are caused by rendering itself, rather than by a particular event. 
 
-```js
-useEffect(() => {
-  // This runs after every render
-});
+Effects are an “escape hatch”: you use them when you need to “step outside React” and when there is no better built-in solution for your use case. Whenever you write an Effect, consider wrapping your Effects in custom Hooks makes it easier to upgrade your code when these solutions become available.
 
-useEffect(() => {
-  // This runs only on mount (when the component appears)
-}, []);
-
-useEffect(() => {
-  // This runs on mount *and also* if either a or b have changed since the last render
-}, [a, b]);
-```
-
-> [!NOTE]
-> You will get a lint error if the dependencies you specified don't match what React expects based on the code inside your Effect.   
-> If you don’t want some code to re-run, edit the Effect code itself to not “need” that dependency.
-
-
-## Example: Video player
+For example:
 
 1. We have a `VideoPlayer` component that render the built-in browser `<video>` tag, it accept `src` and `isPlaying` props
 2. When `isPlaying` prop change, we want to play/pause the video. But the `<video>` tag doesn't have a `isPlaying` prop
@@ -73,7 +56,33 @@ function VideoPlayer({ src, isPlaying }) {
 ```
 
 
-## Cleanup
+## Effect Dependencies
+
+You can control when to run an effect by specifying an array of dependencies as the second argument to the `useEffect` call.
+
+```js
+useEffect(() => {
+  // This runs after every render
+});
+
+useEffect(() => {
+  // This runs only on mount (when the component appears)
+}, []);
+
+useEffect(() => {
+  // This runs on mount, and also if either a or b have changed since the last render
+}, [a, b]);
+```
+
+> [!NOTE]
+> You will get a lint error if the dependencies you specified don't match what React expects based on the code inside your Effect.   
+
+If you don’t want some code to re-run, edit the Effect code itself to not “need” that dependency.
+
+**Avoid relying on objects and functions as dependencies**. If you create objects and functions during rendering and then read them from an Effect, they will be different on every render. This will cause your Effect to re-synchronize every time.
+
+
+## Cleanup Function
 
 React will call your cleanup function each time before the Effect runs again, and one final time when the component unmounts. 
 
@@ -137,3 +146,67 @@ If there is no external system involved, you shouldn’t need an Effect.
 1. [Initializing the application](https://react.dev/learn/synchronizing-with-effects#not-an-effect-initializing-the-application). You can put it outside your components
 2. [Handling user events](https://react.dev/learn/synchronizing-with-effects#not-an-effect-buying-a-product). This should go to event handlers
 3. [Updating state based on props or state](https://react.dev/learn/you-might-not-need-an-effect#updating-state-based-on-props-or-state). Just calculate it during rendering.
+
+
+## Removing Non-Reactive Values from Effect Dependencies
+
+> [!CAUTION]
+> This guide uses an experimental API that has not yet been released in a stable version of React. However, the problem is common enough to be worth mentioning.
+
+Sometimes your effect dependencies include values that you don't want to trigger a re-run when they change.
+
+For example:
+1. You want to show a notification each time a user connects to a different chat room.
+2. But your code references the `theme` value, so you include it in the effect's dependency array.
+3. This causes the app to reconnect and show a notification even when only the `theme` changes.
+
+```jsx
+function ChatRoom({ roomId, theme }) {
+  useEffect(() => {
+    const connection = createConnection(serverUrl, roomId);
+    connection.on('connected', () => {
+      showNotification(`Connected to room ${roomId}!`, theme);
+    });
+    connection.connect();
+    return () => connection.disconnect();
+  }, [roomId, theme]);
+  
+  return <h1>Welcome to the {roomId} room!</h1>
+}  
+```
+
+You can remove `theme` from the dependency array, but you'll get a lint error.
+
+You might be tempted to suppress the dependency linter, but doing so disables warnings when your effect should respond to new reactive dependencies added later. This leads to bugs.
+
+React provides the `useEffectEvent` hook, which lets you extract non-reactive logic from your effect. This allows you to safely remove non-reactive values from the dependency array.
+
+The above example can be refactored to:
+
+```jsx
+import { experimental_useEffectEvent as useEffectEvent } from 'react';
+
+function ChatRoom({ roomId, theme }) {
+  const onConnected = useEffectEvent((room) => {
+    showNotification(`Connected to room ${room}!`, theme);
+  });
+
+  useEffect(() => {
+    const connection = createConnection(serverUrl, roomId);
+    connection.on('connected', () => {
+      onConnected(roomId);
+    });
+    connection.connect();
+    return () => connection.disconnect();
+  }, [roomId]);
+
+  return <h1>Welcome to the {roomId} room!</h1>
+}
+```
+- `onConnected` is called an Effect Event. The logic inside it is not reactive, and it always “sees” the latest values of your props and state.
+- Now you can remove `theme` from the list of your Effect's dependencies, and the lint error will go away.
+
+Limitations:
+
+- Only call Effect Event from inside Effects.
+- Never pass them to other components or Hooks.
