@@ -1,9 +1,10 @@
 [
   "installation",
-  "thinking-in-react",
-  "describe-the-ui",
+  "design",
   "render-process",
+  "describe-the-ui",
   "events",
+  "effect",
   "state",
   "reducer",
   "context",

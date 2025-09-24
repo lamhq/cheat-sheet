@@ -60,6 +60,25 @@ After React updated the DOM, the browser will repaint the screen.
 - A component **unmounts** when it’s removed from the screen.
 
 
+## Two types of logic inside a component
+
+### Rendering code
+
+This is where you take the props and state, transform them, and return the JSX you want to see on the screen.
+
+Rendering code must be pure.
+
+### Event handlers
+
+They are nested functions inside your components that do things rather than just calculate them:
+
+- update an input field
+- submit an HTTP POST request to buy a product
+- navigate the user to another screen
+
+Event handlers contain **[side effects](./effect.mdx)**.
+
+
 ## References
 
 https://react.dev/learn/render-and-commit
