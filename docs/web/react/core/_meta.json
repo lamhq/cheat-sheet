@@ -5,8 +5,11 @@
   "describe-the-ui",
   "events",
   "effect",
-  "state",
-  "reducer",
+  {
+    "name": "state",
+    "type": "dir",
+    "collapsed": true
+  },
   "context",
   "ref"
 ]
