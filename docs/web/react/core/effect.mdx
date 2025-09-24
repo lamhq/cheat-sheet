@@ -29,7 +29,7 @@ Effects let you run some code after rendering so that you can synchronize your c
 
 Effects let you specify side effects that are caused by rendering itself, rather than by a particular event. 
 
-Effects are an “escape hatch”: you use them when you need to “step outside React” and when there is no better built-in solution for your use case. Whenever you write an Effect, consider wrapping your Effects in custom Hooks makes it easier to upgrade your code when these solutions become available.
+Effects are an "escape hatch": you use them when you need to "step outside React" and when there is no better built-in solution for your use case. Whenever you write an Effect, consider wrapping your Effects in custom Hooks makes it easier to upgrade your code when these solutions become available.
 
 For example:
 
@@ -77,7 +77,7 @@ useEffect(() => {
 > [!NOTE]
 > You will get a lint error if the dependencies you specified don't match what React expects based on the code inside your Effect.   
 
-If you don’t want some code to re-run, edit the Effect code itself to not “need” that dependency.
+If you don't want some code to re-run, edit the Effect code itself to not "need" that dependency.
 
 **Avoid relying on objects and functions as dependencies**. If you create objects and functions during rendering and then read them from an Effect, they will be different on every render. This will cause your Effect to re-synchronize every time.
 
@@ -103,7 +103,7 @@ In development, React remounts every component once immediately after its initia
 
 This ensure your effects and cleanup logic are correct. When you implement the cleanup well, there should be no user-visible difference between running the Effect once vs running it, cleaning it up, and running it again.
 
-In this example, your code doesn’t close the connection when the component unmounts, so `"✅ Connecting..."` gets printed twice:
+In this example, your code doesn't close the connection when the component unmounts, so `"✅ Connecting..."` gets printed twice:
 
 ```jsx
 import { useEffect } from 'react';
@@ -141,7 +141,7 @@ export default function ChatRoom() {
 
 ## When not to use Effects
 
-If there is no external system involved, you shouldn’t need an Effect.
+If there is no external system involved, you shouldn't need an Effect.
 
 1. [Initializing the application](https://react.dev/learn/synchronizing-with-effects#not-an-effect-initializing-the-application). You can put it outside your components
 2. [Handling user events](https://react.dev/learn/synchronizing-with-effects#not-an-effect-buying-a-product). This should go to event handlers
@@ -203,7 +203,7 @@ function ChatRoom({ roomId, theme }) {
   return <h1>Welcome to the {roomId} room!</h1>
 }
 ```
-- `onConnected` is called an Effect Event. The logic inside it is not reactive, and it always “sees” the latest values of your props and state.
+- `onConnected` is called an Effect Event. The logic inside it is not reactive, and it always "sees" the latest values of your props and state.
 - Now you can remove `theme` from the list of your Effect's dependencies, and the lint error will go away.
 
 Limitations:

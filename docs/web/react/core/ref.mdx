@@ -2,7 +2,7 @@
 
 ## Storing values
 
-When you want a component to “remember” some information, but you don’t want trigger new renders when updating that information, you can use a *ref*.
+When you want a component to "remember" some information, but you don't want trigger new renders when updating that information, you can use a *ref*.
 
 Usage:
 
@@ -48,7 +48,7 @@ export default function Counter() {
 
 ## Storing DOM elements
 
-React automatically updates the DOM to match your render output, so your components won’t often need to manipulate it.
+React automatically updates the DOM to match your render output, so your components won't often need to manipulate it.
 
 However, sometimes you might need access to the DOM elements managed by React to do things that React doesn't support (e.g., focus an input, scroll to an element, etc).
 
@@ -79,7 +79,7 @@ export default function Form() {
 ### When React attaches the refs 
 
 1. During the first render, the DOM nodes have not yet been created, so `ref.current` will be `null`.
-2. During the rendering of updates, the DOM nodes haven’t been updated yet.
+2. During the rendering of updates, the DOM nodes haven't been updated yet.
 3. Before updating the DOM, React sets the affected `ref.current` values to `null`.
 4. After updating the DOM, React immediately sets `ref.current` to the corresponding DOM nodes.
 
@@ -127,7 +127,7 @@ images.map((image, index) => (
 
 ## Best Practices
 
-If your component needs to store some value, but it doesn’t impact the rendering logic, choose refs (timeout IDs, DOM elements, etc).
+If your component needs to store some value, but it doesn't impact the rendering logic, choose refs (timeout IDs, DOM elements, etc).
 
 Avoid using ref to change DOM nodes managed by React.
 
