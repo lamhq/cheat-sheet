@@ -7,24 +7,23 @@ CSS for each Microfrontend should be scoped to that app only.
 
 ## CSS Scoping Solutions
 
-### CSS of the project
+### In the project
 
 Custom CSS you write for your project.
 
 1. Use a CSS-in-JS library (e.g., styled-components, emotion, etc.)
    - ✅ Safe way to scope CSS
-   - ❌ Require a bit of learning-curve, tooling setup.
-2. Your framework style scoping solution (Vue, Angular, etc.)
+   - ⚠️ Require a bit of learning-curve, tooling setup.
+2. Use framework-provided style scoping solution (Vue, Angular, etc.)
 3. Namespace all your CSS by adding a root class.
    - ✅ Easy to set up, using CSS pre-processor (SASS) to automate the prefixing.
    - ❌ Require all members in the team to be aware of the convention, which can be error-prone and risky.
 
 
-### CSS from third-party libraries
+### Third-party libraries
 
-CSS comming from third-party libraries (Bootstrap, Ant Design, etc.).
-
+CSS scoping solutions for third-party UI libraries (Bootstrap, Ant Design):
 1. Use a component library that support CSS-in-JS (Material UI)
-2. Manually build the css library and apply namespacing techniques to it.
+2. Manually build the CSS library and apply namespacing techniques to it.
    - ❌ Not easy to do
    - ❌ Still add global classes to the whole website
