@@ -6,6 +6,5 @@
   "debouncing",
   "code-splitting",
   "web-workers",
-  "transition",
-  "opt-update"
+  "optimistic"
 ]

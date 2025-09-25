@@ -2,28 +2,30 @@
 
 ## Overview
 
-Code splitting is a technique to optimize app's performance by breaking down large bundles of code into smaller chunks that can be loaded on demand, instead of loading the entire app's code upfront, which can slows down the app.
+Code splitting is a technique to optimize load time by breaking down large bundles of code into smaller chunks that can be loaded on demand.
 
 
 ## Implementation
 
-Splitting code by route, when integrated with bundling and data fetching, can reduce the initial load time of your app and the time it takes for the largest visible content of the app to render (Largest Contentful Paint).
+Use Dynamic Imports to import components or modules only when needed:
+```jsx
+const LazyComponent = () => import('./components/LazyComponent');
+```
 
-1. Use the `import()` syntax to load modules dynamically.
-   ```js
-   import("./module").then(module => {
-     console.log(module.someFunction());
-   });
-   ```
-2. Use `React.lazy()` to load components lazily. Combine it with `<Suspense>` for a loading fallback:
-   ```js
-   const LazyComponent = React.lazy(() => import('./LazyComponent'));
+Use `React.lazy()` to lazy-load routes with React Router:
+```jsx
+import { lazy, Suspense } from 'react';
 
-   <Suspense fallback={<div>Loading...</div>}>
-     <LazyComponent />
-   </Suspense>
-   ```
-3. Configure code splitting for your build tools (Vite, Parcel, Rsbuild)
+const Home = lazy(() => import('./pages/Home'));
+const About = lazy(() => import('./pages/About'));
+
+<Route path="/" element={
+  <Suspense fallback={<Loading />}><Home /></Suspense>
+} />
+<Route path="/about" element={
+  <Suspense fallback={<Loading />}><About /></Suspense>
+} />
+```
 
 > [!NOTE]
 > When the bundler encounters the `import()` syntax, it automatically splits the relevant code into a new chunk and loads it on-demand at runtime.

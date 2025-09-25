@@ -6,12 +6,12 @@ import { PackageManagerTabs } from '@theme'
 
 Lazy loading images is a performance optimization technique that delays the loading of images until they are needed (typically when they come into the user's viewport).
 
-This approach reduces initial page load time, saves bandwidth, and improves user experience.
+This approach reduces initial page load time, saves bandwidth, improves user experience.
 
 
-## Implementation
+## Implementations
 
-There are different approaches to implement Lazy loading images in React: 
+Approaches to implement Lazy loading images: 
 - [`react-lazyload`](https://www.npmjs.com/package/react-lazyload) library
 - [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API)
 
@@ -51,10 +51,13 @@ export default LazyLoadExample;
 
 ### Intersection Observer API
 
+1. We first render an empty `<img />` element, then use `IntersectionObserver` to detect when the element enters the viewport.
+2. When the image is about to appear, the actual `src` is set, triggering the image load.
+
 ```js
 import { useEffect, useRef, useState } from 'react';
 
-const LazyImage = ({ src, alt }) => {
+export default function LazyImage({ src, alt }) {
   const [isIntersecting, setIntersecting] = useState(false);
   const imgRef = useRef(null);
 
@@ -112,6 +115,4 @@ const LazyLoadExample = () => {
     </div>
   );
 };
-
-export default LazyLoadExample;
 ```

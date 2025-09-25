@@ -11,5 +11,10 @@
     "collapsed": true
   },
   "context",
-  "ref"
+  "ref",
+  {
+    "name": "transition",
+    "type": "dir",
+    "collapsed": true
+  }
 ]

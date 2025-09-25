@@ -2,31 +2,24 @@
 
 ## Overview
 
-Throttling is a technique used in JavaScript to control the rate at which a function is executed.
+Throttling ensures a function runs at most once in a specified time interval, preventing it from being executed too frequently.
 
-It ensures that a function is called at most once in a specified time interval, preventing it from being executed too frequently.
+_For example, if you have a function that sends API requests on mouse movement, throttling can limit the number of requests sent to the server, preventing overload._
 
-Useful for optimizing performance in scenarios:
-- handling scroll events
-- mouse movements
-- window resizing.
+Use cases:
+- Scroll position tracking
+- Continuous mouse movement
+- Window resize events
 
-For example, if you have a function that sends API requests on mouse movement, throttling can limit the number of requests sent to the server, preventing overload.
+## Implementations
 
+### From scratch
 
-## How it works
+1. The first call is executed immediately.
+2. Additional calls within the throttle window are delayed until the remaining time has passed.
+3. If a new call occurs during the delay, the new call will replace the previous one.
 
-1. We store the last time the function is called
-2. In subsequence calls, we stop the current scheduled call, then schedule a new call after the remaining time esplapes
-
-
-## Implementation
-
-Here's a simple implementation of throttling:
-
-```javascript
-import { useEffect } from 'react';
-
+```jsx
 function throttle(func, limit) {
   let timer;
   let lastRan;
@@ -53,18 +46,15 @@ function throttle(func, limit) {
   };
 }
 
-const ThrottledScrollComponent = () => {
-  console.log('component rendered');
-  // Throttled scroll handler
+import { useEffect } from 'react';
+
+export function ThrottledScrollComponent() {
   const handleScroll = throttle(() => {
     console.log('Scroll event triggered!');
   }, 2000);
 
   useEffect(() => {
-    // Add the scroll event listener
     window.addEventListener('scroll', handleScroll);
-
-    // Cleanup on component unmount
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
@@ -76,6 +66,25 @@ const ThrottledScrollComponent = () => {
     </div>
   );
 };
+```
 
-export default ThrottledScrollComponent;
+
+### Lodash
+
+```jsx
+import { useEffect } from "react";
+import { throttle } from "lodash";
+
+function ScrollTracker() {
+  useEffect(() => {
+    const handleScroll = throttle(() => {
+      console.log("Scroll event");
+    }, 1000);
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return <div>Scroll to see throttled logs</div>;
+}
 ```

@@ -2,18 +2,18 @@
 
 ## Overview
 
-Debouncing is a technique used in JavaScript to improve performance by controlling how often a function is executed.
+Debouncing delays function execution after a period of time.
 
-It ensures that a function is only called after a specified delay has passed since the last time it was invoked.
+Any subsequent call happens within the delay period will reset the timer.
 
-Useful for scenarios:
-- search inputs: wait until the user has finished typing before making an API call.
+Use cases:
+- Search inputs: wait until the user has finished typing before making an API call.
 
 
-## How it works
+## How It Works
 
-1. Every time the function is called, we remove any scheduled call (if exist)
-2. We schedule a new call after a delay instead of instantly executing the function
+1. When the function is called, it doesn't execute immediately. Instead, it's scheduled to run after a specified delay.
+2. If the function is called again before the delay completes, it replaces the previous scheduled execution and the delay timer is reset.
 
 
 ### Implementation
@@ -32,7 +32,7 @@ function debounce(func, delay) {
   };
 }
 
-const SearchComponent = () => {
+export default function SearchComponent() {
   const [query, setQuery] = useState('');
 
   // Debounced function for handling the search
@@ -61,7 +61,5 @@ const SearchComponent = () => {
       />
     </div>
   );
-};
-
-export default SearchComponent;
+}
 ```
