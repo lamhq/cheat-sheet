@@ -5,11 +5,5 @@
     "type": "dir",
     "collapsed": true
   },
-  "eda",
-  "mono-fe",
-  {
-    "name": "micro-fe",
-    "type": "dir",
-    "collapsed": true
-  }
+  "eda"
 ]
