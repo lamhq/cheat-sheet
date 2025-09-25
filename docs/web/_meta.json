@@ -15,12 +15,6 @@
     "collapsed": true
   },
   {
-    "name": "ssr",
-    "type": "dir",
-    "collapsed": true,
-    "label": "Server Rendering"
-  },
-  {
     "name": "ssg",
     "type": "dir",
     "collapsed": true
