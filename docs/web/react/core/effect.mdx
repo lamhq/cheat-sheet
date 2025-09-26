@@ -1,0 +1,212 @@
+# Effect
+
+## Side Effects
+
+Side effects are operations that affect something outside the scope of the component rendering process.
+
+Examples:
+- Starting an animation
+- Changing the data
+- Fetching data from an API
+- Subscribing to a data stream or event
+- Setting up timers or intervals
+- Manually updating the DOM
+- Logging or analytics
+- Saving data to local storage
+
+Side effects should go in event handlers (functions triggered by user actions, like clicking a button).
+
+If no suitable handler exists, use `useEffect` to run the side effect after rendering, but it should be the last resort.
+
+
+## Effect
+
+Effects let you run some code after rendering so that you can synchronize your component with some system outside of React.
+
+- By default, Effects run after every render.
+- If specifying dependencies, effects should only re-run when it's dependencies change.
+- Some Effects need to specify how to clean up what they were doing.
+
+Effects let you specify side effects that are caused by rendering itself, rather than by a particular event. 
+
+Effects are an "escape hatch": you use them when you need to "step outside React" and when there is no better built-in solution for your use case. Whenever you write an Effect, consider wrapping your Effects in custom Hooks makes it easier to upgrade your code when these solutions become available.
+
+For example:
+
+1. We have a `VideoPlayer` component that render the built-in browser `<video>` tag, it accept `src` and `isPlaying` props
+2. When `isPlaying` prop change, we want to play/pause the video. But the `<video>` tag doesn't have a `isPlaying` prop
+3. We synchronize the value of `isPlaying` prop to tells whether the video should be playing by getting a ref to the `<video>` DOM node, and then call its `play()` and `pause()` methods when `isPlaying` prop changes
+
+```jsx
+import { useState, useRef, useEffect } from 'react';
+
+function VideoPlayer({ src, isPlaying }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (isPlaying) {
+      ref.current.play();
+    } else {
+      ref.current.pause();
+    }
+  }, [isPlaying]);
+
+  return <video ref={ref} src={src} loop playsInline />;
+}
+```
+
+
+## Effect Dependencies
+
+You can control when to run an effect by specifying an array of dependencies as the second argument to the `useEffect` call.
+
+```js
+useEffect(() => {
+  // This runs after every render
+});
+
+useEffect(() => {
+  // This runs only on mount (when the component appears)
+}, []);
+
+useEffect(() => {
+  // This runs on mount, and also if either a or b have changed since the last render
+}, [a, b]);
+```
+
+> [!NOTE]
+> You will get a lint error if the dependencies you specified don't match what React expects based on the code inside your Effect.   
+
+If you don't want some code to re-run, edit the Effect code itself to not "need" that dependency.
+
+**Avoid relying on objects and functions as dependencies**. If you create objects and functions during rendering and then read them from an Effect, they will be different on every render. This will cause your Effect to re-synchronize every time.
+
+
+## Cleanup Function
+
+React will call your cleanup function each time before the Effect runs again, and one final time when the component unmounts. 
+
+```js
+useEffect(() => {
+  const connection = createConnection();
+  connection.connect();
+  return () => {
+    connection.disconnect();
+  };
+}, []);
+```
+
+
+## Development mode
+
+In development, React remounts every component once immediately after its initial mount (React intentionally unmounts and remounts it).
+
+This ensure your effects and cleanup logic are correct. When you implement the cleanup well, there should be no user-visible difference between running the Effect once vs running it, cleaning it up, and running it again.
+
+In this example, your code doesn't close the connection when the component unmounts, so `"✅ Connecting..."` gets printed twice:
+
+```jsx
+import { useEffect } from 'react';
+
+function createConnection() {
+  // A real implementation would actually connect to the server
+  return {
+    connect() {
+      console.log('✅ Connecting...');
+    },
+    disconnect() {
+      console.log('❌ Disconnected.');
+    }
+  };
+}
+
+export default function ChatRoom() {
+  useEffect(() => {
+    const connection = createConnection();
+    connection.connect();
+  }, []);
+  return <h1>Welcome to the chat!</h1>;
+}
+```
+
+
+## When to use Effects?
+
+1. [Controlling non-React widgets](https://react.dev/learn/synchronizing-with-effects#controlling-non-react-widgets) (map, modal, video player, etc)
+2. [Subscribing to events](https://react.dev/learn/synchronizing-with-effects#subscribing-to-events) (scroll, resize, etc)
+3. [Triggering animations](https://react.dev/learn/synchronizing-with-effects#triggering-animations) (fade in, slide down, etc)
+4. [Fetching data](https://react.dev/learn/synchronizing-with-effects#fetching-data) (API, database, etc)
+5. [Sending analytics](https://react.dev/learn/synchronizing-with-effects#sending-analytics) (Google Analytics, Mixpanel, etc)
+
+
+## When not to use Effects
+
+If there is no external system involved, you shouldn't need an Effect.
+
+1. [Initializing the application](https://react.dev/learn/synchronizing-with-effects#not-an-effect-initializing-the-application). You can put it outside your components
+2. [Handling user events](https://react.dev/learn/synchronizing-with-effects#not-an-effect-buying-a-product). This should go to event handlers
+3. [Updating state based on props or state](https://react.dev/learn/you-might-not-need-an-effect#updating-state-based-on-props-or-state). Just calculate it during rendering.
+
+
+## Removing Non-Reactive Values from Effect Dependencies
+
+> [!CAUTION]
+> This guide uses an experimental API that has not yet been released in a stable version of React. However, the problem is common enough to be worth mentioning.
+
+Sometimes your effect dependencies include values that you don't want to trigger a re-run when they change.
+
+For example:
+1. You want to show a notification each time a user connects to a different chat room.
+2. But your code references the `theme` value, so you include it in the effect's dependency array.
+3. This causes the app to reconnect and show a notification even when only the `theme` changes.
+
+```jsx
+function ChatRoom({ roomId, theme }) {
+  useEffect(() => {
+    const connection = createConnection(serverUrl, roomId);
+    connection.on('connected', () => {
+      showNotification(`Connected to room ${roomId}!`, theme);
+    });
+    connection.connect();
+    return () => connection.disconnect();
+  }, [roomId, theme]);
+  
+  return <h1>Welcome to the {roomId} room!</h1>
+}  
+```
+
+You can remove `theme` from the dependency array, but you'll get a lint error.
+
+You might be tempted to suppress the dependency linter, but doing so disables warnings when your effect should respond to new reactive dependencies added later. This leads to bugs.
+
+React provides the `useEffectEvent` hook, which lets you extract non-reactive logic from your effect. This allows you to safely remove non-reactive values from the dependency array.
+
+The above example can be refactored to:
+
+```jsx
+import { experimental_useEffectEvent as useEffectEvent } from 'react';
+
+function ChatRoom({ roomId, theme }) {
+  const onConnected = useEffectEvent((room) => {
+    showNotification(`Connected to room ${room}!`, theme);
+  });
+
+  useEffect(() => {
+    const connection = createConnection(serverUrl, roomId);
+    connection.on('connected', () => {
+      onConnected(roomId);
+    });
+    connection.connect();
+    return () => connection.disconnect();
+  }, [roomId]);
+
+  return <h1>Welcome to the {roomId} room!</h1>
+}
+```
+- `onConnected` is called an Effect Event. The logic inside it is not reactive, and it always "sees" the latest values of your props and state.
+- Now you can remove `theme` from the list of your Effect's dependencies, and the lint error will go away.
+
+Limitations:
+
+- Only call Effect Event from inside Effects.
+- Never pass them to other components or Hooks.

@@ -1,0 +1,120 @@
+# Memoization
+
+## Overview
+
+Memoization is an optimization technique used to improve performance by caching the results of expensive computations and reusing them when the same inputs occur again.
+
+Use cases:
+- Caching result of repetitive computations
+- Reduce unnecessary re-renders
+
+
+## Implementations
+
+Memoization is commonly implemented using:
+- `React.memo`: A higher-order component that prevents re-rendering of functional components if their props haven't changed.
+- `useMemo` Hook: Caches the result of a computation and recalculates it only when its dependencies change.
+- `useCallback` Hook: Memoizes callback functions to avoid unnecessary re-creations during re-renders.
+
+
+### `React.memo`
+
+```js
+import React from "react";
+
+// A functional component
+const ChildComponent = ({ name }) => {
+  console.log("Child component rendered");
+  return <div>Hello, {name}!</div>;
+};
+
+// Using React.memo to memoize the component
+const MemoizedChildComponent = React.memo(ChildComponent);
+
+const ParentComponent = () => {
+  const [count, setCount] = React.useState(0);
+  const [name, setName] = React.useState("John");
+
+  return (
+    <div>
+      <button onClick={() => setCount(count + 1)}>
+        Increment Count: {count}
+      </button>
+      <button onClick={() => setName("Jane")}>Change Name</button>
+      {/* Pass name prop to the memoized child */}
+      <MemoizedChildComponent name={name} />
+    </div>
+  );
+};
+
+export default ParentComponent;
+```
+
+
+### `useMemo`
+
+```js
+import React, { useState, useMemo } from "react";
+
+const ExpensiveCalculation = ({ number }) => {
+  // Simulate an expensive computation
+  console.log("Expensive calculation performed!");
+  return number * number;
+};
+
+const ParentComponent = () => {
+  const [count, setCount] = useState(0);
+  const [number, setNumber] = useState(5);
+
+  // Memoizing the result of the expensive calculation
+  const memoizedResult = useMemo(() => {
+    return ExpensiveCalculation({ number });
+  }, [number]); // Recomputes only when 'number' changes
+
+  return (
+    <div>
+      <button onClick={() => setCount(count + 1)}>
+        Increment Count: {count}
+      </button>
+      <button onClick={() => setNumber(number + 1)}>
+        Increment Number: {number}
+      </button>
+      <div>Memoized Result: {memoizedResult}</div>
+    </div>
+  );
+};
+
+export default ParentComponent;
+```
+
+### `useCallback`
+
+```js
+import React, { useState, useCallback } from "react";
+
+const ChildComponent = ({ onClick }) => {
+  console.log("Child component rendered");
+  return <button onClick={onClick}>Click Me!</button>;
+};
+
+const ParentComponent = () => {
+  const [count, setCount] = useState(0);
+
+  // Memoize the callback to prevent it from being recreated on each render
+  const handleClick = useCallback(() => {
+    console.log("Button clicked!");
+  }, []); // Empty dependency array ensures the callback is created only once
+
+  return (
+    <div>
+      <button onClick={() => setCount(count + 1)}>
+        Increment Count: {count}
+      </button>
+      {/* Pass the memoized callback to the child component */}
+      <ChildComponent onClick={handleClick} />
+    </div>
+  );
+};
+
+export default ParentComponent;
+```
