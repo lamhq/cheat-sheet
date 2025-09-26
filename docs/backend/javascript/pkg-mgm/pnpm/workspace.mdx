@@ -9,11 +9,11 @@ It's ideal for projects that contain multiple apps, libraries, or services that 
 
 ## Why Use Workspace?
 
-- Speed: Faster installs than npm or Yarn due to content-addressable storage
-- Disk Efficiency: Shared dependencies reduce duplication across packages
-- Local Linking: Use `workspace:*` to link packages without publishing them
-- Clean Structure: Centralized configuration and tooling across packages
-- Better Dev Experience: Easier refactoring, testing, and CI/CD setup
+- **Speed**: Faster installs than npm or Yarn due to content-addressable storage
+- **Disk Efficiency**: Shared dependencies reduce duplication across packages
+- **Local Linking**: Use `workspace:*` to link packages without publishing them
+- **Clean Structure**: Centralized configuration and tooling across packages
+- **Better Dev Experience**: Easier refactoring, testing, and CI/CD setup
 
 
 ## Key Features
@@ -35,77 +35,6 @@ When you run `pnpm install`, it:
 - Resolves dependencies across all packages.
 - Hoists shared dependencies to the root `node_modules`.
 - Links local packages together using symlinks.
-
-
-## Scaffolding Workspace
-
-Initialize the Monorepo:
-
-```sh
-mkdir my-monorepo && cd my-monorepo
-pnpm init
-```
-
-Create `pnpm-workspace.yaml` with below content:
-```yml
-packages:
-  - 'apps/*'
-  - 'packages/*'
-```
-
-Create package folders:
-```sh
-mkdir packages apps
-mkdir packages/utils apps/web-app
-```
-
-Initialize each package:
-```sh
-cd packages/utils
-pnpm init
-# Repeat for other packages
-```
-
-Then you will have this structure:
-
-```
-my-monorepo/
-├── pnpm-workspace.yaml
-├── package.json
-├── node_modules/
-├── apps/
-│   └── web-app/
-│       └── package.json
-└── packages/
-    └── utils/
-        └── package.json (name: "@your-org/utils")
-```
-
-
-## Linking packages
-
-Workspace Protocol allows packages within a monorepo to reference each other locally, without needing to publish them to a registry like npm.
-
-To install `utils` package as a dependency of `web-app`:
-```bash
-cd apps/web-app
-pnpm add @your-org/utils --workspace
-```
-
-This will add a dependency to `web-app/package.json`:
-```json title="package.json"
-"dependencies": {
-  "@your-org/utils": "workspace:*"
-}
-```
-
-Now, `web-app` uses the local version of `utils`, and you can develop both side-by-side without publishing anything.
-
-You can also specify exact versions:
-```json
-"@your-org/utils": "workspace:^1.0.0"
-```
-- Package version is defined using the `version` field in `package.json`
 
 
 ## Running scripts
@@ -143,3 +72,75 @@ Use `pnpm exec` to run binaries from dependencies:
 ```bash
 pnpm --filter web-app exec jest
 ```
+
+
+## Scaffolding Workspace
+
+Create the root directory for the workspace:
+
+```sh
+mkdir my-monorepo && cd my-monorepo
+```
+
+Initialize the workspace structure:
+```sh
+pnpm init
+cat <<EOF > pnpm-workspace.yaml
+packages:
+  - 'apps/*'
+  - 'packages/*'
+EOF
+mkdir packages apps
+```
+
+Initialize each package:
+```sh
+mkdir apps/web-app packages/utils
+cd apps/web-app
+pnpm init
+
+cd ../../packages/utils
+pnpm init
+cd ../..
+```
+
+Then you will have this structure:
+
+```
+my-monorepo/
+├── pnpm-workspace.yaml
+├── package.json
+├── node_modules/
+├── apps/
+│   └── web-app/
+│       └── package.json
+└── packages/
+    └── utils/
+        └── package.json
+```
+
+
+## Linking packages
+
+Workspace Protocol allows packages within a monorepo to reference each other locally, without needing to publish them to a registry like npm.
+
+To install `utils` package as a dependency of `web-app`:
+```bash
+cd apps/web-app
+pnpm add @your-org/utils --workspace
+```
+
+This will add a dependency to `web-app/package.json`:
+```json title="package.json"
+"dependencies": {
+  "@your-org/utils": "workspace:*"
+}
+```
+
+Now, `web-app` uses the local version of `utils`, and you can develop both side-by-side without publishing anything.
+
+You can also specify exact versions:
+```json
+"@your-org/utils": "workspace:^1.0.0"
+```
+- Package version is defined using the `version` field in `package.json`

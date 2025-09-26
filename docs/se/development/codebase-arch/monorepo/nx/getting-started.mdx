@@ -1,0 +1,72 @@
+# Getting Started
+
+## Installation
+
+Install Nx CLI on macOS:
+
+```sh
+brew install nx
+```
+
+## Editor Integration
+
+Install [Nx Console extension](https://code.visualstudio.com/) for VSCode.
+
+
+## Creating workspace
+
+Whether you're launching a new project or integrating Nx into an existing one, my recommended way is to start with a clean Nx workspace and gradually add projects as you go.
+
+Begin by setting up a PNPM workspace using this [step-by-step guide](../../../../../backend/javascript/pkg-mgm/pnpm/workspace.mdx#scaffolding-workspace).
+
+Add Nx to your workspace:
+
+```sh
+nx init
+```
+
+
+## Adding project
+
+Install necessary Nx [plugins](https://nx.dev/plugin-registry) based on your tech stack.
+
+> [!TIP]
+> To know which plugins to install, you can run `nx import` to [import the existing repository](https://nx.dev/recipes/adopting-nx/import-project) to a test repository. Nx will automatically detect and install the required plugins.
+
+Use the code generators provided by the installed plugins to scaffold a new project.
+
+> [!TIP]
+> As you evolve your codebase from its templates, you can take full advantage of Nx's capabilities without needing to learn all its configuration to tweak your existing codebase to work with it.
+
+Migrate the content of your `package.json` into the newly generated project:
+- Update the `scripts` section to use `nx exec` for running commands
+
+Move your existing codebase into the new project structure.
+
+Migrate any tooling configurations (e.g., TypeScript, ESLint, Prettier) into the new project.
+
+
+## Explore Workspace
+
+Your workspace is a collection of projects.
+
+Each project has different tasks which can be run.
+
+Projects have dependencies between them and form a graph known as the **Project Graph**.
+
+In addition to the project graph, Nx also tracks the dependencies between tasks as **Task Graph** to determine the way in which the tasks are executed.
+
+Nx provides a UI which shows the information above.
+
+### View all projects
+
+To see all projects in your workspace:
+- Open the project graph: `nx graph`
+- Look at the Projects pane in Nx Console
+- Run `nx show projects`
+
+### View project details
+
+To view details of a project:
+- View it in Nx Console
+- Run `nx show project <project-name> --web`.
