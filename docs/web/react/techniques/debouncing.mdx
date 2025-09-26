@@ -1,0 +1,65 @@
+# Debouncing
+
+## Overview
+
+Debouncing delays function execution after a period of time.
+
+Any subsequent call happens within the delay period will reset the timer.
+
+Use cases:
+- Search inputs: wait until the user has finished typing before making an API call.
+
+
+## How It Works
+
+1. When the function is called, it doesn't execute immediately. Instead, it's scheduled to run after a specified delay.
+2. If the function is called again before the delay completes, it replaces the previous scheduled execution and the delay timer is reset.
+
+
+### Implementation
+
+```js
+import { useCallback, useState } from 'react';
+
+// Debounce function
+function debounce(func, delay) {
+  let timer;
+  return (...args) => {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => {
+      func(...args);
+    }, delay);
+  };
+}
+
+export default function SearchComponent() {
+  const [query, setQuery] = useState('');
+
+  // Debounced function for handling the search
+  const debouncedSearch = useCallback(
+    debounce((query) => {
+      console.log(`Searching for: ${query}`);
+      // Add your actual search logic or API call here
+    }, 500), // 500ms debounce delay
+    [],
+  );
+
+  // Handle input change and call the debounced search function
+  const handleChange = (e) => {
+    const { value } = e.target;
+    setQuery(value);
+    debouncedSearch(value);
+  };
+
+  return (
+    <div>
+      <input
+        type="text"
+        value={query}
+        onChange={handleChange}
+        placeholder="Search..."
+      />
+    </div>
+  );
+}
+```

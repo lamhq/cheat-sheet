@@ -1,0 +1,68 @@
+# Design Components
+
+A process for converting a design mock-up into a React component hierarchy.
+
+## Start with the mockup
+
+![](https://react.dev/images/docs/s_thinking-in-react_ui.png)
+
+
+## Design the component hierarchy
+
+Draw boxes around every component / subcomponent in the mockup and name them.
+
+Split up the design into components using single responsibility principle.
+
+> [!INFO] A component should ideally only do one thing. If it grows, it should be decomposed into smaller subcomponents.
+
+![](https://react.dev/images/docs/s_thinking-in-react_ui_outline.png)
+
+Arrange components into a hierarchy:
+
+- `FilterableProductTable`
+  - `SearchBar`
+  - `ProductTable`
+    - `ProductCategoryRow`
+    - `ProductRow`
+
+
+## Build a static version
+
+Build a non-interactive version that renders your data model. It includes components that reuse other components and pass data using props.
+
+Don't use state at all to build this static version. State is reserved only for interactivity.
+
+You can either build "top down" (starting with parent components) or "bottom-up" (starting with child components). On larger projects, it's easier to go "bottom-up".
+
+The component at the top of the hierarchy will take your data model as a prop (e.g., `products` model) and pass it down to lower-level components.
+
+
+## Design a minimal state structure
+
+To make your UI interactive, you'll need to use state to track data that changes over time.
+
+Keep your state DRY (Don't Repeat Yourself). Only store the minimal necessary data and compute everything else on-demand (like a total count or a filtered list).
+
+Things that aren't state:
+- Remain unchanged over time
+- Is passed through props
+- Can be computed from existing state or props
+
+## Identify Where State Should Live
+
+Once you've defined your app's state, you need to decide which component will **own and manage** that state. 
+
+For each piece of state:
+1.  **Find all components** that use the state to render their output.
+2.  **Locate their closest common parent** in the component hierarchy.
+3.  **Place the state** in that common parent component. If that doesn't feel right, you can move it to a component higher up, or even create a new component just to hold the state.
+
+
+## Add inverse data flow
+
+Allowing changing state by passing state update functions down to child components.
+
+
+## References
+
+https://react.dev/learn/thinking-in-react

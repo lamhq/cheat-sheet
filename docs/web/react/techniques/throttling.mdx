@@ -1,0 +1,90 @@
+# Throttling
+
+## Overview
+
+Throttling ensures a function runs at most once in a specified time interval, preventing it from being executed too frequently.
+
+_For example, if you have a function that sends API requests on mouse movement, throttling can limit the number of requests sent to the server, preventing overload._
+
+Use cases:
+- Scroll position tracking
+- Continuous mouse movement
+- Window resize events
+
+## Implementations
+
+### From scratch
+
+1. The first call is executed immediately.
+2. Additional calls within the throttle window are delayed until the remaining time has passed.
+3. If a new call occurs during the delay, the new call will replace the previous one.
+
+```jsx
+function throttle(func, limit) {
+  let timer;
+  let lastRan;
+  return function (...args) {
+    const context = this;
+    if (!lastRan) {
+      // instantly run the function on the first execution
+      func.apply(context, args);
+      lastRan = Date.now();
+    } else {
+      // stop previously triggered call
+      clearTimeout(timer);
+      // trigger a function call until remaining time has elapsed
+      timer = setTimeout(
+        () => {
+          if (Date.now() - lastRan >= limit) {
+            func.apply(context, args);
+            lastRan = Date.now();
+          }
+        },
+        limit - (Date.now() - lastRan),
+      );
+    }
+  };
+}
+
+import { useEffect } from 'react';
+
+export function ThrottledScrollComponent() {
+  const handleScroll = throttle(() => {
+    console.log('Scroll event triggered!');
+  }, 2000);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [handleScroll]);
+
+  return (
+    <div style={{ height: '250vh', padding: '1rem' }}>
+      <h1>Scroll down the page to see throttling in action!</h1>
+    </div>
+  );
+};
+```
+
+
+### Lodash
+
+```jsx
+import { useEffect } from "react";
+import { throttle } from "lodash";
+
+function ScrollTracker() {
+  useEffect(() => {
+    const handleScroll = throttle(() => {
+      console.log("Scroll event");
+    }, 1000);
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return <div>Scroll to see throttled logs</div>;
+}
+```

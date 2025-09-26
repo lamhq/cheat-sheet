@@ -1,0 +1,15 @@
+[
+  "installation",
+  "design",
+  "render-process",
+  "describe-the-ui",
+  "events",
+  "effect",
+  {
+    "name": "state",
+    "type": "dir",
+    "collapsed": true
+  },
+  "context",
+  "ref"
+]

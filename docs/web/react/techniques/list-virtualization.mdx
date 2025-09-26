@@ -1,0 +1,23 @@
+import { PackageManagerTabs } from '@theme'
+
+# List Virtualization
+
+## Overview
+
+List virtualization (aka. windowing) is a technique for rendering large lists or tables efficiently.
+
+
+## How it works?
+
+Instead of rendering all items in a list at once, it only renders the visible items within a "window" or viewport.
+
+As the user scrolls, the window moves, and new items are rendered while old ones are removed.
+
+This approach significantly improves performance by reducing the number of DOM elements.
+
+
+## Implementations
+
+Approaches to implement list virtualization: 
+- [`react-window`](https://react-window.vercel.app/)
+- [`react-virtualized`](https://github.com/bvaughn/react-virtualized)

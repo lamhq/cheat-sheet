@@ -1,5 +1,11 @@
 [
   {
+    "name": "core",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Core"
+  },
+  {
     "name": "typescript",
     "type": "dir",
     "collapsed": true
@@ -18,7 +24,7 @@
   {
     "name": "react-query",
     "collapsed": true,
-    "label": "Asynchronous Operations"
+    "label": "Data Fetching & Mutation"
   },
   {
     "name": "auth",
@@ -29,7 +35,7 @@
   {
     "name": "jotai",
     "collapsed": true,
-    "label": "State Management"
+    "label": "Global State"
   },
   {
     "name": "styling",
@@ -40,7 +46,7 @@
   {
     "name": "joy-ui",
     "collapsed": true,
-    "label": "UI Framework"
+    "label": "UI Library"
   },
   {
     "name": "react-testing-library",
@@ -49,9 +55,15 @@
   },
   "server-comp",
   {
-    "name": "performance",
+    "name": "nextjs",
     "type": "dir",
     "collapsed": true,
-    "label": "Performance Optimization"
+    "label": "Server Rendering"
+  },
+  {
+    "name": "techniques",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Techniques"
   }
 ]

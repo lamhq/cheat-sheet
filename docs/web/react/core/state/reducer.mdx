@@ -1,0 +1,181 @@
+# Reducer 
+
+## Motivation
+
+Components with many state updates spread across many event handlers can get overwhelming.
+
+For these cases, you can **consolidate all the state update logic** outside your component in a single function, called a reducer.
+
+For example, your state is an array of objects and you want to add,remove and update individual object in the array:
+- The state update logic is spread across many event handlers.
+- It can get harder to see how the component's state gets updated as your components grow.
+
+```js
+export default function TaskApp() {
+  const [tasks, setTasks] = useState(initialTasks);
+
+  function handleAddTask(text) {
+    setTasks([
+      ...tasks,
+      {
+        id: nextId++,
+        text: text,
+        done: false,
+      },
+    ]);
+  }
+  
+  function handleChangeTask(task) {
+    // ...
+  }
+}
+```
+
+To reduce this complexity and keep all your logic in one place, you can move that state logic into a single function outside your component, called a "reducer".
+
+
+## Reducer function 
+
+A reducer function is where you will put your state logic.
+
+It takes two arguments, the current state and the action object, and it returns the next state.
+
+```js
+function yourReducer(state, action) {
+  switch (action.type) {
+    case 'your-action': {
+      // return next state for React to set
+    }
+    default: {
+      throw Error('Unknown action: ' + action.type);
+    }
+  }
+}
+```
+
+Keep these two tips in mind when writing reducers:
+- Reducers must be pure. Same inputs always result in the same output
+- Each action describes a single user interaction. _For example, if user Reset on a form with 5 inputs, we dispatch a `reset_form` action rather than 5 separate `set_field` actions_.
+
+
+## Action
+
+An action object can have any shape.
+
+By convention, it is common to give it a string `type` that describes what happened, and you can pass any additional information in other fields.
+
+```js
+dispatch({
+  // specific to component
+  type: 'what_happened',
+  // other fields go here
+});
+```
+
+
+## Writing oncise reducers with Immer 
+
+Just like with updating objects and arrays in regular state,  `useImmerReducer` lets you write concise reducers.
+
+```js title="reduces.js"
+export function tasksReducer(draft, action) {
+  switch (action.type) {
+    case 'added': {
+      draft.push({
+        id: action.id,
+        text: action.text,
+        done: false,
+      });
+      break;
+    }
+    case 'changed': {
+      const index = draft.findIndex((t) => t.id === action.task.id);
+      draft[index] = action.task;
+      break;
+    }
+    case 'deleted': {
+      return draft.filter((t) => t.id !== action.id);
+    }
+    default: {
+      throw Error('Unknown action: ' + action.type);
+    }
+  }
+}
+```
+
+```jsx title="App.js"
+import { useImmerReducer } from 'use-immer';
+import AddTask from './AddTask.js';
+import TaskList from './TaskList.js';
+import { tasksReducer } from './reduces.js';
+
+export default function App() {
+  const [tasks, dispatch] = useImmerReducer(tasksReducer, initialTasks);
+
+  function handleAddTask(text) {
+    dispatch({
+      type: 'added',
+      id: nextId++,
+      text: text,
+    });
+  }
+
+  function handleChangeTask(task) {
+    dispatch({
+      type: 'changed',
+      task: task,
+    });
+  }
+
+  function handleDeleteTask(taskId) {
+    dispatch({
+      type: 'deleted',
+      id: taskId,
+    });
+  }
+
+  return (
+    <>
+      <h1>Prague itinerary</h1>
+      <AddTask onAddTask={handleAddTask} />
+      <TaskList
+        tasks={tasks}
+        onChangeTask={handleChangeTask}
+        onDeleteTask={handleDeleteTask}
+      />
+    </>
+  );
+}
+
+let nextId = 3;
+const initialTasks = [
+  {id: 0, text: 'Visit Kafka Museum', done: true},
+  {id: 1, text: 'Watch a puppet show', done: false},
+  {id: 2, text: 'Lennon Wall pic', done: false},
+];
+```
+
+
+## `useState` vs `useReducer`
+
+**Code size**:
+- `useState` help you write less code when the state updates are simple
+- `useReducer` can help cut down on the code if many event handlers modify state in a similar way.
+
+**Readability**:
+- `useState` is very easy to read when the state updates are simple.
+- `useReducer` lets you separate the update logic from event handlers.
+
+**Debugging**:
+- It can be difficult to tell where the state was set with `useState` because there's only one `setState` function.
+- With `useReducer`, you can add a console log into your reducer to see which action triggered the state update.
+
+**Testing**:
+- You can test reducer function separately in isolation
+
+
+## Where to use `useReducer`?
+
+1. State update happens in multiple places
+2. State update logic is complex (`get`, `set` is not enough)
+3. State structure is complex (nested objects and arrays).
