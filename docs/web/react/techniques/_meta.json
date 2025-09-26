@@ -4,6 +4,11 @@
   "memoization",
   "throttling",
   "debouncing",
+  {
+    "name": "bg-rendering",
+    "type": "dir",
+    "collapsed": true
+  },
   "code-splitting",
   "web-workers",
   "optimistic"
