@@ -18,14 +18,29 @@ Nx is well-suited for JavaScript and TypeScript projects (Angular, React, Vue, N
 
 **Task Orchestration**
 - Run tasks in parallel or sequence
-- only run tasks for projects affected by a given change
+- Only run tasks for projects affected by a given change
+- Auto infer tasks based on tooling configuration (Vite, Jest, ESLint, etc)
 
 **Caching**
-- speed up task execution with caching
+- Speed up task execution with caching
 - Enable local and distributed caching (via Nx Cloud)
+
+**Code Generation**
+- Allowing scaffolding new projects quickly
+- Support multiple tech stacks and frameworks: Vite, Next.js, NestJS, Angular, React, Vue, Node.js, etc.
 
 **Project Graph Visualization**
 - Automatically generates a visual graph of all projects and their dependencies
 
-**Code Generation**
-- Allowing scaffolding new projects quickly
+**IDE Integration**
+- Provide an UI that allows exploring the project, running tasks, code generation, installing plugins, etc.
+
+**TypeScript support**
+- Automatic configuring type inference for projects
+
+
+## Limitations
+
+- ⚠️ Complex configuration
+- ⚠️ The documentation is lengthy and difficult to navigate.
+- ⚠️ Nx centralizes all dependency definitions in the root `package.json` by default, making it unclear which dependencies belong to which project and complicating the transition to a monorepo structure.

@@ -13,17 +13,26 @@ Nx Console provides a visual interface to find and run generators:
 
 Syntax: `nx g <plugin-name>:<generator-name> [options]`.
 
-Generate a React library in `packages/mylib`:
-```sh
-nx g @nx/react:lib packages/mylib
-```
-
-Specify just the generator name and Nx will prompt you to pick between the installed plugins that provide a generator with that name:
-```sh
-nx g lib packages/mylib
-```
-
-To see a list of available generators in `@nx/react` plugin:
+To see a list of available generators in a plugin:
 ```sh
 nx list @nx/react
+```
+
+### TypeScript package
+
+Generate a TypeScript package in `packages/common`:
+```sh
+nx g @nx/js:lib packages/common
+```
+
+### React
+
+Install React plugin:
+```sh
+nx add @nx/react
+```
+
+Generate a React app in `apps/web`:
+```sh
+nx g @nx/react:app apps/web
 ```
