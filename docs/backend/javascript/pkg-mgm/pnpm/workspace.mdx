@@ -6,6 +6,25 @@ PNPM Workspace is a feature that allows you to manage multiple interdependent pa
 
 It's ideal for projects that contain multiple apps, libraries, or services that share dependencies or tooling.
 
+Below is the sample structure of a PNPM Workspace:
+
+```
+.
+├── apps
+│   ├── docs
+│   │   └── package.json
+│   └── web
+│       └── package.json
+├── packages
+│   ├── ui
+│   │   └── package.json
+│   └── utils
+│       └── package.json
+├── package.json
+├── pnpm-lock.yaml
+└── pnpm-workspace.yaml
+```
+
 
 ## Why Use Workspace?
 
@@ -28,29 +47,79 @@ It's ideal for projects that contain multiple apps, libraries, or services that 
 
 ## How It Work?
 
-pnpm uses a `pnpm-workspace.yaml` file at the root of your repo to define which folders contain packages. Each package has its own `package.json`, and dependencies between them can be linked using the `workspace:` protocol.
+PNPM uses a `pnpm-workspace.yaml` file at the root of your repo to define which folders contain packages.
 
-When you run `pnpm install`, it:
+Each package has its own `package.json`, and dependencies between them can be linked using the `workspace:` protocol.
 
-- Resolves dependencies across all packages.
-- Hoists shared dependencies to the root `node_modules`.
-- Links local packages together using symlinks.
+PNPM installs dependencies for all workspace packages in a single `node_modules` folder at the root.
+
+If one package depends on another in the workspace, PNPM links them locally using symlinks. This allows changes in one package are instantly available to others, no need to publish to npm registry or reinstall.
+
+_For example, using below configuration, every directory with a `package.json` in the `apps` or `packages` directories will be considered a package:_
+
+```yaml title="pnpm-workspace.yaml"
+packages:
+  - "apps/*"
+  - "packages/*"
+```
+
+
+## Creating Workspace
+
+Use a monorepo tool like Turborepo or Nx to quickly scaffold a workspace. Configure them to use PNPM as the package manager.
+
+
+## Install dependencies
+
+Install dependencies in multiple packages:
+
+```sh
+pnpm add jest --save-dev --recursive --filter=web --filter=@repo/ui --filter=docs
+```
+- `--recursive` run command in every project of a workspace
+- `--filter` run command in specific projects
+
+
+## Linking internal packages
+
+To link a package in the workspace, in the consumer package, run:
+
+```sh
+pnpm add @your-org/utils --workspace
+```
+
+This adds a reference to the consumer's `package.json`:
+
+```json title="apps/web/package.json"
+"dependencies": {
+  "@your-org/utils": "workspace:*"
+}
+```
+
+You can also specify the exact versions of the dependencies:
+```json
+"@your-org/utils": "workspace:^1.0.0"
+```
+
+> [!NOTE]
+> The version is defined using the `version` field in `package.json` file of the source package.
 
 
 ## Running scripts
 
-To run a script inside a specific package:
+To run a script of a specific package:
 
 ```bash
 pnpm --filter <package-name> run <script-name>
 ```
-- Package name is defined using the `name` field in `package.json`
 
-Example:
+> [!INFO]
+> Package name is defined using the `name` field in `package.json`
+
+This runs the `build` script defined in `apps/web-app/package.json`:
 ```bash
 pnpm --filter web-app run build
 ```
-- This runs the `build` script defined in `apps/web-app/package.json`.
 
 To run a script across **all packages** in the workspace:
 
@@ -72,75 +141,3 @@ Use `pnpm exec` to run binaries from dependencies:
 ```bash
 pnpm --filter web-app exec jest
 ```
-
-
-## Scaffolding Workspace
-
-Create the root directory for the workspace:
-
-```sh
-mkdir my-monorepo && cd my-monorepo
-```
-
-Initialize the workspace structure:
-```sh
-pnpm init
-cat <<EOF > pnpm-workspace.yaml
-packages:
-  - 'apps/*'
-  - 'packages/*'
-EOF
-mkdir packages apps
-```
-
-Initialize each package:
-```sh
-mkdir apps/web-app packages/utils
-cd apps/web-app
-pnpm init
-
-cd ../../packages/utils
-pnpm init
-cd ../..
-```
-
-Then you will have this structure:
-
-```
-my-monorepo/
-├── pnpm-workspace.yaml
-├── package.json
-├── node_modules/
-├── apps/
-│   └── web-app/
-│       └── package.json
-└── packages/
-    └── utils/
-        └── package.json
-```
-
-
-## Linking packages
-
-Workspace Protocol allows packages within a monorepo to reference each other locally, without needing to publish them to a registry like npm.
-
-To install `utils` package as a dependency of `web-app`:
-```bash
-cd apps/web-app
-pnpm add @your-org/utils --workspace
-```
-
-This will add a dependency to `web-app/package.json`:
-```json title="package.json"
-"dependencies": {
-  "@your-org/utils": "workspace:*"
-}
-```
-
-Now, `web-app` uses the local version of `utils`, and you can develop both side-by-side without publishing anything.
-
-You can also specify exact versions:
-```json
-"@your-org/utils": "workspace:^1.0.0"
-```
-- Package version is defined using the `version` field in `package.json`

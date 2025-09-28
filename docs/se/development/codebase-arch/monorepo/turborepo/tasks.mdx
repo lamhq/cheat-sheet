@@ -1,0 +1,116 @@
+# Tasks
+
+## Overview
+
+A task is a script that Turborepo runs. You can express relationships between tasks in your [`turbo.json`](https://turborepo.com/docs/reference/configuration) configuration and [Package Graph](https://turborepo.com/docs/core-concepts/package-and-task-graph#package-graph).
+
+Turborepo will always parallelize any work that it can to ensure everything runs as fast as possible.
+
+
+## Defining tasks
+
+### Run tasks in direct dependencies first
+
+```json title="turbo.json"
+{
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"] 
+    }
+  }
+}
+```
+
+- The `^` means run the task in direct dependencies first. _If your application depends on a library named `ui` and the library has a `build` task, the `build` script in `ui` will run first._
+
+
+### Depending on tasks in the same package
+
+```json title="turbo.json"
+{
+  "tasks": {
+    "test": {
+      "dependsOn": ["build"] 
+    }
+  }
+}
+```
+
+
+### Depending on a specific task in a specific package
+
+```json title="turbo.json"
+{
+  "tasks": {
+    "lint": {
+      "dependsOn": ["utils#build"] 
+    }
+  }
+}
+```
+
+```json title="turbo.json"
+{
+  "tasks": {
+    "web#lint": {
+      "dependsOn": ["utils#build"] 
+    }
+  }
+}
+```
+
+
+### Long-running tasks
+
+You might have a long-running task that requires another task to always be running at the same time.
+
+For example, a web app might require an API server to be running while it's in development mode:
+
+```json title="apps/web/turbo.json"
+{
+  "tasks": {
+    "dev": {
+      "with": ["api#dev"],
+      "persistent": true,
+      "cache": false
+    }
+  }
+}
+```
+
+
+### Specifying output
+
+The `outputs` key tells Turborepo files and directories it should cache when the task has successfully completed.
+
+```json title="turbo.json"
+{
+  "tasks": {
+    "build": {
+      "outputs": [".next/**", "!.next/cache/**"] 
+    }
+  }
+}
+```
+
+
+### Specifying inputs
+
+The `inputs` key is used to specify the files that you want to include in the task's hash for caching. 
+
+By default all files in the package that are checked into source control are included in the hash.
+
+In this example, Turborepo will use the default inputs behavior for the build task, but will ignore changes to the `README.md` file:
+
+```json title="turbo.json"
+{
+  "tasks": {
+    "spell-check": {
+      "inputs": ["$TURBO_DEFAULT$", "!README.md"] 
+    }
+  }
+}
+```
+
+
+## Running Tasks

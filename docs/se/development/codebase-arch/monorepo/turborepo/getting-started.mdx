@@ -1,0 +1,41 @@
+import { PackageManagerTabs } from '@theme';
+
+# Getting Started
+
+## Install Turborepo
+
+Install turbo globally to quickly scaffold new project anywhere:
+
+<PackageManagerTabs command="install turbo --global" />
+
+
+## Creating new workspace
+
+Create from a [template](https://turborepo.com/docs/getting-started/examples):
+
+<PackageManagerTabs command="dlx create-turbo@latest" />
+
+
+## For existing project
+
+1. Install `turbo` package to your project.
+2. Define tasks in `turbo.json`.
+3. Add `.turbo` to your `.gitignore`.
+4. Add a `packageManager` field to root `package.json`.
+5. Set up your workspace's structure and configure package manager workspaces (PNPM, NPM, Yarn).
+6. Run defined tasks with `turbo` command.
+7. Enabling Remote Caching in [CI](https://turborepo.com/docs/crafting-your-repository/constructing-ci)
+
+View the detailed instructions [here](https://turborepo.com/docs/getting-started/add-to-existing-repository).
+
+
+## Managing packages
+
+You can manually add or remove packages based on your package manager's [workspace structure](./workspace-structure.mdx).
+
+Ensure that each package folder includes its own `package.json` file to be recognized as part of the workspace.
+
+
+## Installing Dependencies
+
+Turborepo does not manage dependencies. It's up to your package manager (PNPM, Yarn, or NPM).
