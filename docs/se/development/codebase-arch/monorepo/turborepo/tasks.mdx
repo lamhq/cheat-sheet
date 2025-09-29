@@ -1,3 +1,5 @@
+import { PackageManagerTabs } from '@theme';
+
 # Tasks
 
 ## Overview
@@ -8,6 +10,32 @@ Turborepo will always parallelize any work that it can to ensure everything runs
 
 
 ## Defining tasks
+
+For tasks that you run frequently, you can write your `turbo` commands directly into your root `package.json`.
+
+```jsonc title="./package.json"
+{
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint"
+  }
+}
+```
+
+These scripts can then be run using your package manager:
+
+<PackageManagerTabs command="dev" />
+
+
+You only want to write `turbo` commands in your root `package.json`. Writing `turbo` commands into the `package.json` of packages can lead to recursively calling `turbo`.
+
+> [!INFO]
+> `turbo` is an alias for `turbo run`.
+
+
+## Defining task order
 
 ### Run tasks in direct dependencies first
 
@@ -114,3 +142,49 @@ In this example, Turborepo will use the default inputs behavior for the build ta
 
 
 ## Running Tasks
+
+1. You can use package manager to run tasks defined in the root `package.json`.
+2. Additionally, installing `turbo` globally lets you run one-off commands directly from your terminal.
+
+Running multiple tasks:
+
+```bash title="Terminal"
+turbo run build test lint check-types
+```
+
+Filtering by package:
+
+```bash title="Terminal"
+turbo build --filter=@acme/web
+```
+
+Filtering by directory:
+
+```bash title="Terminal"
+turbo lint --filter="./packages/utilities/*"
+```
+
+Run task in a package and all packages that **depend on it**:
+
+```bash title="Terminal"
+turbo build --filter=...ui
+```
+
+Run task in a package and all of **its dependencies**:
+
+```bash title="Terminal"
+turbo dev --filter=web...
+```
+
+Combining filters:
+
+```bash title="Terminal"
+turbo build --filter=...ui --filter={./packages/*} --filter=[HEAD^1]
+```
+
+When running `turbo` in a package's directory, it will automatically scope commands to that package:
+
+```bash title="Terminal"
+cd apps/docs
+turbo build
+```
