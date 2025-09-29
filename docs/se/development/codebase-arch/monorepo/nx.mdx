@@ -1,0 +1,48 @@
+# Nx
+
+## Intro
+
+Nx is a open source toolkit, build platform for managing monorepos.
+
+You can adopt Nx incrementally. You can start with just the core and add additional capabilities as your needs grow.
+
+Nx Core is a task runner. It understands project relationships and dependencies, allow fast task execution.
+
+
+## Use cases
+
+Nx is well-suited for JavaScript and TypeScript projects (Angular, React, Vue, Node.js, ...).
+
+It can also be used for non-javascript projects (Java, Go).
+
+
+## Key Features
+
+### Task Orchestration
+- Run tasks in parallel or sequence
+- Only run tasks for projects affected by a given change
+- Auto infer tasks based on tooling configuration (Vite, Jest, ESLint, etc)
+
+### Caching
+- Speed up task execution with caching
+- Enable local and distributed caching (via Nx Cloud)
+
+### Code Generation
+- Allowing scaffolding new projects quickly
+- Support multiple tech stacks and frameworks: Vite, Next.js, NestJS, Angular, React, Vue, Node.js, etc.
+
+### Project Graph Visualization
+- Automatically generates a visual graph of all projects and their dependencies
+
+### IDE Integration
+- Provide an UI that allows exploring the project, running tasks, code generation, installing plugins, etc.
+
+### TypeScript support
+- Automatically configuring type inference for projects
+
+
+## Drawbacks
+
+- ⚠️ Complex configuration.
+- ⚠️ The documentation is lengthy and difficult to navigate.
+- ⚠️ Nx centralizes all dependency definitions in the root `package.json` by default, making it unclear which dependencies belong to which project and complicating the transition to a monorepo structure.

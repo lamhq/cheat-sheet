@@ -144,7 +144,7 @@ console.log(groupedById);
 Removing all instances of a value from an array (modify the original array)
 ```ts
 // Modifies the original array
-removeWithoutCopy = function(arr, item) {
+function removeItemInPlace(arr, item) {
   let idx = 0;
   while(idx < arr.length) {
     if (item === arr[idx]) {

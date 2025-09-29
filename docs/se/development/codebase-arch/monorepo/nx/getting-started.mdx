@@ -1,0 +1,68 @@
+# Getting Started
+
+## Installation
+
+Install Nx CLI on macOS:
+
+```sh
+brew install nx
+```
+
+## Editor Integration
+
+Install [Nx Console extension](https://code.visualstudio.com/) for VSCode.
+
+
+## Creating workspace
+
+Create an empty Nx workspace and install the necessary dependencies using PNPM:
+
+```sh
+npx create-nx-workspace@latest nx-demo --ci=skip --packageManager=pnpm --workspaces
+```
+
+> [!TIP]
+> Migrating your project code to a new Nx workspace is easier than manually adding Nx to an existing codebase and setting it up yourself.
+
+
+## Adding project
+
+1. Install necessary Nx [plugins](https://nx.dev/plugin-registry) for the project type (Node, React, Angular, etc).
+2. Use [generators](./gen-code.mdx) to scaffold a new project from existing templates.
+3. Migrate code & tooling configurations  (e.g., TypeScript, ESLint, Prettier) from your existing project if you have one.
+
+> [!TIP]
+> If you're migrating your project to use Nx, you can run `nx import` to [import your repository](https://nx.dev/recipes/adopting-nx/import-project) to a test repository. Nx will automatically detect and install the required plugins.
+
+Nx will handle for you:
+- ESLint config
+- Update Gitignore file
+- TypeScript config (type reference)
+- VS Code workspace recommended extensions
+- Vitest config
+
+
+## Exploring Workspace
+
+Your workspace is a collection of projects.
+
+Each project has different tasks which can be run.
+
+Projects have dependencies between them and form a graph known as the **Project Graph**.
+
+In addition to the project graph, Nx also tracks the dependencies between tasks as **Task Graph** to determine the way in which the tasks are executed.
+
+Nx provides a UI which shows the information above.
+
+### View all projects
+
+To see all projects in your workspace:
+- Open the project graph: `nx graph`
+- Look at the Projects pane in Nx Console
+- Run `nx show projects`
+
+### View project details
+
+To view details of a project:
+- View it in Nx Console
+- Run `nx show project <project-name> --web`.

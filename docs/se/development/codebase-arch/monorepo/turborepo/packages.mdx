@@ -1,0 +1,162 @@
+# Packages
+
+## Overview
+
+A package / project is a self-contained unit with its own `package.json`, tooling configuration, and source code. 
+
+In Turborepo, there're two types of packages: Application Packages and Library Packages.
+
+
+## Application Packages
+
+Packages that will be deployed from your workspace. Examples: Next.js, Svelte, Vite, or CLI applications
+
+Commonly found in the `./apps` directory.
+
+Application Packages should not be installed into other packages of your repository.
+
+
+## Library Packages
+
+Library Packages (aka. Internal packages) contain code that you intend to share around your workspace.
+
+They support the Application Packages to create the final deployables from your repository.
+
+You can also publish them to npm registry.
+
+There're three compilation strategies to use library packages:
+- Just-in-Time Packages
+- Compiled Packages
+- Publishable Packages
+
+
+### Just-in-Time Packages
+
+- Export package's source code directly (TypeScript) in `exports` field of `package.json`.
+- The consumer's bundlers will compile the package in its build process.
+
+```json title="packages/ui/package.json"
+{
+  "name": "@repo/ui",
+  "exports": {
+    "./button": "./src/button.tsx",
+    "./card": "./src/card.tsx"
+  }
+}
+```
+
+Pros:
+- **Zero build step**: No need to compile libraries separately.
+- **Simple setup**: No need for build pipelines or output directories.
+
+Cons:
+- **Slower consumer builds**: Consumers spend time compiling dependencies during their own build.
+- **No TypeScript `paths` support**: A library that is being transpiled by its consumer cannot use the `compilerOptions.paths` configuration because TypeScript assumes that source code is being transpiled in the package where it is written.
+- **No caching for build task**: Because the package doesn't have its own `build` step. This tradeoff may make sense if you are okay with the build times of your applications.
+- **Errors in internal dependencies will be reported**: When developing consumer, you can get errors reported in internal library. This may confusing or problematic in some situations.
+
+
+### Compiled Packages
+
+- Export the compiled version of package in `exports` field of `package.json`.
+- The package handles its own compilation.
+- If using TypeScript, the package should only use `tsc` to compile the source code. Other works should be handled by consumer's bundler.
+- This requires a moderate amount of configuration.
+
+```json title="packages/ui/package.json"
+{
+  "name": "@repo/ui",
+  "exports": {
+    "./button": {
+      "types": "./src/button.tsx",
+      "default": "./dist/button.js"
+    },
+    "./card": {
+      "types": "./src/card.tsx",
+      "default": "./dist/card.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc"
+  }
+}
+```
+
+Pros:
+- **Better caching**: Tools like Turborepo can cache library builds.
+- **Improved compatibility**: Works well with tools that expect compiled code.
+
+Cons:
+- **Requires build step**: Require deeper knowledge and configuration to create build outputs.
+- **Out-of-sync risk**: If not watched or rebuilt properly, compiled code may lag behind source.
+
+
+### Publishable Packages
+
+- Compile and publish package to the npm registry.
+- This requires the most configuration.
+
+Pros:
+- **Production-ready**: Clean separation of concerns, versioning, and distribution.
+- **Reusable across repos**: Can be published and consumed externally.
+- **Robust tooling**: Works well with package managers and CI/CD pipelines.
+
+Cons:
+- **Heavyweight setup**: Requires build, versioning, and publishing workflows. ([changesets](https://github.com/changesets/changesets) is recommended for managing versioning, changelogs, and the publishing process).
+- **Slower iteration**: More overhead during development.
+- **Complex dependency management**: Especially if multiple versions are used across apps.
+
+
+## Creating internal packages
+
+Follow this [guide](https://turborepo.com/docs/crafting-your-repository/creating-an-internal-package).
+
+
+## Linking internal packages
+
+To reference and import internal packages:
+
+1. Define entrypoints in the `package.json` of the source package using the `exports` field.
+2. Use your package manager to add the source package as a dependency in the consumer package.
+3. Import the source modules in the consumer package’s source code.
+
+For example, suppose we have a `utils` package that exports `add` and `subtract` functions:
+
+```json title="packages/utils/package.json"
+{
+  "name": "@your-org/utils",
+  "exports": {
+    ".": "./src/constants.ts",
+    "./add": "./src/add.ts",
+    "./subtract": "./src/subtract.ts"
+  }
+}
+```
+
+To link the `utils` package to the `web` app using PNPM, install it as a dependency via PNPM workspace protocol:
+
+```sh
+cd apps/web
+pnpm add @your-org/utils --workspace
+```
+
+This adds a dependency to the `web` app:
+
+```json title="apps/web/package.json"
+{
+  "dependencies": {
+    "@your-org/utils": "workspace:*"
+  }
+}
+```
+
+Now, the `web` app can import the `utils` package like this:
+
+```ts title="apps/web/src/index.ts"
+import { GRAVITATIONAL_CONSTANT, SPEED_OF_LIGHT } from '@your-org/utils';
+import { add } from '@your-org/utils/add';
+import { subtract } from '@your-org/utils/subtract';
+```
+
+> [!CAUTION]
+> Never accessing files across package boundaries (do not directly import package code's files through its file path).

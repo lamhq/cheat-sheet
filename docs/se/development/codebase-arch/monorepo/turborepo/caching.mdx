@@ -1,0 +1,30 @@
+# Caching
+
+## How it works
+
+When your task is cacheable, Turborepo will restore the results of your task from cache using a fingerprint from the first time the task ran.
+
+Turborepo stores the results of tasks in the `.turbo/cache` directory on your machine. You can enable [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share this cache with your teammates and CI.
+
+
+## What gets cached?
+
+Turborepo caches two types of outputs: Task outputs and Logs.
+
+Task outputs:
+- file outputs of a task that are defined in the `outputs` key of the task in `turbo.json`
+- you can omit task outputs, but Turborepo will not cache files after running that task
+
+Logs:
+- Turborepo always captures the terminal outputs of your tasks, restoring those logs to your terminal from the first time that the task ran.
+
+
+## Task inputs
+
+Inputs are hashed by Turborepo, creating a "fingerprint" for the task run. When "fingerprints" match, running the task will hit the cache.
+
+
+## Troubleshooting
+
+- You can use the `--dry` flag when running your tasks to see what would happen if you ran a task without actually running it.
+- The `--summarize` flag can be used to get an overview of all of a task's inputs, outputs, and more. This can be useful for debugging inputs and outputs.

@@ -1,0 +1,38 @@
+# Generate Code
+
+Generators are added through installing Nx plugins.
+
+## Using Nx Console
+
+Nx Console provides a visual interface to find and run generators:
+
+![](https://nx.dev/documentation/shared/images/nx-console/nx-console-gen-code.avif)
+
+
+## Using command line
+
+Syntax: `nx g <plugin-name>:<generator-name> [options]`.
+
+To see a list of available generators in a plugin:
+```sh
+nx list @nx/react
+```
+
+### TypeScript package
+
+Generate a TypeScript package in `packages/common`:
+```sh
+nx g @nx/js:lib packages/common
+```
+
+### React
+
+Install React plugin:
+```sh
+nx add @nx/react
+```
+
+Generate a React app in `apps/web`:
+```sh
+nx g @nx/react:app apps/web
+```

@@ -1,0 +1,192 @@
+# Tasks
+
+## Overview
+
+Nx provides a powerful task runner that allows you to:
+- **run multiple targets** for multiple projects in **parallel**
+- define task pipelines to run tasks **in correct order**
+- only run tasks for changed projects
+- speed up task execution with **caching**
+
+You can view and run tasks using Nx Console extension.
+
+
+## Define Tasks
+
+Tasks can be from:
+- existing `package.json` scripts
+- inferred from plugins
+- defined in a `project.json` file
+
+### Root-Level Tasks
+
+Root-Level Tasks can be defined in the root-level `package.json` or `project.json` as follows:
+
+```json title="package.json"
+{
+  "name": "myorg",
+  "scripts": {
+    "docs": "echo 'hello'"
+  },
+  "nx": {}
+}
+```
+
+```json title="project.json"
+{
+  "name": "myorg",
+  ...
+  "targets": {
+    "docs": {
+      "command": "node ./generateDocsSite.js"
+    }
+  }
+}
+```
+
+To run a the task:
+```sh
+nx run myorg:docs
+nx docs myorg
+```
+
+
+### Continuous Tasks
+
+Labeling a task as continuous tells Nx to not wait for the process to exit, and it will be run alongside its dependents.
+
+```json title="apps/myapp/project.json"
+{
+  "targets": {
+    "serve": {
+      "continuous": true
+    }
+  }
+}
+```
+
+
+### Infered Tasks
+
+Nx plugins can detect your tooling configuration files (e.g. `vite.config.ts`) and automatically configure runnable tasks.
+
+For example:
+- `@nx/jest` plugin will automatically create a `test` task for projects that use Jest.
+- `@nx/vite` create `build`, `serve`, `preview` tasks for projects that use Vite.
+
+The task names can be configured in the `nx.json` file:
+
+```json title="nx.json"
+{
+  ...
+  "plugins": [
+    {
+      "plugin": "@nx/vite/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "testTargetName": "test",
+        "serveTargetName": "serve",
+        "previewTargetName": "preview",
+        "serveStaticTargetName": "serve-static"
+      }
+    },
+    {
+      "plugin": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "lint"
+      }
+    },
+    {
+      "plugin": "@nx/jest/plugin",
+      "options": {
+        "targetName": "test"
+      }
+    }
+  ],
+  ...
+}
+```
+
+
+## Run Tasks
+
+Syntax: `nx <task name> <project name> <options>`
+
+Run `build` task for `my-app` project in watch mode:
+```sh
+npx nx build my-app --watch
+```
+
+Run the build task for all projects in the repo:
+```sh
+npx nx run-many -t build
+```
+
+Run the `build`, `lint` and `test` task for all projects in the repo:
+```sh
+npx nx run-many -t build lint test
+```
+
+Run the build, lint, and test tasks only on the project-a and project-b projects:
+```sh
+npx nx run-many -t build lint test -p project-a project-b
+```
+
+Run tasks on projects [affected](https://nx.dev/ci/features/affected) by a PR:
+```sh
+npx nx affected -t test
+```
+
+Learn more about:
+- [Pass arguments when running tasks](https://nx.dev/recipes/running-tasks/pass-args-to-commands)
+- [Workspace Watching](https://nx.dev/recipes/running-tasks/workspace-watching)
+
+
+## Task Pipeline
+
+Require one task to be run before another.
+
+Nx can automatically detect the dependencies between projects. 
+
+### Defining Task Pipeline
+
+Run the `build` target of all dependencies first:
+
+```json title="nx.json"
+{
+  ...
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"]
+    }
+  }
+}
+```
+
+Ensures that `tests` only run after the `build` is complete:
+```json title="nx.json"
+{
+  ...
+  "targetDefaults": {
+    "test": {
+      "dependsOn": ["build"]
+    }
+  }
+}
+```
+
+### Visualize Task Dependencies
+
+You can visualize the actual task graph by running:
+```sh
+nx graph
+```
+
+Alternatively you can use the Nx Console extension in VSCode. Right-click on the project and select `Focus task in Nx Graph`.
+
+![](https://nx.dev/documentation/shared/recipes/running-tasks/task-graph-context-menu.webp)
+
+
+Learn more about:
+
+- [How to configure a task pipeline](https://nx.dev/recipes/running-tasks/defining-task-pipeline)
