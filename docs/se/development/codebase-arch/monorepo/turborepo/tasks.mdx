@@ -88,7 +88,7 @@ You only want to write `turbo` commands in your root `package.json`. Writing `tu
 ```
 
 
-### Long-running tasks
+### Long-running (dev) tasks
 
 You might have a long-running task that requires another task to always be running at the same time.
 
@@ -140,11 +140,27 @@ In this example, Turborepo will use the default inputs behavior for the build ta
 }
 ```
 
+You can add environment variables to task hashes:
+
+```json title="turbo.json"
+{
+  "globalEnv": ["IMPORTANT_GLOBAL_VARIABLE"],
+  "tasks": {
+    "build": {
+      "env": ["MY_API_URL", "MY_API_KEY"]
+    }
+  }
+}
+```
+- **globalEnv**: Changes to the values of any environment variables in this list will change the hash for all tasks.
+- **env**: Includes changes to the values of environment variables that affect the task, allowing for better granularity. For example, a `lint` task probably doesn't need to miss cache when the value of `API_KEY` changes, but a `build` task likely should.
+
 
 ## Running Tasks
 
 1. You can use package manager to run tasks defined in the root `package.json`.
 2. Additionally, installing `turbo` globally lets you run one-off commands directly from your terminal.
+3. You can run tasks in watch mode with `turbo watch [task]`. Tasks are re-run whenever you make changes to its dependencies.
 
 Running multiple tasks:
 
@@ -180,6 +196,12 @@ Combining filters:
 
 ```bash title="Terminal"
 turbo build --filter=...ui --filter={./packages/*} --filter=[HEAD^1]
+```
+
+Run tasks in watch mode:
+
+```bash title="Terminal"
+turbo watch dev lint
 ```
 
 When running `turbo` in a package's directory, it will automatically scope commands to that package:

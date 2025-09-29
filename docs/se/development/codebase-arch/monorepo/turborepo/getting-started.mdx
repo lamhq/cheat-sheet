@@ -29,6 +29,27 @@ Create from a [template](https://turborepo.com/docs/getting-started/examples):
 View the detailed instructions [here](https://turborepo.com/docs/getting-started/add-to-existing-repository).
 
 
+## Exploring the workspace
+
+Show the packages in your repository and where they're located:
+
+```bash title="Terminal"
+turbo ls
+```
+
+Show all packages that depend on a specific package:
+
+```bash title="Terminal"
+turbo ls --filter=...ui
+```
+
+Show all tasks:
+
+```bash title="Terminal"
+turbo run
+```
+
+
 ## Managing packages
 
 You can manually add or remove packages based on your package manager's [workspace structure](./workspace-structure.mdx).
@@ -39,3 +60,22 @@ Ensure that each package folder includes its own `package.json` file to be recog
 ## Installing Dependencies
 
 Turborepo does not manage dependencies. It's up to your package manager (PNPM, Yarn, or NPM).
+
+
+## Using the terminal UI
+
+When running tasks with `turbo`, it use a dynamic view to shows which tasks are running, queued, or completed—organized by package and task name.
+
+You can quickly adjust the UI to your needs using keybinds:
+
+| Keybind | Action                                                            |
+| ------- | ----------------------------------------------------------------- |
+| `m`     | Toggle popup listing keybinds                                     |
+| `↑`/`↓` | Select the next/previous task in the task list                    |
+| `j`/`k` | Select the next/previous task in the task list                    |
+| `p`     | Toggle selection pinning for selected task                        |
+| `h`     | Toggle visibility of the task list                                |
+| `c`     | When logs are highlighted, copy selection to the system clipboard |
+| `u`/`d` | Scroll logs `u`p and `d`own                                       |
+
+Some of your tasks may allow you to type input into them. You can interact with tasks using the `i` keybind, press `Ctrl+z` to stop interacting.
