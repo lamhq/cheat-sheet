@@ -1,0 +1,9 @@
+[
+  "atomic-design",
+  "mono-fe",
+  {
+    "name": "micro-fe",
+    "type": "dir",
+    "collapsed": true
+  }
+]

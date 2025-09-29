@@ -1,0 +1,31 @@
+# Code Splitting
+
+## Overview
+
+Code splitting is a technique to optimize load time by breaking down large bundles of code into smaller chunks that can be loaded on demand.
+
+
+## Implementation
+
+Use Dynamic Imports to import components or modules only when needed:
+```jsx
+const LazyComponent = () => import('./components/LazyComponent');
+```
+
+Use `React.lazy()` to lazy-load routes with React Router:
+```jsx
+import { lazy, Suspense } from 'react';
+
+const Home = lazy(() => import('./pages/Home'));
+const About = lazy(() => import('./pages/About'));
+
+<Route path="/" element={
+  <Suspense fallback={<Loading />}><Home /></Suspense>
+} />
+<Route path="/about" element={
+  <Suspense fallback={<Loading />}><About /></Suspense>
+} />
+```
+
+> [!NOTE]
+> When the bundler encounters the `import()` syntax, it automatically splits the relevant code into a new chunk and loads it on-demand at runtime.

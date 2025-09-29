@@ -1,0 +1,14 @@
+[
+  "integration",
+  "sharing-dep",
+  "development",
+  "deployment",
+  "styling",
+  "team-topologies",
+  {
+    "name": "page-decomp",
+    "type": "dir",
+    "collapsed": true
+  },
+  "widget-decomp"
+]

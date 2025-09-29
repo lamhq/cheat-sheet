@@ -1,0 +1,95 @@
+# Workspace Structure
+
+## Overal structure
+
+Below is a sample structure of a monorepo created using PNPM Workspace and Turborepo:
+
+```
+.
+├── apps
+│   ├── docs
+│   │   └── package.json
+│   └── web
+│       └── package.json
+├── packages
+│   ├── ui
+│   │   └── package.json
+│   └── utils
+│       └── package.json
+├── package.json
+├── pnpm-lock.yaml
+├── pnpm-workspace.yaml
+└── turbo.json
+```
+
+
+## Specifying packages
+
+The package manager provide a configuration file to describe the locations of your packages.
+
+If using PNPM, it will be `pnpm-workspace.yaml`:
+```yaml title="pnpm-workspace.yaml"
+packages:
+  - "apps/*"
+  - "packages/*"
+```
+
+Using this configuration, every folder with a `package.json` in the `apps` or `packages` directories will be considered a package.
+
+## Root package.json
+
+The root `package.json` specify:
+- The package manager to use
+- The global scripts used by the workspace
+
+```json title="package.json"
+{
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint"
+  },
+  "devDependencies": {
+    "turbo": "latest"
+  },
+  "packageManager": "pnpm@9.0.0"
+}
+```
+
+
+## Root turbo.json
+
+Configure the behavior of turbo:
+- Define tasks to run
+- Specify which tasks depends on others
+- Control caching to cache task results
+- Create custom workflows for different environments
+
+
+## Package's content
+
+A package / project is a self-contained unit with its own `package.json`, tooling configuration, and source code. 
+
+Packages can also expose entrypoints, allowing other packages to import and use them (internal dependencies).
+
+### `package.json`
+
+The `package.json` file in a package contains:
+
+- `name`: A unique identifier for the package within the workspace. Other packages can import it using this name.
+- `scripts`: Custom commands that run in the context of the package (e.g., `build`, `test`, `lint`).
+- `exports`: Defines the entrypoints that other packages can access. The package can [export TypeScript directly](https://turborepo.com/docs/core-concepts/internal-packages#just-in-time-packages), or a [compiled JavaScript file](https://turborepo.com/docs/core-concepts/internal-packages#compiled-packages).
+
+> [!INFO]
+> It's best practice to use a namespace prefix for your Internal Packages to avoid conflicts with other packages on the npm registry. For example, if your organization is named `acme`, you might name your packages `@acme/package-name`.
+
+
+### Source code
+
+Packages commonly use an `src` folder to store their source code and compile to a `dist` folder.
+
+
+### Configuration files
+
+If you're using TypeScript, you likely don't need a `tsconfig.json` in the root of your workspace. Packages should independently specify their own configurations. You can have a shared `tsconfig.json` from a separate package in the workspace, and other packages can extend from it.

@@ -1,0 +1,126 @@
+# Transitions
+
+## Overview
+
+Transitions in React are non-urgent updates that can be rendered in the background, allowing the UI thread to remain responsive.
+
+**Urgent updates** should be reflected immediately:
+- *Typing in a text input should update the field instantly.*
+- *Clicking a button should immediately reflect its pressed state.*
+
+**Non-urgent updates**, like rendering large components or switching views, can be deferred using transitions.
+
+By marking updates as transitions:
+- Allows the new UI to be rendered in the background without blocking the main thread.
+- Prevent unwanted loading indicators, which leads to a jarring user experience (the whole UI is replaced with a spinner).
+- Enhances user experience by avoiding layout shifts and keeping interactions smooth.
+
+**Examples**:
+- **Large List Rendering**: If your component needs to process and display a large dataset, marking the state update as a transition allows React to render it in the background. The UI stays responsive while the new list loads.
+- **Tab Switching**: When a user clicks a tab, marking the update as a transition ensures the UI remains responsive. If they quickly switch to another tab, React prioritizes the latest interaction without waiting for the previous tab to finish rendering.
+
+
+## useTransition
+
+`useTransition` is a React Hook that lets you render a part of the UI in the background.
+
+It allows marking some state updates as transitions.
+
+```js
+const [isPending, startTransition] = useTransition()
+
+startTransition(() => {
+  // non-urgent state update operations
+});
+```
+- The `isPending` flag tells you whether there is a pending Transition.
+- The `startTransition` function lets you mark updates as a Transition.
+
+```js
+startTransition(action);
+```
+
+The function passed to `startTransition` is called an "Action":
+- A function that updates some state by calling one or more `setState` functions.
+- It can be synchronous or asynchronous.
+- It is called immediately with no parameters.
+
+
+## How it work?
+
+1. Your UI renders content based on some state.
+2. When you update the state using `setState`, this triggers a re-render.
+3. If rendering is slow, this can cause noticeable lag or block user interactions.
+4. To avoid this, you wrap the state update in `startTransition`, marking it as non-urgent.
+5. React then schedules the render in the background, allowing the UI thread to remain responsive for other interactions.
+6. Once the new UI is ready, React seamlessly swaps it in, updating the screen without interrupting the user experience.
+
+```jsx
+import { useState, useTransition } from 'react';
+import { sendData } from './api';
+
+function CheckoutForm() {
+  const [data, setData] = useState({quantity: 1});
+  const [isPending, startTransition] = useTransition();
+
+  function handleSubmit(data) {
+    startTransition(async function () {
+      const savedData = await sendData(data);
+      startTransition(() => {
+        setData(savedData);
+      });
+    });
+  }
+  
+  return <Form onSubmit={handleSubmit} value={data} />
+}
+```
+
+
+## Caveats
+
+- `useTransition` is a Hook, so it can only be called inside components or custom Hooks. If you need to start a Transition somewhere else (for example, from a data library), call the standalone [`startTransition`](https://react.dev/reference/react/startTransition) instead.
+- You use `useTransition` if you have access to the `setState` function of that state.
+- If you want to start a Transition in response to a value change, try `useDeferredValue` instead.
+- You must wrap any state updates after any async requests in another `startTransition` to mark them as Transitions. This will be fixed in the future.
+- You can omit the `startTransition` function from Effect dependencies.
+- A state update marked as a Transition will be interrupted by other state updates.
+- Transition updates can’t be used to control text inputs. Use another state instead.
+
+
+## Usage
+
+### Perform non-blocking render
+
+1. You have an async action that performs API requests and update state, then re-render the UI.
+2. You can pass that action to `startTransition` and the work will be done in the background without blocking user interactions on the page.
+3. You can use the `isPending` flag to show a loading indicator while the transition is in progress.
+
+View the live example [here](https://react.dev/reference/react/useTransition#perform-non-blocking-updates-with-actions).
+
+
+### Preventing unwanted loading indicators
+
+If your component use `<Suspense>`, hiding the entire UI to show a loading indicator leads to a jarring user experience.
+
+With `useTransition`, you can instead show the old UI while the new UI is being rendered in the background, and display the pending state in better ways (bluring the stale content, for example).
+
+View the live example [here](https://react.dev/reference/react/useTransition#preventing-unwanted-loading-indicators).
+
+
+### Buidling navigation with Transitions
+
+Transitions are recommended for buiding page navigations:
+
+- Transitions are [interruptible](https://react.dev/reference/react/useTransition#marking-a-state-update-as-a-non-blocking-transition), which lets the user click away without waiting for the re-render to complete.
+- Transitions [prevent unwanted loading indicators](https://react.dev/reference/react/useTransition#preventing-unwanted-loading-indicators), which lets the user avoid jarring jumps on navigation.
+- Transitions [wait for all pending actions](https://react.dev/reference/react/useTransition#perform-non-blocking-updates-with-actions) which lets the user wait for side effects to complete before the new page is shown.
+
+View the live example [here](https://react.dev/reference/react/useTransition#building-a-suspense-enabled-router).
+
+
+### Displaying an error
+
+If a function passed to `startTransition` throws an error, you can display an error to your user with an error boundary.
+
+See how it's implemented [here](https://react.dev/reference/react/useTransition#displaying-an-error-to-users-with-error-boundary).

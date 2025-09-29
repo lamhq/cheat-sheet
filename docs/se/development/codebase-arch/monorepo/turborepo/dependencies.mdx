@@ -1,0 +1,25 @@
+# Dependencies
+
+Managing package's dependencies.
+
+## Dependency Types
+
+- **External dependencies** come from the npm registry, allowing you to leverage valuable code from the ecosystem to build your applications and libraries faster.
+- **Internal dependencies** let you share functionality within your repository.
+
+
+## Best practices
+
+### Install dependencies where they're used
+
+Install dependencies directly in the package that uses it.
+
+**Benefits**:
+- **Improved clarity**: Each package clearly shows its own dependencies in its `package.json`, making it easier to understand and maintain.
+- **Enhanced flexibility**: Packages can use different versions of the same dependency without conflicts, suitable when there are many teams working in the same codebase.
+- **Better caching efficiency**: Keeping dependencies scoped to individual packages reduces unnecessary updates and improves cache hit rates compared to centralizing them at the root.
+
+
+### Few dependencies in the root
+
+Dependencies that belong in the workspace root are tools for managing the repository, such as `turbo`, `pnpm`, `prettier`, etc.
