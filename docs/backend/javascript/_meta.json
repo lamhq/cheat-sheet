@@ -12,20 +12,10 @@
     "label": "Syntax"
   },
   {
-    "name": "pkg-mgm",
+    "name": "database",
     "type": "dir",
     "collapsed": true,
-    "label": "Package Management"
-  },
-  {
-    "name": "runtime",
-    "type": "dir",
-    "collapsed": true
-  },
-  {
-    "name": "linters",
-    "type": "dir",
-    "collapsed": true
+    "label": "Database"
   },
   {
     "name": "testing",
@@ -34,16 +24,13 @@
     "label": "Testing"
   },
   {
-    "name": "database",
+    "name": "linters",
     "type": "dir",
-    "collapsed": true,
-    "label": "Database"
+    "collapsed": true
   },
+  "codebase",
   {
-    "name": "codebase",
-    "type": "dir",
-    "collapsed": true,
-    "label": "Codebase Setup"
-  },
-  "fetch"
+    "name": "fetch",
+    "label": "HTTP Client"
+  }
 ]

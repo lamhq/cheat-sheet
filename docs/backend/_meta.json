@@ -15,6 +15,16 @@
     "collapsed": true
   },
   {
+    "name": "nodejs",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "deno",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
     "name": "python",
     "type": "dir",
     "collapsed": true
