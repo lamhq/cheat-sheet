@@ -5,5 +5,22 @@
     "collapsed": true,
     "label": "Package Management"
   },
+  {
+    "name": "database",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Database"
+  },
+  {
+    "name": "testing",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Testing"
+  },
+  {
+    "name": "graphql",
+    "type": "dir",
+    "collapsed": true
+  },
   "troubleshooting"
 ]

@@ -12,18 +12,6 @@
     "label": "Syntax"
   },
   {
-    "name": "database",
-    "type": "dir",
-    "collapsed": true,
-    "label": "Database"
-  },
-  {
-    "name": "testing",
-    "type": "dir",
-    "collapsed": true,
-    "label": "Testing"
-  },
-  {
     "name": "linters",
     "type": "dir",
     "collapsed": true
