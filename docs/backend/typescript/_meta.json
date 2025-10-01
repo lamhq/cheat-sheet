@@ -8,10 +8,5 @@
   },
   "style-guide",
   "module-resolution",
-  "configuration",
-  {
-    "name": "graphql",
-    "type": "dir",
-    "collapsed": true
-  }
+  "configuration"
 ]
