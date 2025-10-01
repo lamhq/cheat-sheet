@@ -11,11 +11,6 @@
     "collapsed": true,
     "label": "Syntax"
   },
-  {
-    "name": "linters",
-    "type": "dir",
-    "collapsed": true
-  },
   "codebase",
   {
     "name": "fetch",

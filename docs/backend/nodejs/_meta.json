@@ -18,6 +18,11 @@
     "label": "Testing"
   },
   {
+    "name": "linters",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
     "name": "graphql",
     "type": "dir",
     "collapsed": true
