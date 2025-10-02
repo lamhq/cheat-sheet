@@ -1,0 +1,38 @@
+# Client Components
+
+## Overview
+
+Client Components are React components that are rendered on the client.
+
+A component usage is considered a Client Component if:
+- it is defined in module with `'use client'` directive
+- or when it is a transitive dependency of a module that contains a `'use client'` directive
+
+> [!NOTE]
+> There is no directive for Server Components. The `"use server"` directive is used for Server Functions.
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+import { formatDate } from './formatters';
+import Button from './button';
+
+export default function RichTextEditor({ timestamp, text }) {
+  const date = formatDate(timestamp);
+  // ...
+  const editButton = <Button />;
+  // ...
+}
+```
+- As dependencies of `RichTextEditor`, `formatDate` and `Button` will also be evaluated on the client regardless of whether their modules contain a `'use client'` directive.
+
+
+## Use Cases
+
+Use Client Components when you need:
+
+- State and event handlers. E.g. `onClick`, `onChange`.
+- Lifecycle logic. E.g. `useEffect`.
+- Browser-only APIs. E.g. `localStorage`, `window`, `Navigator.geolocation`, etc.
+- Custom hooks.

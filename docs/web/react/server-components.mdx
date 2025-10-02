@@ -1,0 +1,58 @@
+# Server Components
+
+## Overview
+
+Server Components are React Components that are rendered at build time (without a server), or they can be run for each request using a web server.
+
+They are sent to the client as serialized HTML, reducing the amount of JavaScript needed to be sent to the browser.
+
+For example, the `<Page>` component is a Server Component that fetches data about a post, and passes it as props to the `<LikeButton>` which handles client-side interactivity.
+
+```tsx filename="app/[id]/page.tsx" highlight={1,12} switcher
+import LikeButton from '@/app/ui/like-button'
+import { getPost } from '@/lib/data'
+
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { id } = await params
+  const post = await getPost(id)
+
+  return (
+    <div>
+      <main>
+        <h1>{post.title}</h1>
+        {/* ... */}
+        <LikeButton likes={post.likes} />
+      </main>
+    </div>
+  )
+}
+```
+
+
+## Use Cases
+
+Use Server Components when you need:
+
+- Fetch data from databases or APIs close to the source.
+- Use API keys, tokens, and other secrets without exposing them to the client.
+- Reduce the amount of JavaScript sent to the browser.
+- Improve the [First Contentful Paint (FCP)](https://web.dev/fcp/), and stream content progressively to the client.
+
+
+## Benefits
+
+1. Reduce the amount of code sent and run by the client. This reduces the bundle size and improves loading times.
+2. SEO-Friendly: search engines can crawl and index the page.
+3. Server Components benefit from running on the server. They can access the local filesystem and may experience low latency for data fetches and network requests.
+
+
+## Limitations
+
+1. Server component can't have interaction or access DOM API.
+2. Server Components cannot use most Hooks and cannot have their own state.
+3. Require special server setup for deployment.
+4. Increased Server Load.

@@ -1,0 +1,44 @@
+# Concepts
+
+
+## Server Rendering
+
+In Next.js, Layouts and Pages are React Server Components by default.
+
+On initial and subsequent navigations, the Server Component Payload is generated on the server before being sent to the client.
+
+There are two types of server rendering:
+- **Static Rendering (or Prerendering)** happens at build time or during revalidation, and the result is cached.
+- **Dynamic Rendering** happens at request time in response to a client request.
+
+
+## Prefetching
+
+Instead of waiting for the server to respond before the new route can be shown, Next.js prefetches routes the user is likely to visit on client-side and performs client-side transitions.
+
+Next.js automatically prefetches routes rendered with the `<Link>` component when they enter the user's viewport.
+
+The full route can be prefetched if it's a static route. For dynamic routes, the route will be skipped or partially prefetched if `loading.tsx` is present (streaming).
+
+
+## Streaming
+
+Streaming allows the server to send parts of a dynamic route to the client (partially prefetch) as soon as they're ready, rather than waiting for the entire route to be rendered.
+
+Shared layouts and loading skeletons can be requested ahead of time.
+
+To use streaming, create a `loading.tsx` in your route folder:
+
+![loading.js special file](https://h8DxKfmAPhn8O0p3.public.blob.vercel-storage.com/docs/light/loading-special-file.png)
+
+The prefetched fallback UI will be shown while the route is loading, and swapped for the actual content once ready.
+
+
+## Client-side transitions
+
+Client-side transitions work by instead of reloading the full page, it updates the content dynamically by:
+
+- Keeping any shared layouts and UI.
+- Replacing the current page with the prefetched loading state or a new page if available.
+
+Client-side transitions when paired with prefetching and streaming, it enables fast transitions, even for dynamic routes.
