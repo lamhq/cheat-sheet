@@ -7,5 +7,6 @@
   "components",
   "fetch-data",
   "update-data",
-  "cache"
+  "cache",
+  "error-handling"
 ]
