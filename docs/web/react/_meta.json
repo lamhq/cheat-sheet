@@ -53,6 +53,12 @@
     "collapsed": true,
     "label": "Testing"
   },
+  {
+    "name": "techniques",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Techniques"
+  },
   "client-components",
   "server-components",
   {
@@ -60,11 +66,5 @@
     "type": "dir",
     "collapsed": true,
     "label": "Next.js"
-  },
-  {
-    "name": "techniques",
-    "type": "dir",
-    "collapsed": true,
-    "label": "Techniques"
   }
 ]

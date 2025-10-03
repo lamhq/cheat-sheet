@@ -6,5 +6,6 @@
   "navigation",
   "components",
   "fetch-data",
-  "update-data"
+  "update-data",
+  "cache"
 ]

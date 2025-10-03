@@ -1,0 +1,64 @@
+# Caching
+
+## Overview
+
+Caching is a technique for storing the result of data fetching and other computations so that future requests for the same data can be served faster, without doing the work again. 
+
+Revalidation allows you to update cache entries without having to rebuild your entire application.
+
+
+## `fetch`
+
+You can cache individual requests by setting the `cache` option to `'force-cache'`.
+
+```tsx title="app/page.tsx"
+export default async function Page() {
+  const data = await fetch('https://...', {
+    cache: 'force-cache',
+    next: { revalidate: 3600 }
+  })
+}
+```
+
+
+## `revalidateTag`
+
+`revalidateTag` is used to revalidate cache entries based on a tag. To use it with `fetch`, start by tagging the function with the `next.tags` option:
+
+```tsx title="app/lib/data.ts"
+export async function getUserById(id: string) {
+  const data = await fetch(`https://...`, {
+    next: {
+      tags: ['user'],
+    },
+  })
+}
+```
+
+Then, call `revalidateTag` in a Route Handler or Server Action:
+
+```tsx title="app/lib/actions.ts"
+import { revalidateTag } from 'next/cache'
+
+export async function updateUser(id: string) {
+  // Mutate data
+  revalidateTag('user')
+}
+```
+
+
+## `revalidatePath`
+
+`revalidatePath` is used to revalidate a route. To use it, call it in a Route Handler or Server Action:
+
+When you call `revalidatePath('/some-path')`:
+- It **invalidates the cache** for that path.
+- The next time that route is requested, Next.js will **refetch fresh data** and update the page.
+
+```tsx title="app/lib/actions.ts"
+import { revalidatePath } from 'next/cache'
+
+export async function updateUser(id: string) {
+  // Mutate data
+  revalidatePath('/profile')
+```
