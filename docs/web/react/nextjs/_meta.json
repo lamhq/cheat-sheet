@@ -5,8 +5,8 @@
   "layouts",
   "navigation",
   "components",
-  "fetch-data",
-  "update-data",
-  "cache",
+  "fetching-data",
+  "updating-data",
+  "caching",
   "error-handling"
 ]
