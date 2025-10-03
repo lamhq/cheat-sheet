@@ -3,5 +3,8 @@
   "project-structure",
   "concepts",
   "layouts",
-  "navigation"
+  "navigation",
+  "components",
+  "fetch-data",
+  "update-data"
 ]

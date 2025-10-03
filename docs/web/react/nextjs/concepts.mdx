@@ -1,35 +1,170 @@
 # Concepts
 
-
 ## Server Rendering
 
-In Next.js, Layouts and Pages are React Server Components by default.
+On the server, the rendering work is split into chunks, by individual route segments.
 
-On initial and subsequent navigations, the Server Component Payload is generated on the server before being sent to the client.
+- Server Components are rendered into a special data format called the React Server Component Payload (RSC Payload).
+- Client Components and the RSC Payload are used to prerender HTML (partial prerendering).
 
-There are two types of server rendering:
-- **Static Rendering (or Prerendering)** happens at build time or during revalidation, and the result is cached.
-- **Dynamic Rendering** happens at request time in response to a client request.
+There're two types of server rendering: **Static Rendering** (or Prerendering) and **Dynamic Rendering**.
+
+
+### RSC Payload
+
+The RSC Payload is a compact binary representation of the rendered React Server Components tree. It's used by React on the client to update the browser's DOM.
+
+The RSC Payload contains:
+- The rendered result of Server Components
+- Placeholders for where Client Components should be rendered and references to their JavaScript files
+- Any props passed from a Server Component to a Client Component
+
+
+### Static Rendering
+
+With Static Rendering, HTML is generated ahead of time (build time or [revalidation](https://nextjs.org/docs/app/guides/incremental-static-regeneration)).
+
+The result is cached and shared across users and requests.
+
+
+### Dynamic Rendering
+
+With Dynamic Rendering, content is generated at request time, based on request-time data.
+
+A component becomes dynamic if it uses the following APIs:
+
+- `cookies`
+- `headers`
+- `connection`
+- `searchParams`
+- `draftMode`
+- `fetch` with `{ cache: 'no-store' }`
+- ...
+
+
+### Partial Prerendering
+
+> [!CAUTION]
+> This feature is currently experimental and subject to change, it's not recommended for production.
+
+Partial Prerendering (PPR) is a mix of Static Rendering and Dynamic Rendering.
+
+It allows the dynamic parts of the page to be rendered at request time, while the static shell is **prerendered**:
+- Dynamic parts: components that use dynamic APIs
+- Static shell: layout, components don't depend on request-time data
+
+The dynamic parts are marked by wrapping them in a `Suspense` boundary (otherwise, it will cause a build error):
+
+```tsx title="app/page.tsx"
+import { Suspense } from 'react'
+import { User, AvatarSkeleton } from './user'
+ 
+export const experimental_ppr = true
+ 
+export default function Page() {
+  return (
+    <section>
+      <h1>This will be prerendered</h1>
+      <Suspense fallback={<AvatarSkeleton />}>
+        <User />
+      </Suspense>
+    </section>
+  )
+}
+```
+
+```tsx title="app/user.tsx"
+import { cookies } from 'next/headers'
+ 
+export async function User() {
+  // This component use a dynamic API `cookies`
+  const session = (await cookies()).get('session')?.value
+  return '...'
+}
+```
+
+You can enable PPR by adding the `ppr` option to your `next.config.ts` file:
+
+```ts title="next.config.ts"
+import type { NextConfig } from 'next'
+ 
+const nextConfig: NextConfig = {
+  experimental: {
+    ppr: 'incremental',
+  },
+}
+ 
+export default nextConfig
+```
+
+Then add `experimental_ppr = true` in your `layout.tsx` file:
+
+```tsx title="app/dashboard/layout.tsx"
+export const experimental_ppr = true
+
+export default function Layout({ children }: { children: React.ReactNode }) {
+  // ...
+}
+```
+
+> [!INFO]
+> * `experimental_ppr` will apply to all children of the route segment.
+> * To disable PPR for children segments, you can set `experimental_ppr` to `false` in the child segment.
+
+
+## Client Rendering
+
+With the response from server, on the client:
+
+1. **HTML** is used to immediately show a fast non-interactive preview of the route to the user.
+2. **RSC Payload** is used to reconcile the Client and Server Component trees.
+3. **JavaScript** is used to hydrate Client Components and make the application interactive.
+
+On subsequent navigations:
+
+- The **RSC Payload** is prefetched and cached for instant navigation.
+- **Client Components** are rendered entirely on the client, without the server-rendered HTML.
+
+> [!INFO]
+> Hydration is React's process for attaching event handlers to the DOM, to make the static HTML interactive.
 
 
 ## Prefetching
 
-Instead of waiting for the server to respond before the new route can be shown, Next.js prefetches routes the user is likely to visit on client-side and performs client-side transitions.
+Next.js prefetches routes that user is likely to visit on client-side.
 
-Next.js automatically prefetches routes rendered with the `<Link>` component when they enter the user's viewport.
+Then if the prefetched route is requested, it performs [client-side transitions](#client-side-transitions) to update the page with rendered content.
 
-The full route can be prefetched if it's a static route. For dynamic routes, the route will be skipped or partially prefetched if `loading.tsx` is present (streaming).
+This allow smooth and fast navigation, instead of waiting for the server to respond before the new route can be shown.
+
+**How it work?**:
+- Routes rendered with the `<Link>` component are automatically prefetches when in the user's viewport.
+- The full route can be prefetched if it's a static route.
+- For dynamic routes, the route will be skipped or partially prefetched if `loading.tsx` is present (streaming).
 
 
 ## Streaming
 
-Streaming allows the server to send parts of a dynamic route to the client (partially prefetch) as soon as they're ready, rather than waiting for the entire route to be rendered.
+Streaming allows the server to send parts of a dynamic route to the client (partially prefetch), rather than waiting for the entire route to be rendered.
+
+This allows the user to see parts of the page immediately, before the entire content has finished rendering.
+
+![Diagram showing partially rendered page on the client, with loading UI for chunks that are being streamed.](https://h8DxKfmAPhn8O0p3.public.blob.vercel-storage.com/docs/light/server-rendering-with-streaming.png)
 
 Shared layouts and loading skeletons can be requested ahead of time.
 
-To use streaming, create a `loading.tsx` in your route folder:
+To use streaming:
+1. Create a `loading.tsx` in your route folder
+2. Wrapping a component with `<Suspense>`
 
 ![loading.js special file](https://h8DxKfmAPhn8O0p3.public.blob.vercel-storage.com/docs/light/loading-special-file.png)
+
+```tsx title="app/dashboard/loading.js"
+export default function Loading() {
+  // Define the Loading UI here
+  return <div>Loading...</div>
+}
+```
 
 The prefetched fallback UI will be shown while the route is loading, and swapped for the actual content once ready.
 

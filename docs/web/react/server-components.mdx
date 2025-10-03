@@ -6,7 +6,7 @@ Server Components are React Components that are rendered at build time (without 
 
 They are sent to the client as serialized HTML, reducing the amount of JavaScript needed to be sent to the browser.
 
-For example, the `<Page>` component is a Server Component that fetches data about a post, and passes it as props to the `<LikeButton>` which handles client-side interactivity.
+In example below, the `<Page>` component is a Server Component that fetches data about a post, and passes it as props to the `<LikeButton>` which handles client-side interactivity.
 
 ```tsx filename="app/[id]/page.tsx" highlight={1,12} switcher
 import LikeButton from '@/app/ui/like-button'
@@ -56,3 +56,8 @@ Use Server Components when you need:
 2. Server Components cannot use most Hooks and cannot have their own state.
 3. Require special server setup for deployment.
 4. Increased Server Load.
+
+
+## References
+
+- https://react.dev/reference/rsc/server-components

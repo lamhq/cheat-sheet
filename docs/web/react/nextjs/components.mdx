@@ -1,0 +1,175 @@
+# Writting Components
+
+## Interleaving Server and Client Components
+
+Client Components cannot import or render Server Components, but you can pass Server Components as a prop to a Client Component (e.g. children prop) to nest server-rendered UI within Client components. 
+
+All Server Components will be rendered on the server. The resulting RSC payload will contain references of where Client Components should be rendered within the component tree.
+
+_For example, a `<Cart>` component that fetches data on the server, inside a `<Modal>` component that uses client state to toggle visibility._
+
+```tsx title="app/ui/modal.tsx"
+'use client'
+
+export default function Modal({ children }: { children: React.ReactNode }) {
+  return <div>{children}</div>
+}
+```
+
+```tsx filename="app/page.tsx"
+import Modal from './ui/modal'
+import Cart from './ui/cart'
+ 
+export default function Page() {
+  return (
+    <Modal>
+      <Cart />
+    </Modal>
+  )
+}
+```
+
+
+## Context providers
+
+React context is not supported in Server Components.
+
+To use context, create a Client Component that render context provider:
+
+```tsx title="app/theme-provider.tsx"
+'use client'
+ 
+import { createContext } from 'react'
+ 
+export const ThemeContext = createContext({})
+ 
+export default function ThemeProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return <ThemeContext.Provider value="dark">{children}</ThemeContext.Provider>
+}
+```
+
+Then, import it into a Server Component (e.g. `layout`):
+
+```tsx filename="app/layout.tsx"
+import ThemeProvider from './theme-provider'
+ 
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html>
+      <body>
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
+    </html>
+  )
+}
+```
+
+
+## Using components from third-party libraries
+
+Third-party client components which doesn't yet have the `"use client"` directive, if you try to use it directly within a Server Component, you'll see an error.
+
+To fix this, you can wrap third-party components that rely on client-only features in your own Client Components.
+
+For example, the `<Carousel />` can be imported from the `acme-carousel` package. This component uses `useState`, but it doesn't yet have the `"use client"` directive.
+
+```tsx
+'use client'
+ 
+import { Carousel } from 'acme-carousel'
+ 
+export default Carousel
+```
+
+Now, you can use `<Carousel />` directly within a Server Component:
+
+```tsx filename="app/page.tsx"
+import Carousel from './carousel'
+
+export default function Page() {
+  return (
+    <div>
+      <p>View pictures</p>
+      {/*  Works, since Carousel is a Client Component */}
+      <Carousel />
+    </div>
+  )
+}
+```
+
+
+## Server-only code
+
+It's possible to accidentally import server-only code into client code (client components).
+
+To prevent accidental usage in Client Components, you can use the [`server-only` package](https://www.npmjs.com/package/server-only).
+
+The corresponding [`client-only` package](https://www.npmjs.com/package/client-only) can be used to mark modules that contain client-only logic like code that accesses the `window` object.
+
+For example, the `getData` function access an `API_KEY` environment variable, which is only available on the server, to prevent client code to import it, add the `import 'server-only'` at the top of the file:
+
+```tsx
+import 'server-only'
+ 
+export async function getData() {
+  const res = await fetch('https://external-service.com/data', {
+    headers: {
+      authorization: process.env.API_KEY,
+    },
+  })
+ 
+  return res.json()
+}
+```
+
+> [!INFO]
+> You don't need to install the `server-only` or `client-only` package in `package.json`. The contents of these packages from NPM are not used by Next.js.
+
+
+## Passing props to Client Components
+
+Prop values passed from a Server Component to Client Component must be [serializable](https://react.dev/reference/rsc/use-client#serializable-types) (since they are rendered in different environments).
+
+The following are not supported:
+
+- Functions that are not exported from client-marked modules or marked with 'use server'
+- Classes
+- Objects that are instances of any class (other than the built-ins mentioned) or objects with a null prototype
+- Symbols not registered globally, ex. Symbol('my new symbol')
+
+
+## Passing props to Dynamic Components
+
+> [!NOTE]
+> This guide is for [Partial Prerendering](./concepts.mdx#partial-prerendering).
+
+To pass request data from your `<Page/>` component to a dynamic component, you can forward the request `Promise` as a prop:
+
+```tsx title="app/page.tsx"
+import { Table, TableSkeleton } from './table'
+import { Suspense } from 'react'
+ 
+export default function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ sort: string }>
+}) {
+  return (
+    <section>
+      <h1>This will be prerendered</h1>
+      <Suspense fallback={<TableSkeleton />}>
+        <Table searchParams={searchParams} />
+      </Suspense>
+    </section>
+  )
+}
+```
+- Components only opt into dynamic rendering when the value is accessed. Since the `<Page />` component don't access dynamic APIs, it can prerendered (except the `<Table />` component).

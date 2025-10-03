@@ -1,0 +1,39 @@
+# Fetching Data
+
+## In Server Components
+
+You can fetch data in Server Components using:
+
+1. The `fetch` API
+2. A database client library
+
+```tsx
+export default async function Page() {
+  const data = await fetch('https://api.vercel.app/blog')
+  const posts = await data.json()
+  return (
+    <ul>
+      {posts.map((post) => (
+        <li key={post.id}>{post.title}</li>
+      ))}
+    </ul>
+  )
+}
+```
+
+> [!INFO]
+> If use the `fetch` API, Next.js will prerender the route and the output will be cached for improved performance. If you'd like to opt into dynamic rendering, use the `{ cache: 'no-store' }` option.
+
+
+## Deduplicate requests
+
+Next.js extends the `fetch` API to automatically deduplicate `fetch` calls that **use GET or HEAD method with the same URL and options**.
+
+If multiple components or functions call `fetch()` with the same URL and options during the same render, Next.js will only execute the request once and reuse the result.
+
+You can opt out by using the [`signal`](https://developer.mozilla.org/en-US/docs/Web/API/AbortController/signal) property from `AbortController`:
+
+```tsx
+const { signal } = new AbortController()
+fetch(url, { signal })
+```
