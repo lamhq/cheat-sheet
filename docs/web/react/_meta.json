@@ -59,8 +59,6 @@
     "collapsed": true,
     "label": "Techniques"
   },
-  "client-components",
-  "server-components",
   {
     "name": "nextjs",
     "type": "dir",
