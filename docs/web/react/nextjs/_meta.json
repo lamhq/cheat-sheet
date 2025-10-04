@@ -2,11 +2,15 @@
   "installation",
   "project-structure",
   "concepts",
+  "components",
   "layouts",
   "navigation",
-  "components",
   "fetching-data",
   "updating-data",
   "caching",
-  "error-handling"
+  "error-handling",
+  "route-handlers",
+  "middleware",
+  "font",
+  "images"
 ]
