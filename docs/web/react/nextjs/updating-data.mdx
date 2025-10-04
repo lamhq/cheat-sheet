@@ -1,0 +1,252 @@
+# Updating Data
+
+You can update data in Next.js using React's [Server Functions](https://react.dev/reference/rsc/server-functions).
+
+
+## Server Functions
+
+Server Functions are asynchronous functions that runs on the server. 
+
+They can be called from client through a network request.
+
+Behind the scenes, actions use the POST method, and only this HTTP method can invoke them.
+
+
+## Creating
+
+A Server Function can be defined by using the [`use server`](https://react.dev/reference/rsc/use-server) directive
+
+You can place the directive at the top of afunction or at the top of a module file.
+
+```ts title="app/lib/actions.ts"
+export async function createPost(formData: FormData) {
+  'use server'
+  const title = formData.get('title')
+  const content = formData.get('content')
+
+  // Update data
+  // Revalidate cache
+}
+```
+
+Server Functions can be inlined in Server Components:
+
+```tsx title="app/page.tsx"
+export default function Page() {
+  // Server Action
+  async function createPost(formData: FormData) {
+    'use server'
+    // ...
+  }
+ 
+  return <></>
+}
+```
+
+
+## Importing
+
+You can import Server Functions in Client Components and invoke them:
+
+```tsx title="app/ui/button.tsx"
+'use client'
+ 
+import { createPost } from '@/app/actions'
+ 
+export function Button() {
+  return <button formAction={createPost}>Create</button>
+}
+```
+
+You can also pass an action to a Client Component as a prop:
+
+```tsx
+<ClientComponent updateItemAction={updateItem} />
+```
+
+```tsx title="app/client-component.tsx"
+'use client'
+ 
+export default function ClientComponent({
+  updateItemAction,
+}: {
+  updateItemAction: (formData: FormData) => void
+}) {
+  return <form action={updateItemAction}>{/* ... */}</form>
+}
+```
+
+
+## Invoking
+
+There are two main ways you can invoke a Server Function:
+
+1. [Forms](#forms) in Server and Client Components
+2. [Event Handlers](#event-handlers) and [useEffect](#useeffect) in Client Components
+
+### Forms
+
+React extends the HTML [`<form>`](https://react.dev/reference/react-dom/components/form) element to allow Server Function to be invoked with the HTML `action` prop.
+
+```tsx title="app/ui/form.tsx"
+import { createPost } from '@/app/actions'
+ 
+export function Form() {
+  return (
+    <form action={createPost}>
+      <input type="text" name="title" />
+      <input type="text" name="content" />
+      <button type="submit">Create</button>
+    </form>
+  )
+}
+```
+
+```ts title="app/actions.ts"
+'use server'
+ 
+export async function createPost(formData: FormData) {
+  const title = formData.get('title')
+  const content = formData.get('content')
+ 
+  // Update data
+  // Revalidate cache
+}
+```
+
+
+### Event Handlers
+
+```tsx title="app/like-button.tsx"
+'use client'
+ 
+import { incrementLike } from './actions'
+import { useState } from 'react'
+ 
+export default function LikeButton({ initialLikes }: { initialLikes: number }) {
+  const [likes, setLikes] = useState(initialLikes)
+ 
+  return (
+    <>
+      <p>Total Likes: {likes}</p>
+      <button
+        onClick={async () => {
+          const updatedLikes = await incrementLike()
+          setLikes(updatedLikes)
+        }}
+      >
+        Like
+      </button>
+    </>
+  )
+}
+```
+
+### useEffect
+
+You can use the React `useEffect` hook to invoke a Server Action when the component mounts or a dependency changes.
+
+```tsx title="app/view-count.tsx"
+'use client'
+
+import { incrementViews } from './actions'
+import { useState, useEffect, useTransition } from 'react'
+
+export default function ViewCount({ initialViews }: { initialViews: number }) {
+  const [views, setViews] = useState(initialViews)
+  const [isPending, startTransition] = useTransition()
+
+  useEffect(() => {
+    startTransition(async () => {
+      const updatedViews = await incrementViews()
+      setViews(updatedViews)
+    })
+  }, [])
+
+  // You can use `isPending` to give users feedback
+  return <p>Total Views: {views}</p>
+}
+```
+
+
+## Showing a pending state
+
+While executing a Server Function, you can show a loading indicator with React's [`useActionState`](https://react.dev/reference/react/useActionState) hook. This hook returns a `pending` boolean:
+
+```tsx title="app/ui/button.tsx"
+'use client'
+
+import { useActionState, startTransition } from 'react'
+import { createPost } from '@/app/actions'
+import { LoadingSpinner } from '@/app/ui/loading-spinner'
+
+export function Button() {
+  const [state, action, pending] = useActionState(createPost, false)
+
+  return (
+    <button onClick={() => startTransition(action)}>
+      {pending ? <LoadingSpinner /> : 'Create Post'}
+    </button>
+  )
+}
+```
+
+## Revalidating
+
+After performing an update, you can revalidate the Next.js cache and show the updated data by calling `revalidatePath` or `revalidateTag` within the Server Function:
+
+```ts title="app/lib/actions.ts"
+import { revalidatePath } from 'next/cache'
+
+export async function createPost(formData: FormData) {
+  'use server'
+  // Update data
+  // ...
+
+  revalidatePath('/posts')
+}
+```
+
+
+## Redirecting
+
+You may want to redirect the user to a different page after performing an update. You can do this by calling `redirect` within the Server Function.
+
+```ts title="app/lib/actions.ts"
+'use server'
+
+import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
+
+export async function createPost(formData: FormData) {
+  // Update data
+  // ...
+
+  revalidatePath('/posts')
+  redirect('/posts')
+}
+```
+
+
+## Cookies
+
+You can `get`, `set`, and `delete` cookies inside a Server Action using the `cookies` API.
+
+```ts title="app/actions.ts"
+'use server'
+
+import { cookies } from 'next/headers'
+
+export async function exampleAction() {
+  const cookieStore = await cookies()
+
+  // Get cookie
+  cookieStore.get('name')?.value
+
+  // Set cookie
+  cookieStore.set('name', 'Delba')
+
+  // Delete cookie
+  cookieStore.delete('name')
+}
+```

@@ -1,0 +1,71 @@
+# Installation
+
+## Automatic installation
+
+Create a new Next.js app in a new directory:
+```sh
+npx create-next-app@latest
+```
+
+## Run the development server
+
+1. Run `npm run dev` to start the development server.
+2. Visit http://localhost:3000 to view your application.
+3. Edit the `app/page.tsx` file and save it to see the updated result in your browser.
+
+
+## Set up TypeScript
+
+### IDE
+
+Next.js includes a custom TypeScript plugin and type checker, which VSCode and other code editors can use for advanced type-checking and auto-completion.
+
+You can enable the plugin in VS Code by:
+
+1. Opening the command palette (`Ctrl/⌘` + `Shift` + `P`)
+2. Searching for "TypeScript: Select TypeScript Version"
+3. Selecting "Use Workspace Version"
+
+
+### Import Path Aliases
+
+Next.js has in-built configuration for the `"paths"` and `"baseUrl"` options of `tsconfig.json`, allows using absolute import paths, making it easier and cleaner to import modules.
+
+```jsx
+// Before
+import { Button } from '../../../components/button'
+
+// After
+import { Button } from '@/components/button'
+```
+
+To configure absolute imports, add the `baseUrl` configuration option to your `tsconfig.json`:
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "baseUrl": "src/"
+  }
+}
+```
+
+You can use the `"paths"` option to `"alias"` module paths. For example, the following configuration maps `@/components/*` to `components/*`:
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "baseUrl": "src/",
+    "paths": {
+      "@/styles/*": ["styles/*"],
+      "@/components/*": ["components/*"]
+    }
+  }
+}
+```
+
+Each of the `"paths"` are relative to the `baseUrl` location.
+
+
+## Set up ESLint
+
+Next.js automatically installs the necessary ESLint packages and configures the proper settings when you create a new project with `create-next-app`.

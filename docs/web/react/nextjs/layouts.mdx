@@ -1,0 +1,34 @@
+# Layouts
+
+In Next.js, Layouts and Pages are React Server Components by default.
+
+## Creating a layout
+
+![File hierarchy showing root layout wrapping the blog layout](https://h8DxKfmAPhn8O0p3.public.blob.vercel-storage.com/docs/light/nested-layouts.png)
+
+```tsx title="app/layout.tsx"
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en">
+      <body>
+        {/* Layout UI */}
+        {/* Place children where you want to render a page or nested layout */}
+        <main>{children}</main>
+      </body>
+    </html>
+  )
+}
+```
+
+
+## Nesting layouts
+
+By default, layouts in the folder hierarchy are also nested.
+
+For example, layout of the `/blog` route (`app/blog/layout.js`) is nested inside the root layout `app/layout.js`.
+
+![File hierarchy showing root layout wrapping the blog layout](https://h8DxKfmAPhn8O0p3.public.blob.vercel-storage.com/docs/light/nested-layouts.png)

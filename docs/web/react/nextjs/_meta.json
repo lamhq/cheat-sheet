@@ -1,3 +1,16 @@
 [
-  "eslint"
+  "installation",
+  "project-structure",
+  "concepts",
+  "components",
+  "layouts",
+  "navigation",
+  "fetching-data",
+  "updating-data",
+  "caching",
+  "error-handling",
+  "route-handlers",
+  "middleware",
+  "font",
+  "images"
 ]
