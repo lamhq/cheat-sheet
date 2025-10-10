@@ -9,9 +9,9 @@
   "updating-data",
   "caching",
   "error-handling",
+  "authentication",
   "route-handlers",
   "middleware",
   "font",
-  "images",
-  "authentication"
+  "images"
 ]
