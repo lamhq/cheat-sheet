@@ -8,6 +8,9 @@ It defines how API server and client exchange data.
 
 GraphQL isn't tied to any specific database or storage engine.
 
+
+## How it works
+
 A GraphQL service is created by defining types and fields on those types, then providing functions for (processing) each field on each type
 
 After a GraphQL service is running, it can receive GraphQL queries to validate and execute. The service first checks a query to ensure it only refers to the types and fields defined, and then runs the provided functions to produce a result.

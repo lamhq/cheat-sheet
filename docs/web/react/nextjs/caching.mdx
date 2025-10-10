@@ -1,0 +1,102 @@
+# Caching
+
+## Overview
+
+Caching is a technique for storing the result of data fetching and other computations so that future requests for the same data can be served faster, without doing the work again. 
+
+Revalidation allows you to update cache entries without having to rebuild your entire application.
+
+![Diagram showing the default caching behavior in Next.js for the four mechanisms, with HIT, MISS and SET at build time and when a route is first visited.](https://h8DxKfmAPhn8O0p3.public.blob.vercel-storage.com/docs/light/caching-overview.png)
+
+
+## Request memoization
+
+Request memoization ensures that multiple identical `fetch` calls (same URL and options) made during a single render cycle are executed only once. The result is cached and reused across the component tree.
+
+**How It Works?**
+- Next.js extends the `fetch` API to automatically memoize requests that have the same URL and options.
+- When rendering the compoment tree, you can call a fetch function for the same data in multiple places, and Next.js will only execute it once.
+
+![Deduplicated Fetch Requests](https://h8DxKfmAPhn8O0p3.public.blob.vercel-storage.com/docs/light/deduplicated-fetch-requests.png)
+
+Memoization applies only to `GET` fetch requests.
+
+Memoization only applies to the React Component tree, this means:
+- It applies to `fetch` requests in `generateMetadata`, `generateStaticParams`, Layouts, Pages, and other Server Components.
+- It doesn't apply to `fetch` requests in Route Handlers as they are not a part of the React component tree.
+- It is not supported in `middleware`. Any fetches done inside of your `middleware` will be uncached.
+
+**Duration**: The cache lasts until the React component tree has finished rendering.
+
+**Revalidating**: Since the memoization is not shared across server requests and only applies during rendering, there is no need to revalidate it.
+
+[**Opting out**](https://nextjs.org/docs/app/guides/caching#opting-out): use the `signal` property from `AbortController`.
+
+For cases where `fetch` is not suitable (e.g. some database clients, CMS clients, or GraphQL clients), you can use the React `cache` function to memoize functions.
+
+
+## Data Cache
+
+Data cache allow the result of a data-fetching operation (like `fetch()`) to be stored and reused across requests and deployments.
+
+![Diagram showing how cached and uncached fetch requests interact with the Data Cache. Cached requests are stored in the Data Cache, and memoized, uncached requests are fetched from the data source, not stored in the Data Cache, and memoized.](https://h8DxKfmAPhn8O0p3.public.blob.vercel-storage.com/docs/light/data-cache.png)
+
+You can use the `cache` and `next.revalidate` options of fetch to configure the caching behavior.
+
+```tsx title="app/page.tsx"
+export default async function Page() {
+  const data = await fetch('https://...', {
+    cache: 'force-cache',
+    next: { revalidate: 3600 }
+  })
+}
+```
+
+Comparing with Request Memoization:
+- The Data Cache is persistent across incoming requests and deployments, whereas memoization only lasts the lifetime of a request.
+- Whether the data is cached or uncached in Data Cache, the requests are always memoized to avoid making duplicate requests for the same data during a React render pass.
+
+Cached data can be revalidated in two ways:
+- **Time-based Revalidation**: Revalidate data after a certain amount of time has passed. Useful for data that changes infrequently and freshness is not as critical.
+- **On-demand Revalidation**: Use a [tag-based](https://nextjs.org/docs/app/guides/caching#fetch-optionsnexttags-and-revalidatetag) or [path-based](https://nextjs.org/docs/app/guides/caching#revalidatepath) approach to revalidate groups of data at once. Useful when you want to ensure the latest data is shown as soon as possible
+
+
+## Full Route Cache (server side)
+
+On the server, Next.js caches the rendered result (RSC Payload and HTML) of routes that are [statically rendered](./concepts.mdx#static-rendering) at build time, or during revalidation.
+
+> [!INFO]
+> Dynamic routes are rendered at request time, and not cached.
+
+![Default behavior of the Full Route Cache, showing how the React Server Component Payload and HTML are cached on the server for statically rendered routes.](https://h8DxKfmAPhn8O0p3.public.blob.vercel-storage.com/docs/light/full-route-cache.png)
+
+
+## Router Cache (client side)
+
+The RSC Payload of individual route segments is stored in the client-side Router Cache (in-memory cache).
+
+On navigations or during prefetching, Next.js will check if the RSC Payload is stored in the Router Cache:
+- If so, it will skip sending a new request to the server.
+- If not, Next.js will fetch the RSC Payload from the server, and populate the Router Cache on the client.
+
+With the Router Cache:
+- **Layouts** are cached and reused on navigation.
+- **Loading states** are cached and reused on navigation for instant navigation.
+- **Pages** are not cached by default, but are reused during browser backward and forward navigation. You can enable caching for page segments by using the experimental [`staleTimes`](https://nextjs.org/docs/app/api-reference/config/next-config-js/staleTimes) config option.
+
+![How static and dynamic rendering affects the Full Route Cache. Static routes are cached at build time or after data revalidation, whereas dynamic routes are never cached](https://h8DxKfmAPhn8O0p3.public.blob.vercel-storage.com/docs/light/static-and-dynamic-routes.png)
+
+
+## Cache Interactions
+
+When configuring the different caching mechanisms, it's important to understand how they interact with each other:
+
+### Data Cache and Full Route Cache
+
+- Revalidating or opting out of the Data Cache will invalidate the Full Route Cache, as the render output depends on data.
+- Invalidating or opting out of the Full Route Cache does not affect the Data Cache. You can dynamically render a route that has both cached and uncached data. This is useful when most of your page uses cached data, but you have a few components that rely on data that needs to be fetched at request time. You can dynamically render without worrying about the performance impact of re-fetching all the data.
+
+### Data Cache and Client-side Router cache
+
+- To immediately invalidate the Data Cache and Router cache, you can use `revalidatePath` or `revalidateTag` in a Server Action.
+- Revalidating the Data Cache in a Route Handler will not immediately invalidate the Router Cache as the Route Handler isn't tied to a specific route. This means Router Cache will continue to serve the previous payload until a hard refresh, or the automatic invalidation period has elapsed.
