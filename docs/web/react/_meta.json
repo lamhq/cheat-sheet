@@ -53,17 +53,16 @@
     "collapsed": true,
     "label": "Testing"
   },
-  "server-comp",
-  {
-    "name": "nextjs",
-    "type": "dir",
-    "collapsed": true,
-    "label": "Server Rendering"
-  },
   {
     "name": "techniques",
     "type": "dir",
     "collapsed": true,
     "label": "Techniques"
+  },
+  {
+    "name": "nextjs",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Next.js"
   }
 ]

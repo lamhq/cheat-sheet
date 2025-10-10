@@ -1,0 +1,45 @@
+# Route Handlers
+
+## Overview
+
+Route Handlers allow you to create custom request handlers for a given route.
+
+Route Handlers are defined in a `route.js` file inside the `app` directory:
+
+![Route.js Special File](https://h8DxKfmAPhn8O0p3.public.blob.vercel-storage.com/docs/light/route-special-file.png)
+
+```ts title="app/api/route.ts"
+import type { NextRequest } from 'next/server'
+ 
+export async function GET(_req: NextRequest, ctx: RouteContext<'/users/[id]'>) {
+  const { id } = await ctx.params
+  return Response.json({ id })
+}
+```
+
+There **cannot** be a `route.js` file at the same route segment level as `page.js`.
+
+The following [HTTP methods](https://developer.mozilla.org/docs/Web/HTTP/Methods) are supported: `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `HEAD`, and `OPTIONS`. If an unsupported method is called, Next.js will return a `405 Method Not Allowed` response.
+
+
+## Caching
+
+Route Handlers are not cached by default. You can, however, opt into caching for `GET` methods. Other supported HTTP methods are **not** cached. 
+
+To cache a `GET` method, add `export const dynamic = 'force-static'` in your Route Handler file.
+
+```ts title="app/items/route.ts" {1}
+export const dynamic = 'force-static'
+
+export async function GET() {
+  const res = await fetch('https://data.mongodb-api.com/...', {
+    headers: {
+      'Content-Type': 'application/json',
+      'API-Key': process.env.DATA_API_KEY,
+    },
+  })
+  const data = await res.json()
+
+  return Response.json({ data })
+}
+```

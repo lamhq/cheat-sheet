@@ -1,0 +1,66 @@
+# Navigation
+
+## Linking between pages
+
+You can use the `<Link>` component to navigate between routes. 
+
+```tsx
+import Link from 'next/link'
+ 
+export default async function Post({ post }) {
+  const posts = await getPosts()
+ 
+  return (
+    <ul>
+      {posts.map((post) => (
+        <li key={post.slug}>
+          <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+        </li>
+      ))}
+    </ul>
+  )
+}
+```
+
+## Accessing search params
+
+In a Server Component page, you can access search parameters using the `searchParams` prop:
+
+```tsx
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+  const filters = (await searchParams).filters
+}
+```
+
+
+## Showing in-progress transition
+
+While a (client) transition is in progress, you can use the `useLinkStatus` hook to show inline visual feedback to the user.
+
+```tsx title="app/ui/loading-indicator.tsx"
+'use client'
+ 
+import { useLinkStatus } from 'next/link'
+ 
+export default function LoadingIndicator() {
+  const { pending } = useLinkStatus()
+  return pending ? (
+    <div role="status" aria-label="Loading" className="spinner" />
+  ) : null
+}
+```
+
+
+## Disabling prefetching
+
+You can opt out of prefetching by setting the prefetch prop to false on the `<Link>` component.
+
+```tsx
+<Link prefetch={false} href="/blog">
+  Blog
+</Link>
+```
