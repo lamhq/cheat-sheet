@@ -1,0 +1,82 @@
+# Authentication
+
+Three key components:
+
+- **Authentication**: Verifying a user's identity (login, sign-up).
+- **Session Management**: Tracks the user's auth state across requests (session management, access token).
+- **Authorization**: Decides what routes and data the user can access (verify token, role-based access control).
+
+![Diagram showing the authentication flow with React and Next.js features](https://h8DxKfmAPhn8O0p3.public.blob.vercel-storage.com/docs/light/authentication-overview.png)
+
+
+## Authentication
+
+Implement Sign-up and login functionality:
+
+1. Render [sign-up and login forms](https://nextjs.org/docs/app/guides/authentication#1-capture-user-credentials) using `<form>` element and trigger a Server Action on submit.
+2. Validate form fields on the server.
+3. Display validation errors on the form with `useActionState` hook.
+4. Create user record in the database on sign-up (or retrieve on login).
+5. Generate an [auth state](#session-management) and return it as an HTTP-only cookie.
+
+
+## Session Management
+
+A session identifies the user interacting with the application. It's generated securely on the server and sent to client after login.
+
+There're two ways to manage user sessions: **Stateless** and **Stateful**.
+
+### Stateless
+
+Session data is encrypted and sent to client.
+
+On subsequent requests, the client includes this data, allowing the server to decrypt it and identify the user.
+
+To end a session, the server clears the cookie when the user send a logout request.
+
+✅ Pros:
+- **Scalable**: No server-side storage, so it's easy to scale horizontally.
+- **Fast**: No database lookup needed on each request.
+- **Simple setup**: Easier to implement for small apps or MVPs.
+- **No server-side persistence**: Useful for serverless environments.
+
+❌ Cons:
+- **Size limits**: Cookies have size restrictions (~4KB).
+- **Security risks**: If encryption is weak or misconfigured, sensitive data could leak.
+- **No easy revocation**: Once issued, sessions can't be invalidated until they expire.
+- **Harder to rotate secrets**: Changing encryption keys can invalidate all sessions.
+
+
+### Stateful
+
+Session data is stored in a database, and an encrypted session ID is sent to the client.
+
+On subsequent requests, the client includes this data, allowing the server to decrypt it, retrieve the session from the database, and identify the user.
+
+
+✅ Pros:
+- **Secure**: Sensitive data stays on the server.
+- **Revocable**: Sessions can be invalidated anytime (e.g., logout, ban).
+- **Flexible**: Can store more data and support complex session logic.
+- **Auditable**: Easier to track user activity or session history.
+
+❌ Cons:
+- **Slower**: Requires a database read on each request.
+- **Less scalable**: Needs session storage infrastructure (e.g., Redis, SQL).
+- **More complex**: Requires session cleanup, expiration logic, and storage management.
+
+
+## Authorization
+
+Once a user is authenticated and a session is created, You can implement authorization to check if the user is authorized to access a route or perform an action within your application.
+
+Two main types of authorization checks:
+1. **Optimistic**: store the user roles or permission **in the cookie**. Useful for quick operations, such as showing/hiding UI elements or redirecting users based on permissions or roles.
+2. **Secure**: store the user roles or permission **in the database**. More secure and are used for operations that require access to sensitive data or actions.
+
+You can use [Middleware](https://nextjs.org/docs/app/guides/authentication#optimistic-checks-with-middleware-optional) to perform optimistic checks. Since Middleware runs on every route, it's a good way to centralize redirect logic and pre-filter unauthorized users. It's important to avoid database checks to prevent performance issues.
+
+Steps to implement:
+1. Define a [`verifySession()`](https://nextjs.org/docs/app/guides/authentication#creating-a-data-access-layer-dal) function that verifies the user's session
+2. Invoke the function in your [Server Components](https://nextjs.org/docs/app/guides/authentication#server-components), [Server Actions](https://nextjs.org/docs/app/guides/authentication#server-actions), [Route Handlers](https://nextjs.org/docs/app/guides/authentication#route-handlers)
+3. Be cautious when doing checks in [Layouts](https://nextjs.org/docs/app/guides/authentication#layouts-and-auth-checks) as these don't re-render on navigation, meaning the user session won't be checked on every route change.
