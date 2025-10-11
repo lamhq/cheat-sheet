@@ -1,0 +1,96 @@
+# Scalability
+
+## Overview
+
+Scalability is the measure of the system's ability to handle a growing amount of work, in an easy and cost effective way.
+
+We can scale a system on three orthogonal dimensions:
+- **Vertical scalability** (Scale Up)
+- **Horizontal scalability** (Scale Out)
+- **Team/Organization Scalability** 
+
+These dimensions are independent. You can scale in one or more dimensions depending on your needs.
+
+
+## Vertical scalability
+
+Adding resources or upgrading the existing resources on a single computer.
+
+**Implementations**:
+- Upgrade a service to a newer machine that has a faster CPU, more memory, network card that can handle higher bandwidth.
+- Upgrade the database by putting it on a stronger hardware with more storage capacity
+
+**Benefits**:
+- Any application can benefit from it.
+- No code changes are required.
+- Migration between different machines is easy (especially in the cloud).
+
+**Use cases**:
+- Common for non distributed systems, such as database.
+- When traffic is low, vertical scaling is a great option
+
+**Limitations**:
+- Scope of upgrade is limited. There's usually a hardware limit on how much you can scale a machine.
+- Reliability. Running system on a single machine does not provide high availability and fault tolerance.
+- Cost. Larger machines are more expensive.
+
+
+## Horizontal Scalability
+
+Adding more resources in the form of new instances running on different machines, then distribute the work among them.
+
+**Implementations**:
+- Load Balancing: Requests are distributed across multiple instances of a service.
+- Competing Consumer Pattern: Multiple workers consume tasks from a queue.
+- Read Replicas: Database replicas handle read requests, reducing load on the primary database.
+
+**Benefits**:
+- No limit on scalability.
+- Easy to add/remove machines
+- Provide High Availability and Fault Tolerance (if designed correctly)
+
+**Limitations**:
+- Significant code changes may be required.
+- Increased complexity, coordination overhead between instances (sticky sessions).
+
+
+## Team Scalability
+
+This scalability allows company to keep increasing productivity while adding more engineers into the team.
+
+**Motivation**:
+- Scalability isn't just about system performance, it's also about how well a team perform when the amount of work increase (add new features, test, fix bugs, release).
+- Keep adding more engineers to a team can cause productivity degradation because:
+  - Overcrowded meetings.
+  - Code merge conflicts, no isolation.
+  - Steep learning curves for new engineers because the code base grows.
+  - Testing becomes very hard and slow.
+  - Risky releases with too many changes from many engineers.
+
+**Approaches**:
+1. Split the codebase into **modules** so teams can work independently with less interference. They are still part of the same deployment unit.
+2. Separate the code base into separate **services**. Each service has its own code base, tech stack, release cycle, infrastructure, communicating via loosely coupled network protocols.
+
+**Benefits** & **Limitations**: have all characteristics when using Microservices architecture.
+
+
+## Best practices
+
+1. **Avoid Premature Optimization**. Optimization should be driven by actual needs, not assumptions.
+2. **Avoid Unnecessary Complexity**. Start small and only add complexity when needed.
+3. **Conducting tests and experiments** to confirm whether the proposed solution will work.
+4. **Combining scaling techniques**. Choose the right combination based on system needs.
+
+Imagine an Order microservice in an e-commerce system.  
+
+1️⃣ Step 1: Functional Decomposition  
+- The Order functionality is extracted from the monolithic system into its own microservice.  
+- This allows independent scaling of order processing.  
+
+2️⃣ Step 2: Horizontal Duplication  
+- Multiple copies of the Order microservice are deployed to handle increased traffic.  
+- A load balancer distributes requests across these instances.  
+
+3️⃣ Step 3: Geographic Sharding  
+- Orders are sharded by region (e.g., US orders go to one shard, EU orders to another).  
+- Within each region, horizontal duplication ensures redundancy and scalability.  

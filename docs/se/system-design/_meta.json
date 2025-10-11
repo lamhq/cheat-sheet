@@ -1,12 +1,17 @@
 [
   "requirements",
-  "principles",
+  {
+    "name": "quality-attributes",
+    "type": "dir",
+    "collapsed": true
+  },
   {
     "name": "concepts",
     "type": "dir",
     "label": "Concepts",
     "collapsed": true
   },
+  "principles",
   {
     "name": "components",
     "type": "dir",
