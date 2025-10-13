@@ -2,7 +2,10 @@
 
 ## Overview
 
-Availability refers to a system's ability to operate continuously without significant downtime.
+Availability is the system's ability to operate continuously without significant downtime.
+
+
+## Formulars
 
 Availability is defined as the fraction of time/probability that our service is operationally functional and accessible to the user:
 
@@ -25,24 +28,22 @@ This formula is more statistical and more useful for availability estimation rat
 
 ## How much is High Availability?
 
-Users would want 100% availability.
+Availability is measured as a percentage.
 
-On the engineering side it is:
-- Extremely hard to achieve
-- Leaves no time for maintenance/upgrades
+100% means a service that has 0 downtime.
 
-Some examples of Availability value:
+Industry standard (set by cloud vendors) is typically 99.9% or higher.
+
+List of availability numbers and expected downtime:
 
 | Availability | Daily Downtime | Weekly Downtime | Monthly Downtime | Annual Downtime |
 |--------------|----------------|-----------------|------------------|-----------------|
-| 90%          | 2 h 24 m       | 16 h 48 m       | 3 d              | 36 d 12 h       |
-| 95%          | 1 h 12 m       | 8 h 24 m        | 1 d 12 h         | 18 d 6 h        |
-| 99%          | 14 m 24 s      | 1 h 40 m 48 s   | 7 h 18 m         | 3 d 15 h 36 m   |
-| 99.9%        | 1 m 26 s       | 10 m 5 s        | 43 m 12 s        | 8 h 45 m 36 s   |
+| 90%          | 2h 24m       | 16h 48m       | 3d              | 36d 12h       |
+| 95%          | 1h 12m       | 8h 24m        | 1d 12h         | 18d 6h        |
+| 99%          | 14m 24s      | 1h 40m 48s   | 7h 18m         | 3d 15h 36m   |
+| 99.9%        | 1m 26s       | 10m 5s        | 43m 12s        | 8h 45m 36ås   |
 
-Industry standard set by cloud vendors is typically 99.9% or higher.
-
-Availability is typically expressed as a percentage, and is often described by the number of nines in its digits:
+Availability is often described by the number of nines in its digits. The more the nines, the better:
 - 99.9% = 3 nines
 - 99.99% = 4 nines
 - 99.999% = 5 nines

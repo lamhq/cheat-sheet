@@ -1,5 +1,7 @@
 # Quality Attributes
 
+## Overview
+
 Quality attributes describe how well the system performs on a particular dimension.
 
 Some important quality attributes:
@@ -7,3 +9,69 @@ Some important quality attributes:
 - Scalability
 - Availability
 - Fault Tolerance
+
+Three important terms that aggregate system reliability regard to those quality attributes:
+- SLA (Service Level Agreement)
+- SLO (Service Level Objective)
+- SLI (Service Level Indicator)
+
+
+## Service-level agreement
+
+A Service Level Agreement (SLA) is a formal contract between a service provider and its clients/users. It defines the expected level of service and outlines the consequences if those expectations aren't met.
+
+It's a legal contract that represents the promise we make to our users in terms of quality service, such as:
+- Availability
+- Performance
+- Data durability
+- Time to respond to system failures
+
+It states the penalties and financial consequences, if we breach the contract. Include:
+- Full/Partial refunds
+- Subscription/License extensions
+- Service credits
+
+SLAs exist for:
+- External paying users
+- Free external users (sometimes, don't publish SLA)
+- Internal users within our company (occasionally, don't include penalties)
+
+Example: _AWS EC2 instances have a 90% uptime guarantee, but no assurance beyond that. If an instance fails too often, AWS may refund charges but users still suffer downtime._
+
+
+## Service-Level Objectives
+
+While SLAs set external commitments, SLOs are internal targets that teams aim to meet, ensuring teams work toward high-quality service beyond contractual obligations.
+
+Example: Customer Support Ticket Resolution Time: "Resolve 80% of critical support tickets within 4 hours."
+
+Why SLOs matter?
+- They help teams define their own standards for performance.
+- Ensuring all teams meet their SLOs will likely satisfy SLAs but also improve overall reliability.
+- SLOs may go beyond SLAs, setting aspirational goals or focusing on internal improvements.
+
+
+## Service-Level Indicator
+
+A Service-Level Indicator (SLI) is a quantitative measure of a system's behavior, used to determine whether SLOs are being met.
+
+Examples:
+- **Response time** (e.g., how fast a request is processed).
+- **Customer registration success rate** (ensuring users can sign up).
+- **Error rate** (how often failures occur).
+- **Order completion rate** (tracking successful transactions).
+
+Benefits:
+- Without real measurements, teams can't assess whether they are hitting their SLO targets.
+- SLIs help organizations optimize performance and ensure reliability.
+
+
+## Error budgets
+
+Error budgets define the acceptable amount of downtime or failures within a system
+
+For example: If a system has an SLO of 99.9% availability per quarter, it allows up to 2 hours and 11 minutes of downtime. This downtime forms the error budget (the amount of failure a team is allowed before corrective actions are needed).
+
+Using error budgets for decision-making:
+- If a team is well below the budget, they can safely experiment (e.g., rolling out a new microservice).
+- If they exceed the budget, they should prioritize stability, postponing risky deployments.
