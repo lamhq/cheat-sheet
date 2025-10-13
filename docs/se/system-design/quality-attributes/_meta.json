@@ -1,4 +1,6 @@
 [
   "performance",
-  "scalability"
+  "scalability",
+  "availability",
+  "fault-tolerance"
 ]
