@@ -18,5 +18,8 @@
     "name": "partitioning",
     "type": "dir",
     "collapsed": true
-  }
+  },
+  "eventual-consistency",
+  "cap-theorem",
+  "base-model"
 ]

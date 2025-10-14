@@ -1,8 +1,7 @@
 [
-  "data-center",
-  "server",
-  "proxy",
   "load-balancer",
+  "message-broker",
   "cdn",
-  "message-broker"
+  "server",
+  "proxy"
 ]
