@@ -2,43 +2,86 @@
 
 ## Overview
 
-A Content delivery network (CDN) is a network of geographically dispersed servers used to deliver static content.
+A Content delivery network (CDN) is globally distributed network of servers located in strategic places, to speed up the delivery of content to the end users.
 
-CDN servers cache static content like images, videos, CSS, JavaScript files, etc.
+CDN servers cache static content of our website on their edge servers which are located at different Point of Presence (PoP).
+
+CDNs can be used to deliver:
+- Images
+- Text
+- CSS
+- Javascript files
+- Video streams (live and on-demand)
 
 You are charged for data transfers in and out of the CDN.
-
-
-## Benefits
-
-CDN allow placing your static assets close to users.
-
-It may help reducing cost, because you don't need to have multiple servers.
-
-Decrease latency and improves user experience.
-
-Increase complexity of your system: content invalidation, configuration, debugging and troubleshooting.
-
-
-## How it work?
-
-1. When a user requests a web page or any online content, the request is sent to the CDN instead of the origin server.
-2. The CDN identifies the server closest to the user based on their geographical location
-3. The nearest CDN server, also known as a Point of Presence (PoP), delivers the cached content to the user. This reduces latency and speeds up the loading time
-4. If the requested content is not available on the nearest CDN server, the request is forwarded to the origin server. The origin server then sends the content to the CDN server, which caches it for future requests
 
 ![](https://learn.microsoft.com/en-us/azure/architecture/best-practices/images/cdn/cdn.png)
 
 
-## Time-to-Live
+## How it work?
 
-Time-to-Live (TTL) refers to the duration for which cached content is stored on a CDN server before it become stale.
+1. When a user requests a web page or any online content, requests are routed to a CDN instead of the origin server.
+2. The CDN selects the nearest server (PoP) based on location.
+3. If cached, the PoP delivers the content quickly to reduce latency.
+4. If not cached, request is forwarded to the origin server. The content is stored in CDN server for future requests
 
-When content is cached on a CDN server, a TTL value is assigned.
 
-Once the TTL expires, the CDN server will check with the origin server to see if the content has been updated. If it has, the CDN server fetches the new content and updates its cache.
+## Content Publishing Strategies
+
+Two strategies to manage content with CDN:
+
+### Pull Strategy
+
+**How it works:**
+- You configure which assets should be cached and set their expiration (Time To Live or TTL).
+- When a user requests an asset for the first time, the CDN fetches it from your server and caches it.
+- Future requests are served directly from the CDN’s edge servers, reducing latency.
 
 
-## Dynamic content caching
+**Cache Expiry Handling:**
+- If an asset expires, the CDN checks with your server for updates.
+- If unchanged, it refreshes the TTL; if updated, it caches the new version.
 
-It enables the caching of HTML pages that are based on request path, query strings, cookies, and request headers.
+**Pros:**
+- Low maintenance — CDN handles caching automatically.
+
+**Cons:**
+- First-time requests may be slower.
+- Simultaneous TTL expiry can cause traffic spikes.
+- Your server must stay available to refresh expired assets.
+
+
+### Push Strategy
+
+**How it works:**
+- You manually or automatically upload content to the CDN.
+- When content changes, you must republish it to the CDN.
+
+**TTL Handling:**
+- Some CDNs allow long TTLs so content rarely expires.
+- To update content, you purge the cache and let the CDN fetch the new version.
+
+**Pros:**
+- Great for static or rarely changing content.
+- Reduces load and dependency on your server.
+
+**Cons:**
+- Requires active management to keep content fresh.
+- Risk of serving outdated content if updates aren’t pushed promptly.
+
+
+## Benefits
+
+- **Perfomance**. Faster page loads, improves user experience.
+- **High Availability**. Most of the content will actually come from the CDN and not from our servers directly.
+- **Improve Security**. Protect against DDoS attacks.
+
+
+## CDN Solutions
+
+1. **Cloudflare**: ultra-fast static and dynamic content delivery, built-in unmetered DDoS protection.
+2. **Fastly**: modern, efficient, and highly configurable CDN
+3. **Akamai**: variety of offerings for API Acceleration, Global Traffic Management, Image & Video Management, Media Delivery, etc.
+4. **Amazon CloudFront**: high performance, security, developer convenience, delivering fast secure websites, accelerating dynamic content delivery and APIs, live streaming, video-on-demand, etc.
+5. **Google Cloud Platform CDN**: fast, reliable web and video content delivery with a global scale and reach.
+6. **Microsoft Azure Content Delivery Network**: global coverage, full integration with Azure services, and a simple setup.
