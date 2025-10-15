@@ -1,5 +1,4 @@
 [
-  "choosing-db",
   {
     "name": "sql",
     "type": "dir",
@@ -10,6 +9,7 @@
     "type": "dir",
     "collapsed": true
   },
+  "choosing-db",
   "transaction",
   "concurrency",
   "indexes",
