@@ -1,6 +1,7 @@
 [
   "load-balancer",
   "message-broker",
+  "api-gateway",
   "cdn",
   "server",
   "proxy"
