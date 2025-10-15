@@ -2,22 +2,54 @@
 
 ## Overview
 
-The CAP Theorem (aka Brewer’s Theorem) states that "when **network partitioning** occurs, a system cannot be both consistent (C) and available (A)".
-
-It helps engineers understand the trade-offs when designing distributed systems.
+The CAP Theorem (aka Brewer’s Theorem) states that "when a Network partition occurs, a distributed database cannot guarantee both Consistency (C) and Availability (A), and has to choose only one of them".
 
 > [!NOTE]
 > A **Network Partition** refers to a break in the network that prevents communication between nodes in a distributed system.
 
+CAP Theorem helps engineers understand the trade-offs when designing distributed systems.
+
 **CAP** stands for:
-1. **Consistency** (C): every read receives the most recent write (all nodes have the same data at any time)
-2. **Availability** (A): every request receives a response (may not be the most recent data)
-3. **Partition Tolerance** (P): system continues to operate even if communication between nodes is lost or delayed
+- Consistency
+- Availability
+- Partition Tolerance
 
 
-## Sacrificing Consistency (AP)
+## Consistency
 
-Sacrifice strong consistency during a partition to ensure the system always responds.
+Every read receives the most recent write or an error.
+
+All the clients see the same value at the same time regardless of which instance of the database they talk to.
+
+
+## Availability
+
+Every request receives a non-error response, without the guarantee that it contains the most recent write.
+
+Different clients may get different versions of a particular record. Some of them may be stale.
+
+
+## Partition Tolerance
+
+System continues to operate even if communication between nodes is lost or delayed
+
+
+## AC system (impossible)
+
+If we decide to have a distributed database, Network partitions can happen at any time, so we have to choose Partition Tolerance to allow the system to continue operating. 
+
+So AC systems are impossible. We have to choose to either drop Availability or Consistency.
+
+> [!CAUTION]
+> Some explanations tell you that you must pick two among Consistency, Availability, and Partition Tolerance. However, they are incorrect. In fact, in the theorem, Network Partitioning is assumed as a given condition you must accept, and your choice is only between consistency and availability.
+
+> [!INFO]
+> The only way to have a database that guarantees both availability and consistency is to let it run on only one computer (centralized database). But with a high amount of data and query volume, it cannot scale.
+
+
+## AP System (Sacrificing Consistency)
+
+Sacrifice strong consistency during a network partition to ensure the system always responds.
 
 The system continues to accept requests, but nodes cannot synchronize due to a network partition.
 
@@ -29,19 +61,11 @@ If the system keeps accepting writes, they have to be resynchronized in the futu
 > In real life, because of network latency, replication is not instantaneous, meaning some users may still see old data even no network failure.
 
 
-## Sacrificing Availability (CP)
+## CP System (Sacrificing Availability)
 
-Sacrifice availability during a partition to ensure all accessible data is consistent.
+Sacrifice availability during a network partition to ensure all accessible data is consistent.
 
-That means rejecting requests to remains consistent and partition tolerant (CP).
-
-
-## How about AC system?
-
-In theory, an AC system assumes that network partitions never happen, which is impossible in a distributed system. So CA systems are impossible.
-
-> [!CAUTION]
-> Some explanations tell you that you must pick two among Consistency, Availability, and Partition Tolerance. However, they are incorrect. In fact, in the theorem, Network Partitioning is assumed as a given condition you must accept, and your choice is only between consistency and availability.
+That means the system may return errors or reject requests during a network partition to remains consistent and partition tolerant (CP).
 
 
 ## Example

@@ -1,20 +1,26 @@
-# Indexes
+# Indexing
 
 ## Overview
 
-A database index is a data structure that improves the speed of data retrieval operations on a database table.
+Database indexing is a technique to improve the performance of database queries.
+
+It's done by creating a data structure called **Index** that allows faster access to data on a table.
 
 > [!TIP]
 > Think of it like an index in a book, which allows you to quickly find the page where a specific topic is discussed without having to read through the entire book.
 
-There are various types of indexes, such as single-column indexes, multi-column indexes, unique indexes, and full-text indexes.
+Indexes are useful for columns that are frequently searched or used in join operations.
 
 While indexes improve read performance, they can add overhead to write operations and require additional storage space.
 
-Indexes are particularly useful for columns that are frequently searched or used in join operations.
+Types of indexes:
+- Single-column indexes
+- Multi-column indexes
+- Unique indexes
+- Full-text indexes
 
 
-## Data Structure of Indexes
+## Data Structure
 
 A database index is typically implemented using one of the following data structures:
 
@@ -26,7 +32,7 @@ B-trees maintain sorted data and allow searches, sequential access, insertions, 
 
 Variants like B+ trees are also widely used, especially in databases like MySQL and PostgreSQL.
 
-![](./indexes/bptree.drawio.svg)
+![](./indexing/bptree.drawio.svg)
 
 A B+ tree has all the values in the leaves and the nodes hold the ranges. Leaf nodes are linked, allowing for efficient sequential access.
 

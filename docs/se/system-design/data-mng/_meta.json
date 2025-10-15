@@ -12,7 +12,7 @@
   "choosing-db",
   "transaction",
   "concurrency",
-  "indexes",
+  "indexing",
   "replication",
   {
     "name": "partitioning",
