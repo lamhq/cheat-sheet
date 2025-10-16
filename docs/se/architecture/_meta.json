@@ -1,5 +1,6 @@
 [
   "monolith",
+  "multi-tier",
   {
     "name": "microservices",
     "type": "dir",
