@@ -1,3 +1,4 @@
 [
-  "tumbling-window"
+  "tumbling-window",
+  "hopping-window"
 ]
