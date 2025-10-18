@@ -2,7 +2,7 @@
 
 ## Overview
 
-Command Query Responsibility Segregation (CQRS) is a design pattern that segregates read and write operations for a data store into separate data models.
+Command Query Responsibility Segregation (CQRS) is a design pattern that separates read and write operations for a data store into separate data models.
 
 This approach allows each model to be optimized independently and can improve the performance, scalability, and security of an application.
 
@@ -12,15 +12,6 @@ Read Database options:
 - Redis
 - Amazon DynamoDB
 - Amazon Cosmos DB
-
-
-## How it work?
-
-The application's code is divided into two distinct paths
-- The Command Path handles write operations, such as creating, updating, or deleting data
-- The Query Path handles read operations and is optimized for querying and displaying data to users
-
-![](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*TaPzEj91HM06UgZoajqGwA.png)
 
 
 ## Why CQRS?
@@ -36,6 +27,31 @@ Reads (Queries):
 - Need low latency
 - Involve complex joins and normalized data
 - Much higher volume
+
+
+## How it work?
+
+The application's code is divided into two distinct paths
+- The Command Path handles write operations, such as creating, updating, or deleting data
+- The Query Path handles read operations and is optimized for querying and displaying data to users
+
+![](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*TaPzEj91HM06UgZoajqGwA.png)
+
+
+## Synchronization
+
+Some techniques to synchronize the read and write models:
+
+1. Database Replication
+   - The read models share the same database technology and schema.
+   - You can use built-in database replication features to create read only replicas.
+   - Queries are directed to read replicas.
+2. Change Data Capture (CDC)
+   - CDC tools can monitor transaction log of the write database and automatically publish events for data changes, simplify application code.
+3. Event Sourcing
+   - The write model does not store the current state of the data, instead it stores a sequence of events that describe the changes to the data.
+   - The current state is derived by replaying events
+   - Ideal for buidling/updating Materialized Views
 
 
 ## Benefits
@@ -74,18 +90,32 @@ This pattern might not be suitable when:
 3. Use different database technologies if make sense
 
 
-## Synchronization Techniques
+## Example
 
-1. Database Replication
-   - The read models share the same database technology and schema.
-   - You can use built-in database replication features to create read only replicas.
-   - Queries are directed to read replicas.
-2. Change Data Capture (CDC)
-   - CDC tools can monitor transaction log of the write database and automatically publish events for data changes, simplify application code.
-3. Event Sourcing
-   - The write model does not store the current state of the data, instead it stores a sequence of events that describe the changes to the data.
-   - The current state is derived by replaying events
-   - Ideal for buidling/updating Materialized Views
+There's an e-commerce platform with:
+- Hundreds of thousands of products
+- Millions of users searching and leaving reviews daily
+
+There are two services:
+- **Product Service**: Manages product data (name, inventory, description, price)
+- **Review Service**: Manages user reviews and ratings
+
+Also, Product inventory and reviews are updated frequently.
+
+**Challenge**:
+
+- Users constantly search for products and expect to see Product details with Reviews and ratings.
+- Reading and combining data from two services every time a user searches is slow and inefficient.
+
+**Apply CQRS pattern**:
+
+1. Add a Product Search Service with its own database that stores the materialized view of Product and Review, optimized for fast reads.
+2. Product Search Service listens to events from both Product Service and Review Service to update its materialized view.
+3. When a user searches for "vacuum cleaner" or "shoes", the request goes only to the Product Search Service, results are returned quickly, with all relevant info, can support sorting/filtering easily.
+
+CQRS solving both:
+1. **Performance issues** from frequent reads and writes
+2. **Data joining complexity** across microservices
 
 
 ## References
