@@ -16,6 +16,97 @@ Analyzing an infinite stream of data is impossible. Instead, we breaks the strea
 
 Windows strategies for processing streams of events:
 - Tumbling Window
+- Hopping Window
+- Sliding Window
+- Session Window
+
+
+## Event Time
+
+For every event we can define three distinct timestamps:
+- Event Time
+- Arrival Time
+- Processing Time
+
+The timestamp to use to match events into windows depends on the use case.
+
+### Event Time
+
+- The moment the event actually occurred.
+- Embedded in the event’s payload.
+- Example: When a sensor captures temperature or location data.
+
+Use when:
+- You need precise timing for analysis or decision-making.
+- Events may arrive late or out of order.
+- The actual occurrence time is more meaningful than when the system receives it.
+
+Examples:
+- Stock market analysis (trade events)
+- User activity analytics (in mobile apps, web)
+
+
+### Arrival Time
+
+- When the event reaches the system or microservice.
+- Always later than the event time due to network delays, system load, or processing type (real-time vs batch).
+
+Use when:
+- Real-time actions like monitoring or alerting require immediate response (e.g., a rate-limiting service).
+- Event time is unavailable or unreliable.
+- The exact timing of the original event isn’t critical to your logic.
+
+### Processing Time
+- When the event is actually handled by the application code.
+- Usually very close to arrival time, unless the system is overloaded.
+
+
+## Handling Late Events
+
+Sometimes an event arrives after its window has closed, normally it will be discarded.
+
+To avoid losing valuable data, we add extra time (grace period) **after** the window ends and **before** finalizing results (performing the aggregation of events, publishing the results, and discarding the window).
+
+Late events that arrive within this grace period are still included.
+
+Once the grace period ends, the window is permanently closed and any further late events are discarded.
+
+
+### Watermark
+
+Grace Periods are too long can add unnecessary delay. But 
+too short can likely to lose valid events.
+
+To solve that we introduce a value called a watermark.
+
+A **watermark** is a threshold used to decide when to close a window based on event time, not arrival time.
+
+The system tracks the maximum event time seen so far.
+
+A window stays open as long as:
+
+```
+max event time - watermark < window end time
+```
+
+Late events are accepted if their event time fits within this condition—even if they arrive much later.
+
+**Example**:
+
+- Watermark = 10s, max event time = 00:59.
+- A late event with event time 00:57 still fits and is added to the old window.
+- Arrival time doesn’t matter.
+- Once an event arrives that pushes the condition beyond the window’s end, the window closes and results are published.
+
+**Pros**:
+
+- No need for a fixed grace period.
+- More flexible handling of out-of-order events.
+
+**Cons**:
+
+- Window closing time becomes unpredictable.
+- May delay result publication longer than expected.
 
 
 ## References
