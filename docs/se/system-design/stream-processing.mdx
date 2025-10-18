@@ -1,0 +1,18 @@
+# Stream Processing
+
+## Overview
+
+In today's systems, we often deal with infinite streams of events:
+- sensor data from IoT devices
+- payment notifications from credit card companies
+- user activity in web applications
+
+In many cases, to get meaningful insights, we need to aggregate and analyze a series of events instead of processing each event in isolation:
+- pattern recognition
+- rate limiting
+- recommendation service
+
+Analyzing an infinite stream of data is impossible. Instead, we breaks the stream into finite windows (e.g., 5-minute chunks).
+
+Windows strategies for processing streams of events:
+- Tumbling Window
