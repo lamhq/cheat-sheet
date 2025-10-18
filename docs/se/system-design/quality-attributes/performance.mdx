@@ -1,0 +1,37 @@
+# Performance
+
+Performance Metrics include Response Time & Throughput.
+
+## Response Time
+
+Response time is the time between a client sending a request and receiving a response. It includes:
+- **Processing Time**: time spent in our system actively process in the request and building/sending the response
+- **Waiting Time (Latency)**: duration of time request/response spends inactively in our system (time spent in network transit, gateway, in a queue waiting to be handled)
+
+We **define response time goals** using percentiles and tail latency (not in terms of average):
+- **Percentile**: The "xth percentile" is the value below which x% of the values can be found
+- **Tail Latency**: The small percentage of response times from a system, that take the longest in comparison to the rest of values (prefer short tail latency)
+
+_For example, 95% of response time should be under 30ms (allow 5% of requests take longer than 30ms)._
+
+We measure and validate our goals using percentile distributions.
+
+![](https://miro.medium.com/v2/resize:fit:1260/format:webp/1*NA9r9ryaVMuLyro6oucdAQ.png)
+
+
+## Throughput
+
+Throughput is either:
+- Amount of work performed by our system per unit of time, Measured in tasks per second
+- Amount of data processed by our system per unit of time. Measured in bits/second, Bytes/second, MBytes/second
+
+
+## Performance degradation
+
+Performance degradation point is where the response time starts to get significantly worse as the load increases.
+
+If we see that our system's performance degrades very quickly, it likely means that one or some of our resources are fully utilized (CPU, Memory, Disk, Network), and it can't keep up with the number of messages coming into our system.
+
+_In below example,the degradation point of our system is 10k requests/sec:_
+
+![](https://img-c.udemycdn.com/redactor/raw/quiz_question/2021-11-18_01-58-23-004657be0ba882956474be636ad0ac24.png)

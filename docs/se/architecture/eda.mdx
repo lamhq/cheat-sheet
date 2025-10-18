@@ -4,25 +4,27 @@
 
 Event-Driven Architectures (EDA) is an architecture paradigm where the flow and actions within a system are determined by the occurrence of specific events.
 
-It's is especially useful in distributed systems and applications that require scalability, responsiveness, and decoupled communication.
-
 EDA use asynchronous communication, leads to loosely coupled components.
 
 
 ## Components
 
-- Event: An immutable notification of a change in state, such as `OrderPlaced` or `UserRegistered`
-- Event Producer: Component that creates and publishes events; it shouldn't have knowledge of downstream consumers of the events
+An Event is an immutable statement of a fact or a change., such as `OrderPlaced` or `UserRegistered`.
+
+In an Event-Driven Architecture, we have three components:
+
+- Event Emitters/Producer: Component that creates and publishes events; it shouldn't have knowledge of downstream consumers of the events
 - Event Consumer: Component that consumes and processes based on events
-- Event Broker: Accepts events and either pushes to (or is pulled from by) consumers
+- Message Broker: Accepts events and either pushes to (or is pulled from by) consumers
 
 
 ## Benefits
 
-1. **Decoupling**. Publishers and subscribers are completely independent.
-2. **Scalability**. Publishers, subscribers, and brokers can scale independently.
-3. **Resilience**. If a subscriber down, events can be queued and retained for later processing.
+1. **Decoupling**. Services don't need to know about each other's API. All messages are exchanged asynchronously.
+2. **Scalability**. Services can scale independently. More services can be added to the system without any changes.
+3. **Resilience**. If a Consumer down, events can be queued and retained for later processing.
 4. **Responsiveness**. The publisher can quickly fire an event and move on, not waiting for downstream processing.
+5. **Support Real Time Stream Analysis**. EDA allows analyze streams of data, detect patterns, and act upon them in real time.
 
 
 ## Challenges
@@ -36,10 +38,10 @@ EDA use asynchronous communication, leads to loosely coupled components.
 ## Patterns
 
 There are several event-driven architecture patterns:
-1. Event notification: it's a notification that something has occurred
-2. Event-carried state transfer: similar to Event Notification but also contains the state
-3. Event sourcing: when every single change of state is a submitted event such that the events make up the state of the whole system
-4. Command and Query Responsibility Segregation (CQRS): a pattern to segregate reading and writing. The informational events are segregated from the actual commands to make changes
+1. [Event sourcing](../system-design/patterns/event-sourcing.mdx): when every single change of state is a submitted event such that the events make up the state of the whole system
+2. [CQRS](../system-design/patterns/cqrs.mdx): a pattern to segregate reading and writing. The informational events are segregated from the actual commands to make changes
+3. Event notification: it's a notification that something has occurred
+4. Event-carried state transfer: similar to Event Notification but also contains the state
 
 
 ## Communication types

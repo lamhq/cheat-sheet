@@ -1,0 +1,54 @@
+# Tumbling Window
+
+## Overview
+
+Consumers divide time into fixed, non-overlapping time buckets. 
+
+Each event in the stream fall into only one window
+
+Once the window closes, consumer aggregates those events and produces the result as a single event.
+
+The result can be a sum, an average summary, ... and can be emitted to another channel.
+
+![](https://www.geeknarrator.com/static/images/stream-processing/tumbling-windows.jpg)
+
+> [!NOTE]
+> The message broker is unaware of the concept of tumbling window. The consumer is fully responsible for buffering events.
+
+## Use Cases
+
+### Processing sensor data
+
+A tumbling window can be used to compute average sensor readings—like temperature or energy usage—over fixed intervals (e.g., 10 seconds).
+
+To improve accuracy, a trimmed mean technique can be used to discard outliers (e.g., top and bottom 10%), producing cleaner, more reliable data for downstream processing.
+
+
+### Log analysis
+
+We can use the tumbling window per hour to calculate error rates from production logs.
+
+Then if we detect that in a certain window the error rate exceeds some threshold, we can send an alert to notify engineers.
+
+
+### Daily Revenue Calculation
+
+In e-commerce systems, a 24-hour tumbling window can track seller revenue.
+
+At each window’s end, we produce the total revenue report for each seller, and send to them or calculate payouts.
+
+
+## Advantages
+
+1. **Simplicity**. Easy to implement and understand.
+2. **Efficiency**. Minimal memory usage since old data is discarded.
+3. **Clear Boundaries**. Each event belongs to one window only.
+4. **Ideal for Periodic Reporting**. Ideal for dashboards, alerts, and summaries.
+
+
+## Disadvantages
+
+1. **Low Granularity of results**. Insights only arrive at the end of each window.
+2. **Delayed Alerts**. Critical spikes (e.g., errors) may go unnoticed until the window closes.
+3. **Poor Pattern Detection**. Trends that span across windows may be missed.
+4. **Boundary Blindness**. Events split across windows can distort analysis (e.g., 11 errors split into 6 + 5 won't trigger a 10-error alert).

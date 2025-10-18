@@ -2,40 +2,79 @@
 
 ## Overview
 
-Remote procedure calls (RPC) is a technique that allows a program to execute a procedure on another computer over network as if it were a local procedure call.
+Remote procedure calls (RPC) is a technique that allows a program to execute a function on another computer as if it were a local function.
 
-There are different RPC implementations, such as SOAP and gRPC, which require an explicit schema.
+It abstracts away the complexity of network communication.
 
-RPC uses stubs to handle the communication between the client and server:
-- **client stub** sends the request to the server
-- **server stub** receives the request and executes the procedure
-
-**Schema** makes it easier to generate **client and server stubs** for different technology stacks. For example, a Java server and a .NET client.
-
-RPC technologies typically involve a serialization protocol that defines how data is serialized and deserialized.
-
-One of the main advantages of RPC is the ease of generating client-side code (due to its explicit schema), making it simpler for clients to interact with remote services.
-
-> [!NOTE]
-> gRPC uses the Protocol Buffers serialization format.
+RPC revolves more around actions and less around data/resources.
 
 
-## How RPC works
+## How it works
 
-1. The client calls a local stub procedure.
-2. The stub marshals (packs) the procedure parameters into a message.
-3. The message is sent over the network to the server.
-4. The server stub unmarshals (unpacks) the message and calls the actual procedure.
-5. The procedure executes on the server.
-6. The result is marshalled back into a message and sent to the client.
-7. The client stub unmarshals the result and returns it to the client program.
+### 1. **Interface Definition**
+- A special **Interface Description Language (IDL)** is used to define:
+  - The **API methods** (functions that can be called remotely)
+  - The **data types** used in those methods
+- This IDL acts like a **contract** between the client and server.
+
+### 2. **Code Generation**
+- The RPC framework uses the IDL to **auto-generate code**:
+  - **Client Stub**: Code that runs on the client side
+  - **Server Stub**: Code that runs on the server side
+- These stubs handle the **communication logic**, so developers only focus on the business logic.
+
+### 3. **Data Transfer Objects (DTOs)**
+- Custom data types defined in the IDL are compiled into **classes or structs**.
+- These are called **DTOs**, used to package and transfer data between client and server.
+
+---
+
+![](https://media.geeksforgeeks.org/wp-content/uploads/operating-system-remote-call-procedure-working.png)
+
+### 4. **Client-Side Invocation**
+- The client calls an RPC method.
+- The **client stub**:
+  - **Serializes** (encodes) the parameters (called **marshalling**)
+  - Sends the request to the server
+
+### 5. **Server-Side Execution**
+- The **server stub**:
+  - **Deserializes** (decodes) the incoming data
+  - Invokes the actual method on the server
+- After execution, the result is:
+  - **Serialized** by the server stub
+  - Sent back to the client
+
+### 6. **Client Receives Response**
+- The **client stub**:
+  - **Deserializes** the response
+  - Returns it to the caller as if it were a local function result
 
 
-## Challenges
+## Benefits
 
-1. **Technology Coupling**. Some RPC mechanisms are closely associated with a particular platform, which restricts the choice of technologies for both the client and server (for example, Java RMI ties both the client and server to the Java Virtual Machine).
-2. **Local calls are not like remote calls**. The cost of marshaling and unmarshaling payloads can be significant. Simply exposing a local API as a service boundary without careful consideration is likely to cause problems. Also, networks can fail, and data can be malformed.
-3. **Tighly coupled Client-Server**. Using an RPC mechanism with binary stub generation ties client and server deployments together. Any change, like adding or removing a field, requires regenerating client stubs—even if some clients don’t use the field. This can lead to lockstep releases.
+- **Easy to use** – Developers call remote methods like local ones.  
+- **Hidden complexity** – Networking and data handling are fully abstracted.  
+- **Consistent Error Handling** – Failures in the server result in an error or exception that can be handled like local method calls.
+- **Strong typing** – Auto-generated stubs and DTOs reduce bugs.  
+- **Faster development** – Less boilerplate, more focus on business logic.  
+
+
+## Drawbacks
+
+1. **Performance Issues**. Remote methods are slower than local ones because they involve network communication.
+   - To avoid blocking the client’s execution, API designers should offer asynchronous versions of slow methods.
+2. **Unreliable**. RPC involves communication over a network, which is **inherently unreliable**.
+   - Best Practice: Use Idempotent Operations to safely retry without changing the result.
+3. **Tighly coupled**. Any change requires regenerating client stubs. This can lead to lockstep releases.
+
+
+## Considerations
+
+RPC is a perfect choice for:
+- API provided to a different company instead of an end user app/web page
+- Communication between different components within a large system
+- Abstracting away the network communication and focusing only on the actions the client wants to perform
 
 
 ## gRPC
@@ -47,7 +86,7 @@ gRPC uses Protocol Buffers (protobufs) for defining service interfaces and encod
 gRPC use HTTP2 for transport, improve performance and lower latency.
 
 
-### Advantages
+### Benefits
 
 1. Better performance compared to REST APIs (by using protobufs and HTTP2)
 2. Supports authentication, including Transport Layer Security (TLS) and token-based authentication.
@@ -70,7 +109,7 @@ How it works:
 3. The generated code can be used to serialize and deserialize data.
 
 
-### Where to use it
+### Considerations
 
 gRPC is a good choice when:  
 - **You have control over both client and server implementations**: Since gRPC requires client-side code to be compiled against the server’s schema, it works best in environments where you manage both sides.  

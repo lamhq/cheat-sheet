@@ -13,19 +13,21 @@ Often transparent to client applications (they see a single logical database)
 
 ## Benefits
 
-1. **Scalability**: Distribute data and load across multiple servers (horizontal scaling for data)
+1. **Performance**: Queries can be performed in parallel, on smaller dataset
 2. **Availability**: Failure of one partition/server doesn't affect others
-3. **Performance**: Queries can operate on smaller data subsets; allow parallel processing across partitions
+3. **Scalability**: we can scale database to store more data (horizontal scaling)
 4. **Manageability**: Smaller partitions are easier to back up, index and maintain
-5. **Security**: Isolate sensitive data in specific partitions
+5. **Security**: We can isolate sensitive data in specific partitions
 
 
 ## Challenges
 
-1. **Complexity of maintainance**. Backup and recovery procedures become more difficult when dealing with multiple partitions.
-2. **Potential Wasted Space**. If partitions are not evenly distributed, some may be underutilized, leading to wasted storage.
-3. **Expensive Cross-Partition Queries**. Querying data from all partitions can be resource-intensive and slow.  
-4. **Difficulty Ensuring Uniqueness**. Maintaining unique constraints across partitions is more complex and error-prone.
+1. **Increased Complexity**.
+   - We need to route queries to the right shards
+   - Make sure neither of the shards become too large
+   - Backup and recovery become more difficult when dealing with multiple partitions.
+2. **Expensive Cross-Partition Queries**. Querying data from all partitions can be resource-intensive and slow.  
+3. **Difficulty Ensuring Uniqueness**. Maintaining unique constraints across partitions is more complex and error-prone.
 
 
 ## Types of Partitioning

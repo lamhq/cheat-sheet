@@ -1,0 +1,44 @@
+# API Gateway
+
+## Introduction
+
+An API Gateway is a service that sits in between the client and the collection of backend services.
+
+Instead of clients calling multiple services directly, they send one request to the API Gateway, which then handles everything behind the scenes.
+
+![](https://substackcdn.com/image/fetch/$s_!_ZNj!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fcb0c8192-4b1b-4834-b068-20d8cfb65050_1856x1412.png)
+
+The API Gateway uses the API composition pattern to compose multiple service APIs into a single unified API, allowing clients to send requests to just one endpoint.
+
+
+## Benefits
+
+1. **Making Seamless Internal Changes**. Enable modifying backend services without affecting external clients.
+2. **Centralized Security**. Consolidate **authentication**, **authorization**, **rate limiting**, **SSL termination** in one place.
+3. Enables **request routing**: clients send one request, and the gateway distributes it to multiple services and aggregates the responses.
+4. **Static content & Response Caching**: Frequently requested data can be served instantly without hitting backend services.
+5. **Monitoring & Alerting**.
+   - Get real time metrics about traffic patterns and system load.
+   - Triggers alerts for unusual spikes or drops in traffic.
+6. **Protocol Translation**. Converts between external and internal protocols (REST JSON to RPC or XML).
+
+
+## Best Practices
+
+1. **API Gateway shouldn't contain any business logic**. It should focus on **routing**, **security**, **monitoring**, and **composition**.
+2. **Avoid Single Point of Failure**. Since all traffic flows through the API Gateway, it must be **highly available**.
+3. **Prevent clients bypassing the gateway**. All external calls should go through the API Gateway.
+
+
+## API Gateway Solutions
+
+Open Source API Gateways:
+- **Netflix Zuul**: written in Java, provides dynamic routing, monitoring, resiliency, security, ...
+
+Cloud-Based API Gateways:
+- **Amazon API Gateway**: Supports RESTful APIs and WebSocket APIs 
+- **Google Cloud Platform**:
+   - **Google Cloud Platform API Gateway**: designed for serverless workloads on GCP.
+   - **Apigee**: build, manage, and secure APIs — for any use case, environment
+- **Microsoft Azure**: helps organizations publish APIs to external, partner, and internal developers 
+   

@@ -1,0 +1,43 @@
+# Sliding Window
+
+## Overview
+
+Consumers divide time into fixed time buckets (similar to the tumbling window), but every new event will start a new window.
+
+![](https://www.geeknarrator.com/static/images/stream-processing/sliding-windows.jpg)
+
+
+## Characteristics
+
+Unlike the hopping window strategy, the advanced interval between windows is dynamic and is aligned to events instead of fixed points in time.
+
+The strategy is great when events arrive at irregular intervals:
+- if we have frequent events, we will have many overlapping windows
+- if we have a low volume of events, we will have fewer windows
+
+
+## Advantages
+
+- **Real-time monitoring**: excellent for detecting patterns and anomalies as they happen.
+- **Flexible advance interval**: Unlike hopping windows, sliding windows move forward based on event timing, not fixed intervals.
+- **High responsiveness**: The window advances as frequently as new events arrive, ensuring no delay in analysis.
+
+
+## Disadvantages
+
+- **High resource cost**. The number of windows is directly correlated to the number of events. when the volume of events is high, the memory footprint and complexity can become quite significant.
+
+
+## Use Cases
+
+### Fraud detection
+
+Assume that we have a rule that detects fraud by flagging any credit card used over 10 times in one minute. If triggered, it freezes the account and sends alerts to the cardholder.
+
+Using a sliding window, each event starts a new 1-minute window; once it ends, results are computed and alerts triggered if the threshold is exceeded.
+
+### API rate limiting and throttling
+
+Each request triggers an event to the message broker, which is processed by a rate limiting service that uses a sliding window to track usage per user or client.
+
+If a quota is exceeded, the system blocks further requests and returns a "too many requests" response—helping prevent DDoS attacks and ensuring fair access.

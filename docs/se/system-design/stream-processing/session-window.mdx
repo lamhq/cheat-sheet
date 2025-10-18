@@ -1,0 +1,55 @@
+# Session Window
+
+## Overview
+
+Consumers start a window when a particular type of event happen (e.g., user login) and closes after a period of inactivity or a particular event (e.g., user logout).
+
+![](https://www.geeknarrator.com/static/images/stream-processing/session-windows.jpg)
+
+
+## Characteristics
+
+The size of the window is dynamic and is determined based on the time between the first event and the last event in the session.
+
+Windows are always created per user, key, device ID, etc.
+
+Each user will have no more than one active session window open at any given moment.
+
+
+## Use Cases
+
+### IOT
+
+Session windows are ideal for IoT scenarios like autonomous vacuum cleaners, which emit sensor data (location, temperature, or amount of dust) during sessions.
+
+They help detect patterns like decreased efficiency, increased energy consumption, allow us to suggest maintenance to the users.
+
+### Driving & Navigation
+
+Navigation apps use session windows to track driving activity. 
+
+Each session starts when movement begins and ends with inactivity (location not change) or app closure.
+
+Location and speed data are sent to the cloud to optimize routes and reduce congestion for other drivers.
+
+
+## Benefits
+
+1. **Great for real-time user analytics**. Ideal for tracking behavior in apps or services.
+2. **Dynamic window size**: Events are grouped based on actual activity, not fixed time intervals.
+3. **Efficient processing**: Each event belongs to only one session window, avoiding redundant computation (unlike hopping or sliding windows where events may be processed multiple times).
+
+
+## Challenges
+
+1. **Defining the Inactivity Threshold**
+   - **Too short**: May close a session prematurely (e.g., user pauses briefly or switches tabs).
+   - **Too long**: Keeps sessions open unnecessarily, increasing memory usage.
+   - Human behavior is unpredictable, so it's hard to know when a session truly ends.
+2. **Managing Many Windows**
+   - Each session window is tied to a specific user or event key.
+   - High user volume or long sessions (e.g., video streaming, navigation apps) can lead to many active windows, straining system resources.
+
+**Mitigation Strategy**:
+- Use multiple consumer instances, each handling a subset of users or event keys.
+- Continuously monitor CPU and memory usage to scale up or down the number of instances based on demand to optimize performance and resource efficiency.

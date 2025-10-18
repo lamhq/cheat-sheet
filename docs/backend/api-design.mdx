@@ -1,0 +1,71 @@
+# API Design
+
+## Best Practices
+
+### Encapsulation
+
+Hide the internal design, business logic, implementation of your system from API users.
+
+This allows changing API's internal implementation without affecting external users.
+
+
+### Easy to Use
+
+API need to be easy to use, easy to understand and impossible to misuse accidentally or on purpose.
+
+The ways to make an API simple can be:
+
+- Only one way to get certain data/perform a task
+- Descriptive names for actions and resources
+- Exposing only the information and actions that users need
+- Keeping things consistent all across our API
+
+
+### Idempotent
+
+Keep the operations idempotent as much as possible.
+
+An idempotent operation is an operation that doesn't have any additional effect on the result if it's performed more than once.
+
+For example:
+- updating the user's address to a new address is an idempotent operation.
+- incrementing a user's balance by $100 is not an idempotent operation
+
+In networked systems, messages can be lost or duplicated. Idempotency ensures safe retries without unintended effects.
+
+
+### API Pagination
+
+Pagination is an important API feature for scenario when the response from system to the client request contains a very large payload or dataset.
+
+Without pagination most client applications will:
+- Not be able to handle big responses
+- Result in a poor user experience
+
+Pagination allows the client:
+- To request only a small segment of the response
+- Specify the maximum size of each response from our system
+- Specify an offset within the overall dataset. To receive the next segment we increment the offset
+
+
+### Asynchronous Operations
+
+This applies to operations need to return one big result at the end, nothing can be provided before the entire operation finishes
+
+Examples:
+- Running a big report requiring our system to talk to many
+databases
+- Big data analysis that scans a lot of records/log files
+
+With an asynchronous API, a client application receives a response immediately without having to wait for the final result.
+
+That response includes some kind of identifier that allows:
+- Tracking the progress and status of the operation
+- Receiving the final result
+
+
+### Versioning
+
+Versioning allow making non-backward compatible API changes.
+
+It works by explicitly maintaining two versions of the API at the same time and deprecate the older one gradually.

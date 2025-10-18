@@ -50,6 +50,7 @@
     "type": "dir",
     "collapsed": true
   },
+  "api-design",
   {
     "name": "graphql",
     "type": "dir",

@@ -2,20 +2,24 @@
 
 ## Overview
 
-A message broker acts as an intermediary that facilitates communication between different applications, systems, or services.
+A message broker is a software that routes messages between different applications, helping them communicate reliably and asynchronously.
 
-A message is a generic concept that defines the thing that a message broker sends. A message could contain a request, a response, or an event.
+Message brokers are the fundamental building block for any type of asynchronous software architecture.
 
-Message brokers facilitate asynchronous communication between microservices. Instead of directly interacting with another microservice, a microservice sends a message to the message broker, it then delivery the message to the appropriate consumer.
 
-Brokers may provide **queues** and **topics**.
+## Features
 
-Popular message brokers:
-- Kafka
-- RabbitMQ
-- ActiveMQ
-- Amazon SNS, EventBridge
-- Kinesis (AWS)
+Message brokers may provide **queues** and **topics**.
+
+Message brokers provide capabilities that can be useful for asynchronous communication:
+1. **Guaranteed Delivery**: Brokers ensure messages are reliably delivered to their destination, even if the downstream service is temporarily unavailable. They store messages in a durable manner until they can be processed.
+2. **Message Order Guarantee**: Most brokers ensures that messages are delivered in the same order they were sent.
+3. **Transactions on Write**: allow to write data to multiple topics in a single transactionn (e.g., Kafka).
+4. **Read Transactionality**: prevents message loss in case the consumer fail to process it.
+5. **Exactly-Once Delivery**: Guarantees that messages are delivered only once without duplication.
+
+> [!CAUTION]
+> While brokers may guarantee exactly once delivery, it is still recommended to design consumers to gracefully handle potential duplicate messages.
 
 
 ## Consumers
@@ -59,12 +63,24 @@ If multiple consumer groups subscribe to a topic, within each consumer group, on
 
 ## Benefits
 
-Message brokers provide capabilities that can be useful for asynchronous communication:
-1. **Guaranteed Delivery**: Brokers ensure messages are reliably delivered to their destination, even if the downstream service is temporarily unavailable. They store messages in a durable manner until they can be processed.
-1. **Message Order Guarantee**: Most brokers ensures that messages are delivered in the same order they were sent.
-2. **Transactions on Write**: allow to write data to multiple topics in a single transactionn (e.g., Kafka).
-3. **Read Transactionality**: prevents message loss in case the consumer fail to process it.
-4. **Exactly-Once Delivery**: Guarantees that messages are delivered only once without duplication.
+Message brokers provide Quality Attributes:
+1. **Fault Tolerance**:
+   - It allows different services to communicate with each other while some of them may be unavailable temporarily
+   - Message brokers prevent messages from being lost
+2. **Availability & Scalability**:
+   - A message broker can queue up messages when there is a traffic spike. It allows system to scale to high traffic without modification
 
-> [!CAUTION]
-> While brokers may guarantee exactly once delivery, it is still recommended to design consumers to gracefully handle potential duplicate messages.
+
+## Message Brokers Solutions
+
+Open Source Message Brokers:
+- **Apache Kafka**. Most popular. Apache Kafka is a distributed event streaming platform for high-performance data pipelines, streaming analytics, data integration, and mission-critical applications.
+- **RabbitMQ**. It is used worldwide at small startups and large enterprises.
+
+Cloud Based Message Brokers:
+- **Amazon Simple Queue Service (SQS)**. Message queuing service.
+- **Google Cloud Pub/Sub**. Publisher/Subscriber and message queue solutions.
+- **Microsoft Azure**:
+   - **Service Bus**. message broker with message queues and publish-subscribe topics.
+   - **Event Hubs**. real-time data ingestion service. Allows streaming millions of events per second from any source. Integrates seamlessly with Apache Kafka clients. A perfect solution for Big Data.
+   - **Event Grid**. serverless event delivery system at a massive scale. It uses the publish-subscribe model.

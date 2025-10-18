@@ -1,0 +1,60 @@
+# Availability
+
+## Overview
+
+Availability is the system's ability to operate continuously without significant downtime.
+
+
+## Formulars
+
+Availability is defined as the fraction of time/probability that our service is operationally functional and accessible to the user:
+
+**Availability (%) = Uptime / (Uptime + Downtime)**
+
+- Uptime: The time that our system is operationally functional and accessible to the user
+- Downtime: The time that our system is unavailable to the user
+
+---
+
+Availability can also be defined as:
+
+**Availability = MTBF / (MTBF + MTTR)**
+
+- MTBF (Mean Time Between Failures): the average time our system is operational
+- MTTR (Mean Time to Recovery): the average downtime of the system (to detect & recover from a failure)
+
+This formula is more statistical and more useful for availability estimation rather than measurement.
+
+
+## How much is High Availability?
+
+Availability is measured as a percentage.
+
+100% means a service that has 0 downtime.
+
+Industry standard (set by cloud vendors) is typically 99.9% or higher.
+
+List of availability numbers and expected downtime:
+
+| Availability | Daily Downtime | Weekly Downtime | Monthly Downtime | Annual Downtime |
+|--------------|----------------|-----------------|------------------|-----------------|
+| 90%          | 2h 24m       | 16h 48m       | 3d              | 36d 12h       |
+| 95%          | 1h 12m       | 8h 24m        | 1d 12h         | 18d 6h        |
+| 99%          | 14m 24s      | 1h 40m 48s   | 7h 18m         | 3d 15h 36m   |
+| 99.9%        | 1m 26s       | 10m 5s        | 43m 12s        | 8h 45m 36ås   |
+
+Availability is often described by the number of nines in its digits. The more the nines, the better:
+- 99.9% = 3 nines
+- 99.99% = 4 nines
+- 99.999% = 5 nines
+
+
+## Techniques
+
+Techniques for achieving High Availability:
+
+- Redundant Hardware: Duplicating servers, network devices, and other hardware components.
+- Data Replication: Replicating data across multiple locations to ensure that it remains available even if one location fails.
+- Load Balancing: Distributing traffic across multiple servers to prevent any single server from becoming overloaded.
+- Failover Mechanisms: Automating the process of switching to redundant systems in the event of a failure.
+- Monitoring and Alerting: Continuously monitoring system health and alerting administrators to potential problems.
