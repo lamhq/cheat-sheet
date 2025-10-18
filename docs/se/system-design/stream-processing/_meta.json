@@ -1,4 +1,6 @@
 [
   "tumbling-window",
-  "hopping-window"
+  "hopping-window",
+  "sliding-window",
+  "session-window"
 ]
