@@ -1,6 +1,6 @@
 # Stream Processing
 
-## Overview
+## Introduction
 
 In today's systems, we often deal with infinite streams of events:
 - sensor data from IoT devices
@@ -107,6 +107,39 @@ Late events are accepted if their event time fits within this condition—even i
 
 - Window closing time becomes unpredictable.
 - May delay result publication longer than expected.
+
+
+## Technologies
+
+Event Stream Processing Technologies:
+
+### Apache Kafka Streams
+
+Client library (Java and Scala) for building applications and microservices that process continuous streams of records coming through the Kafka message broker.
+
+It supports:
+- Per record, real-time processing
+- Stateful and processing using Windows Strategies (Tumbling, Hopping, Sliding, Session)
+
+
+### Apache Flink
+
+Apache Flink is a framework and distributed processing engine for building scalable streaming ETL, analytics, and event-driven applications. 
+
+It is specifically designed for stateful computations of bounded and unbounded streams of events.
+
+Apache Flink can:
+- Be used as a distributed system that requires effective allocation and management of computing resources using Hadoop YARN or Kubernetes.
+- Run as a standalone distributed cluster
+- Used as a client library for building microservices
+
+### Azure Stream Analytics
+
+Azure Stream Analytics is a real-time analytics service that enables you to process and analyze streaming data from various sources.
+
+It's a fully managed, serverless service that uses a SQL-like query language to process data streams using windows.
+
+Support Windows Strategies (Tumbling, Hopping, Sliding, Session).
 
 
 ## References
