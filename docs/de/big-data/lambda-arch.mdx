@@ -1,0 +1,103 @@
+# Lambda Architecture
+
+## Introduction
+
+Lambda Architecture takes advantage of batch and real-time processing to balance between:
+- fault tolerance, deep analysis, accuracy from batch processing
+- low-latency from real time processing
+
+Ideal when making this decision between real time processing and batch processing is very hard because we need the properties of both strategies.
+
+
+## Use Cases
+
+### Ads Management System
+
+In the ad industry, advertisers (e.g., event promoters or online stores) pay website owners to display ads. When users view or click ads, the advertiser pays a fee.
+
+Our system acts as a middleman—matching advertisers with publishers and delivering relevant ads when users visit websites. This is the **synchronous part**.
+
+The **asynchronous part** begins when we collect three types of events:
+1. Ad viewed
+2. Ad clicked
+3. Purchase made
+
+These events are processed by both the **batch layer** (for deep, historical analysis) and the **speed layer** (for real-time insights). After that, it will be ready to be queried by the serving layer.
+
+The serving layer may get different types of queries, which will require different parts of our big data processing system:
+- **Current ad view count** → handled by the speed layer.
+- **Total ads shown in 24 hours** → if the batch layer processes incoming events every 2 hours, the query will have to merge data from 2 hours from the speed layer + 22 from the batch layer.
+- **Return on investment** → requires batch layer to track long-term user behavior across multiple sites and timeframes.
+
+A user might see the same ad across sites for weeks before clicking or buying, so we use batch layer analytics to track long-term behavior and provide insights to advertisers.
+
+
+### Log/Metrics Analysis Service
+
+We use a system to analyze logs and metrics from thousands of servers in real time, giving engineers immediate visibility to respond to issues (real time processing).
+
+In addition, If a new feature affects performance, we need to compare real-time metrics with historical data from past weeks or months.
+
+For anomaly detection, the system must access both real-time and historical data to spot unusual behavior.
+
+
+### Ride Sharing Service
+
+A ride-sharing service needs both real-time and batch processing:
+- real-time data to match drivers and riders instantly base on location
+- historical data to identify demand patterns (peak hours, hot locations) and optimize driver distribution.
+
+
+## Architecture
+
+In Lambda architecture, the infrastructure is divided into three layers:
+- Batch layer
+- Speed layer
+- Serving layer
+
+Data that comes into our system is dispatched both into the batch layer and the speed layer simultaneously.
+
+### Batch Layer
+
+The batch layer is designed to handle large-scale data processing with high accuracy.
+
+It works with historical data, ideal for deep analysis. It performs two key functions:
+
+1. Data Management:
+   - Acts as the system of record: stores all raw data in an immutable format (data is only added, never changed).
+   - Uses distributed file systems (like HDFS or cloud storage) optimized for storing huge datasets.
+2. Precomputed Views:
+   - Periodically runs batch jobs that process the entire dataset.
+   - These jobs can clean, correct, or duplicate raw data.
+   - Results are stored in a read-only database, replacing previous views.
+   - Focuses on perfect accuracy, not speed.
+
+
+### Speed Layer
+
+The speed layer handle real-time data.
+
+How It Works:
+1. Incoming data is sent to a queue or message broker (like Kafka).
+2. A processing job picks up each event as it arrives.
+3. It quickly analyzes the event and updates a real-time view that users can query instantly.
+
+Purposes:
+- **Compensates for batch latency**: Since batch jobs run periodically, the speed layer fills the gap between now and the last batch run.
+- **Handles recent data only**: It doesn’t process historical data or perform deep corrections.
+- **Provides fast but partial insights**: It’s designed for responsiveness, not completeness.
+
+
+### Serving Layer
+
+The serving layer is designed to handle user queries.
+
+It responds to ad hoc queries (spontaneous or custom data request).
+
+It merges data from both:
+  - The batch layer (accurate, historical data)
+  - The speed layer (fresh, real-time data)
+
+By combining both sources, the serving layer ensures that queries reflect:
+- Long-term trends from batch processing
+- Recent updates from real-time events
