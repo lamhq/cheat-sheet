@@ -1,12 +1,12 @@
 [
   "web-app",
   {
-    "name": "taxi-app",
+    "name": "uber",
     "type": "dir",
     "collapsed": true
   },
   {
-    "name": "chat",
+    "name": "whatsapp",
     "type": "dir",
     "collapsed": true
   }
