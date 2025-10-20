@@ -1,0 +1,76 @@
+# Big Data Processing Strategies
+
+To process real-time data from various sources, there're two processing strategies.
+
+## Batch Processing
+
+Batch processing is a strategy for handling large volumes of data by collecting and storing it first, then processing it in groups (or "batches") at scheduled intervals.
+
+### How It Works
+
+1. Incoming data is stored in a distributed file system or database. It’s append-only—never modified.
+2. Jobs run periodically (e.g., hourly, daily, monthly) or based on a set number of records.
+3. You write the logic for each job, and it can be updated anytime.
+4. Each run analyzes new data and produces a fresh, queryable view of the dataset.
+
+### Use Case 1: Online Learning Platform
+
+Imagine an online learning platform with millions of students and thousands of video courses. As students watch and rate courses, we receive two types of events: viewing progress and course reviews. With around a million events per minute, this qualifies as big data.
+
+Instead of processing in real time, we use batch processing to analyze historical data. This lets us:
+
+- Compensate instructors based on content consumption.
+- Recalculate course ratings daily, weighting reviews by how much of the course was watched.
+- Rank courses by both engagement and rating.
+- Train machine learning models to recommend courses to students based on their behavior.
+
+
+### 🔍 Use Case 2: Search Engines
+
+Search engines are a classic example of batch processing.
+
+Instead of scanning the entire web for each query (which would be too slow), they periodically crawl and index massive amounts of data like websites and images.
+
+Since real-time updates aren't essential, this scheduled, large-scale processing is ideal for batch jobs.
+
+
+### Advantages
+
+- **Simplicity**: Easy to implement since there's no need to handle data instantly, latency isn’t a concern.
+- **High Availability**: Users can still access the previous data view while a new batch job is running, ensuring no downtime.
+- **Efficiency**: Processing data in bulk is generally faster and more resource-friendly than handling each record individually.
+- **Fault Tolerance**: Mistakes (like buggy code) are less risky because the raw data remains intact. You can fix the issue and rerun the job.
+- **Advanced Analysis**: Enables deep, historical data analysis—ideal for building predictive models and extracting long-term insights.
+
+
+### Disadvantages
+
+- **Delay in Processing**. There's a significant delay between when data enters the system and when results are produced.
+- **No real-time insights and reaction**: If jobs run hourly or daily, you can't see what's happening in the moment and respond quickly to issues or user actions.
+- **User Confusion**: If users aren't aware that data is processed in batches, they might not understand why changes aren't reflected immediately.
+
+Batch Processing is not suitable for systems require instant data processing:
+- **Monitoring systems**: Engineers need real-time logs and metrics to troubleshoot production issues.
+- **Stock trading platforms**: Trades must be matched and prices updated instantly to reflect market activity.
+
+
+## Real-Time Processing
+
+Real-time processing is a method of handling data immediately as it arrives.
+
+Each incoming event is placed into a queue or message broker (like Kafka or RabbitMQ), and then processed one by one by a job running on the other end.
+
+Once processed, the data is stored in a database that supports instant querying and visualization, allowing users to see and act on the data right away.
+
+### Advantages
+
+- **Immediate response**: You can analyze and react to data the moment it enters the system.
+- **No waiting**: Unlike batch jobs that run hourly or daily, real-time systems provide instant feedback.
+- **Better user experience**: Users see the results of their actions right away, which is crucial for interactive platforms.
+
+### Disadvantages
+
+- **Limited analytical depth**: Complex computations and deep insights are harder to perform in real time.
+- **No historical context**: It's difficult to combine or compare data from different time periods.
+- **Data fusion challenges**: Merging events from various sources or timeframes is nearly impossible on-the-fly.
+- **Short-term focus**: Insights are based only on the most recent data, which may miss broader trends or patterns.
