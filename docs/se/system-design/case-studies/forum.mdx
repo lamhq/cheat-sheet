@@ -1,0 +1,42 @@
+# Discussion Forum
+
+## Overview
+
+Design and architect a highly scalable public discussion forum (Reddit, Quora, Stack Overflow, etc.), where people can:
+- post questions or news
+- comment on existing posts
+- upvote or downvote posts or comments
+- get a feed of the most popular posts
+
+
+## Functional Requirements
+
+Example questions that capture the functional requirements:
+
+- Can anyone post or view posts/comments?
+- What can a post contain? (text/images/video)
+- What is the meaning of "most popular posts"?
+- What is the structure of comments? (flat list vs tree)
+
+Let's assume the following functional requirements:
+
+1. A user can signup and login to post, vote, or comment.
+2. A user should be able to create a new post that contains a
+   - Title
+   - Topic tags
+   - Body (text or uploaded images)
+3. A user should be able to comment on any existing post.
+4. Comments are ordered chronologically as a flat list.
+5. User can to delete their own post or comment
+6. Logged-in user can upvote/downvote an existing post/comment.
+7. Present the top most popular posts in the last 24 hours on the homepages
+8. Popularity = Upvotes - Downvotes (for posts happened in the last 24 hours)
+
+
+## Non-functional requirements
+
+1. **Scalability**: millions of daily users
+2. **Performance**: Less than 500 ms Response Time
+3. **Fault Tolerance & High Availability**: 99.9%
+4. **Availability + Partition Tolerance**: prefer AP over CP. It's okay if users see slightly outdated data, as long as the system stays responsive and reliable.
+5. **Durability**: Data such as users, posts, comments, and votes must be safely stored and never lost—unless intentionally deleted.

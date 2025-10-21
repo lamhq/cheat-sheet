@@ -51,6 +51,7 @@
     "collapsed": true
   },
   "api-design",
+  "rest",
   {
     "name": "graphql",
     "type": "dir",
