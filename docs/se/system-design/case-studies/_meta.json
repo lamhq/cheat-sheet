@@ -9,5 +9,10 @@
     "name": "chat",
     "type": "dir",
     "collapsed": true
+  },
+  {
+    "name": "forum",
+    "type": "dir",
+    "collapsed": true
   }
 ]

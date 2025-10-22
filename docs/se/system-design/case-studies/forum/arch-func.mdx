@@ -1,0 +1,123 @@
+# Architecture (Functional)
+
+Design an architecture that addressing functional requirements only.
+
+## Architecture Diagram
+
+Since we're designing for scale, we'll follow a service or microservice architecture style.
+
+![](./arch-func.drawio.svg)
+
+
+## Web App Service
+
+The Web App Service serves dynamic content (HTML) to the user's devices (web browser).
+
+
+## Object Storage
+
+The Object Storage stores:
+
+- images that users upload as part of their posts
+- static assets (CSS, JavaScript, images, etc.) for the web app
+
+**How it works**:
+1. When a user creates a post, they first upload the image to the object store.
+2. The object store returns a URL pointing to the uploaded image.
+3. That URL is then embedded in the post content (usually in markdown format).
+4. The post content, including the image URL, is sent to the Post Service, which stores it in the database.
+
+
+## User Service
+
+The User Service handles user-related operations (sign-up, log-in).
+
+All the API calls to sign up and log in will go to this service.
+
+The service will use a SQL database to store user information because:
+- It's suite for tabular data
+- We want to enforce data consistency (through constraints like Unique Field, Foreign keys, Not-null fields)
+- ACID Compliance is required to support critical operations (login, sign-up).
+
+Data includes:
+- User credentials (like email or username)
+- A secure version of their password (typically hashed and salted)
+
+
+## Post Service
+
+The Post Service handles all operations related to creating and deleting posts.
+
+Since the goal is scalability and flexibility, this service uses a NoSQL database:
+- Posts may have varying structures (e.g., different fields, embedded media, tags).
+- NoSQL allows storing arrays (like topic tags) directly within the post document.
+- It's better suited for high-volume, read-heavy applications like social platforms.
+
+Each post includes:
+- A unique post ID
+- Title
+- Body
+- A reference to the user ID who wrote it
+- An array of topic tags
+
+When a user wants to delete a post, the service checks if the logged in user ID matches the ID of the original author before deleting the post from the database.
+
+
+## Comment Service
+
+The Comments Service allow users to:
+- comment on posts
+- update/delete their comments
+
+Since **comments** have very similar in structure to posts, to keep things simple, it's combined with the Post Service into a single microservice.
+
+Comments are stored in a new collection in the same database with the posts.
+
+Each comment record includes:
+- A unique comment ID
+- The comment text
+- A reference to the user ID who wrote it
+- A reference to the post ID it belongs to
+
+
+## Vote Service
+
+The Vote Service handles upvotes and downvotes on posts and comments.
+
+Votes are handled in a separate service with its own database, because:
+- Storing just counters in the Post and Comment collections isn't enough to prevent users from voting multiple times.
+- It allows calculating votes within a specific time window (e.g., last 24 hours).
+
+Each vote entry includes:
+- **User ID**: Who cast the vote
+- **Post or Comment ID**: What the vote is for
+- **Vote value**: `+1` for upvote, `-1` for downvote
+- **Timestamp**: When the vote was cast or updated
+
+When a user votes:
+- The request goes to the **Vote Service**.
+- The service checks if the user already voted on that item to approve or reject the vote.
+
+The Vote Service uses the Sliding Time Window techinque to count votes within a moving 24-hour window, allow for features like **getting the most recent popular posts** (every second, the window shifts forward, dropping older votes).
+
+
+## Ranking Service
+
+The Ranking Service generates a newsfeed of the most popular posts based on their voting activity in the last 24 hours.
+
+The data is pulled from the Post Service and Vote Service, aggregated and sorted by popularity. Stored in a read optimized database for fast access.
+
+The Ranking Service runs periodically (e.g., every 10, 30, or 60 minutes). Each run:
+1. Requests **recent votes** from the Vote Service
+2. **Sums up** votes per post
+3. **Sorts** posts by popularity
+4. Fetches **post content** from the Posts Service
+5. Stores the **sorted list** in its own database
+
+> [!INFO]
+> 
+> _Why Not Real-Time Ranking?_
+> 
+> Real-time ranking is computationally expensive.
+> But the system doesn't need perfect accuracy at all times.
+> So it uses batch processing instead.

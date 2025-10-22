@@ -6,16 +6,12 @@ Representational State Transfer
 
 Designing a REST API from functional requirements:
 
-1. **Identifying Entities** (resources). Examples: `users`, `posts`, `comments`, `votes`
+1. **Identifying Entities** (resources). Examples: `users`, `posts`, `comments`
 2. **Mapping Entities to URIs**. Examples:
-   - `/users`
-   - `/users/{id}`
    - `/posts`
    - `/posts/{id}`
    - `/posts/{id}/comments`
    - `/posts/{id}/comments/{comment-id}`
-   - `/posts/{id}/vote`
-   - `/posts/{id}/comments/{comment-id}/vote`
 3. **Defining Resources Representations**. Examples:
    - `GET /posts/{post-id}`:
      ```
