@@ -1,0 +1,92 @@
+# Fault Tolerance
+
+## Overview
+
+Failures are inevitable in any system.
+
+Fault Tolerance enables our system to remain operational and available to the users despite failures within one or multiple of its components.
+
+When failures happen a fault-tolerant system will:
+- Continue operating at the same/reduced level of performance
+- Prevent the system from becoming unavailable
+
+Fault Tolerance is the best way to achieve High Availability.
+
+Fault Tolerance revolves around 3 major tactics:
+- Failure Prevention
+- Failure Detection and Isolation
+- Recovery
+
+
+## Failure Prevention
+
+To prevent the system from going down, we need to eliminate any Single Point of Failure (SPoF) in the system
+
+> [!INFO]
+> 
+> SPoF can be:
+> - Running our application on one server
+> - Storing all data of database on a single computer
+
+The best way to eliminate SPoF is through **Replication** and **Redundancy**:
+- **Database Replication**: Running replicas of database containing the same data on multiple servers. Losing any of those replicas will not cause losing data.
+- **Spatial Redundancy**: Running multiple instances of our application on different servers. If one server goes down, direct network traffic to the other servers instead.
+- **Time Redundancy**: Repeating the same operation/request multiple times until we succeed/give up
+
+Two strategies for Redundancy & Replication:
+- Active-Active Architecture
+- Active-Passive Architecture
+
+### Active-Active
+
+All replicas (copies of the system or database) are active and handle requests simultaneously.
+
+**Benefits**:
+- **High availability**: If one replica fails, others can instantly take over.
+- **Horizontal scalability**: Load is distributed across all replicas, improving performance.
+
+**Challenges**:
+- **Synchronization overhead**: All replicas must stay in sync, which requires complex coordination and can introduce latency or consistency issues.
+
+
+### Active-Passive
+
+One primary replica handles all requests, while passive replicas stay updated by periodically syncing with the primary.
+
+**Benefits**:
+- **Simpler implementation**: Easier to manage since there's a clear leader and followers.
+- **Reliable failover**: If the primary fails, a passive replica can be promoted to take over.
+
+**Limitations**:
+- **Limited scalability**: All traffic goes to one machine, which can become a bottleneck.
+
+
+## Failure Detection & Isolation
+
+Detect faulty instances and stop routing requests to them.
+
+To achieve this, systems rely on the monitoring service that continuously check the health of each instance.
+
+Common monitoring methods are:
+- **Health Checks**: The monitoring service sends periodic requests (pings) to each instance. If an instance fails to respond within a set time, it's marked as unhealthy.
+- **Heartbeats**: Each healthy instance sends regular heartbeat signals to the monitoring service. If a heartbeat is missed for a certain duration, the instance is assumed to be down.
+
+Beyond basic pings and heartbeats, monitoring systems can use more sophisticated metrics:
+- **Error Rate**: If a server logs an unusually high number of exceptions or errors, it may be failing.
+- **Response Time**: If a server becomes significantly slower, it may be degraded or overloaded.
+
+It's important to avoid **False Negative** where a failed server is not detected that it may continue receiving traffic and cause errors.
+
+
+## Recovery from Failure
+
+Regardless of system failure rate, if we can detect and recover from each failure faster than user can notice, then our system will have high availability.
+
+Actions to take after detecting faulty instance:
+1. **Stop routing traffic** to that host
+2. **Restart the host** to make the problem go away
+   - Assumes the issue may be transient
+   - Often effective for short-lived failures.
+3. **Rollback** to a stable version
+   - Database rollback: when we get to a state violating some condition/data, we can roll back to the last correct state
+   - Software rollback: If a new version causes errors, we can roll back to the previous version

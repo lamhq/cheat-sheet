@@ -11,8 +11,7 @@
   {
     "name": "architecture",
     "type": "dir",
-    "collapsed": true,
-    "label": "Software Architecture"
+    "collapsed": true
   },
   {
     "name": "development",

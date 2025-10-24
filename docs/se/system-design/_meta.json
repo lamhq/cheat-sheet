@@ -1,9 +1,11 @@
 [
-  "principles",
   {
-    "name": "concepts",
+    "name": "requirements",
+    "label": "Requirements"
+  },
+  {
+    "name": "quality-attributes",
     "type": "dir",
-    "label": "Concepts",
     "collapsed": true
   },
   {
@@ -11,6 +13,22 @@
     "type": "dir",
     "label": "Components",
     "collapsed": true
+  },
+  {
+    "name": "patterns",
+    "type": "dir",
+    "label": "Patterns",
+    "collapsed": true
+  },
+  {
+    "name": "case-studies",
+    "label": "Case Studies",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "principles",
+    "label": "Principles"
   },
   {
     "name": "communication",
@@ -29,17 +47,10 @@
     "collapsed": true
   },
   {
-    "name": "patterns",
+    "name": "stream-processing",
     "type": "dir",
-    "label": "Patterns",
     "collapsed": true
   },
   "bote",
-  {
-    "name": "case-studies",
-    "label": "Case Studies",
-    "type": "dir",
-    "collapsed": true
-  },
   "interview"
 ]

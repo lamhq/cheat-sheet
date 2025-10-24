@@ -1,22 +1,26 @@
-# Load balancer
+# Load Balancers
 
 ## Overview
 
-A load balancer is a machine that runs a reverse proxy software.
+A load balancer balances the traffic load among a group of servers, to make sure no individual server is overloaded.
 
-It evenly distributes incoming traffic among registered servers that host the application.
+A load balancer communicates with servers through private IPs. Servers are unreachable directly by clients anymore.
 
-A load balancer communicates with servers through private IPs. A private IP is an IP address reachable only between servers in the same network; however, it is unreachable over the internet.
+> [!INFO]
+> A private IP is an IP address reachable only between servers in the same network; however, it is unreachable over the internet.
 
-Servers are unreachable directly by clients anymore.
+![](./load-balancer/load-balancer.drawio.svg)
 
-![](./load-balancer.md/../load-balancer/load-balancer.drawio.svg)
+Load balancers are usually collocated with the group of servers they manage, to minimize latency.
 
 
 ## Benefits
 
-1. Make system more resilient. If a server fails, the load balancer reroutes requests to other servers (scalability).
-2. Make system horizontally scalable. You can add more servers easily (high availability).
+A load balancer provides Quality Attributes:
+- **Scalability**. Servers can be added when traffic spikes and removed when demand drops, saving costs.
+- **Availability**. Load balancers monitor servers and stop sending traffic to those that are down or slow.
+- **Performance** (throughput). With multiple servers handling requests, the system can process more tasks per second than a single server could.
+- **Maintainability**. Servers can be taken offline one at a time for maintenance or upgrades.
 
 
 ## Routing Strategies
@@ -30,15 +34,15 @@ Load balancers use various strategies to distribute network traffic across multi
 6. **Geographical Algorithms**: Routes traffic based on the geographical location of the client.
 
 
-## Types of Load Balancers
+## Load Balancer Types
 
-### Layer 4
+### Layer 4 (hardware)
 
 - Operates at the transport layer of the OSI model
 - Routing based on: IP addresses, ports, protocol (TCP / UDP) of the request
 - Suitable for applications where high performance and low latency are critical, such as in real-time applications and high-throughput environments
 
-### Layer 7
+### Layer 7 (software)
 
 - Operates at the application layer of the OSI model
 - Has access to everything layer 4 has
@@ -47,11 +51,26 @@ Load balancers use various strategies to distribute network traffic across multi
 - Ideal for web applications where detailed inspection and intelligent routing of traffic are required.
 
 
-## High Availability
+### Global Server Load Balancer
 
-To avoid becomming a Single Point of Failure (SPOF), load balancers are often deployed in a highly available configuration. This involves using multiple load balancers that can take over if one fails, ensuring continuous operation.
+A **GSLB** is an advanced type of load balancing solution that combines:
+- **DNS functionality** (resolving domain names to IP addresses)
+- **Load balancing intelligence** (like monitoring server health and traffic)
 
-For example, AWS Load Balancers are deployed across multiple Availability Zones to ensure continuous operation and traffic distribution even if one AZ fails.
+How it works:
+1. GSLB uses the user's IP address to estimate their geographic location.
+2. It tracks the health and performance of all registered servers across different data centers.
+3. When a user sends a DNS query, the GSLB responds with the IP of the best server.
+
+GSLBs can route users based on:
+- Physical location
+- Server load (traffic, CPU load)
+- Response time
+- Bandwidth between user and data center
+
+GSLBs play a very important role in disaster recovery, if a data center goes down, GSLB redirects users to healthy locations.
+
+To prevent a load balancer from being a single point of failure in each region, multiple load balancers can be registered with GSLB, so clients can get a list of load balancers to choose from.
 
 
 ## Sticky sessions
@@ -67,3 +86,22 @@ Cons:
 - Hard to scale horizontally. Adding or removing servers is much more difficult
 - Challenging to handle server failures
 - It can lead to uneven load distribution. If one server receives a disproportionate number of sessions, it can become a bottleneck, while other servers remain underutilized
+
+
+## Load Balancing Solutions
+
+Open Source Software Load Balancing Solutions:
+- **HAProxy**: TCP/HTTP load balancer. Suited for very high traffic web sites. Shipped with most mainstream Linux distributions.
+- **NGINX**: HTTP server and reverse proxy (load balancer). Known for its high performance, stability, rich feature set and simple configuration.
+
+
+Cloud Based Load Balancing Solutions:
+- **AWS - Elastic Load Balancing (ELB)**: Highly scalable load balancing solution. Ideal for running on AWS, and integrates seamlessly with all of AWS services.
+- **GCP - Cloud Load Balancing**: Google's highly scalable and robust load-balancing solution.
+- **Microsoft Azure Load Balancer**: Microsoft Azure load balancing solution.
+
+GSLB Solutions:
+- **Amazon Route 53**: Amazon Route 53 is a highly available and scalable cloud Domain Name System (DNS) web service.
+- **AWS Global Accelerator**: A networking service that helps you improve the availability, performance, and security of your public applications.
+- **Google Cloud Platform Load Balancer & Cloud DNS**: Reliable, resilient, low-latency DNS serving from Google's worldwide network with everything you need to register, manage, and serve your domains.
+- **Azure Traffic Manager**: DNS-based load balancing

@@ -1,0 +1,94 @@
+# Multi-Tier Architecture
+
+## Introduction
+
+The Multi-Tier Architecture organizes the system into multiple **physical** and **logical** tiers.
+
+The **logical separation** limits the scope of responsibility on each tier.
+
+The **physical separation** allows each tier to be deployed, upgraded, and scaled separately by different teams.
+
+
+## Multi-Tier vs Multilayer Architecture
+
+Multi-Tier and Multilayer architecture are two different concepts.
+
+Multi layered architecture:
+- Refers to the internal separation inside a single application into multiple logical layers.
+- Despite being logically separated, it still run as a single unit at runtime, and is considered as a single tier.
+
+Multi-Tier Architecture: applications in each tier physically run on different infrastructure.
+
+
+## Restrictions
+
+To keep the system clean and maintainable, this architecture follows two key restrictions:
+
+1. **Client-Server Model**. Each tier only talks to the one directly above or below it.
+2. **No Skipping Tiers**. A tier should not bypass the one next to it to talk directly to a non-adjacent tier.
+
+
+## Three-Tier Architecture
+
+The most common Multi-Tier architectural variation for client-server, web-based services.
+
+### Presentation Tier
+
+Responsibilities:
+- Displays information to the user.
+- Handles user interaction.
+
+Examples:
+- A webpage in a browser.
+- A mobile app interface.
+- A desktop GUI application.
+
+Important Notes:
+- It should not contain business logic (especially in web apps, code in the browser is visible and modifiable by users).
+
+
+### Application Tier
+
+Also known as Business Tier or Logic Tier.
+
+This is where the actual "thinking" of the application happens.
+
+Provides all the functionality and features:
+- Processing the data that comes from the Presentation Tier
+- Applying the relevant business logic to it
+
+
+### Data Tier
+
+Manages data storage and retrieval.
+
+Examples:
+- Databases (SQL, NoSQL).
+- File systems or cloud storage.
+
+
+### Benefits
+
+1. It fits a large variety of use cases (web-based).
+2. Each tier is easy to scale horizontally
+3. Easy to maintain and develop (because all the logic is concentrated in the Application Tier)
+
+### Drawbacks
+
+With the same characteristics of Monolithic architecture, when the codebase grows, it becomes difficult to:
+- Troubleshoot
+- Add new features
+- Build
+- Test
+- Load in IDE
+
+
+### Use Cases
+
+It is the perfect choice for companies whose codebase is:
+- Relatively small and not complex
+- Maintained by a small team of developers
+
+This includes:
+- Early-stage startups
+- Well-established companies whose size of the codebase and the organization fit these criteria

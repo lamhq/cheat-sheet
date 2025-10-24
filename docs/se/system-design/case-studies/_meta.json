@@ -1,12 +1,17 @@
 [
   "web-app",
   {
-    "name": "taxi-app",
+    "name": "ride-hailing",
     "type": "dir",
     "collapsed": true
   },
   {
     "name": "chat",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "forum",
     "type": "dir",
     "collapsed": true
   }

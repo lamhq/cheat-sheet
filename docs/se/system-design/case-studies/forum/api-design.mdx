@@ -1,0 +1,72 @@
+# API Design
+
+## Communication Strategy
+
+Since this is a web-based system invoked by client-side code running in the browser, we will use a **REST API** over HTTP.
+
+We will follow the [4 step process](../../../../backend/rest.mdx#api-design-process) when designing REST API:
+
+
+## 1. Identifying Entities
+
+`users`, `posts`, `comments`, `votes`
+
+
+## 2. Mapping Entities to URIs
+
+- `/users`
+- `/users/{id}`
+- `/posts`
+- `/posts/{id}`
+- `/posts/{id}/comments`
+- `/posts/{id}/comments/{comment-id}`
+- `/posts/{id}/vote`
+- `/posts/{id}/comments/{comment-id}/vote`
+
+
+## 3. Defining Resources Representations
+
+`GET /posts/{post-id}`:
+```
+{
+  "postId": "1",
+  "title": "Post Title",
+  "userId": "1",
+  "body": "Post Body",
+  "upvotes": 5,
+  "downvotes": 1
+}
+```
+
+`GET /posts/{post-id}/comments/{comment-id}`:
+```
+{
+  "commentId": "1",
+  "body": "Comment Body",
+  "userId": "1",
+  "upvotes": 5,
+  "downvotes": 1
+}
+```
+
+## 4. Assigning HTTP Methods to Operations on Resources
+
+User:
+- Create new user: `POST /users`
+- Login Existing user: `POST /sessions`
+
+Post:
+- Create new post: `POST /posts`
+- Get posts: `GET /posts`
+- Get a post: `GET /posts/{post-id}`
+- Delete a post: `DELETE /posts/{post-id}`
+
+Comment:
+- Create a comment for a post: `POST /posts/{post-id}/comments`
+- View post's comments: `GET /posts/{post-id}/comments`
+- Delete a comment: `DELETE /posts/{post-id}/comments/{comment-id}`
+
+Vote:
+- Upvote/Downvote a post: `POST /posts/{post-id}/vote`
+- Upvote/Downvote a comment: `POST /posts/{post-id}/comments/{comment-id}/vote`
+   

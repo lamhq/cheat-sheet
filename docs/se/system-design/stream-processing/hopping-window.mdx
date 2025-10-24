@@ -1,0 +1,48 @@
+# Hopping Window
+
+## Overview
+
+Consumers divide time into fixed time buckets (similar to the tumbling window), but the windows can overlap with each other and are separated by a fixed advanced interval (hop).
+
+For example, a 10-second window with a 5-second advanced interval will create windows like:
+- [0, 10)
+- [5, 15)
+- [10, 20)
+- etc.
+
+![](https://www.geeknarrator.com/static/images/stream-processing/hopping-windows.jpg)
+
+> [!INFO]
+> The tumbling window strategy is just a particular case of a hopping window where both the advance interval and the window duration are the same.
+
+
+## Characteristics
+
+When the advanced interval < window size, events can belong to multiple windows, unlike tumbling windows where each event belongs to only one.
+
+If the advanced interval > window size, we have the tumbling window strategy, except now we have gaps between the windows. This is useful when the volume of events is very large but doesn't have high variability.
+
+_For example, when we're getting a lot of sensor or user data, that doesn't change too often or we don't need to process all of it this way, we basically sample those events with fixed windows and discard the data coming in between._
+
+
+## Advantages
+
+- **Higher granularity**: More frequent updates and insights.
+- **Better trend detection**: Overlapping windows help capture patterns that span time boundaries.
+- **Timely alerts**: Useful for scenarios like fraud detection, error monitoring, or real-time analytics.
+- **Flexible window size**: You can analyze more data per window without affecting update frequency.
+
+
+## Disadvantages
+
+- **Increased complexity**: Events are processed multiple times.
+- **Higher resource usage**: More memory and compute needed due to more windows, more frequently producing results.
+
+
+## Use Cases
+
+- **Real-time monitoring**: Detect spikes or anomalies quickly
+  - Display the data on an interactive dashboard.
+  - Stock Trading: detect shifting trends, make automated trading decisions
+- **Rolling averages**: Smooth out data fluctuations.
+- **Trend analysis**: Capture evolving patterns across time.

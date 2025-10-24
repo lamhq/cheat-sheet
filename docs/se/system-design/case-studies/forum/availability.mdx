@@ -1,0 +1,14 @@
+# Availability
+
+## Database
+
+1. Introduce **database replication** for failover in case a database instance or database shard crashes.
+2. Take regular **backups** to prevent data loss.
+
+
+## Multi-datacenter Deployment
+
+Deploy system across multiple data centers in different geographical locations and utilize a global load balancing service for failover to another region if there is a natural disaster in one of those regions.
+
+> [!NOTE]
+> This also improves **performance** as the system gets physically closer to users on different continents.

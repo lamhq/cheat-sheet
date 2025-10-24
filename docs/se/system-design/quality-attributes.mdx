@@ -1,0 +1,125 @@
+# Quality Attributes
+
+## Overview
+
+[Quality attributes](./requirements.mdx#non-functional-requirements) describe how well the system performs on a particular dimension.
+
+Some important quality attributes:
+- Performance
+- Scalability
+- Availability
+- Fault Tolerance
+
+## System Reliability
+
+Three important terms that aggregate system reliability:
+- SLA (Service Level Agreement)
+- SLO (Service Level Objective)
+- SLI (Service Level Indicator)
+
+SLAs are crafted by the business and the legal team. SLOs and SLIs are defined and set by the software engineers and architects.
+
+
+## Service Level Agreement
+
+A Service Level Agreement (SLA) is a formal contract between a service provider and its clients/users. It defines the expected level of service and outlines the consequences if those expectations aren't met.
+
+It's a legal contract that represents the promise we make to our users in terms of quality service, such as:
+- Availability
+- Performance
+- Data durability
+- Time to respond to system failures
+
+It states the penalties and financial consequences, if we breach the contract. Include:
+- Full/Partial refunds
+- Subscription/License extensions
+- Service credits
+
+Example: _"Our cloud service guarantees 99.9% uptime per month, with service credits issued if availability drops below this threshold"_
+
+SLAs exist for:
+- **External Paying Users**: SLAs are most commonly used here, with clear legal and financial terms.
+- **Free External Users**: SLAs may still apply in limited cases, such as free trials, where compensation (e.g., trial extensions) may be offered if service fails.
+- **Internal Users**: SLAs can exist between teams within the same organization, especially when one team depends on another to meet its own external commitments. These internal SLAs usually don’t include financial penalties.
+
+SLAs help:
+- Set clear expectations
+- Build trust with users
+- Ensure accountability
+- Align internal teams on service goals
+
+Even if a service is free, offering an SLA can demonstrate professionalism and commitment, though most companies avoid strict SLAs for free public services to reduce liability.
+
+
+## Service-Level Objectives
+
+SLOs are the individual goals that we set for our system.
+
+Each SLO defines a performance target or acceptable range that our service needs to meet.
+
+For example, we can have:
+- Availability Service Level Objective of _3 nines_
+- Response Time SLO of _less than 100 milliseconds at the 90th percentile_
+- Issue Resolution Time Objective of _between 24 and 48 hours_
+
+### Relationship to SLA
+
+If a system has an SLA, each SLO represents a specific promise about a metric within that contract.
+
+An SLA aggregates all the SLOs in a single legal document. While SLAs set external commitments, SLOs are internal targets to meet.
+
+Even without an SLA, SLOs are essential for internal alignment and user trust.
+
+### Why SLOs matter?
+
+- They define clear performance expectations.
+- They help teams measure success and detect regressions.
+- Achieving SLOs will likely satisfy SLAs but also improve overall reliability.
+
+
+### Best Practices
+
+1. Define SLOs around metrics that most matter to users
+2. Promising fewer SLOs is better. Too many SLOs make it hard to prioritize.
+3. Setting realistic goals with a budget for errors
+   - Commit to a lower threshold (e.g., 99.9%) to:
+     - Reduce operational costs
+     - Allow room for unexpected issues
+   - This is especially important when SLOs are part of an **external SLA**:
+     - Internal SLOs can be more aggressive (e.g., 99.99%)
+     - External SLOs should be conservative (e.g., 99.9%) to avoid penalties
+4. Create a recovery plan for when SLOs aren't meet. The plan should include:
+   - Automated alerts to engineers/DevOps
+   - Automatic Failover/restarts/rollbacks/auto-scaling policies
+   - Predefined handbooks on what to do in certain situations
+
+
+## Service-Level Indicator
+
+A Service Level Indicator (SLI) is a quantitative metric that measures how well a system is performing against a specific SLO.
+
+SLIs are actual numbers, collected through monitoring tools or system logs.
+
+Once collected, SLIs are compared against SLOs to determine if the system is meeting its targets.
+
+**Examples**:
+- **Availability SLI**: Percentage of user requests that receive a successful response. It can be compared to the availability SLO that we set before.
+- **Latency SLI**: The percentile distribution of response time can be compared to the latency SLO of 100 milliseconds at the 90th percentile that we set before.
+- **Customer registration success rate**: ensuring users can sign up.
+- **Error rate**: how often failures occur.
+- **Order completion rate**: tracking successful transactions.
+
+**Benefits**:
+- Without real measurements, we wouldn't find any SLIs to validate that we meet our SLOs.
+- If we can't prove that we meet the SLOs, we can't say that we meet our SLA.
+
+
+## Error budgets
+
+Error budgets define the acceptable amount of downtime or failures within a system
+
+For example: If a system has an SLO of 99.9% availability per quarter, it allows up to 2 hours and 11 minutes of downtime. This downtime forms the error budget (the amount of failure a team is allowed before corrective actions are needed).
+
+Using error budgets for decision-making:
+- If a team is well below the budget, they can safely experiment (e.g., rolling out a new microservice).
+- If they exceed the budget, they should prioritize stability, postponing risky deployments.

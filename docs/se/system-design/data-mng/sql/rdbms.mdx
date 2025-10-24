@@ -1,38 +1,54 @@
-# Relational Databases (RDBMS)
+# Relational Databases
 
 ## Overview
 
-Stores data in structured tables with pre-defined schema (columns with specific data types).
+A relational database (RDBMS) is a type of database where:
+- Data is stored in tables (like spreadsheets).
+- Each row is a record (e.g., a product or a customer).
+- Each column has a name, a data type (like text or number), and optional rules (called constraints).
+- All records in a table share the same structure, known as the schema.
+- Each record is uniquely identified by a primary key (one or more columns).
 
-Use SQL for data definition and manipulation.
-
-Enforces relationships between tables using primary and foreign keys.
-
-Optimized for [OLTP](../sql.mdx#OLTP) workloads.
-
-Guarantees [ACID properties](../transaction.mdx#ACID-properties) for transactions.
-
-RDBMSs are row-oriented databases.
-
-Excellent choice for **highly structured data**, **strong consistency**, and **complex relational queries**.
-
-> [!NOTE]
-> Traditional RDBMS cannot handle the massive scale needed for Big Data analytics.
+Characteristics:
+- Use SQL to retrieve, update, analyze data.
+- Optimized for [OLTP](../sql.mdx#OLTP) workloads.
+- Guarantees [ACID properties](../transaction.mdx#ACID-properties) for transactions.
+- Row-oriented.
 
 
-## Options
+## Advantages
 
-Available RDBMSs options include:
+- **Ability to form complex and flexible queries** using SQL
+- **Efficient storage**. Ability to join multiple tables helps save a lot of space on storage
+- **Easy to understand**. Table structure is natural for humans
+- **ACID transaction guarantees**
+
+
+## Disadvantages
+
+1. **Rigid Schema Structure**
+- Schema must be defined ahead, require **careful planning** during the design phase to avoid frequent schema changes.
+- Changing the schema often requires maintenance downtime (table becomes temporarily unavailable).
+2. **Hard to maintain/scale** because of their complexity
+3. **Slower Read Performance** compared to non-relational databases
+
+
+## Use Cases
+
+Use RDBMS when:
+1. **Complex Queries & Joins are Needed**. We want to perform complex and flexible queries to analyze data 
+2. **Strong Data Consistency & ACID Compliance Required**. We need to guarantee ACID transactions between different entities in database
+3. **Normalization is Important**. Reducing data redundancy and ensuring data integrity 
+4. **Moderate or Predictable Workloads**. Relational database is a reliable choice for steady traffic, known access patterns, vertical scaling needs
+
+When not to choose a RDBMS:
+1. There isn't any inherent relationship between different records that justifies storing our data in tables
+2. Read performance is the most important quality that we need (Big Data analytics)
+
+
+## RDBMS Solutions
+
 - Cloud Agnostic: PostgreSQL, MySQL, Oracle, SQL Server
 - AWS: Amazon RDS (hosted PostgreSQL and MySQL)
 - Microsoft Azure: Azure SQL Database (hosted SQL Server)
 - Google Cloud: Cloud SQL (hosted PostgreSQL and MySQL), Cloud Spanner
-
-
-## When to use RDBMS?
-
-1. **Strong Data Consistency & ACID Compliance Required**. Relational databases guarantee ACID properties for transactions.
-2. **Data is Highly Structured & Predictable**. Well-defined schema, clear relationships, data doesn't change structure frequently
-3. **Complex Queries & Joins are Needed**. Leveraging the power of SQL for reporting or data analysis across related tables
-4. **Normalization is Important**. Reducing data redundancy and ensuring data integrity 
-5. **Moderate or Predictable Workloads**. Relational database is a reliable choice for steady traffic, known access patterns, vertical scaling needs

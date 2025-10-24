@@ -1,0 +1,46 @@
+# Scalability
+
+## General
+
+1. Place the **load balancer** in front of each service:
+   - Web App Service
+   - User Service
+   - Post & Comment Service
+   - Ranking Service
+   - Vote Service
+2. Place an **API Gateway** to decouple the client from system's internal structure. That allows making changes internally and increase system's scalability.
+
+
+## Post Service
+
+To enable horizontal scaling and handle large volumes of posts and comments efficiently, the system distributes data across multiple shards.
+
+- **Strategy**: Apply a hash function to the post ID.
+- **Goal**: Evenly distribute posts across all shards.
+- **Benefit**: Simple and effective for balancing load, since post sizes are generally predictable.
+
+
+## Comment Service
+
+Shard comments.
+
+❌ Hash by Comment ID:
+- **Problem**: Comments from the same post end up on different shards.
+- **Consequence**: To fetch all comments for a post, the system must query every shard — inefficient and slow.
+
+❌ Shard by Post ID:
+- **Benefit**: All comments for a post are on the same shard.
+- **Problem**:
+   - If a post has too many comments, that shard becomes overloaded.
+   - There's no way to split the data further when one post has many comments that can't be fit on a single shard.
+
+✅ Compound Index Sharding:
+- **Strategy**: Use a compound index of (post ID, comment ID) with a range-based sharding approach.
+- **How it works**:
+  - Data is sorted first by `post ID`, then by `comment ID`.
+  - Comments for the same post are likely grouped together.
+  - If a post has too many comments, the system can split the range and distribute them across multiple shards.
+**Benefits**:
+- Handles posts with many comments by splitting them across shards.
+- Queries for a post’s comments usually hit only one or two shards, not all.
+- Avoids both overloading a shard and inefficient broadcasting.

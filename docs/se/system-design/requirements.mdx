@@ -1,0 +1,133 @@
+# System Requirements
+
+System requirements are a formal way of identifying what needs to be built for a client.
+
+
+## Types of Requirements
+
+Three main types of software requirements:
+- Functional Requirements
+- Non-Functional Requirements
+- System Constraints
+
+They are called **architectural drivers** because they guide the design from countless possibilities to a solution that meets the client's needs.
+
+
+## Functional Requirements
+
+Functional Requirements define what the system does (its behavior and capabilities).
+
+They don’t determine system architecture. Generally any architecture can achieve any feature.
+
+Examples:
+- When a rider logs in, the app shows nearby drivers within a 5-mile radius.
+- After a ride ends, the system charges the rider and pays the driver (minus fees).
+
+Formal method of gathering functional requirements:
+
+1. Identify all the actors/users in our system
+2. Capture and describe all the possible **use-cases**/scenarios
+3. Expand each use case through **flow of events** (using Sequence Diagram). In each event, capture the actions and take note of the data that flows with it to and from the system.
+
+
+## Non-Functional Requirements
+
+Non-Functional Requirements (aka Quality Attributes) describe how well the system performs on a particular dimension (rather than what it does).
+
+They have a direct effect on the software architecture. And different architectures provide us with different quality attributes.
+
+Some of Quality Attributes:
+- **Scalability**: Can handle growing user base.
+- **Availability**: System is accessible when needed.
+- **Reliability**: Performs consistently without failure.
+- **Security**: Protects user data and transactions.
+- **Performance**: Responds quickly and efficiently.
+
+There're some some very important considerations about quality attributes when it comes to designing a software system:
+
+### Testability & Measurability
+
+Quality attributes need to be **measurable** and **testable**.
+
+If we cannot prove that our system satisfied the required quality attributes we don't know if our system performs well or poorly
+
+
+### Tradeoffs
+
+No single software architecture can provide all the quality attributes, because:
+- Certain quality attributes contradict one another
+- Some combinations of quality attributes are very hard / impossible to achieve
+
+Software Architects need to make the right tradeoff, prioritizing some quality attributes over the others, and designing the system in a way that will give us the highest chance for success based on the requirements of the business.
+
+
+### Feasibility
+
+We need to make sure that the system is capable of delivering with the client asking for.
+
+The client may ask for something that is either Technically impossible or Prohibitively expensive to implement.
+
+It's system designer's job to call that out early on in the process.
+
+
+## System Constraints
+
+When defining architecture, we face many design choices to meet quality and functionality goals. System constraints are pre-set decisions that limit our options and guide the design process.
+
+System constraints provide us with a solid starting point. They are usually non-negotiable, we need to design the rest of the system around those constraints. They are referred as pillars for software architecture.
+
+There are three types of constraints:
+
+### Technical constraints
+
+they affect the decisions we make in the design phase and put restrictions on our architecture
+
+Examples: 
+- Being locked to a particular hardware/cloud vendor (e.g., AWS, on-premise)
+- Having to use a particular programming language
+- Having to use a particular database or technology
+- Having to support certain platforms, browsers, or OS
+
+### Business constraints
+
+Limited budget or a strict deadline will make us have very different choices than if we had an unlimited budget and unlimited time.
+
+Certain software architectural patterns are more suitable for small startups, and there're other patterns fit much better with bigger organizations.
+
+Some business constraints require to use third-party services with their own architecture as a part of our system (shipping, payment processing, banks, brokers,etc).
+
+
+### Legal constraints
+
+Those constraints may be global or specific to a particular geographical region.
+
+Examples:
+- In the US, if you are developing a system that handles medical information or patient's records, you need to adhere to the HIPAA regulations that place certain constraints on accessing the patient's data
+- In the European Union, GDPR (General Data Protection Regulation) sets limitations on collecting, storing and sharing users' data
+
+We shouldn't take any given constraint lightly. There're real constraints that there is nothing we can do about and self-imposed constraints that we can negotiate and maybe even remove.
+
+We need to design our architecture to be loosely coupled with the constraints we take on. For example:
+- If limited to a database/third-party service, we need to make sure our system is not tightly coupled to that technology or APls
+- Usage of different technology/service in future should need minimal changes
+- Different parts of the system can be decoupled to be easily replaced or updated independently
+
+
+## Gathering Requirements
+
+### Challenges
+
+Challenges of gathering requirements:
+1. **Big Scope and High Level of Abstraction**
+   - As abstraction increases from methods, classes to modules, libraries, applications, so do the number of possible solutions.
+   - This can be overwhelming because it's hard for us to visualize the implementation.
+2. **High Level of Ambiguity**
+   - Requirements often come from non-technical stakeholders (e.g., clients or product managers). These are usually high-level and vague.
+   - Sometimes, even the client doesn’t know exactly what they need.
+   - Engineers must translate vague ideas into technical specifications
+
+### Importance
+
+Getting the requirements right upfront is absolutely critical because:
+- Large scale systems are big projects that cannot be easily changed, they typically involve contracts with time commitments and financial obligations.
+- Not delivering the product to our clients on time may cause irreversible damage to our company's reputation and brand image
