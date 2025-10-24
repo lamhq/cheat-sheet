@@ -1,4 +1,7 @@
 [
   "api-design",
-  "arch-func"
+  "functionality",
+  "scalability",
+  "performance",
+  "availability"
 ]

@@ -1,12 +1,12 @@
-# Architecture (Functional)
+# Functional Architecture
 
 Design an architecture that addressing functional requirements only.
 
 ## Architecture Diagram
 
-Since we're designing for scale, we'll follow a service or microservice architecture style.
+We'll follow microservice architecture style for scalability.
 
-![](./arch-func.drawio.svg)
+![](./functionality.drawio.svg)
 
 
 ## Web App Service
@@ -16,14 +16,14 @@ The Web App Service serves dynamic content (HTML) to the user's devices (web bro
 
 ## Object Storage
 
-The Object Storage stores:
+The Object Storage contains:
 
 - images that users upload as part of their posts
 - static assets (CSS, JavaScript, images, etc.) for the web app
 
 **How it works**:
-1. When a user creates a post, they first upload the image to the object store.
-2. The object store returns a URL pointing to the uploaded image.
+1. When a user creates a post, they first upload the image to the object storage.
+2. The object storage returns a URL pointing to the uploaded image.
 3. That URL is then embedded in the post content (usually in markdown format).
 4. The post content, including the image URL, is sent to the Post Service, which stores it in the database.
 
@@ -34,7 +34,7 @@ The User Service handles user-related operations (sign-up, log-in).
 
 All the API calls to sign up and log in will go to this service.
 
-The service will use a SQL database to store user information because:
+The service will use a SQL database to store user information:
 - It's suite for tabular data
 - We want to enforce data consistency (through constraints like Unique Field, Foreign keys, Not-null fields)
 - ACID Compliance is required to support critical operations (login, sign-up).
@@ -48,10 +48,10 @@ Data includes:
 
 The Post Service handles all operations related to creating and deleting posts.
 
-Since the goal is scalability and flexibility, this service uses a NoSQL database:
+The service uses a NoSQL database for scalability and flexibility:
 - Posts may have varying structures (e.g., different fields, embedded media, tags).
-- NoSQL allows storing arrays (like topic tags) directly within the post document.
-- It's better suited for high-volume, read-heavy applications like social platforms.
+- Allows storing arrays (like tags) directly within the post document.
+- Better suited for high-volume, read-heavy applications like social platforms.
 
 Each post includes:
 - A unique post ID
@@ -60,7 +60,7 @@ Each post includes:
 - A reference to the user ID who wrote it
 - An array of topic tags
 
-When a user wants to delete a post, the service checks if the logged in user ID matches the ID of the original author before deleting the post from the database.
+To delete a post, the service verifies the user ID matches the author's before removal.
 
 
 ## Comment Service
@@ -69,9 +69,9 @@ The Comments Service allow users to:
 - comment on posts
 - update/delete their comments
 
-Since **comments** have very similar in structure to posts, to keep things simple, it's combined with the Post Service into a single microservice.
+Comments share a similar structure with posts, so they're stored in the same database of the Post Service for simplicity.
 
-Comments are stored in a new collection in the same database with the posts.
+The two services are deployed together as a single microservice.
 
 Each comment record includes:
 - A unique comment ID
@@ -84,9 +84,9 @@ Each comment record includes:
 
 The Vote Service handles upvotes and downvotes on posts and comments.
 
-Votes are handled in a separate service with its own database, because:
-- Storing just counters in the Post and Comment collections isn't enough to prevent users from voting multiple times.
-- It allows calculating votes within a specific time window (e.g., last 24 hours).
+Votes are structured as follow:
+- Each vote is stored in the Vote Service to prevent users from voting multiple times, and allows calculating votes within a specific time window (e.g., last 24 hours).
+- The total number of upvotes and downvotes is stored in the Post and Comment collections.
 
 Each vote entry includes:
 - **User ID**: Who cast the vote
@@ -97,15 +97,17 @@ Each vote entry includes:
 When a user votes:
 - The request goes to the **Vote Service**.
 - The service checks if the user already voted on that item to approve or reject the vote.
+- The service publishes an event to a message broker.
+- The Post Service and Comment Service subscribe to these events to update the total number of upvotes and downvotes.
 
-The Vote Service uses the Sliding Time Window techinque to count votes within a moving 24-hour window, allow for features like **getting the most recent popular posts** (every second, the window shifts forward, dropping older votes).
+For getting the most recent popular posts, the Vote Service uses the Sliding Time Window technique to count votes within a moving 24-hour window (every second, the window shifts forward, dropping older votes).
 
 
 ## Ranking Service
 
 The Ranking Service generates a newsfeed of the most popular posts based on their voting activity in the last 24 hours.
 
-The data is pulled from the Post Service and Vote Service, aggregated and sorted by popularity. Stored in a read optimized database for fast access.
+The data is pulled from the Vote Service and Post Service, aggregated and sorted by popularity. Stored in a read optimized database for fast access.
 
 The Ranking Service runs periodically (e.g., every 10, 30, or 60 minutes). Each run:
 1. Requests **recent votes** from the Vote Service

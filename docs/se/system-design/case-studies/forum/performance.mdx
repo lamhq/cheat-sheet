@@ -1,0 +1,21 @@
+# Performance
+
+## Object Store
+
+Every time a user views popular posts, the system must load associated images from a central object store.
+
+To reduce latency when loading images, use a CDN service to distribute images to edge servers (close to users geographically).
+
+The CDN service can also deliver static content for the Web App Service which speeds up page load times for users.
+
+
+## API Gateway
+
+At the API gateway, we can cache responses of frequently viewed posts during peak times, refreshing every few minutes.
+
+This improves performance and availability.
+
+
+## Database
+
+Add index to tables to speed up queries for every GET request. For example, getting comments for a post.

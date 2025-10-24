@@ -3,10 +3,10 @@
 ## Overview
 
 Design and architect a highly scalable public discussion forum (Reddit, Quora, Stack Overflow, etc.), where people can:
-- post questions or news
-- comment on existing posts
-- upvote or downvote posts or comments
-- get a feed of the most popular posts
+1. Post questions or news
+2. Comment on existing posts
+3. Upvote or downvote posts or comments
+4. Get a feed of the most popular posts
 
 
 ## Functional Requirements
@@ -37,4 +37,4 @@ Example questions that capture the functional requirements:
 2. **Performance**: Less than 500 ms Response Time
 3. **Fault Tolerance & High Availability**: 99.9%
 4. **Availability + Partition Tolerance**: prefer AP over CP. It's okay if users see slightly outdated data, as long as the system stays responsive and reliable.
-5. **Durability**: Data such as users, posts, comments, and votes must be safely stored and never lost—unless intentionally deleted.
+5. **Durability**: Data such as users, posts, comments, and votes must be safely stored and never lost (unless intentionally deleted).

@@ -1,18 +1,18 @@
-## API Design
+# API Design
 
 ## Communication Strategy
 
-Since this is a web based system called by the client side code that runs on the browser, we will use a REST API over HTTP.
+Since this is a web-based system invoked by client-side code running in the browser, we will use a **REST API** over HTTP.
 
 We will follow the [4 step process](../../../../backend/rest.mdx#api-design-process) when designing REST API:
 
 
-## Identifying Entities
+## 1. Identifying Entities
 
 `users`, `posts`, `comments`, `votes`
 
 
-## Mapping Entities to URIs
+## 2. Mapping Entities to URIs
 
 - `/users`
 - `/users/{id}`
@@ -24,7 +24,7 @@ We will follow the [4 step process](../../../../backend/rest.mdx#api-design-proc
 - `/posts/{id}/comments/{comment-id}/vote`
 
 
-## Defining Resources Representations
+## 3. Defining Resources Representations
 
 `GET /posts/{post-id}`:
 ```
@@ -49,7 +49,7 @@ We will follow the [4 step process](../../../../backend/rest.mdx#api-design-proc
 }
 ```
 
-## Assigning HTTP Methods to Operations on Resources
+## 4. Assigning HTTP Methods to Operations on Resources
 
 User:
 - Create new user: `POST /users`
