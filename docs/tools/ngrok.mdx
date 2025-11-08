@@ -1,0 +1,54 @@
+# ngrok
+
+## What is ngrok?
+
+ngrok (pronounced as _en-grok_) is a reverse proxy that creates a secure tunnel to your local web server.
+
+## Use Cases
+
+### Development and Testing
+
+**Webhook Testing**:
+- Run ngrok on your local machine to get a URL to receive
+  webhooks directly in the app you're developing.
+- Inspect and replay requests for fast development.
+
+**Local Previews**:
+- Demo a website running on your local machine to a client
+  or stakeholder without deploying to a staging site.
+
+**Mobile Backend Testing**:
+- Test your mobile apps against a backend that
+  you're developing on your local machine.
+
+### Remote Access
+
+You can securely access machines and services like SSH or RDP over the internet using ngrok’s TCP endpoints.
+
+### Production Ingress
+
+Ngrok provides a unified platform for secure, scalable ingress including reverse proxy, load balancing, and identity-aware access.
+
+### Ingress to External Networks
+
+You can securely access APIs in customer environments or remote networks without needing VPNs or complex setups.
+
+
+## How to use ngrok?
+
+1. Visit [ngrok.com](https://ngrok.com) and sign up for a free account
+2. Copy your [Authtoken](https://dashboard.ngrok.com/get-started/your-authtoken) in the Dashboard after sign in.
+3. Install ngrok via Homebrew (macOS):
+  ```sh
+  brew install ngrok
+  ```
+4. Add your Authtoken to ngrok configuration file:
+  ```sh
+  ngrok config add-authtoken <TOKEN>
+  ```
+5. Start your app
+6. Open port to access your app online:
+  ```sh
+  ngrok http 3000
+  ```
+7. Go to your ngrok domain to see your app.
