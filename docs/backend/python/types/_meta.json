@@ -1,0 +1,12 @@
+[
+  "boolean",
+  "number",
+  "string",
+  "list",
+  "enum",
+  "dict",
+  "set",
+  "tuple",
+  "datetime",
+  "type-hint"
+]
