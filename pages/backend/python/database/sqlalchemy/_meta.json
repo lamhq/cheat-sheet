@@ -1,7 +1,0 @@
-{
-  "installation": "Installation",
-  "connection": "Connection",
-  "types": "Types",
-  "core": "SQLAlchemy Core",
-  "orm": "SQLAlchemy ORM"
-}

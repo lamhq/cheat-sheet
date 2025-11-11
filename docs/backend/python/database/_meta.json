@@ -1,0 +1,8 @@
+[
+  {
+    "name": "sqlalchemy",
+    "type": "dir",
+    "collapsed": true
+  },
+  "alembic"
+]
