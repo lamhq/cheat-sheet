@@ -10,7 +10,8 @@
         "run",
         "dev"
       ],
-      "console": "integratedTerminal"
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"]
     }
   ]
 }

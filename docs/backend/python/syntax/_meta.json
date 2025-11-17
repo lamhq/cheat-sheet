@@ -1,0 +1,20 @@
+[
+  "variables",
+  "constants",
+  "operators",
+  "comments",
+  "branching",
+  "loop",
+  "functions",
+  "modules",
+  "exception",
+  "decorators",
+  {
+    "name": "oop",
+    "type": "dir",
+    "collapsed": true
+  },
+  "async",
+  "context-manager",
+  "iterators"
+]
