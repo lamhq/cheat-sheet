@@ -1,0 +1,31 @@
+# Pull Requests
+
+This feature is only available in GitHub Copilot Coding Agent.
+
+## Creating a pull request
+
+You can ask Copilot to create a pull request from many places:
+
+- **Copilot Chat (IDEs and GitHub.com):**
+    * In **Visual Studio Code** by clicking "Delegate to Agent" button or by using the `@github` mention.
+    * On **GitHub.com**, by using the `/task` command in Copilot Chat.
+- **GitHub Issues:** By simply assigning an Issue to Copilot (`@copilot`) on GitHub.com or GitHub Mobile.
+- **GitHub UI (Agents Tab/Dashboard):** By using the **Agents tab** or the **Task button** on your personal GitHub dashboard and providing a prompt.
+- **GitHub CLI:** By running the command **`gh agent-task create "Your descriptive prompt"`**.
+- **GitHub Mobile:** By tapping the Copilot icon in a repository and entering a prompt.
+- **New Repository Page:** When creating a new repository, you can enter a prompt to ask Copilot to **seed the new repository** with initial code.
+
+**How it work**:
+
+1. You provide a prompt describing the request (e.g., "Implement a user friendly message for common errors"). You can optionally specify a target repository, a base branch, and even a **Custom Agent** to use for the work.
+2. The agent pushes the changes to a new branch and opens a draft Pull Request.
+3. Copilot then adds you as a reviewer to the PR, triggering a notification for you to review the completed work.
+4. To ask Copilot to fix its work, you must submit a formal review with the status set to **Request changes**.
+
+
+## Update existing pull requests
+
+1. You ask Copilot to make changes to an existing pull request by leaving a **comment or review** on the PR and mention Copilot **`@copilot`**, provide instructions for the changes
+2. Copilot creates a **new, child pull request**. This child PR uses the original PR's branch as its base branch.
+3. Copilot performs the requested changes in this new branch. Once the agent finishes the work, it requests your review on the child pull request.
+4. If you are satisfied, you merge the child PR into the original PR's branch.
