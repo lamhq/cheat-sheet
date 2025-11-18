@@ -1,0 +1,77 @@
+# Customize Responses
+
+Customizing the behavior of GitHub Copilot to fit with your preferences and requirements in Visual Studio Code.
+
+## About
+
+GitHub Copilot can provide responses that are tailored to your team's workflow, tools, and the specifics of your project.
+
+Instead of repeatedly including contextual details in your prompts, you create **files** in your repository that automatically give Copilot the necessary information.
+
+In VS Code, there are two primary ways to provide this context via files:
+
+- **Repository Custom Instructions:** Used to specify general instructions and preferences that Copilot should consider when working *anywhere* in the repository's context.
+- **Prompt Files (Public Preview):** Used to save and reuse common, specific prompt instructions and relevant context in Markdown files (`*.prompt.md`), typically for a single, specific chat interaction.
+
+
+## Repository Custom Instructions
+
+Three types of repository custom instructions in VS Code:
+
+- **Repository-Wide Custom Instructions:**
+    - Apply to **all requests** made within the repository's context.
+    - Specified in a single file: `.github/copilot-instructions.md`.
+
+- **Path-Specific Custom Instructions:**
+    - Apply only to requests made in the context of files that match a **specified file path**.
+    - Specified in one or more `NAME.instructions.md` files placed in the directory: `.github/instructions/`.
+    - Useful for avoiding information overload by providing context only relevant to specific types of files or directories
+
+- **Agent Instructions:**
+    - These are similar to repository-wide instructions but are currently used to configure specific Copilot agents.
+    - Specified in files such as `AGENTS.md`, `CLAUDE.md`, or `GEMINI.md`.
+
+Instructions are sent with every chat message.
+
+
+## Writing Effective Custom Instructions
+
+Guidelines for good instructions:
+
+- Short, self-contained statements that are broadly applicable to most requests.
+- Provide an overview of the project you're working on, including its purpose, goals, and any relevant background information.
+- Include the folder structure of the repository, including any important directories or files that are relevant to the project.
+- Specify the coding standards and conventions that should be followed, such as naming conventions, formatting rules, and best practices.
+- Include any specific tools, libraries, or frameworks that are used in the project, along with any relevant version numbers or configurations.
+
+Example:
+
+```md
+# Project Overview
+
+This project is a web application that allows users to manage their tasks and to-do lists. It is built using React and Node.js, and uses MongoDB for data storage.
+
+## Folder Structure
+
+- `/src`: Contains the source code for the frontend.
+- `/server`: Contains the source code for the Node.js backend.
+- `/docs`: Contains documentation for the project, including API specifications and user guides.
+
+## Libraries and Frameworks
+
+- React and Tailwind CSS for the frontend.
+- Node.js and Express for the backend.
+- MongoDB for data storage.
+
+## Coding Standards
+
+- Use semicolons at the end of each statement.
+- Use single quotes for strings.
+- Use function based components in React.
+- Use arrow functions for callbacks.
+
+## UI guidelines
+
+- A toggle is provided to switch between light and dark mode.
+- Application should have a modern and clean design.
+```

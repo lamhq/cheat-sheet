@@ -1,0 +1,46 @@
+# Code review
+
+Find out how Copilot can review pull requests for you.
+
+## Introduction
+The GitHub Copilot Code Review is an intelligent agent designed to automatically review code, primarily within Pull Requests, and provide actionable feedback, often including suggested code changes that can be applied with a few clicks.
+
+
+## Features
+
+- **Intelligent Agent:** It reviews code in **any programming language**.
+- **Actionable Feedback:** The feedback often includes suggested changes you can accept directly.
+- **Systematic Uncovering:** It's designed to systematically uncover insights, identify issues, and suggest fixes by looking at planning, customization, and deduplication of code.
+
+
+## Availability
+
+Available to users with Copilot Pro, Pro+, Business, or Enterprise plans.
+
+The feature is supported across multiple platforms:
+- **GitHub.com** and **GitHub Mobile**
+- **VS Code**, **Visual Studio**, **Xcode**, and **JetBrains IDEs**
+
+
+## Quota
+
+**Consumes a Request:** Reviewing a full Pull Request or reviewing all uncommitted changes in your IDE uses **one premium request**.
+
+**Does Not Consume a Request:** Reviewing only a **selected block of code** within a file in VS Code is a standard Copilot feature and does **not** count against the premium request quota.
+
+If a repository is configured for automatic review, the premium request is charged to the pull request author's quota.
+
+
+## Custom Instructions
+
+You can tailor the reviews Copilot generates to match your team's specific coding standards and practices by using:
+- **Repository Custom Instructions**
+- **Organization Custom Instructions**
+
+
+## Automatic Reviews
+
+Copilot can be configured to act as an automatic reviewer for PRs.
+- **By default:** Copilot only reviews a PR if it's assigned as a reviewer.
+- **Automatic Configuration:** Owners (Individual users, Repository owners, or Organization owners) can configure Copilot to **automatically review all new PRs** they create or in specific repositories.
+- **Triggers:** Automatic reviews can be configured to trigger when a PR is created/switched to "Open," every time a new commit is pushed, or even while the PR is still a "Draft."

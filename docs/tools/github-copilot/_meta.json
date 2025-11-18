@@ -3,5 +3,10 @@
   "best-practices",
   "installation",
   "code-suggestions",
-  "pull-requests"
+  "pull-requests",
+  "code-review",
+  "coding-agent",
+  "custom-response",
+  "prompt-eng",
+  "context"
 ]

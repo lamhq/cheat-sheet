@@ -1,0 +1,103 @@
+# Coding Agent
+
+## About
+
+The Coding Agent is an advanced, autonomous feature of Copilot.
+
+It works in the background like an independent developer within the Pull Request workflow.
+
+> [!NOTE]
+This feature is available with the **GitHub Copilot Pro, GitHub Copilot Pro+, GitHub Copilot Business**, and **GitHub Copilot Enterprise** plans.
+
+Copilot coding agent can:
+- Fix bugs
+- Implement new features
+- Improve test coverage
+- Update documentation
+- Address technical debt
+
+You delegate tasks by:
+- Assigning an Issue to Copilot.
+- Mentioning `@copilot` in an existing PR comment.
+- Asking via Copilot Chat or the Agents Panel.
+
+The agent works in an ephemeral development environment (GitHub Actions-powered), it can make changes, open a Pull Request (PR), and request your review.
+
+## Usage Costs
+
+The agent's work utilizes your existing allowance for:
+- **GitHub Actions minutes**.
+- **Copilot premium requests**.
+
+There is no additional cost within these monthly allowances.
+
+## Limitations
+
+The agent has several workflow and compatibility limitations:
+
+* Can only make changes in the **same repository** as the assigned task.
+* Cannot make changes **across multiple repositories** in one run.
+* Can only open **one PR per task**.
+* By default, only accesses context in the **assigned repository**.
+* Does not work in personal repositories owned by **managed user accounts**.
+* Does **not account for content exclusions** (it can see and update excluded files).
+* The AI model used (currently **Claude Sonnet 4.5**) cannot be selected by the user.
+
+## Custom Agents
+
+### About
+
+Custom Agents are specialized versions of the Copilot Coding Agent that you can tailor to specific workflows, coding conventions, and organizational needs.
+
+They act like highly specialized AI teammates, eliminating the need to repeat the same instructions.
+
+> [!NOTE]
+> This feature is available with the **GitHub Copilot Pro, GitHub Copilot Pro+, GitHub Copilot Business**, and **GitHub Copilot Enterprise** plans.
+
+
+### Agent Profile
+
+Custom Agents are defined by **Agent Profiles**, which are **Markdown files** containing **YAML frontmatter**.
+
+
+### Agent Profile Components
+
+- **YAML Frontmatter:** Defines the agent's metadata and capabilities.
+   * Includes properties like `name`, a required `description`, and a list of available `tools` (e.g., `["read", "edit"]`).
+   * Can configure access to external tools via the `mcp-servers` property (for Enterprise use).
+- **Markdown Content:** containing custom instructions that dictate the agent's role and expertise.
+
+
+### Example Agent Profile
+
+This example shows a profile for an agent focused only on documentation:
+
+```markdown
+---
+name: readme-creator
+description: Agent specializing in creating and improving README files
+---
+You are a documentation specialist focused on README files. Your scope is limited to README files or other related documentation files only - do not modify or analyze code files.
+```
+
+### Location
+
+Agent profiles can be defined at two levels:
+
+1.  **Repository Level:** Defined in the `.github/agents/` directory for project-specific use.
+2.  **Organization/Enterprise Level:** Defined in the `/agents/` directory of a `.github-private` repository for broader availability.
+
+
+### Usage
+
+Once created, Custom Agents are available wherever the Copilot Coding Agent can be used, including:
+
+- **GitHub.com** (Agents tab, Issue assignment, PRs).
+- **GitHub Copilot CLI.**
+- **Visual Studio Code** and other supported IDEs.
+
+
+### References
+
+- [GitHub Docs: About GitHub Copilot Coding Agent](https://docs.github.com/en/copilot/concepts/agents/coding-agent/about-coding-agent)
+- [GitHub Docs: About Custom Agents](https://docs.github.com/en/copilot/concepts/agents/coding-agent/about-custom-agents)
