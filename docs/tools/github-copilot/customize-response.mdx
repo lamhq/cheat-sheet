@@ -2,7 +2,7 @@
 
 Customizing the behavior of GitHub Copilot to fit with your preferences and requirements in Visual Studio Code.
 
-## About
+## Introduction
 
 GitHub Copilot can provide responses that are tailored to your team's workflow, tools, and the specifics of your project.
 
@@ -16,20 +16,20 @@ In VS Code, there are two primary ways to provide this context via files:
 
 ## Repository Custom Instructions
 
-Three types of repository custom instructions in VS Code:
+VS Code supports three types of repository custom instructions:
 
 - **Repository-Wide Custom Instructions:**
-    - Apply to **all requests** made within the repository's context.
-    - Specified in a single file: `.github/copilot-instructions.md`.
+   - Apply to **all requests** made within the repository's context.
+   - Specified in a single file: `.github/copilot-instructions.md`.
 
 - **Path-Specific Custom Instructions:**
-    - Apply only to requests made in the context of files that match a **specified file path**.
-    - Specified in one or more `NAME.instructions.md` files placed in the directory: `.github/instructions/`.
-    - Useful for avoiding information overload by providing context only relevant to specific types of files or directories
+   - Apply only to requests made in the context of files that match a **specified file path**.
+   - Specified in one or more `NAME.instructions.md` files placed in the directory: `.github/instructions/`.
+   - Useful for avoiding information overload by providing context only relevant to specific types of files or directories
 
 - **Agent Instructions:**
-    - These are similar to repository-wide instructions but are currently used to configure specific Copilot agents.
-    - Specified in files such as `AGENTS.md`, `CLAUDE.md`, or `GEMINI.md`.
+   - These are similar to repository-wide instructions but are currently used to configure specific Copilot agents.
+   - Specified in files such as `AGENTS.md`, `CLAUDE.md`, or `GEMINI.md`.
 
 Instructions are sent with every chat message.
 
@@ -44,9 +44,9 @@ Guidelines for good instructions:
 - Specify the coding standards and conventions that should be followed, such as naming conventions, formatting rules, and best practices.
 - Include any specific tools, libraries, or frameworks that are used in the project, along with any relevant version numbers or configurations.
 
-Example:
+Example of repository-wide custom instructions:
 
-```md
+```md title=".github/copilot-instructions.md"
 # Project Overview
 
 This project is a web application that allows users to manage their tasks and to-do lists. It is built using React and Node.js, and uses MongoDB for data storage.
@@ -75,3 +75,18 @@ This project is a web application that allows users to manage their tasks and to
 - A toggle is provided to switch between light and dark mode.
 - Application should have a modern and clean design.
 ```
+
+Example of [path-specific custom instructions](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions#creating-path-specific-custom-instructions-1):
+
+```md title=".github/instructions"
+---
+applyTo: "app/models/**/*.rb"
+excludeAgent: "code-review"
+---
+```
+
+
+## References
+
+- [Example custom instructions](https://docs.github.com/en/copilot/tutorials/customization-library/custom-instructions/your-first-custom-instructions).
+- [Using custom instructions to unlock the power of Copilot code review](https://docs.github.com/en/copilot/tutorials/use-custom-instructions)
