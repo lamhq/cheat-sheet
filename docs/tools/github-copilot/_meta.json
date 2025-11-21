@@ -4,10 +4,10 @@
   "code-suggestions",
   "code-review",
   "pull-requests",
-  "context",
+  "provide-context",
   "customize-response",
+  "prompt",
+  "mcp",
   "best-practices",
-  "prompt-eng",
-  "prompt-examples",
   "plans"
 ]

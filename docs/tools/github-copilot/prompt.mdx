@@ -1,0 +1,193 @@
+# Prompting
+
+## Introduction
+
+A prompt is any request you make to Copilot (a question, a code completion request, etc.).
+
+Copilot uses the prompt, along with context (like the code in your current file and the chat history), to generate a response.
+
+
+## Prompt engineering
+
+Follow these strategies to improve your Copilot results:
+
+### Start General, Then Get Specific
+
+Begin your prompt by giving Copilot a broad description of the goal or scenario, and then follow up by listing any specific requirements.
+
+For example:
+
+```
+Write a JavaScript function that tells me if a number is prime
+
+The function should take an integer and return true if the integer is prime
+
+The function should error if the input is not a positive integer
+```
+
+### Give Examples
+
+Use examples of input data, expected outputs, or implementation styles to help Copilot understand exactly what you want. Unit tests can also serve as examples.
+
+```
+Write a Go function that finds all dates in a string and returns them in an array. Dates can be formatted like:
+
+* 05/02/24
+* 05/02/2024
+* 5/2/24
+* 5/2/2024
+* 05-02-24
+* 05-02-2024
+* 5-2-24
+* 5-2-2024
+
+Example:
+
+findDates("I have a dentist appointment on 11/14/2023 and book club on 12-1-23")
+
+Returns: ["11/14/2023", "12-1-23"]
+```
+
+### Break Complex Tasks into Simpler Tasks
+
+If you have a large or complicated task, divide it into multiple small, simple tasks and ask Copilot to complete them one by one.
+
+For example, instead of asking Copilot to generate a word search puzzle, break the process down into smaller tasks, and ask Copilot to accomplish them one by one:
+
+- Write a function to generate a 10 by 10 grid of letters.
+- Write a function to find all words in a grid of letters, given a list of valid words.
+- Write a function that uses the previous functions to generate a 10 by 10 grid of letters that contains at least 10 words.
+- Update the previous function to print the grid of letters and 10 random words from the grid.
+
+
+### Avoid Ambiguity
+
+Be specific in your prompts.
+
+For instance, instead of asking "what does this do," specify "What does the `createUser` function do?" If using an uncommon library, describe what it does.
+
+
+### Indicate Relevant Code
+
+- **In the IDE**: Open any relevant files and close irrelevant ones, as Copilot uses open files for context.
+- **In Copilot Chat**: Highlight the specific code you want Copilot to reference, or use keywords (like `@workspace` in VS Code) to manually supply context.
+
+
+### Experiment and Iterate
+
+If the initial result is not what you wanted, refine your prompt and try again.
+
+For chat, you can reference the previous response in your next request or simply delete the previous response and start over.
+
+
+### Keep History Relevant
+
+In Copilot Chat:
+- Use threads to start a new conversation for a new task
+- Delete requests that are no longer relevant or that didn’t give you the desired result
+
+
+### Follow Good Coding Practices
+
+Ensure the existing code in your codebase follows best practices:
+
+- Use a consistent code style and patterns
+- Use descriptive names for variables and functions
+- Comment your code
+- Structure your code into modular, scoped components
+- Include unit tests
+
+## Prompt Examples
+
+Examples of prompts to use with GitHub Copilot Chat.
+
+### Creating templates
+
+Create a template for a project README file:
+
+```text
+Create a README template for a new open-source project that includes sections for project description, installation instructions, usage examples, and contribution guidelines. Make it clear and easy to follow.
+```
+
+### Summarize
+
+```text
+Can you summarize the key points and action items from this discussion?
+```
+
+
+### Creating diagrams
+
+```text
+Create a mermaid gantt diagram that covers the period August 1st 2025 until January 31st, 2025. Include 5 phases, each taking 6 weeks, and overlapping equally.
+```
+
+### Find implementation approachs
+
+You want to evaluate different approaches to implement a feature to see whether they fit with your needs and constraints.
+
+```text
+Given the feature specification below, list options for implementation and tradeoffs for each option.
+
+## Feature Description
+Users have requested a "Recent Items" section on their dashboard to quickly access the most recently viewed documents, projects, or files. This section should display the ten most recent items, sorted by the last access time.
+
+## Requirements
+* Display up to ten items that the user has accessed recently.
+* Items must be sorted by the time they were last accessed.
+* The solution should minimize database load.
+* Data should reflect updates in near real-time.
+* The solution should prioritize performance, especially for large datasets of items.
+
+## Acceptance Criteria
+* Dashboard loads the "Recent Items" section within 200ms under normal load.
+* The solution must not degrade performance for users with thousands of items.
+```
+
+
+### Refactor code
+
+Refactoring for performance optimization:
+
+```text
+Optimize this code for performance
+```
+
+Refactoring for environmental sustainability (use less resources):
+
+```text
+Refactor this code to improve its environmental sustainability by reducing memory usage and computational overhead.
+```
+
+Refactoring to implement a design pattern:
+
+```text
+Refactor this code using the module pattern
+```
+
+Decoupling business logic from UI components:
+
+```text
+Separate the UI code from the Counter component in this code.
+```
+
+
+### Explain code
+
+```text
+I'm a Python developer. Help me better understand this code. Please provide analogies.
+```
+
+
+### Document code
+
+```text
+Update the existing documentation for the getByCategoryName function to reflect the current implementation.
+```
+
+
+### Analyze code
+
+```text
+Analyze this code for potential security vulnerabilities and suggest fixes.
+```

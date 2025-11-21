@@ -1,4 +1,4 @@
-# Customize Responses
+# Customizing Responses
 
 Customizing the behavior of GitHub Copilot to fit with your preferences and requirements in Visual Studio Code.
 
@@ -14,37 +14,16 @@ In VS Code, there are two primary ways to provide this context via files:
 - **Prompt Files (Public Preview):** Used to save and reuse common, specific prompt instructions and relevant context in Markdown files (`*.prompt.md`), typically for a single, specific chat interaction.
 
 
-## Repository Custom Instructions
+## Repository custom instructions
 
 VS Code supports three types of repository custom instructions:
 
-- **Repository-Wide Custom Instructions:**
-   - Apply to **all requests** made within the repository's context.
-   - Specified in a single file: `.github/copilot-instructions.md`.
+### Repository-wide custom instructions
 
-- **Path-Specific Custom Instructions:**
-   - Apply only to requests made in the context of files that match a **specified file path**.
-   - Specified in one or more `NAME.instructions.md` files placed in the directory: `.github/instructions/`.
-   - Useful for avoiding information overload by providing context only relevant to specific types of files or directories
+- Apply to **all requests** made within the repository's context.
+- Specified in a single file: `.github/copilot-instructions.md`.
 
-- **Agent Instructions:**
-   - These are similar to repository-wide instructions but are currently used to configure specific Copilot agents.
-   - Specified in files such as `AGENTS.md`, `CLAUDE.md`, or `GEMINI.md`.
-
-Instructions are sent with every chat message.
-
-
-## Writing Effective Custom Instructions
-
-Guidelines for good instructions:
-
-- Short, self-contained statements that are broadly applicable to most requests.
-- Provide an overview of the project you're working on, including its purpose, goals, and any relevant background information.
-- Include the folder structure of the repository, including any important directories or files that are relevant to the project.
-- Specify the coding standards and conventions that should be followed, such as naming conventions, formatting rules, and best practices.
-- Include any specific tools, libraries, or frameworks that are used in the project, along with any relevant version numbers or configurations.
-
-Example of repository-wide custom instructions:
+Custom instruction for a web application:
 
 ```md title=".github/copilot-instructions.md"
 # Project Overview
@@ -76,14 +55,221 @@ This project is a web application that allows users to manage their tasks and to
 - Application should have a modern and clean design.
 ```
 
-Example of [path-specific custom instructions](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions#creating-path-specific-custom-instructions-1):
+Custom instructions for code review:
+```md title=".github/copilot-instructions.md"
+# General Code Review Standards
 
-```md title=".github/instructions"
----
-applyTo: "app/models/**/*.rb"
-excludeAgent: "code-review"
----
+## Purpose
+
+These instructions guide Copilot code review across all files in this repository.
+Language-specific rules are in separate instruction files.
+
+## Security Critical Issues
+
+- Check for hardcoded secrets, API keys, or credentials
+- Look for SQL injection and XSS vulnerabilities
+- Verify proper input validation and sanitization
+- Review authentication and authorization logic
+
+## Performance Red Flags
+
+- Identify N+1 database query problems
+- Spot inefficient loops and algorithmic issues
+- Check for memory leaks and resource cleanup
+- Review caching opportunities for expensive operations
+
+## Code Quality Essentials
+
+- Functions should be focused and appropriately sized (under 50 lines)
+- Use clear, descriptive naming conventions
+- Ensure proper error handling throughout
+- Remove dead code and unused imports
+
+## Review Style
+
+- Be specific and actionable in feedback
+- Explain the "why" behind recommendations
+- Acknowledge good patterns when you see them
+- Ask clarifying questions when code intent is unclear
+
+## Testing Standards
+
+- New features require unit tests
+- Tests should cover edge cases and error conditions
+- Test names should clearly describe what they test
+
+Always prioritize security vulnerabilities and performance issues that could impact users.
 ```
+
+
+### Path-specific custom instructions
+
+- Apply only to requests made in the context of files that match a **specified file path**.
+- Specified in one or more `NAME.instructions.md` files placed in the directory: `.github/instructions/`.
+- Useful for avoiding information overload by providing context only relevant to specific types of files or directories
+
+Custom instruction for Playwright tests:
+
+```md title=".github/instructions/playwright-tests.instructions.md"
+---
+applyTo: "**/tests/*.spec.ts"
+---
+
+## Playwright test requirements
+
+When writing Playwright tests, please follow these guidelines to ensure consistency and maintainability:
+
+1. **Use stable locators** - Prefer `getByRole()`, `getByText()`, and `getByTestId()` over CSS selectors or XPath
+1. **Write isolated tests** - Each test should be independent and not rely on other tests' state
+1. **Follow naming conventions** - Use descriptive test names and `*.spec.ts` file naming
+1. **Implement proper assertions** - Use Playwright's `expect()` with specific matchers like `toHaveText()`, `toBeVisible()`
+1. **Leverage auto-wait** - Avoid manual `setTimeout()` and rely on Playwright's built-in waiting mechanisms
+1. **Configure cross-browser testing** - Test across Chromium, Firefox, and WebKit browsers
+1. **Use Page Object Model** - Organize selectors and actions into reusable page classes for maintainability
+1. **Handle dynamic content** - Properly wait for elements to load and handle loading states
+1. **Set up proper test data** - Use beforeEach/afterEach hooks for test setup and cleanup
+1. **Configure CI/CD integration** - Set up headless mode, screenshots on failure, and parallel execution
+```
+
+Custom instruction for Python files:
+
+````md title=".github/instructions/python.instructions.md"
+---
+applyTo: "**/*.py"
+---
+
+# Python Coding Conventions
+
+## Naming Conventions
+
+- Use snake_case for variables and functions
+- Use PascalCase for class names
+- Use UPPERCASE for constants
+
+## Code Style
+
+- Follow PEP 8 style guidelines
+- Limit line length to 88 characters (Black formatter standard)
+- Use type hints for function signatures
+
+## Best Practices
+
+- Use list comprehensions for simple transformations
+- Prefer f-strings for string formatting
+- Use context managers (with statements) for resource management
+
+```python
+# Avoid
+file = open('data.txt')
+content = file.read()
+file.close()
+
+# Prefer
+with open('data.txt') as file:
+    content = file.read()
+```
+````
+
+Custom instruction for React components:
+
+```md title=".github/instructions/frontend.instructions.md"
+---
+applyTo: "src/components/**/*.{tsx,jsx}"
+---
+
+# React Component Guidelines
+
+## Component Structure
+
+- Use functional components with hooks
+- Keep components small and focused (under 200 lines)
+- Extract reusable logic into custom hooks
+
+## State Management
+
+- Use useState for local component state
+- Use useContext for shared state across components
+- Avoid prop drilling beyond 2-3 levels
+
+## Accessibility
+
+- All interactive elements must be keyboard accessible
+- Include appropriate ARIA labels
+- Ensure color contrast meets WCAG AA standards
+```
+
+Recommended instruction file structure:
+````md
+---
+applyTo: "**/*.{js,ts}"  # If this is a path-specific file
+---
+
+# [Title: Technology or Domain Name] Guidelines
+
+## Purpose
+
+Brief statement of what this file covers and when these instructions apply.
+
+## Naming Conventions
+
+- Rule 1
+- Rule 2
+- Rule 3
+
+## Code Style
+
+- Style rule 1
+- Style rule 2
+
+```javascript
+// Example showing correct pattern
+```
+
+## Error Handling
+
+- How to handle errors
+- What patterns to use
+- What to avoid
+
+## Security Considerations
+
+- Security rule 1
+- Security rule 2
+
+## Testing Guidelines
+
+- Testing expectation 1
+- Testing expectation 2
+
+## Performance
+
+- Performance consideration 1
+- Performance consideration 2
+````
+
+
+### Agent instructions
+
+- These are similar to repository-wide instructions but are currently used to configure specific Copilot agents.
+- Specified in files such as `AGENTS.md`, `CLAUDE.md`, or `GEMINI.md`.
+
+Instructions are sent with every chat message.
+
+
+## Organization-wide custom instructions
+
+Copilot coding agent leverages your [organization's custom instructions](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-organization-instructions) as part of its work.
+
+
+## Writing effective custom instructions
+
+Guidelines for good instructions:
+
+- Short, self-contained statements that are broadly applicable to most requests.
+- Provide an overview of the project you're working on, including its purpose, goals, and any relevant background information.
+- Include the folder structure of the repository, including any important directories or files that are relevant to the project.
+- Specify the coding standards and conventions that should be followed, such as naming conventions, formatting rules, and best practices.
+- Include any specific tools, libraries, or frameworks that are used in the project, along with any relevant version numbers or configurations.
 
 
 ## References
