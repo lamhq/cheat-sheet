@@ -1,0 +1,119 @@
+# Best practices
+
+## Tool selection
+
+Choose the right Copilot tool
+
+### Code completion
+
+Code completion works best for:
+
+- Completing code snippets, variable names, and functions as you write them
+- Generating repetitive code
+- Generating code from inline comments in natural language
+- Generating tests for test-driven development
+
+
+### Copilot Chat
+
+Copilot Chat is best suited for:
+
+- Answering questions about code
+- Generating large sections of code
+- Accomplishing specific tasks with keywords and skills. Copilot Chat has built-in keywords and skills designed to provide important context for prompts and accomplish common tasks quickly. Different types of keywords and skills are available in different Copilot Chat platforms. See Asking GitHub Copilot questions in your IDE.
+- Completing a task as a specific persona. For example, you can tell Copilot Chat that it is a Senior C++ Developer who cares greatly about code quality, readability, and efficiency, then ask it to review your code.
+
+
+## Model selection
+
+For more details, see [AI model comparison](https://docs.github.com/en/copilot/reference/ai-models/model-comparison).
+
+### General-purpose coding and writing
+
+- GPT-5-Codex: higher-quality code on complex engineering tasks like features, tests, debugging, refactors, and reviews without lengthy instructions.
+- GPT-5 mini: fast, accurate, and works well across languages and frameworks.
+- Grok Code Fast 1: Performs well on code generation, and debugging across multiple languages.
+- Raptor mini: fast, accurate inline suggestions and explanations.
+
+When to use these models:
+- Write or review functions, short files, or code diffs.
+- Generate documentation, comments, or summaries.
+- Explain errors or unexpected behavior quickly.
+- Work in a non-English programming environment.
+
+
+### Fast help with simple or repetitive tasks
+
+- Claude Haiku 4.5: Balances fast responses with quality output. Ideal for small tasks and lightweight code explanations.
+
+When to use these models:
+- Write or edit small functions or utility code.
+- Ask quick syntax or language questions.
+- Prototype ideas with minimal setup.
+- Get fast feedback on simple prompts or edits.
+
+
+### Deep reasoning and debugging
+
+- GPT-5 mini: Delivers deep reasoning and debugging with faster responses and lower resource usage than GPT-5. Ideal for interactive sessions and step-by-step code analysis.
+- GPT-5: Great at complex reasoning, code analysis, and technical decision-making.
+- Claude Sonnet 4: Improves on 3.7 with more reliable completions and smarter reasoning under pressure.
+- Claude Opus 4.1: Anthropic’s most powerful model. Improves on Claude Opus 4.
+- Gemini 2.5 Pro: Advanced reasoning across long contexts and scientific or technical analysis.
+
+When to use these models:
+- Debug complex issues with context across **multiple files**.
+- Refactor large or **interconnected codebases**.
+- Plan features or architecture across layers.
+- Weigh trade-offs between libraries, patterns, or workflows.
+- Analyze logs, performance data, or system behavior.
+
+
+### Working with visuals (diagrams, screenshots)
+
+- GPT-5 mini: Reliable default for most coding and writing tasks. Fast, accurate, and supports multimodal input for visual reasoning tasks. Works well across languages and frameworks.
+- Claude Sonnet 4: Improves on 3.7 with more reliable completions and smarter reasoning under pressure.
+- Gemini 2.5 Pro: Deep reasoning and debugging, ideal for complex code generation, debugging, and research workflows.
+
+When to use these models:
+- Ask questions about diagrams, screenshots, or UI components.
+- Get feedback on visual drafts or workflows.
+- Understand front-end behavior from visual context.
+
+
+## Create good prompts
+
+See [Prompt Engineering](./prompt.mdx#prompt-engineering).
+
+
+## Review Copilot's work
+
+Fully understand Copilot's suggested code. Consider:
+- Functionality
+- Security
+- Readability
+- Maintainability
+
+You can ask Copilot Chat to explain the code.
+
+
+## Provide helpful context
+
+- In IDE: open relevant files and close irrelevant files.
+- In Copilot Chat: delete irrelevant requests from the conversation or start a new conversation.
+- In Copilot Chat in your IDE: use keywords to focus Copilot on a specific task or piece of context.
+- In Copilot Chat in GitHub: provide specific repositories, files, symbols, and more as context.
+
+
+## Provide feedback
+
+Provide feedback to improve future suggestions:
+
+- For code completion, accept or reject Copilot's suggestion.
+- For individual responses in Copilot Chat, click the thumbs up or thumbs down icons next to the response.
+- For Copilot Chat in GitHub, leave a comment on the feedback discussion.
+
+
+## References
+
+- [Best practices for using GitHub Copilot](https://docs.github.com/en/copilot/tutorials/coding-agent/get-the-best-results).

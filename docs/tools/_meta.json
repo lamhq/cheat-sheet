@@ -33,5 +33,11 @@
     "type": "dir",
     "collapsed": true,
     "label": "ngrok"
+  },
+  {
+    "name": "github-copilot",
+    "type": "dir",
+    "collapsed": true,
+    "label": "GitHub Copilot"
   }
 ]
