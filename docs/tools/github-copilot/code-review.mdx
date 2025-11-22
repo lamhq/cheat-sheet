@@ -1,0 +1,149 @@
+# Code review
+
+How to request a code review from GitHub Copilot.
+
+## Introduction
+
+GitHub Copilot can review code in the IDE and review pull requests.
+
+It provides feedback that includes suggested changes which you can apply with a couple of clicks.
+
+It can review code written in any programming language.
+
+
+## Availability
+
+Available to users with Copilot Pro, Pro+, Business, or Enterprise plans.
+
+Copilot code review is supported in:
+- GitHub.com
+- GitHub Mobile
+- VS Code
+- Visual Studio
+- Xcode
+- JetBrains IDEs
+
+
+## Quota
+
+Each time Copilot reviews a pull request, or reviews code in your IDE, your monthly quota of Copilot premium requests is reduced by one.
+
+If a repository is configured to automatically request code review, the premium request usage is applied to the quota of the pull request author.
+
+
+## Adding Copilot as a reviewer
+
+Copilot can review code changes in your IDE before opening a pull request, or be assigned as reviewer to a pull request.
+
+### In IDE
+
+**Reviewing a selection of code**:
+1. In Visual Studio Code, select the code you want to review.
+2. Right-click the selected code and choose **Generate Code** > **Review**.
+3. VS Code creates review comments in the Comments panel and also shows them inline in the editor.
+
+**Reviewing all uncommitted changes**:
+1. In Visual Studio Code, click the Source Control button in the **Activity Bar**.
+2. At the top of the **Source Control view**, hover over **CHANGES**, then click the **Copilot Code Review - Uncommitted Changes** button.
+   ![](https://docs.github.com/assets/cb-26188/mw-1440/images/help/copilot/code-review/vscode-review-button.webp)
+3. Wait for Copilot to review your changes. This usually takes less than 30 seconds.
+4. If Copilot has any comments, they will be shown inline in your file(s), and in the Problems tab.
+
+
+### Reviewing PRs
+
+1. On GitHub.com, create a pull request or navigate to an existing pull request.
+2. Open the **Reviewers** menu, then select **Copilot**.
+   ![](https://docs.github.com/assets/cb-33497/mw-1440/images/help/copilot/code-review/request-review@2x.webp)
+3. Wait for Copilot to review your pull request. This usually takes less than 30 seconds.
+4. Scroll down and read through Copilot's comments.
+5. You can add reactions to them, comment on them, resolve them and hide them.
+6. Any comments you add to Copilot's review comments won't be replied.
+
+
+If you make changes to the pull request and you want Copilot to re-review the pull request, you can request this manually (click the button next to Copilot's name in the **Reviewers** menu).
+
+
+## Use Copilot as a review assistant
+
+You can use Copilot to speed up your pull request review.
+
+**Ask Copilot to summarize the changes made to a file**:
+
+![](https://docs.github.com/assets/cb-114020/mw-1440/images/help/copilot/ask-to-explain.webp)
+
+**Ask Copilot to explain highlighted lines of code**:
+
+![](https://docs.github.com/assets/cb-77888/mw-1440/images/help/copilot/highlight-lines.webp)
+
+**Ask Copilot for its own opinion on the PR changes**:
+
+```
+Provide your judgement as a PR Reviewer, both for functional and non-functional aspects that these changes bring
+```
+
+**Ask Copilot for its own opinion on your PR comment**:
+
+```
+As my peer reviewer on this pull request, give me your feedback on my own review: YOUR-REVIEW-COMMENT. Do you think it's pertinent? Am I missing something?
+```
+
+**Refine your review comments**:
+
+```
+Make a list of review comments to add to the PR and tell me exactly in which file diff and lines each comment should be added
+```
+
+```
+Refine this review comment to make it clear, concise, and actionable.
+```
+
+
+## Working with suggested changes
+
+Where possible, Copilot's feedback includes suggested changes which you can apply with a couple of clicks.
+
+You can also invoke Copilot coding agent to implement suggested changes by clicking **Implement suggestion** on review comments. Copilot will create a new pull request against your branch with the suggestions applied.
+
+
+## Customizing Copilot's reviews
+
+You can tailor the generated reviews to match your team's specific coding standards, tools, and practices, using:
+- Repository Custom Instructions
+- Organization Custom Instructions
+
+This example of a repository instructions:
+
+```markdown title=".github/copilot-instructions.md"
+When performing a code review, respond in Spanish.
+
+When performing a code review, apply the checks in the `/security/security-checklist.md` file.
+
+When performing a code review, focus on readability and avoid nested ternary operators.
+```
+
+
+## Automatic pull request reviews
+
+Individual users on the Copilot Pro or Copilot Pro+ plan can configure Copilot to automatically review all pull requests they create.
+
+Repository owners can configure Copilot to automatically review all pull requests in the repository.
+
+Organization owners can configure Copilot to automatically review all pull requests in some or all of the repositories in the organization.
+
+To configure Copilot to automatically review new pull requests, see [Configuring automatic code review by GitHub Copilot](https://docs.github.com/en/copilot/how-tos/agents/copilot-code-review/configuring-automatic-code-review-by-copilot).
+
+
+## Best Practices
+
+**Developers** should **request a review of all their changes** using Copilot code review in the IDE  before opening a pull request.
+
+**Administrators** should set up repository (or organization rulesets) to **automatically add Copilot as a reviewer** on any pull request targeting protected branches.
+
+**Team leads** should capture their team's standard style and rules and set them as **custom instructions for the organization** so that Copilot can leverage them in reviews.
+
+
+## References
+
+- [About GitHub Copilot code review](https://docs.github.com/en/copilot/concepts/agents/code-review)
+- [Using GitHub Copilot code review](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/request-a-code-review/use-code-review)

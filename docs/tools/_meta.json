@@ -27,5 +27,17 @@
     "collapsed": true,
     "label": "Android"
   },
-  "udemy"
+  "udemy",
+  {
+    "name": "ngrok",
+    "type": "dir",
+    "collapsed": true,
+    "label": "ngrok"
+  },
+  {
+    "name": "github-copilot",
+    "type": "dir",
+    "collapsed": true,
+    "label": "GitHub Copilot"
+  }
 ]

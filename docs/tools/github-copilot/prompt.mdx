@@ -1,0 +1,315 @@
+# Prompting
+
+## Introduction
+
+A prompt is any request you make to Copilot (a question, a code completion request, etc.).
+
+Copilot uses the prompt, along with context (like the code in your current file and the chat history), to generate a response.
+
+
+## Prompt engineering
+
+Follow these strategies to improve your Copilot results:
+
+### Start General, Then Get Specific
+
+Begin your prompt by giving Copilot a broad description of the goal or scenario, and then follow up by listing any specific requirements.
+
+For example:
+
+```
+Write a JavaScript function that tells me if a number is prime
+
+The function should take an integer and return true if the integer is prime
+
+The function should error if the input is not a positive integer
+```
+
+### Give Examples
+
+Use examples of input data, expected outputs, or implementation styles to help Copilot understand exactly what you want. Unit tests can also serve as examples.
+
+```
+Write a Go function that finds all dates in a string and returns them in an array. Dates can be formatted like:
+
+* 05/02/24
+* 05/02/2024
+* 5/2/24
+* 5/2/2024
+* 05-02-24
+* 05-02-2024
+* 5-2-24
+* 5-2-2024
+
+Example:
+
+findDates("I have a dentist appointment on 11/14/2023 and book club on 12-1-23")
+
+Returns: ["11/14/2023", "12-1-23"]
+```
+
+### Break Complex Tasks into Simpler Tasks
+
+If you have a large or complicated task, divide it into multiple small, simple tasks and ask Copilot to complete them one by one.
+
+For example, instead of asking Copilot to generate a word search puzzle, break the process down into smaller tasks, and ask Copilot to accomplish them one by one:
+
+- Write a function to generate a 10 by 10 grid of letters.
+- Write a function to find all words in a grid of letters, given a list of valid words.
+- Write a function that uses the previous functions to generate a 10 by 10 grid of letters that contains at least 10 words.
+- Update the previous function to print the grid of letters and 10 random words from the grid.
+
+
+### Avoid Ambiguity
+
+Be specific in your prompts.
+
+For instance, instead of asking "what does this do," specify "What does the `createUser` function do?" If using an uncommon library, describe what it does.
+
+
+### Indicate Relevant Code
+
+- **In the IDE**: Open any relevant files and close irrelevant ones, as Copilot uses open files for context.
+- **In Copilot Chat**: Highlight the specific code you want Copilot to reference, or use keywords (like `@workspace` in VS Code) to manually supply context.
+
+
+### Experiment and Iterate
+
+If the initial result is not what you wanted, refine your prompt and try again.
+
+For chat, you can reference the previous response in your next request or simply delete the previous response and start over.
+
+
+### Keep History Relevant
+
+In Copilot Chat:
+- Use threads to start a new conversation for a new task
+- Delete requests that are no longer relevant or that didn’t give you the desired result
+
+
+### Follow Good Coding Practices
+
+Ensure the existing code in your codebase follows best practices:
+
+- Use a consistent code style and patterns
+- Use descriptive names for variables and functions
+- Comment your code
+- Structure your code into modular, scoped components
+- Include unit tests
+
+## Prompt Examples
+
+Examples of prompts to use with GitHub Copilot Chat.
+
+### Summarize text
+
+These are instruction for Gemini to shorten a documentation link:
+
+```markdown
+Every time I give you a link to a web page, shorten the web page, base on the following rules:
+- Keep the structure of the original content (number of sections, headings).
+- For instructions that contain many steps in the UI, replace them with a short summary of as a link, clicking the link should lead to the section in the original page
+- Only return markdown, do not include filler text.
+- Do not use markdown table
+- Do not use `*` as bullet points for unordered list
+- Do not add more than one space between bullet points and text.
+```
+
+````markdown
+Follow this structure when shorten the content:
+
+```markdown
+# Title
+
+[description about the content, no filler text]
+
+
+## [Section title]
+
+[shortened section content]
+
+
+## [Other section title]
+
+[...]
+
+
+## References
+
+- [Page title](https://link-to-the-original-page)
+```
+````
+
+### Plan project
+
+Turn ideas into actionable tasks by breaking down your project into epics, features, and smaller pieces of work
+
+1. Create your repository
+2. Open Copilot Chat in GitHub
+3. Attach the repository to the chat
+4. Run this prompt:
+   ```text
+   I’m planning to create a shopping website in React and Node.js. 
+
+   The site should allow users to browse products by category, search for items, add products to a cart, and complete checkout. 
+
+   Please help me plan the project by creating issues and breaking it down into epics, features, and tasks.
+   ```
+5. Refine the generated issues and epics:
+   ```text
+   Can you break down the issue "Feature: UI Skeleton and Navigation" into smaller tasks?
+   ```
+6. If an issue is not as you expected, you can unlink it from the issue tree.
+7. Assign issues to team members or to Copilot itself for further assistance.
+
+
+### Creating diagrams
+
+```text
+Create a mermaid gantt diagram that covers the period August 1st 2025 until January 31st, 2025. Include 5 phases, each taking 6 weeks, and overlapping equally.
+```
+
+### Explore codebase
+
+```text
+Based on the code in this repository, give me an overview of the architecture of the codebase. Provide evidence.
+```
+
+```text
+Which languages are used in this repo? Show the percentages for each language.
+```
+
+```text
+Analyze the code in this repository and tell me about the entry points for this application.
+```
+
+```text
+Where is authentication handled in this codebase?
+```
+
+```text
+Describe the data flow in this application.
+```
+
+```text
+What design patterns are used in this repository? Give a brief explanation of each pattern that you find, and an example of code from this repository that uses the pattern, with a link to the file.
+```
+
+```text
+What are the core algorithms implemented in this repo?
+```
+
+
+### Explain code
+
+```text
+I'm a Python developer. Help me better understand this code. Please provide analogies.
+```
+
+
+### Refactor code
+
+Refactoring for performance optimization:
+
+```text
+Optimize this code for performance
+```
+
+Refactoring for environmental sustainability (use less resources):
+
+```text
+Refactor this code to improve its environmental sustainability by reducing memory usage and computational overhead.
+```
+
+Refactoring to implement a design pattern:
+
+```text
+Refactor this code using the module pattern
+```
+
+Decoupling business logic from UI components:
+
+```text
+Separate the UI code from the Counter component in this code.
+```
+
+
+### List implementation approachs
+
+You want to evaluate different approaches to implement a feature to see whether they fit with your needs and constraints.
+
+```text
+Given the feature specification below, list options for implementation and tradeoffs for each option.
+
+## Feature Description
+Users have requested a "Recent Items" section on their dashboard to quickly access the most recently viewed documents, projects, or files. This section should display the ten most recent items, sorted by the last access time.
+
+## Requirements
+* Display up to ten items that the user has accessed recently.
+* Items must be sorted by the time they were last accessed.
+* The solution should minimize database load.
+* Data should reflect updates in near real-time.
+* The solution should prioritize performance, especially for large datasets of items.
+
+## Acceptance Criteria
+* Dashboard loads the "Recent Items" section within 200ms under normal load.
+* The solution must not degrade performance for users with thousands of items.
+```
+
+### Document code
+
+```text
+Create a README template for a new open-source project that includes sections for project description, installation instructions, usage examples, and contribution guidelines. Make it clear and easy to follow.
+```
+
+```text
+Update the existing documentation for the getByCategoryName function to reflect the current implementation.
+```
+
+
+### Analyze code
+
+```text
+Analyze this code for potential security vulnerabilities and suggest fixes.
+```
+
+
+### Learn programming language
+
+These are some prompts that you can use in Copilot Chat to help you learn the basics of a new programming language:
+
+```text
+What is NEW-LANGUAGE best suited for? I am an experienced Python programmer, but I don't know anything about NEW-LANGUAGE.
+```
+
+```text
+What are the main ways in which NEW-LANGUAGE differs from other languages? Explain the most essential things I need to know as an experienced programmer who wants to learn to code in NEW-LANGUAGE.
+```
+
+```text
+As an experienced programmer learning NEW-LANGUAGE, what are the things I should focus on first?
+```
+
+```text
+What are the biggest mistakes newcomers to NEW-LANGUAGE typically make with this language?
+```
+
+```text
+What are the most essential libraries or frameworks I should know about for NEW-LANGUAGE?
+```
+
+```text
+How can I install NEW-LANGUAGE?
+```
+
+```text
+How do you manage dependencies and packages in NEW-LANGUAGE?
+```
+
+```text
+What testing frameworks does the NEW-LANGUAGE community typically use?
+```
+
+```text
+How does error handling work in NEW-LANGUAGE?
+```

@@ -1,0 +1,21 @@
+[
+  "logging",
+  "setting",
+  "email",
+  "json",
+  "regex",
+  "performance",
+  "file-io",
+  "file-system",
+  "cli-app",
+  "exec-program",
+  "excel",
+  "table-extraction",
+  "web-scraping",
+  "interpreter",
+  {
+    "name": "pdf",
+    "type": "dir",
+    "collapsed": true
+  }
+]

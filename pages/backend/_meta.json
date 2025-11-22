@@ -1,5 +1,4 @@
 {
-  "python": "Python",
   "redis": "Redis",
   "rabbitmq": "RabbitMQ"
 }

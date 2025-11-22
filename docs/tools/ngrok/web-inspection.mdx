@@ -1,0 +1,25 @@
+# Web Inspection Interface
+
+## What It Is?
+
+The **Web Inspection Interface** is a browser-based tool that runs locally at `http://localhost:4040`.
+
+It provides a real-time view of HTTP requests and responses that pass through your ngrok tunnel.
+
+
+## Key Features
+
+- **Request Inspection**: View full details of incoming HTTP requests including headers, body, and metadata.
+- **Response Inspection**: See the exact response your local server sent back.
+- **Replay Requests**: Resend any captured request to your server with a single click—great for debugging webhooks.
+- **History Navigation**: Browse through a timeline of past requests to analyze behavior over time.
+
+## How to Use It
+- Start your ngrok tunnel (e.g., `ngrok http 3000`).
+- Open your browser and go to `http://localhost:4040`.
+- Use the interface to monitor and interact with traffic flowing through your tunnel.
+
+## Use Cases
+- **Webhook Debugging**: Easily inspect and replay webhook payloads from services like Stripe, GitHub, or Twilio.
+- **API Testing**: Validate how your local API handles different requests.
+- **Traffic Analysis**: Understand request patterns and troubleshoot issues without needing external logging tools.

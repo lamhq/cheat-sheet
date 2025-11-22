@@ -1,0 +1,15 @@
+[
+  "installation",
+  "connection",
+  "types",
+  {
+    "name": "core",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "orm",
+    "type": "dir",
+    "collapsed": true
+  }
+]
