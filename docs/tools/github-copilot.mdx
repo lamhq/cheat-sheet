@@ -30,19 +30,41 @@ This guide focuses on GitHub Copilot Pro in Visual Studio Code.
    - Copilot pull request summaries generate summaries of a pull request.
 
 
+## Use Cases
+
+1. **Planning**
+    - Use **Copilot Chat** to get a development overview, create structured issues
+    - Set up a **Copilot Space** with all the necessary project context (mockups, code links).
+2. **Scaffolding**
+    - Use **GitHub Spark** (a no-code environment) to generate working apps with integrated LLMs.
+3. **Writting code**
+    - Use **GitHub Models playground** to compare different AI models for effectiveness and cost.
+    - Use **Copilot agent mode** in the IDE to perform complex, autonomous tasks like refactoring code across multiple files, guided by custom instructions and developer authorization.
+4. **Testing**
+    - Use **MCP Server** (e.g., for Playwright) to enable the Copilot agent to run automated in-browser tests.
+    - The agent can then identify failing tests and suggest code fixes.
+5. **Reviewing**
+    - **Copilot code review** provides an initial automated review of the pull request (PR) to catch bugs early.
+    - **Copilot custom agents** (configured with internal policies) can be prompted to review the PR for compliance before a human checks it.
+6. **Optimizing**
+    - For small, well-scoped maintenance tasks (e.g., switching an API), the product manager can assign an issue directly to the **Copilot coding agent** on GitHub.
+    - The agent works asynchronously, opens a PR, and can incorporate feedback from human reviewers.
+7. **Security**
+    - When code scanning finds a vulnerability, **Copilot Autofix** can be requested to automatically suggest a fix, which a developer then reviews and approves.
+
 
 ## Availability
 
 Copilot is available:
 
+- On the **GitHub website**
+- On the **command line**, through the GitHub CLI
 - In your **IDE**
 - In **GitHub Mobile**, as a chat interface
-- In **Windows Terminal Canary**, through the Terminal Chat interface
-- On the **command line**, through the GitHub CLI
-- On the **GitHub website**
+- ...
 
 
-## Getting access to Copilot
+## Getting access
 
 There are few ways you can start using Copilot:
 
@@ -53,3 +75,39 @@ There are few ways you can start using Copilot:
 3. Use Copilot through your organization. Request access at https://github.com/settings/copilot under **Get Copilot from an organization**.
 
 See: [Get access to GitHub Copilot](https://code.visualstudio.com/docs/copilot/setup#_get-access-to-github-copilot)
+
+
+## Plans
+
+### Copilot Free
+
+- **Audience**: Individual developers not affiliated with an organization or enterprise.
+- **Cost**: Free.
+- **Features**:
+  - Basic access to Copilot code suggestions.
+  - Limited usage: 2,000 code completions and 50 premium requests per month.
+- **Best for**: Trying out Copilot with minimal commitment.
+
+### Copilot Pro
+
+- **Audience**: Individual developers seeking more power and flexibility.
+- **Cost**: $10/month or $100/year. Purchase additional premium requests at $0.04/request.
+- **Features**:
+  - Unlimited code completions.
+  - Access to premium AI models.
+  - 300 premium requests per month.
+  - Includes the Copilot coding agent.
+- **Special Access**: Free for verified students, teachers, and maintainers of popular open-source projects.
+- **Best for**: Regular users who want full access to Copilot's capabilities.
+
+### Copilot Pro+
+
+- **Audience**: Power users and professionals needing maximum AI support.
+- **Cost**: $39/month or $390/year.
+- **Features**:
+  - Everything in Copilot Pro.
+  - 1,500 premium requests per month.
+  - Full access to all available models in Copilot Chat.
+- **Best for**: Heavy users who rely on advanced AI features and higher usage limits.
+
+For all plans, check [GitHub Copilot Plans](https://docs.github.com/en/copilot/get-started/plans).
