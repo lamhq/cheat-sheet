@@ -1,0 +1,18 @@
+# Tips
+
+## Launch Chrome with custom profile
+
+```ts
+import { test, chromium } from '@playwright/test';
+
+test('launch Chrome with default profile', async () => {
+  const userDataDir = '/path/to/chrome-profile';
+  const context = await chromium.launchPersistentContext(userDataDir, {
+    headless: false,
+    channel: 'chrome',
+  });
+  const page = await context.newPage();
+
+  await page.goto('https://example.com');
+});
+```
