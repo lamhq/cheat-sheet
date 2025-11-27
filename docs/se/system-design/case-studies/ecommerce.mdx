@@ -27,9 +27,9 @@ Questions for Buyers:
 
 ### General
 
-There're two actors in the system: Merchants and Buyers.
+We're selling physical products with inventory.
 
-We're selling physical products with a limited inventory. Each product contains:
+Each product contains:
 - Title
 - Description
 - Categories
@@ -38,15 +38,71 @@ We're selling physical products with a limited inventory. Each product contains:
 
 ### Merchants
 
-**Product management** features:
-- Signup
+Product Management System:
+- A web-based UI that allows **Signup and Login**
 - Create new products
-- Update the product properties
+- Update product properties
 - Update product inventory
 - View product data
 
-**Product analytics** features. In merchant dashboard, they can: 
-- view the current number of visitors to their products page in real time
-- see the historical and projected trends about their products performance
+**Product analytics**:
+- View the current number of visitors in merchant dashboard
+- View historical / projected trends about products performance
 
 ### Buyers
+
+Storefront:
+
+- Support web UI and mobile app
+- Browse products
+- Search products based on title/categories/description
+
+Checkout:
+- View breakdown of the bill, taxes, shipping, etc.
+- Provide shipping + payment info
+- Receive email updates/push notifications about their orders
+
+*Out of scope*:
+- User registration
+- Product reviews
+- Shopping cart
+- Delivery
+- Online Payment
+
+
+## Quality Attributes Requirements
+
+### Merchant
+
+Scalability: not very high
+- Hundreds of merchants
+- Low traffic
+- Thousands of products
+
+Performance:
+- Response time < 1 second at 50th percentile
+
+Consistency vs Availability:
+- Prefer Consistency & Partition Tolerance, merchants need the most correct data about their products
+
+Availability:
+- Uptime: 99.5%
+
+
+### Buyer
+
+Scalability: very high
+- 10 - 100 Million daily users
+- Multiple countries
+- High traffic at peak
+
+Performance:
+- Product retrieval (storefront): Response time < 200ms at 50th percentile, 500ms 99p
+- Checkout: Response time < 1 second 99p
+
+Consistency vs Availability:
+- Storefront: Prefer AP, show data that may be stale
+- Checkout (inventory): Prefer CP, ensure consistent product inventory
+
+Availability:
+- Internal SLA: Uptime of 99.99%
