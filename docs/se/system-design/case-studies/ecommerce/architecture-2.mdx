@@ -1,0 +1,68 @@
+# Architecture (2)
+
+## Merchant
+
+### Merchant Portal
+
+- Because the workload is low, only a few instances are needed.
+- These instances are placed behind a **load balancer**:
+  - Distributes incoming requests evenly.
+  - Provides fault tolerance if one instance fails.
+- Merchant database:
+  - No need for sharding because the merchant count is small.
+  - replication is essential to prevent data loss, high availability and read performance.
+
+### Products & Inventory Services
+
+- Instances are also placed behind a **load balancer** that supports auto-scaling.
+- Databases:
+  - Only a few thousand products → no heavy sharding needed.
+  - Multiple replicas are still used for availability and faster reads.
+  - Configured to ensure consistency (data is the same in every instance, but may sacrifice some availability in rare cases). 
+
+
+## Buyer
+
+**All services** (except Notification Service):
+- Are placed behind a **load balancer** to ensure redundancy and fault tolerance.  
+- Auto-scaling policies are applied to allow scale out massively during peak traffic.  
+
+### Notification Service
+
+Notification Service doesn't need a load balancer because it doesn’t handle direct HTTP traffic (but subscribes to events from the message broker).
+
+### Product Search Service
+
+- Database: needs multiple replicas, **configured for availability** over consistency.
+- Use an in-memory cache to store results of popular queries and products. When a user performs one of these common searches, the service returns the cached result immediately without hitting the database.
+
+### Tax Service
+
+- Database is also replicated for **availability**.  
+
+### Product images
+
+Improve performance for loading product images.
+
+- When merchants upload product images, the system automatically generates smaller thumbnail versions.
+- These thumbnails are stored in the **object store** alongside the original images.
+- When displaying product lists (where images are small), the system serves thumbnails instead of full-resolution images.
+- CDN can also be used to cache images across servers worldwide. Users fetch images from the nearest CDN node.
+
+### Checkout Services
+
+When a user places an order, the system gives them an immediate confirmation. Heavy tasks (billing, shipping) are handled asynchronously (in the background). User doesn’t wait for external services to respond, which improve **performance**.
+
+System use event-driven architecture for processing orders:
+- **Scalability** → Can handle sudden spikes in purchases (e.g., flash sales).
+- **Resilience** → Orders are buffered in the broker, so they won’t be lost if services are temporarily overloaded.
+
+The inventory service database is a key-value store:
+- **Very high performance** → Perfect for checking product availability during checkout.
+- **Scalability** → Can handle large volumes of read/write operations efficiently.
+
+### Global scale
+
+- The system is deployed in multiple data centers worldwide.
+- A global load balancing service sits in front of all data centers and directs traffic to the closest data center. This **reduces latency** and improves **performance**.
+- If one data center fails, traffic is rerouted to another healthy data center, ensures the system remains online (**fault tolerance**).

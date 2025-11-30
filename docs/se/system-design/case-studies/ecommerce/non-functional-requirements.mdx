@@ -1,0 +1,38 @@
+# Non-Functional Requirements
+
+Quality Attributes Requirements
+
+## Merchant
+
+**Scalability**: not very high
+- Hundreds of merchants
+- Low traffic
+- Thousands of products
+
+**Performance**:
+- Response time < 1 second at 50th percentile
+
+**Consistency** vs **Availability**:
+- Prefer Consistency & Partition Tolerance, merchants need the most correct data about their products
+
+**Availability**:
+- Uptime: 99.5%
+
+
+## Buyer
+
+**Scalability**: very high
+- 10 - 100 Million daily users
+- Multiple countries
+- High traffic at peak
+
+**Performance**:
+- Product retrieval (storefront): Response time < 200ms at 50th percentile, 500ms 99p
+- Checkout: Response time < 1 second 99p
+
+**Consistency** vs **Availability**:
+- Storefront: Prefer **Availability**, show data that may be stale
+- Checkout (inventory): Prefer **Consistency**, ensure consistent product inventory
+
+**Availability**:
+- Internal SLA: Uptime of 99.99%

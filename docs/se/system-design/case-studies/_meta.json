@@ -14,5 +14,10 @@
     "name": "forum",
     "type": "dir",
     "collapsed": true
+  },
+  {
+    "name": "ecommerce",
+    "type": "dir",
+    "collapsed": true
   }
 ]

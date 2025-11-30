@@ -1,0 +1,21 @@
+# Resiliency
+
+## Overview
+
+Resilience refers to the ability of a system to withstand failures and recover gracefully without causing major disruptions to the overall application.
+
+A system is considered to be resilient if it can continue to function effectively despite failures or disruptions.
+
+This's important because in a distributed architecture, failures are inevitable due to network issues, service crashes, or hardware faults.
+
+> ![INFO]
+> Key point: system continue operating at a degraded level (slower responses, limited features, queued requests).
+
+
+## Key Principles
+
+- **Design for failure**: Assume things will go wrong and plan accordingly.
+- **Graceful degradation**: If one service fails, others should still work.
+- **Fault tolerance**: The system should continue operating even when parts of it fail.
+- **Self-healing**: Services should restart or reroute automatically when issues occur.
+- **Isolation**: Prevent cascading failures by isolating services (e.g., using bulkheads or circuit breakers).
