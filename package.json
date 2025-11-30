@@ -11,15 +11,13 @@
     "prepare": "node .husky/install.js"
 	},
 	"dependencies": {
-		"react": "^18.2.0",
-		"react-dom": "^18.2.0",
+		"rspress": "^1.40.2",
 		"rspress-plugin-katex": "^0.3.0"
 	},
 	"devDependencies": {
-		"lint-staged": "^16.1.2",
-		"rspress": "^1.42.0",
-		"typescript": "5.8.2",
-		"husky": "^8.0.0"
+		"@types/node": "^18.11.17",
+		"husky": "^9.1.7",
+		"lint-staged": "^16.1.2"
 	},
 	"lint-staged": {
 		"*.mdx": "node scripts/lint-markdown.js"
