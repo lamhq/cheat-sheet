@@ -15,5 +15,9 @@
     "type": "dir",
     "collapsed": true
   },
-  "ecommerce"
+  {
+    "name": "ecommerce",
+    "type": "dir",
+    "collapsed": true
+  }
 ]

@@ -1,0 +1,100 @@
+# Architecture (1)
+
+Architecture for functional requirements.
+
+## Merchant
+
+![](./merchant-diagram.drawio.svg)
+
+### Merchant Service
+
+- Handles **registration** and **login**.  
+- Store merchant information using a SQL database because merchant data is well-structured.
+
+### Product Service
+
+- Handle **products updates** (write-intensive).  
+- Stores product details using a NoSQL document database because:
+  - Different products may have different optional attributes.  
+  - NoSQL is flexible and schema-less, making it easier to store varying product data.
+
+### Inventory Service
+
+- **Store inventory for each product** in a high performance key-value store database (Redis).
+- This design ensures fast reads and updates, which is critical for inventory tracking.
+
+### Object Store
+
+- **Store product images**.  
+- Object stores (like AWS S3, Azure Blob Storage, Google Cloud Storage) are optimized for large binary files such as images, videos, or documents.
+
+### Analytics
+
+Use Lambda Architecture that provide both real-time and historical data for analytics with two layers:
+
+1. **Speed Layer (real-time)**  
+   - Processes incoming events immediately.  
+   - Used when merchants want to see *current visitors* on their product page.  
+
+2. **Batch Layer (historical + projections)**  
+   - Runs on a schedule.  
+   - Aggregates large volumes of data from multiple sources.  
+   - Used when merchants want *historical views* and *predicted trends*.  
+
+Events flow like this:
+- Product Search Service → publishes “product viewed” events.  
+- Order Service → publishes “order completed” events.  
+- Both go into a **message broker** (like Kafka).  
+- Analytics system consumes these events into **speed layer** and **batch layer** simultaneously.  
+
+
+## Buyer
+
+![](./buyer-diagram.drawio.svg)
+
+### Product Search Service
+
+- Handles product search requests (read-intensive).
+- Stores product data in a read-optimized NoSQL database:
+   - Prioritizes availability over strict consistency.
+   - Uses text search engine + indexes (on title, description, categories).
+   - Enables fast product search queries.
+- Receives updates from the Product Service via a message broker (asynchronous communication).
+
+### Tax Service
+
+- The Tax Service uses its own database with all tax related data
+- It calculates taxes based on:
+  - Product price
+  - Product type
+  - User’s location (derived from IP address)
+- It fetches Product information directly from Product Service for consistency.
+
+### Checkout Services
+
+Three new services are added:
+- **Order Service** → orchestrates the checkout process.
+- **Payment Service** → handles billing.
+- **Shipping Service** → schedules delivery.
+
+### Checkout logic
+
+- Respond to the user as soon as inventory is confirmed.
+- Payment and shipping are processed **asynchronously** afterward.
+- Tradeoff: If payment fails or shipping is impossible, the user finds out later (via email/push notification).
+
+### Order Data Storage
+
+Two approaches for storing order data:
+- **Traditional approach**: Store order in a database and overwrite with each update.
+  - Drawback: No audit trail of changes.
+- **Event Sourcing Pattern approach**:
+  - Every order update is stored as an event in a **message broker**.
+  - Benefits:
+    - **Notifications**: A Notification Service can subscribe to events and send updates to users.
+    - **Order Recovery**: If the Order Service crashes mid-process, a Recovery Service can replay events and resume from where it left off.
+
+### Notification Service
+
+- Subscribes to order events.
+- Sends emails/push notifications for updates (payment confirmed, shipping scheduled, delivery updates).

@@ -2,5 +2,6 @@
   "performance",
   "scalability",
   "availability",
-  "fault-tolerance"
+  "fault-tolerance",
+  "resiliency"
 ]
