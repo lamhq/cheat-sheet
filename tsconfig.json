@@ -21,8 +21,13 @@
   },
   "include": [
     "docs",
-    "theme",
-    "rspress.config.ts"
+    "configs/base.ts",
+    "configs/se.ts",
+    "configs/de.ts",
+    "configs/devops.ts",
+    "configs/tools.ts",
+    "configs/backend.ts",
+    "configs/web.ts"
   ],
   "mdx": {
     "checkMdx": true
