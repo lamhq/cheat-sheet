@@ -13,7 +13,7 @@
 		"dev:backend": "rspress dev -c configs/backend.ts --port 5006",
 		"build": "rspress build",
 		"preview": "rspress preview --port 5002",
-		"lint": "ls docs/**/*.mdx | node lint-markdown.js",
+		"lint": "ls docs/**/*.mdx | node scripts/lint-markdown.js",
 		"prepare": "node .husky/install.mjs"
 	},
 	"dependencies": {
