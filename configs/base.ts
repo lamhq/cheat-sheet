@@ -42,12 +42,11 @@ export function createConfig(name: DocSection) {
     .filter(([_, value]) => value !== name)
     .map(([_, value]) => path.join(docRoot, value, '**'));
 
-  console.log(excludedRoutes);
-
   return defineConfig({
     ...baseConfig,
     route: {
       exclude: excludedRoutes,
+      include: [path.join(docRoot, name, '**')],
     },
   });
 }

@@ -1,0 +1,91 @@
+# MCP
+
+Use MCP servers in VS Code.
+
+## Add an MCP server
+
+Common ways to add an MCP server to VS Code:
+
+1. [From GitHub MCP server registry](https://code.visualstudio.com/docs/copilot/customization/mcp-servers#_add-an-mcp-server-from-the-github-mcp-server-registry)
+2. Add an MCP server to a workspace `mcp.json` file
+3. Add an MCP server to a dev container
+
+### Using `mcp.json` file
+
+Run the `MCP: Add Server` command from the Command Palette.
+
+
+### Add MCP to a dev container
+
+Add MCP server configuration to `customizations.vscode.mcp` section of the dev container config file:
+
+```json title=".devcontainer/devcontainer.json" {5-12}
+{
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:latest",
+  "customizations": {
+    "vscode": {
+      "mcp": {
+        "servers": {
+          "playwright": {
+            "command": "npx",
+            "args": ["-y", "@microsoft/mcp-server-playwright"]
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+## Use MCP tools in chat
+
+Once you have added an MCP server, you can use the tools it provides in chat.
+
+For example, if [GitHub MCP server](https://github.com/mcp/io.github.github/github-mcp-server) is installed, when you ask `List my GitHub issues`, Copilot will automatically invoke the `List Issues` tool from the GitHub MCP server.
+
+To configure MCP tools to be used in chat:
+1. Open the Chat view (`⌃⌘I`).
+2. Open the tool picker to select which tools the agent is allowed to use. MCP tools are grouped per MCP server.
+3. Tools are automatically invoked as needed based on your prompt.
+
+
+## Manage installed MCP servers
+
+To view installed MCP servers, open the Extensions tab in VS Code (`Cmd+Shift+X` or sidebar icon).
+
+![](https://code.visualstudio.com/assets/docs/copilot/mcp-servers/extensions-view-mcp-servers.png)
+
+You can perform various actions on the installed MCP servers, such as:
+- Starting or stopping a server
+- Viewing the server logs
+- Browsing server resources
+- Uninstalling the server
+
+
+## Add MCP resources to chat context
+
+You can add MCP server's resources as context to your chat prompts.
+
+To add a resource from an MCP server to your chat prompt:
+1. In the Chat view, select **Add Context** (`⌘/`) > **MCP Resources**
+2. Select a resource type from the list and provide optional resource input parameters.
+
+![](https://code.visualstudio.com/assets/docs/copilot/mcp-servers/mcp-resources-quick-pick.png)
+
+
+## Use MCP prompts
+
+MCP servers can provide preconfigured prompts for common tasks that you can invoke in chat with a slash `/` command.
+
+![](https://code.visualstudio.com/assets/docs/copilot/mcp-servers/mcp-prompt-invocation.png)
+
+
+## Advanced Topics
+
+- [MCP server configuration format `mpc.json`](https://code.visualstudio.com/docs/copilot/customization/mcp-servers#_configuration-format)
+- [Debug an MCP server](https://code.visualstudio.com/docs/copilot/customization/mcp-servers#_troubleshoot-and-debug-mcp-servers)
+
+
+## References
+
+- [MCP servers](https://code.visualstudio.com/docs/copilot/customization/mcp-servers)

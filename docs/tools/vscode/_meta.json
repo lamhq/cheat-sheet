@@ -10,5 +10,10 @@
     "name": "dev-containers",
     "type": "dir",
     "collapsed": true
+  },
+  {
+    "name": "github-copilot",
+    "type": "dir",
+    "collapsed": true
   }
 ]
