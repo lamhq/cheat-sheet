@@ -1,7 +1,5 @@
 # MCP
 
-Use MCP servers in VS Code.
-
 ## Introduction
 
 The Model Context Protocol (MCP) is an open standard that defines how various applications can share context with Large Language Models (LLMs).
@@ -63,23 +61,3 @@ Copilot analyzes code changes, related issues, and context to generate a detaile
 Connecting to the Grafana MCP server allows for easier application performance monitoring.
 
 Copilot can query your Grafana instance to examine metrics like latency and error rates, returning panel data or raw time-series information for analysis.
-
-
-
-## Use MCP resources
-
-MCP servers can give direct access to resources that you can use as context in your chat prompts.
-
-1. In the Chat view, select **Add Context** > **MCP Resources**
-2. Select a resource type from the list and provide optional resource input parameters.
-
-To view the list of available resources, use `MCP: Browse Resources` command
-
-To view resources for a specific server, use `MCP: List Servers` > `Browse Resources` command
-
-
-## Use MCP prompts
-
-MCP servers can provide preconfigured prompts for common tasks.
-
-To invoke an MCP prompt in chat, type `/` in the chat input field, followed by the prompt name, formatted as `mcp.servername.promptname`.

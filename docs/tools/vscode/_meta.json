@@ -15,5 +15,6 @@
     "name": "github-copilot",
     "type": "dir",
     "collapsed": true
-  }
+  },
+  "nodejs"
 ]
