@@ -1,0 +1,63 @@
+# Model Context Protocol
+
+## Introduction
+
+The Model Context Protocol (MCP) is an open standard that defines how various applications can share context with Large Language Models (LLMs).
+
+
+## Benefits
+
+- MCP extends AI assistant's capabilities, enabling it to interact with external systems like knowledge bases, data stores, and testing applications.
+- MCP integration allows performing tasks that previously required multiple tools, context switching, and manual effort — all directly in IDE.
+- MCP eliminates the need for custom integrations between each AI model and each tool.
+
+
+## How MCP works?
+
+MCP follows a client-server architecture:
+
+- **MCP clients** connect to MCP servers and request actions on behalf of the AI model
+- **MCP servers** provide one or more tools that expose specific functionalities through a well-defined interface
+- **Model Context Protocol** defines the message format for communication between clients and servers
+
+For example:
+- A file system MCP server might provide tools for reading, writing, or searching files and directories
+- GitHub's MCP server offers tools to list repositories, create pull requests, or manage issues.
+
+MCP servers can run locally on your machine or be hosted remotely.
+
+> [!CAUTION]
+> MCP servers can run arbitrary code on your machine. Only add servers from trusted sources.
+
+
+## MCP Use Cases
+
+### Bridge Design and Development with Figma
+
+Copilot can securely access and interpret design specifications directly from Figma.
+
+It automatically retrieves exact design parameters (colors, spacing, etc.) to generate accurate, ready-to-use code (React components), reducing manual translation.
+
+### Tap into Your Knowledge Base with Obsidian
+
+The Obsidian MCP server connects Copilot to your Obsidian vault (Markdown notes).
+
+This allows Copilot to search past decisions, architectural notes, and research findings, and even create new summary documentation directly in your vault.
+
+### Test Your Code with Playwright
+
+Integrating with the Playwright MCP server transforms test creation into a guided experience.
+
+Copilot can analyze your implementation, generate comprehensive tests (e.g., for complex authentication flows), run them, and provide immediate feedback with suggested fixes.
+
+### File Pull Requests Faster
+
+The GitHub remote MCP server helps automate the creation of pull requests (PRs).
+
+Copilot analyzes code changes, related issues, and context to generate a detailed PR summary (overview, changes, testing strategy) and suggest appropriate reviewers.
+
+### Monitor Application Performance with Grafana
+
+Connecting to the Grafana MCP server allows for easier application performance monitoring.
+
+Copilot can query your Grafana instance to examine metrics like latency and error rates, returning panel data or raw time-series information for analysis.

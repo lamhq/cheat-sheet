@@ -4,24 +4,28 @@
 	"description": "Albert's cheat sheet",
 	"type": "module",
 	"scripts": {
-		"dev": "rspress dev --port 5002",
+		"dev": "rspress dev -c configs/base.ts --port 5000",
+		"dev:se": "rspress dev -c configs/se.ts --port 5001",
+		"dev:de": "rspress dev -c configs/de.ts --port 5002",
+		"dev:devops": "rspress dev -c configs/devops.ts --port 5003",
+		"dev:tools": "rspress dev -c configs/tools.ts --port 5004",
+		"dev:web": "rspress dev -c configs/web.ts --port 5005",
+		"dev:backend": "rspress dev -c configs/backend.ts --port 5006",
 		"build": "rspress build",
 		"preview": "rspress preview --port 5002",
-		"lint": "ls docs/**/*.mdx | node lint-markdown.js",
-    "prepare": "node .husky/install.js"
+		"lint": "ls docs/**/*.mdx | node scripts/lint-markdown.js",
+		"prepare": "node .husky/install.mjs"
 	},
 	"dependencies": {
-		"react": "^18.2.0",
-		"react-dom": "^18.2.0",
+		"rspress": "^1.40.2",
 		"rspress-plugin-katex": "^0.3.0"
 	},
 	"devDependencies": {
-		"lint-staged": "^16.1.2",
-		"rspress": "^1.42.0",
-		"typescript": "5.8.2",
-		"husky": "^8.0.0"
+		"@types/node": "^18.11.17",
+		"husky": "^9.1.7",
+		"lint-staged": "^16.1.2"
 	},
 	"lint-staged": {
-		"*.mdx": "node lint-markdown.js"
+		"*.mdx": "node scripts/lint-markdown.js"
 	}
 }

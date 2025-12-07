@@ -1,0 +1,10 @@
+[
+  "prompt",
+  "mcp",
+  {
+    "name": "github-copilot",
+    "type": "dir",
+    "collapsed": true,
+    "label": "GitHub Copilot"
+  }
+]
