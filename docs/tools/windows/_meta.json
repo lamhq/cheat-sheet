@@ -1,6 +1,6 @@
 [
   "active",
   "optimize",
-  "no-network-access",
+  "network",
   "virtual-keyboard"
 ]

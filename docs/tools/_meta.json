@@ -10,6 +10,12 @@
     "label": "Visual Studio Code"
   },
   {
+    "name": "ai-coding-assistants",
+    "type": "dir",
+    "collapsed": true,
+    "label": "AI Coding Assistants"
+  },
+  {
     "name": "macos",
     "type": "dir",
     "collapsed": true,
@@ -27,17 +33,11 @@
     "collapsed": true,
     "label": "Android"
   },
-  "udemy",
   {
     "name": "ngrok",
     "type": "dir",
     "collapsed": true,
     "label": "ngrok"
   },
-  {
-    "name": "ai-coding-assistants",
-    "type": "dir",
-    "collapsed": true,
-    "label": "AI Coding Assistants"
-  }
+  "udemy"
 ]
