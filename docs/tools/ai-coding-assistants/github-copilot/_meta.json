@@ -1,12 +1,8 @@
 [
-  "installation",
-  "coding-agent",
-  "code-suggestions",
   "code-review",
   "pull-requests",
+  "coding-agent",
   "provide-context",
   "customize-response",
-  "prompt",
-  "mcp",
   "best-practices"
 ]

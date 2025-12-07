@@ -35,9 +35,9 @@
     "label": "ngrok"
   },
   {
-    "name": "github-copilot",
+    "name": "ai-coding-assistants",
     "type": "dir",
     "collapsed": true,
-    "label": "GitHub Copilot"
+    "label": "AI Coding Assistants"
   }
 ]
