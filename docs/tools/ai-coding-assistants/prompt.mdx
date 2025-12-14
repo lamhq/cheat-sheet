@@ -97,11 +97,10 @@ Ensure the existing code in your codebase follows best practices:
 - Structure your code into modular, scoped components
 - Include unit tests
 
+
 ## Prompt Examples
 
-Examples of prompts to use with GitHub Copilot Chat.
-
-### Summarize text
+### Analyzing text
 
 These are instruction for Gemini to shorten a documentation link:
 
@@ -140,103 +139,29 @@ Follow this structure when shorten the content:
 ```
 ````
 
-### Plan project
 
-Turn ideas into actionable tasks by breaking down your project into epics, features, and smaller pieces of work
+### Learning Programming
 
-1. Create your repository
-2. Open Copilot Chat in GitHub
-3. Attach the repository to the chat
-4. Run this prompt:
-   ```text
-   I’m planning to create a shopping website in React and Node.js. 
-
-   The site should allow users to browse products by category, search for items, add products to a cart, and complete checkout. 
-
-   Please help me plan the project by creating issues and breaking it down into epics, features, and tasks.
-   ```
-5. Refine the generated issues and epics:
-   ```text
-   Can you break down the issue "Feature: UI Skeleton and Navigation" into smaller tasks?
-   ```
-6. If an issue is not as you expected, you can unlink it from the issue tree.
-7. Assign issues to team members or to Copilot itself for further assistance.
+- What is NEW-LANGUAGE best suited for? I am an experienced Python programmer, but I don't know anything about NEW-LANGUAGE.
+- What are the main ways in which NEW-LANGUAGE differs from other languages? Explain the most essential things I need to know as an experienced programmer who wants to learn to code in NEW-LANGUAGE.
+- As an experienced programmer learning NEW-LANGUAGE, what are the things I should focus on first?
+- What are the biggest mistakes newcomers to NEW-LANGUAGE typically make with this language?
+- What are the most essential libraries or frameworks I should know about for NEW-LANGUAGE?
+- How can I install NEW-LANGUAGE?
+- How do you manage dependencies and packages in NEW-LANGUAGE?
+- What testing frameworks does the NEW-LANGUAGE community typically use?
+- How does error handling work in NEW-LANGUAGE?
+- What are the best practices for error handling in NEW-LANGUAGE?
 
 
 ### Creating diagrams
 
-```text
-Create a mermaid gantt diagram that covers the period August 1st 2025 until January 31st, 2025. Include 5 phases, each taking 6 weeks, and overlapping equally.
-```
-
-### Explore codebase
-
-```text
-Based on the code in this repository, give me an overview of the architecture of the codebase. Provide evidence.
-```
-
-```text
-Which languages are used in this repo? Show the percentages for each language.
-```
-
-```text
-Analyze the code in this repository and tell me about the entry points for this application.
-```
-
-```text
-Where is authentication handled in this codebase?
-```
-
-```text
-Describe the data flow in this application.
-```
-
-```text
-What design patterns are used in this repository? Give a brief explanation of each pattern that you find, and an example of code from this repository that uses the pattern, with a link to the file.
-```
-
-```text
-What are the core algorithms implemented in this repo?
-```
+- Create a mermaid gantt diagram that covers the period August 1st 2025 until January 31st, 2025. Include 5 phases, each taking 6 weeks, and overlapping equally.
 
 
-### Explain code
+### Task Planning
 
-```text
-I'm a Python developer. Help me better understand this code. Please provide analogies.
-```
-
-
-### Refactor code
-
-Refactoring for performance optimization:
-
-```text
-Optimize this code for performance
-```
-
-Refactoring for environmental sustainability (use less resources):
-
-```text
-Refactor this code to improve its environmental sustainability by reducing memory usage and computational overhead.
-```
-
-Refactoring to implement a design pattern:
-
-```text
-Refactor this code using the module pattern
-```
-
-Decoupling business logic from UI components:
-
-```text
-Separate the UI code from the Counter component in this code.
-```
-
-
-### List implementation approachs
-
-You want to evaluate different approaches to implement a feature to see whether they fit with your needs and constraints.
+Evaluate different approaches to implement a feature to see whether they fit with your needs and constraints.
 
 ```text
 Given the feature specification below, list options for implementation and tradeoffs for each option.
@@ -256,60 +181,52 @@ Users have requested a "Recent Items" section on their dashboard to quickly acce
 * The solution must not degrade performance for users with thousands of items.
 ```
 
-### Document code
 
-```text
-Create a README template for a new open-source project that includes sections for project description, installation instructions, usage examples, and contribution guidelines. Make it clear and easy to follow.
-```
+### Feature implementation
 
-```text
-Update the existing documentation for the getByCategoryName function to reflect the current implementation.
-```
+- Create a user registration system with email verification
+- Add real-time notifications using WebSockets
+- Implement a shopping cart with local storage persistence
 
 
-### Analyze code
+### Code Analysis
 
-```text
-Analyze this code for potential security vulnerabilities and suggest fixes.
-```
+- Based on the code in this repository, give me an overview of the architecture of the codebase. Provide evidence.
+- Analyze the code in this repository and tell me about the entry points for this application.
+- Where is authentication handled in this codebase?
+- Explain the authentication flow in this application
+- Describe the data flow in this application.
+- Which languages are used in this repo? Show the percentages for each language.
+- What are the core algorithms implemented in this repo?
+- What design patterns are used in this repository? Give a brief explanation of each pattern that you find, and an example of code from this repository that uses the pattern, with a link to the file.
+- I'm a Python developer. Help me better understand this code. Please provide analogies.
+- Analyze this code for potential security vulnerabilities and suggest fixes.
 
 
-### Learn programming language
+### Debugging and troubleshooting
 
-These are some prompts that you can use in Copilot Chat to help you learn the basics of a new programming language:
+- Why is this component re-rendering unnecessarily?
+- Find and fix the memory leak in this data processing pipeline
 
-```text
-What is NEW-LANGUAGE best suited for? I am an experienced Python programmer, but I don't know anything about NEW-LANGUAGE.
-```
 
-```text
-What are the main ways in which NEW-LANGUAGE differs from other languages? Explain the most essential things I need to know as an experienced programmer who wants to learn to code in NEW-LANGUAGE.
-```
+### Testing
 
-```text
-As an experienced programmer learning NEW-LANGUAGE, what are the things I should focus on first?
-```
+- Generate comprehensive unit tests for this service class
+- Create integration tests for the API endpoints
+- Add property-based tests for this data validation function
 
-```text
-What are the biggest mistakes newcomers to NEW-LANGUAGE typically make with this language?
-```
 
-```text
-What are the most essential libraries or frameworks I should know about for NEW-LANGUAGE?
-```
+### Code Refactoring
 
-```text
-How can I install NEW-LANGUAGE?
-```
+- Optimize this database query for better performance
+- Optimize this code for performance
+- Refactor this code to improve its environmental sustainability by reducing memory usage and computational overhead.
+- Refactor this code using the module pattern
+- Separate the UI code from the Counter component in this code.
 
-```text
-How do you manage dependencies and packages in NEW-LANGUAGE?
-```
 
-```text
-What testing frameworks does the NEW-LANGUAGE community typically use?
-```
+### Documentation
 
-```text
-How does error handling work in NEW-LANGUAGE?
-```
+- Document this API endpoint with proper JSDoc comments
+- Create a README template for a new open-source project that includes sections for project description, installation instructions, usage examples, and contribution guidelines. Make it clear and easy to follow.
+- Update the existing documentation for the getByCategoryName function to reflect the current implementation.

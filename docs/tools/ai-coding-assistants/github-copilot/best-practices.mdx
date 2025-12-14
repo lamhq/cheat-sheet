@@ -1,12 +1,12 @@
 # Best practices
 
-## Tool selection
+## Choose the right tool
 
-Choose the right Copilot tool
+Choose the right Copilot tool for the task.
 
 ### Code completion
 
-Code completion works best for:
+Code completion (inline suggestion) works best for:
 
 - Completing code snippets, variable names, and functions as you write them
 - Generating repetitive code
@@ -24,29 +24,34 @@ Copilot Chat is best suited for:
 - Completing a task as a specific persona. For example, you can tell Copilot Chat that it is a Senior C++ Developer who cares greatly about code quality, readability, and efficiency, then ask it to review your code.
 
 
-## Model selection
+## Create good prompts
+
+See [Prompt Engineering](../prompt.mdx#prompt-engineering).
+
+
+## Choose the right AI model
 
 For more details, see [AI model comparison](https://docs.github.com/en/copilot/reference/ai-models/model-comparison).
 
-### General-purpose coding and writing
+### General-purpose coding
 
-- GPT-5-Codex: higher-quality code on complex engineering tasks like features, tests, debugging, refactors, and reviews without lengthy instructions.
-- GPT-5 mini: fast, accurate, and works well across languages and frameworks.
-- Grok Code Fast 1: Performs well on code generation, and debugging across multiple languages.
-- Raptor mini: fast, accurate inline suggestions and explanations.
+- **GPT-5-Codex**: higher-quality code on complex engineering tasks like features, tests, debugging, refactors, and reviews without lengthy instructions.
+- **GPT-5 mini**: fast, accurate, and works well across languages and frameworks.
+- **Grok Code Fast 1**: Performs well on code generation, and debugging across multiple languages.
+- **Raptor mini**: fast, accurate inline suggestions and explanations.
 
-When to use these models:
+When to use:
 - Write or review functions, short files, or code diffs.
 - Generate documentation, comments, or summaries.
 - Explain errors or unexpected behavior quickly.
 - Work in a non-English programming environment.
 
 
-### Fast help with simple or repetitive tasks
+### Simple or repetitive tasks
 
-- Claude Haiku 4.5: Balances fast responses with quality output. Ideal for small tasks and lightweight code explanations.
+- **Claude Haiku 4.5**: Balances fast responses with quality output. Ideal for small tasks and lightweight code explanations.
 
-When to use these models:
+When to use:
 - Write or edit small functions or utility code.
 - Ask quick syntax or language questions.
 - Prototype ideas with minimal setup.
@@ -55,13 +60,13 @@ When to use these models:
 
 ### Deep reasoning and debugging
 
-- GPT-5 mini: Delivers deep reasoning and debugging with faster responses and lower resource usage than GPT-5. Ideal for interactive sessions and step-by-step code analysis.
-- GPT-5: Great at complex reasoning, code analysis, and technical decision-making.
-- Claude Sonnet 4: Improves on 3.7 with more reliable completions and smarter reasoning under pressure.
-- Claude Opus 4.1: Anthropic’s most powerful model. Improves on Claude Opus 4.
-- Gemini 2.5 Pro: Advanced reasoning across long contexts and scientific or technical analysis.
+- **GPT-5 mini**: Delivers deep reasoning and debugging with faster responses and lower resource usage than GPT-5. Ideal for interactive sessions and step-by-step code analysis.
+- **GPT-5**: Great at complex reasoning, code analysis, and technical decision-making.
+- **Claude Sonnet 4**: Improves on 3.7 with more reliable completions and smarter reasoning under pressure.
+- **Claude Opus 4.1**: Anthropic’s most powerful model. Improves on Claude Opus 4.
+- **Gemini 2.5 Pro**: Advanced reasoning across long contexts and scientific or technical analysis.
 
-When to use these models:
+When to use:
 - Debug complex issues with context across **multiple files**.
 - Refactor large or **interconnected codebases**.
 - Plan features or architecture across layers.
@@ -71,19 +76,27 @@ When to use these models:
 
 ### Working with visuals (diagrams, screenshots)
 
-- GPT-5 mini: Reliable default for most coding and writing tasks. Fast, accurate, and supports multimodal input for visual reasoning tasks. Works well across languages and frameworks.
-- Claude Sonnet 4: Improves on 3.7 with more reliable completions and smarter reasoning under pressure.
-- Gemini 2.5 Pro: Deep reasoning and debugging, ideal for complex code generation, debugging, and research workflows.
+- **GPT-5 mini**: Reliable default for most coding and writing tasks. Fast, accurate, and supports multimodal input for visual reasoning tasks. Works well across languages and frameworks.
+- **Claude Sonnet 4**: Improves on 3.7 with more reliable completions and smarter reasoning under pressure.
+- **Gemini 2.5 Pro**: Deep reasoning and debugging, ideal for complex code generation, debugging, and research workflows.
 
-When to use these models:
+When to use:
 - Ask questions about diagrams, screenshots, or UI components.
 - Get feedback on visual drafts or workflows.
 - Understand front-end behavior from visual context.
 
 
-## Create good prompts
+## Customize the AI
 
-See [Prompt Engineering](../prompt.mdx#prompt-engineering).
+Customize the AI to your coding style and project conventions by using:
+- [Custom instructions](./customize-response.mdx#repository-wide-custom-instructions)
+- [Custom agents](./coding-agent.mdx#custom-agents)
+- Prompt files
+
+
+## Extend the AI's capabilities
+
+Extend the AI's capabilities with tools from [MCP](../mcp.mdx) servers or Marketplace extensions.
 
 
 ## Review Copilot's work

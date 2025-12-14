@@ -1,8 +1,10 @@
-# Code suggestions
+# Inline suggestions
 
-## Enable suggestion
+## Enable or disable inline suggestions
 
-Enable or disable auto triggering of Copilot completions for specified languages with the `setting(github.copilot.enable)` setting.
+![](https://code.visualstudio.com/assets/docs/copilot/inline-suggestions/snooze-code-completions.png)
+
+Alternatively, you can Enable or disable auto triggering of Copilot completions **for specified languages** by modifying the `github.copilot.enable` setting in the Settings editor.
 
 
 ## Showing suggestions
@@ -15,21 +17,16 @@ Type the function header in a JavaScript file:
 function calculateDaysBetweenDates(begin, end) {
 ```
 
-Describe what you want in a comment:
+When you're presented with an inline suggestion, you can accept it with the `Tab` key.
 
-```js
-// write a function to
-// find all images without alternate text
-// and give them a red border
-```
+![](https://code.visualstudio.com/assets/docs/copilot/inline-suggestions/js-suggest.png)
+
 
 ## Showing alternative suggestions
 
 GitHub Copilot may offer multiple suggestions. You can select which suggestion to use, or reject all suggestions.
 
 Hover over the suggestion, click the **forward** or **back** arrow button in the control to display next or previous suggestions.
-
-You can press `Ctrl`+`Enter` to open a new tab with multiple additional options.
 
 
 ## Find matching code
@@ -41,3 +38,16 @@ This feature is only available if your GitHub Copilot settings (personal or orga
 In Visual Studio Code, You can find code references in the GitHub Copilot logs:
 1. Open the Output window (`View` > `Output`)
 2. Select `GitHub Copilot Log (Code References)` from the dropdown.
+
+
+## Change the AI model for suggestions
+
+1. Open the Command Palette
+2. Select the **GitHub Copilot: Change Completions Model** command.
+
+
+## Provide Context
+
+Copilot looks at the current and open files in your editor to analyze the context and create appropriate suggestions.
+
+Having related files open in VS Code while using Copilot helps set this context and lets Copilot get a bigger picture of your project.

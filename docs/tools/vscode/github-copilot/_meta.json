@@ -1,5 +1,11 @@
 [
-  "code-suggestions",
   "modes",
-  "mcp"
+  "inline-suggestions",
+  {
+    "name": "customization",
+    "type": "dir",
+    "collapsed": true
+  },
+  "mcp",
+  "smart-actions"
 ]
