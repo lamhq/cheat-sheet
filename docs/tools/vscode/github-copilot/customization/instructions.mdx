@@ -36,10 +36,10 @@ VS Code supports multiple types of Markdown-based instructions files:
    - Stored in the workspace (`.github/instructions`) or user profile
 
 3. One or more `AGENTS.md` files:
-   - Useful if you work with multiple AI agents in your workspace
-   - Automatically applies to all chat requests in the workspace or to specific subfolders
+   - Define custom instructions for all AI agents in workspace
+   - Automatically applies to all chat requests within workspace
    - Stored in the root of the workspace or in subfolders
-   - Enabled by the `chat.useAgentsMdFile` setting
+   - Enabled by setting: `chat.useAgentsMdFile` and `chat.useNestedAgentsMdFiles` (use multiple `AGENTS.md` files)
 
 
 ## Examples
