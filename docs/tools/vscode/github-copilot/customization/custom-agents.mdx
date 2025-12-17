@@ -2,44 +2,118 @@
 
 ## Introduction
 
-Custom Agents are specialized versions of the Copilot Coding Agent that you can tailor to specific roles or tasks (database administrator, front-end development, or planning)
+Custom Agents are specialized versions of the Copilot Coding Agent that you can tailor to specific roles or tasks.
+
+Custom agents consist of a set of instructions and tools that are applied when you switch to that agent.
+
+_For example, a "Plan" agent could include instructions for generating an implementation plan and only use read-only tools._
 
 > [!NOTE]
 > This feature is available with the **GitHub Copilot Pro, GitHub Copilot Pro+, GitHub Copilot Business**, and **GitHub Copilot Enterprise** plans.
 
 
+## Why custom agents?
+
+Different tasks require different capabilities.
+
+By creating a custom agent, you can quickly switch to a specific task with predefined relevant tools and instructions, without having to manually select them each time.
+
+
 ## Use Cases
 
-Create a custom agent for planning, where the AI has read-only access to the codebase and can only generate implementation plans
+**Plan**: custom agent has read-only access to the codebase and can only generate implementation plans
 
-Define a research custom agent, where the AI can reach out to external resources to explore new technologies or gather information
+**Research**: custom agent can reach out to external resources to explore new technologies or gather information
 
-Create a front-end developer custom agent, where the AI can only generate and modify code related to front-end development
+**Front-end developer**: custom agent can only generate and modify code related to front-end development
 
 
-## Agent Profile
+## Handoffs
 
-Custom agents are defined by Agent Profiles, which are Markdown files containing YAML frontmatter.
+Handoffs enable you to create guided workflows between agents.
 
-Agent profiles can be defined at two levels:
-1. **Repository Level:** Defined in the `.github/agents/` directory for project-specific use.
-2. **Organization/Enterprise Level:** Defined in the `/agents/` directory of a `.github-private` repository for broader availability.
+After a chat response completes, **handoff buttons** let users move to the next agent with relevant context and a pre-filled prompt.
 
-An Agent Profile has two **components**:
-- **YAML Frontmatter:** Defines the agent's metadata and capabilities.
-   - Includes properties like `name`, a required `description`, and a list of available `tools` (e.g., `["read", "edit"]`).
-   - Can configure access to external tools via the `mcp-servers` property (for Enterprise use).
-- **Markdown Content:** containing custom instructions that dictate the agent's role and expertise.
+Handoffs are useful for orchestrating multi-step workflows.
 
-Example:
+For example:
+
+- **Planning → Implementation**: Generate a plan in planning agent, then hand off to implementation agent to start coding.
+- **Implementation → Review**: Complete implementation, then switch to a code review agent to check for quality and security issues.
+- **Write Failing Tests → Write Passing Tests**: Generate failing tests that are easier to review than big implementations, then hand off to make those tests pass by implementing the required code changes.
+
+To **define handoffs**, edit the frontmatter of the agent file. Specify the target agent, the button label, and an optional prompt to send:
+
+```
+---
+description: Generate an implementation plan
+tools: ['search', 'fetch']
+handoffs:
+  - label: Start Implementation
+    agent: implementation
+    prompt: Now implement the plan outlined above.
+    send: false
+---
+```
+
+
+## Custom agent file structure
+
+Custom agents are defined in a `.agent.md` Markdown file, and can be stored in:
+- Workspace: `.github/agents/*.md`
+- User profile
+- [Organization](https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-for-organization/prepare-for-custom-agents) or [Enterprise](https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-for-organization/prepare-for-custom-agents).
+
+Custom agent files have two components: **Header** & **Body**.
+
+### Header (optional)
+
+Formatted as YAML frontmatter. Defines the agent's metadata and capabilities.
+
+
+### Body
+
+Formatted as Markdown. Containing prompts, guidelines, and relevant information that dictate the agent's role and expertise.
+
+You can reference other files by using Markdown links (reuse instructions files).
+
+To reference agent tools, use the `#tool:<tool-name>` syntax.
+
+
+### Example
+
+A "Plan" custom agent file that generates an implementation plan and doesn't make any code edits:
 
 ```markdown
 ---
-name: readme-creator
-description: Agent specializing in creating and improving README files
+description: Generate an implementation plan for new features or refactoring existing code.
+name: Planner
+tools: ['fetch', 'githubRepo', 'search', 'usages']
+model: Claude Sonnet 4
+handoffs:
+  - label: Implement Plan
+    agent: agent
+    prompt: Implement the plan outlined above.
+    send: false
 ---
-You are a documentation specialist focused on README files. Your scope is limited to README files or other related documentation files only - do not modify or analyze code files.
+# Planning instructions
+You are in planning mode. Your task is to generate an implementation plan for a new feature or for refactoring existing code.
+Don't make any code edits, just generate a plan.
+
+The plan consists of a Markdown document that describes the implementation plan, including the following sections:
+
+* Overview: A brief description of the feature or refactoring task.
+* Requirements: A list of requirements for the feature or refactoring task.
+* Implementation Steps: A detailed list of steps to implement the feature or refactoring task.
+* Testing: A list of tests that need to be implemented to verify the feature or refactoring task.
 ```
+
+View the [official doc](https://code.visualstudio.com/docs/copilot/customization/custom-agents#_custom-agent-file-structure) for more details.
+
+
+## Create a custom agent
+
+View the [official doc](https://code.visualstudio.com/docs/copilot/customization/custom-agents#_create-a-custom-agent) for more details.
 
 
 ## Usage
@@ -51,7 +125,13 @@ Once created, Custom Agents are available wherever the Copilot Coding Agent can 
 - Visual Studio Code and other supported IDEs.
 
 
+## Share custom agents across workspaces
+
+View the [official doc](https://code.visualstudio.com/docs/copilot/customization/custom-agents#_share-custom-agents-across-teams-experimental) for more details.
+
+
 ## References
 
 - [GitHub Docs: About Custom Agents](https://docs.github.com/en/copilot/concepts/agents/coding-agent/about-custom-agents)
 - [Example Agent Profiles](https://docs.github.com/en/copilot/tutorials/customization-library/custom-agents/your-first-custom-agent)
+- [Awesome GitHub Copilot Customizations](https://github.com/github/awesome-copilot/tree/main)
