@@ -1,5 +1,7 @@
 [
   "instructions",
   "prompt-files",
-  "custom-agents"
+  "custom-agents",
+  "mcp",
+  "models"
 ]
