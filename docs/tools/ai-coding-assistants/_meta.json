@@ -1,6 +1,7 @@
 [
   "prompt",
   "mcp",
+  "context",
   {
     "name": "github-copilot",
     "type": "dir",

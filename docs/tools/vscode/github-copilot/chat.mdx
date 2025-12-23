@@ -1,0 +1,236 @@
+# Chat
+
+VS Code provides three ways to start an AI chat conversation, to access them, use the Chat menu in the VS Code title bar:
+
+![](https://code.visualstudio.com/assets/docs/copilot/chat/copilot-chat/copilot-chat-menu-command-center.png)
+
+## Chat view
+
+Press `⌃⌘I` (Control + Command + I) to open the Chat view.
+
+Use the Chat view for:
+
+- Ongoing, multi-turn chat conversations
+- Switching between different agents to ask questions, make code edits across files, or start autonomous coding workflows
+- Working on features that span multiple files
+- Planning and implementing complex changes
+
+![](https://code.visualstudio.com/assets/docs/copilot/chat/copilot-chat/chat-view.png)
+
+
+## Inline chat
+
+Press `⌘I` (Command + I) to open Inline Chat in the **editor** or **integrated terminal**.
+
+Prompt is scoped to the code in the active editor.
+
+Use inline chat for:
+
+- Getting suggestions inline, right where you're working
+- Understanding code in your current context
+- Getting help with terminal commands and output
+
+![](https://code.visualstudio.com/assets/docs/copilot/chat/copilot-chat/inline-chat.png)
+
+
+## Quick chat
+
+Press `⇧⌥⌘L` (Command + Option + Shift + L) to open a lightweight chat overlay.
+
+Use quick chat for:
+
+- Quick questions that don't require extended conversation
+- Getting answers without changing your current view
+- Looking up information while maintaining focus on your work
+
+![](https://code.visualstudio.com/assets/docs/copilot/chat/copilot-chat/quick-chat.png)
+
+
+## Add context
+
+The following information is **implicitly** included in the chat context:
+- Current selected text.
+- The file name of the active editor.
+- The active file (**Ask** or **Edit**)
+
+
+### # - mention
+
+Use `#` to mention different types of context items:
+
+- Files/folders: `#file` or Drag & drop from Explorer view
+- Codebase: `#codebase` (enable code search for your workspace)
+- Terminal output: `#terminalSelection`
+- Code symbols (make sure to open the file containing the symbol in the editor first)
+- Tools: `#` followed by a **tool name**
+- Content from web: `#fetch <URL>`
+- Content from GitHub: `#githubRepo <repo>`
+
+Examples:
+
+- `Explain how authentication works in #codebase`
+- `Summarize #fetch https://code.visualstudio.com/updates`
+- `How does routing work? #githubRepo vercel/next.js`
+- `How do I use the 'useState' hook in react 18? #fetch https://18.react.dev/reference/react/useState#usage`
+- `what are my open issues #github-mcp`
+- `Fix the failing tests #testFailure`
+- `Fix the issues in #problems`
+- `Summarize the #changes`
+
+
+### @ - mention
+
+Use `@` to mention chat participants to ask questions belong to a specific domain.
+
+VS Code has several built-in chat participants like `@vscode`, `@terminal`, or `@workspace`.
+
+Examples:
+
+- `@vscode how to enable word wrapping`
+- `@terminal what are the top 5 largest files in the current directory`
+
+
+### / - command
+
+Use `/` command to access common commands (`/new`, `/explain`, ... or custom prompts).
+
+
+### Images
+
+You can drag and drop an image from a web browser or file system onto the Chat view to add it as context.
+
+For examples:
+
+- Attach a screenshot of a block of code and ask to explain it
+- Attach a sketch of a UI and ask the agent to implement it
+
+
+### Browser Elements
+
+You can add [elements from the Simple Browser window](https://code.visualstudio.com/docs/copilot/chat/copilot-chat-context#_add-browser-elements-experimental) as context to your chat prompt. VS Code has a built-in browser that you can use to preview and interact with web pages inside VS Code.
+
+To do that:
+
+1. Enable selection from the Simple Browser with the `chat.sendElementsToChat.enabled` setting.
+2. Start your web application.
+3. Open the Simple Browser view by running the Simple Browser: Show command from the Command Palette.
+4. Select the Start button to start selecting elements from the current page.
+5. Hover over the elements of the web page and click to add them to the chat prompt.
+
+
+## Use tools in chat
+
+Tools can:
+- search code
+- run commands
+- fetch web content
+- invoke APIs
+
+VS Code supports three types of tools:
+- **Built-in tools**. See [Chat tools reference](https://code.visualstudio.com/docs/copilot/reference/copilot-vscode-features#_chat-tools) for a complete list.
+- **MCP tools**. MCP servers provide tools that extend chat with extra capabilities. MCP servers can run locally on your machine or be hosted remotely.
+- **Extension tools**. Extensions can provide tools that integrate deeply with the editor using VS Code extension APIs.
+
+You can enable or disable tools on a per-request basis by using the tools picker.
+
+You can add more tools by [installing MCP servers](https://code.visualstudio.com/docs/copilot/customization/mcp-servers) or [extensions](https://code.visualstudio.com/docs/getstarted/extensions) that contribute tools.
+
+![](https://code.visualstudio.com/assets/docs/copilot/chat-tools/agent-mode-select-tools.png)
+
+When using agents, it autonomously chooses and invokes relevant tools as needed to accomplish the task.
+
+You can explicitly reference tools in prompts by typing `#` followed by the tool name:
+- "Summarize the content from #fetch https://code.visualstudio.com/updates"
+- "How does routing work in Next.js? #githubRepo vercel/next.js"
+- "Fix the issues in #problems"
+- "Explain the authentication flow #codebase"
+
+Some tools accept parameters. For example, `#fetch` requires a URL and `#githubRepo` requires a repository name.
+
+## Auto approve
+
+You can choose to automatically approve tool by change `chat.tools.eligibleForAutoApproval` setting to `true`.
+
+To auto approve all requests to an URL, configure the `chat.tools.urls.autoApprove` setting:
+
+```json
+{
+  "chat.tools.urls.autoApprove": {
+    "https://www.example.com": false,
+    "https://*.contoso.com/*": true,
+    "https://example.com/api/*": {
+        "approveRequest": true,
+        "approveResponse": false
+    }
+  }
+}
+```
+
+To auto approve tools to edit files, use the chat.tools.edits.autoApprove setting:
+
+```json
+{
+  "chat.tools.edits.autoApprove": {
+    "**/*": true,
+    "**/.vscode/*.json": false,
+    "**/.env": false
+  }
+}
+```
+
+You can configure which terminal commands are automatically approved by using the `chat.tools.terminal.autoApprove` setting:
+
+```json
+{
+  // Allow the `mkdir` command
+  "mkdir": true,
+  // Allow `git status` and commands starting with `git show`
+  "/^git (status|show\\b.*)$/": true,
+
+  // Block the `del` command
+  "del": false,
+  // Block any command containing "dangerous"
+  "/dangerous/": false
+}
+```
+
+Related settings:
+
+- `chat.tools.terminal.enableAutoApprove`: permanently disable auto-approve functionality
+- `chat.tools.terminal.blockDetectedFileWrites` (experimental): detection of file writes (experimental)
+- `chat.tools.terminal.ignoreDefaultAutoApproveRules` (experimental): disable all default rules (both allow and block), giving full control over all rules.
+
+To clear all saved tool approvals, use the `Chat: Reset Tool Confirmations` command in the Command Palette.
+
+> [!CAUTION]
+> To allow all tools and terminal commands to run without prompting for user confirmation, enable the `chat.tools.global.autoApprove` setting.
+
+
+## Export a chat session
+
+Export a chat session as a JSON file by running the `Chat: Export Chat...` command from the Command Palette.
+
+
+## Save a chat session as a prompt
+
+You can save a chat session as a prompt to reuse by typing `/savePrompt` command in the chat.
+
+> [!INFO]
+> The command creates a prompt file that generalizes your current chat conversation into a reusable prompt. The prompt file has placeholders where appropriate.
+
+
+## Use Subagents
+
+A subagent is an isolated, autonomous agent within a chat session.
+
+It handle a specific task and has its own context, operate independently from the main chat. 
+
+It helps optimize context management for complex, multi-step tasks (e.g., research, analysis) by returning only the final result to the main chat session, keeping the main context window focused on the primary conversation.
+
+To invoke a subagent in a prompt:
+
+1. In the tool picker, enable **Built-In** > **Agent** > **runSubagent** tool
+2. In chat, ask to use subagent: `Run #runSubagent to research the best authentication methods for web applications. Summarize the findings.`
+
+> [!INFO]
+> You can [specify a custom agent](https://code.visualstudio.com/docs/copilot/chat/chat-sessions#_use-a-custom-agent-with-subagents-experimental) to use with subagents.

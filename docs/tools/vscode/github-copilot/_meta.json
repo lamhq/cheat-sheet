@@ -1,6 +1,7 @@
 [
   "modes",
   "inline-suggestions",
+  "chat",
   {
     "name": "customization",
     "type": "dir",

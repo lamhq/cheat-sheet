@@ -1,0 +1,44 @@
+# Context engineering
+
+## Introduction
+
+Context engineering is a systematic approach to providing AI agents with targeted project information, to:
+- Improve the quality and accuracy of generated code.
+- Enable AI to make better decisions and maintain persistent knowledge across interactions.
+
+## Workflow
+
+Steps of high-level workflow for context engineering in **VS Code**:
+1. **Curate project-wide context**: use **custom instructions** to include relevant documentation (for example, architecture, design, contributor guidelines) as context to all agent interactions.
+2. **Generate implementation plan**: create a planning persona by using a **custom agent** and a prompt to generate a detailed feature implementation plan.
+3. **Generate implementation code**: use **custom instructions** to generate code based on the implementation plan that adheres to your coding guidelines.
+
+![](https://code.visualstudio.com/assets/docs/copilot/context-engineering-guide/context-engineering-workflow.png)
+
+
+## Step 1: Curate project-wide context
+
+Collect key project information like product vision, architecture, and other relevant documentation to be used as chat context.
+
+You can use AI to generate these project documentation files. For example:
+- `Generate an ARCHITECTURE.md (max 2 page) file that describes the overall architecture of the project.`
+- `Generate a PRODUCT.md (max 2 page) file that describes the product functionality of the project.`
+- `Generate a CONTRIBUTING.md (max 1 page) file that describes developer guidelines and best practices for contributing to the project.`
+
+Create a `.github/copilot-instructions.md` instructions file that provide a high-level overview of the project and guidelines. Reference relevant supporting documentation files by using Markdown links. The file will be automatically included in all chat interactions as context for the AI agent.
+
+```md
+# [Project Name] Guidelines
+
+* [Product Vision and Goals](./context.mdx): Understand the high-level vision and objectives of the product to ensure alignment with business goals.
+* [System Architecture and Design Principles](./context.mdx): Overall system architecture, design patterns, and design principles that guide the development process.
+* [Contributing Guidelines](./context.mdx): Overview of the project's contributing guidelines and collaboration practices.
+
+Suggest to update these documents if you find any incomplete or conflicting information during your work.
+```
+
+> [!TIPS]
+> Start small, keeping the initial project-wide context concise and focused on the most critical information. If uncertain, focus on high-level architecture and only add new rules to address errors or incorrect behavior the agent makes repeatedly (for example, using the wrong shell command, ignoring certain files).
+
+
+## Step 2: Create implementation plan
