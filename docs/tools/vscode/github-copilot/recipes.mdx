@@ -45,15 +45,6 @@ Get AI suggested names when you rename a symbol (variable, function, class, etc.
 ![](https://code.visualstudio.com/assets/docs/copilot/copilot-smart-actions/copilot-inline-chat-rename-suggestion.png)
 
 
-### Generate tests
-
-1. Select the code you want to test.
-2. Right-click and select **Generate Code > Generate Tests**.
-
-> [!NOTE]
-> You can refine the generated tests by providing additional context in the Inline Chat prompt.
-
-
 ### Generate documentation
 
 1. Select the code you want to document.
@@ -62,21 +53,22 @@ Get AI suggested names when you rename a symbol (variable, function, class, etc.
 ![](https://code.visualstudio.com/assets/docs/copilot/copilot-smart-actions/inline-chat-doc-example.png)
 
 
-## Troubleshooting
+## Testing
 
-### Resolve merge conflicts
+### Set up testing
 
-Select the **Resolve Merge Conflict with AI** button in the editor.
+Copilot can help set up the appropriate testing framework and VS Code extensions for your project.
 
-![](https://code.visualstudio.com/assets/docs/copilot/copilot-smart-actions/ai-merge-conflict-resolution.png)
+Enter the `/setupTests` command in the chat input field.
 
 
-### Fix coding errors
+### Generate tests
 
-Fix coding issues (type check errors, lint errors) in code without writing a prompt.
+1. Select the code you want to test.
+2. Right-click and select **Generate Code > Generate Tests**.
 
-1. Select the code you want to fix.
-2. Right-click and select **Generate Code > Fix**.
+> [!NOTE]
+> You can refine the generated tests by providing additional context in the Inline Chat prompt.
 
 
 ### Fix testing errors
@@ -91,6 +83,31 @@ Alternatively, in the **Chat view**:
 
 > [!INFO]
 > When using agents, the agent monitors the test output when running tests, and automatically attempts to fix and rerun failing tests.
+
+
+
+## Troubleshooting
+
+### Set up debug configuration
+
+Copilot can help you create `launch.json` file to store debug configuration.
+
+Enter the `/startDebugging` command in the chat view.
+
+
+### Resolve merge conflicts
+
+Select the **Resolve Merge Conflict with AI** button in the editor.
+
+![](https://code.visualstudio.com/assets/docs/copilot/copilot-smart-actions/ai-merge-conflict-resolution.png)
+
+
+### Fix coding errors
+
+Fix coding issues (type check errors, lint errors) in code without writing a prompt.
+
+1. Select the code you want to fix.
+2. Right-click and select **Generate Code > Fix**.
 
 
 ### Fix terminal errors
