@@ -1,0 +1,134 @@
+# Add context
+
+## Implicit context
+
+The following information is **implicitly** included in the chat context:
+- Current selected text.
+- The file name of the active editor.
+- The active file (**Ask** or **Edit**)
+
+
+## # - mention
+
+Use `#` to mention different types of context items or invoke tools. Examples:
+- `Explain how authentication works in #codebase`
+- `Summarize #fetch https://code.visualstudio.com/updates`
+- `How does routing work? #githubRepo vercel/next.js`
+- `How do I use the 'useState' hook in react 18? #fetch https://18.react.dev/reference/react/useState#usage`
+- `what are my open issues #github-mcp`
+- `Fix the issues in #problems`
+- `Summarize the #changes`
+
+### Getting context
+
+- Search files in workspace: `#fileSearch <query>`
+- Search code from GitHub: `#githubRepo <repo>`
+- Fetch web content: `#fetch <URL>`
+- Add files/folders as context: use `#file` or Drag & drop from Explorer view
+- Search codebase for context: `#codebase <keyword?>`
+- Get current selected code: `#selection`
+- Get search results from the Search view: `#searchResults`
+- Get workspace issues and problems (from the Problems panel): `#problems`
+
+### Unit test
+
+- Run unit tests in the workspace: `#runTests <keyword>`
+- Fix test failures: `Fix the failing tests #testFailure`
+
+### Terminal
+
+- Enable running commands in the terminal and reading the output: `#runCommands`
+- Run a shell command in the integrated terminal: `#runInTerminal <command>`
+- Get the current terminal selection: `#terminalSelection`
+
+### VS Code
+
+- Search extension: `#extensions <query>`
+- Install extension: `#installExtension <query>`
+- Ask about VS Code functionality: `#vscodeAPI <query>`
+
+### Scaffolding
+
+- Ask instructions for scaffolding new projects: `#getProjectSetupInfo <keyword>`
+- Scaffold a new VS Code workspace, preconfigured with debug and run configurations: `#new`, `#newWorkspace`
+
+### Other
+
+- Run a task in an isolated subagent context, avoid polluting the context of the main agent: `#runSubagent <task>`
+- Track implementation and progress of a chat request with a todo list: `#todos`
+- Find usage of a symbol (function, class, variable, etc.): `#usages <symbol>`
+
+
+## @ - mention
+
+Use `@` to mention chat participants to ask questions belong to a specific domain.
+
+Built-in chat participants:
+### `@github`
+
+Ask questions about GitHub repositories, issues, pull requests, and [more](https://docs.github.com/en/copilot/how-tos/chat-with-copilot/chat-in-ide#using-github-skills-for-copilot).
+
+- `@github What are all of the open PRs assigned to me?`
+- `@github Show me the recent merged PRs from @dancing-mona`
+
+### `@terminal`
+
+Ask questions about the integrated terminal or shell commands.
+
+> Example: @terminal list the 5 largest files in this workspace
+
+- `@vscode`: ask questions about VS Code features, settings, and the VS Code extension APIs.
+
+> Example: @vscode how to enable word wrapping?
+
+- `@workspace`: Ask questions about the current workspace.
+
+> Example: @workspace how is authentication implemented?
+
+Examples:
+
+- `@vscode how to enable word wrapping`
+- `@terminal what are the top 5 largest files in the current directory`
+
+
+## / - command
+
+Use `/` command to access common commands (`/new`, `/explain`, ... or custom prompts).
+
+- `/doc`: Generate code documentation comments from editor inline chat.
+- `/explain`: Explain a code block, file, or programming concept.
+- `/fix`: Ask to fix a code block or resolve compiler or linting errors.
+- `/tests`: Generate tests for all or only the selected methods and functions in the editor.
+- `/setupTests`: Get help setting up a testing framework for your code. Get recommendation for a relevant testing framework, steps to set up and configure it, and suggestions for VS Code testing extensions.
+- `/clear`: Start a new chat session in the Chat view.
+- `/new`: Scaffold a new VS Code workspace or file. Use natural language to describe the type of project/file you need, and preview the scaffolded content before creating it.
+- `/newNotebook`: Scaffold a new Jupyter notebook based on your requirements. Use natural language to describe what the notebook should contain.
+- `/search`: Generate a search query for the Search view. Use natural language to describe what you want to search for.
+- `/startDebugging`: Generate a launch.json debug configuration file and start a debugging session from the Chat view.
+- `/prompt name`: Run a reusable prompt in chat.
+
+
+## Images
+
+You can drag and drop an image from a web browser or file system onto the Chat view to add it as context.
+
+For examples:
+
+- Attach a screenshot of a block of code and ask to explain it
+- Attach a sketch of a UI and ask the agent to implement it
+
+
+## Browser Elements
+
+You can add elements from the [Simple Browser window](https://code.visualstudio.com/docs/copilot/chat/copilot-chat-context#_add-browser-elements-experimental) as context to your chat prompt.
+
+> [!INFO]
+> VS Code has a built-in browser that you can use to preview and interact with web pages inside VS Code.
+
+To do that:
+
+1. Enable selection from the Simple Browser with the `chat.sendElementsToChat.enabled` setting.
+2. Start your web application.
+3. Open the Simple Browser view by running the Simple Browser: Show command from the Command Palette.
+4. Select the Start button to start selecting elements from the current page.
+5. Hover over the elements of the web page and click to add them to the chat prompt.
