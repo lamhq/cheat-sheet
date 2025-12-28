@@ -1,0 +1,27 @@
+# AI language models
+
+## Auto model selection
+
+VS Code automatically selects a model to ensure that you get the optimal performance and reduce rate limits due to excessive usage of particular language models.
+
+To enable this feature, select **Auto** from the model picker in chat.
+
+Currently, premium models (Claude Sonnet 4, GPT-5, GPT-5 mini) are automatically chosen. If none of these models are available or you run out of premium requests, auto will fall back to a model at `0x` multiplier.
+
+If you are a paid user, auto will apply a **request discount**.
+
+
+## Manage language models
+
+You can use the Language Models editor to choose which models are shown in the model picker ỏ add more models.
+
+To open the Language Models editor, open the model picker in the Chat view and select **Manage Models**.
+
+
+## Bring your own language model key
+
+You can bring your own language model API key to use models from other providers.
+
+You can add models from [built-in model providers](https://code.visualstudio.com/docs/copilot/customization/language-models#_add-a-model-from-a-built-in-provider) or install a [language model provider extension](https://marketplace.visualstudio.com/search?term=tag%3Alanguage-models&target=VSCode&category=All%20categories&sortBy=Relevance).
+
+Your own model only applies to the chat experience and doesn't affect inline suggestions or other AI-powered features in VS Code.

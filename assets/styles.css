@@ -1,46 +1,25 @@
-@font-face {
-  font-family: 'Bookerly';
-  src: url('./Bookerly.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Bookerly';
-  src: url('./Bookerly Italic.ttf') format('truetype');
-  font-weight: normal;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: 'Bookerly';
-  src: url('./Bookerly Bold.ttf') format('truetype');
-  font-weight: bold;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Bookerly';
-  src: url('./Bookerly Bold Italic.ttf') format('truetype');
-  font-weight: bold;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: 'Bookerly Light';
-  src: url('./Bookerly Light.ttf') format('truetype');
-  font-weight: 300; /* Assuming "Light" corresponds to a font-weight of 300 */
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Bookerly Light';
-  src: url('./Bookerly Light Italic.ttf') format('truetype');
-  font-weight: 300;
-  font-style: italic;
-}
-
 /* Set default font */
 :root {
-  --rp-font-family-base: 'Bookerly';
+  --rp-font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+/* Dark mode color overrides */
+.dark {
+  --rp-c-text-1: #9ba3b4;  /* Main text color (paragraphs) */
+  --header-foreground: #c3d0e5;
+  --text-bold: #ebcb8b;
+}
+
+/* Dark mode specific styles */
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6 {
+  color: var(--header-foreground);
+}
+
+.dark strong {
+  color: var(--text-bold);
 }

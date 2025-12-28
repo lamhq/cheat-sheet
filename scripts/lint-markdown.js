@@ -27,7 +27,7 @@ async function checkLink(filePath) {
       const link = match[1];
 
       // Skip absolute URLs and anchors
-      if (/^(https?:\/\/|#)/.test(link)) continue;
+      if (/^(https?:\/\/|#|\!)/.test(link)) continue;
 
       const resolvedPath = path.resolve(dir, link.split("#")[0]); // Remove anchor if present
       if (!fs.existsSync(resolvedPath)) {

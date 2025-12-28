@@ -17,16 +17,16 @@ You can ask Copilot to create a pull request from many places:
 
 **How it work**:
 
-1. You provide a prompt describing the request (e.g., "Implement a user friendly message for common errors"). You can optionally specify a target repository, a base branch, and even a **Custom Agent** to use for the work.
+1. You provide a prompt describing the request (e.g., "Implement a user friendly message for common errors"). You can optionally specify a target repository, a base branch, and even a Custom Agent to use for the work.
 2. The agent pushes the changes to a new branch and opens a draft Pull Request.
 3. Copilot then adds you as a reviewer to the PR, triggering a notification for you to review the completed work.
-4. To ask Copilot to fix its work, you must submit a formal review with the status set to **Request changes**.
+4. To ask Copilot to fix its work, you submit a review with the status set to `Request changes`.
 
 
 ## Update existing pull requests
 
-1. You ask Copilot to make changes to an existing pull request by leaving a **comment or review** on the PR and mention Copilot **`@copilot`**, provide instructions for the changes
-2. Copilot creates a **new, child pull request**. This child PR uses the original PR's branch as its base branch.
+1. You ask Copilot to make changes to an existing pull request by leaving a comment or review on the PR and mention Copilot **`@copilot`**, provide instructions for the changes
+2. Copilot creates a new, child pull request. This child PR uses the original PR's branch as its base branch.
 3. Copilot performs the requested changes in this new branch. Once the agent finishes the work, it requests your review on the child pull request.
 4. If you are satisfied, you merge the child PR into the original PR's branch.
 
