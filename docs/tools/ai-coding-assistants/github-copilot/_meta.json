@@ -1,4 +1,13 @@
 [
+  "getting-started",
+  "inline-suggestions",
+  "chat",
+  "smart-actions",
+  {
+    "name": "customization",
+    "type": "dir",
+    "collapsed": true
+  },
   "code-review",
   "pull-requests",
   "coding-agent",

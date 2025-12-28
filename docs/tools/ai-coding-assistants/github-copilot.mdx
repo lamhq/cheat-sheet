@@ -13,44 +13,25 @@ This guide is for individual users with GitHub Copilot Pro plan, using Visual St
    - Copilot Chat can help you brainstorm and identify the best technologies for your project.
    - Copilot Chat can create issues to help track your ideas.
    - Copilot Spaces direct Copilot's responses in the right context for a specific task
-- **Code creation**:
+- **Scaffolding**
+   - Use **GitHub Spark** (a no-code environment) to generate working apps with integrated LLMs.
+- **Coding**:
    - Copilot inline suggestions help add code as you type.
    - Next edit suggestions (public preview) predicts the next edit you are likely to make and suggests a completion for it.
    - Copilot Chat can answer questions and offer suggestions in a conversational environment.
    - Copilot coding agent can make code changes, create a pull request for you to review.
-- **Reviews**:
+- **Reviewing**:
    - Copilot code review gives you feedback in your favorite IDE, or as a pull request review on GitHub.
 - **Testing**:
-   - Copilot Chat can help you write and debug tests.
+   - Copilot Chat can write, run tests, identify failing tests and fix them (with **MCP Server**).
 - **Deployment**:
    - Copilot Chat can help you configure continuous integration and continuous deployment (CI/CD) pipelines.
 - **Operation**:
    - You can assign Copilot coding agent to an open issue and it will automatically raise a pull request to address the necessary changes.
    - Copilot Chat can help with tasks you're working on yourself.
    - Copilot pull request summaries generate summaries of a pull request.
-
-
-## Use Cases
-
-1. **Planning**
-    - Use **Copilot Chat** to get a development overview, create structured issues
-    - Set up a **Copilot Space** with all the necessary project context (mockups, code links).
-2. **Scaffolding**
-    - Use **GitHub Spark** (a no-code environment) to generate working apps with integrated LLMs.
-3. **Writting code**
-    - Use **GitHub Models playground** to compare different AI models for effectiveness and cost.
-    - Use **Copilot agent mode** in the IDE to perform complex, autonomous tasks like refactoring code across multiple files, guided by custom instructions and developer authorization.
-4. **Testing**
-    - Use **MCP Server** (e.g., for Playwright) to enable the Copilot agent to run automated in-browser tests.
-    - The agent can then identify failing tests and suggest code fixes.
-5. **Reviewing**
-    - **Copilot code review** provides an initial automated review of the pull request (PR) to catch bugs early.
-    - **Copilot custom agents** (configured with internal policies) can be prompted to review the PR for compliance before a human checks it.
-6. **Optimizing**
-    - For small, well-scoped maintenance tasks (e.g., switching an API), the product manager can assign an issue directly to the **Copilot coding agent** on GitHub.
-    - The agent works asynchronously, opens a PR, and can incorporate feedback from human reviewers.
-7. **Security**
-    - When code scanning finds a vulnerability, **Copilot Autofix** can be requested to automatically suggest a fix, which a developer then reviews and approves.
+- **Security**
+   - When code scanning finds a vulnerability, **Copilot Autofix** can be requested to automatically suggest a fix, which a developer then reviews and approves.
 
 
 ## Availability

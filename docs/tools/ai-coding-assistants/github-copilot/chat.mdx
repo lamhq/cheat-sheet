@@ -184,6 +184,129 @@ To clear all saved tool approvals, use the `Chat: Reset Tool Confirmations` comm
 > To allow all tools and terminal commands to run without prompting for user confirmation, enable the `chat.tools.global.autoApprove` setting.
 
 
+## Add context
+
+Use `#` to mention different types of context items:
+
+- Files/folders: use `#file` or Drag & drop from Explorer view
+- Codebase: `#codebase`
+- Selected code: `#selection`
+- Search results from the Search view: `#searchResults`
+- Search files in workspace: `#fileSearch <query>`
+- Web content: `#fetch <URL>`
+- Code from GitHub: `#githubRepo <repo>`
+- Workspace issues and problems (from the Problems panel): `#problems`
+- Terminal selection: `#terminalSelection`
+- Changes in source control: `#changes`
+
+Examples:
+- `Explain how authentication works in #codebase`
+- `Summarize #fetch https://code.visualstudio.com/updates`
+- `How does routing work? #githubRepo vercel/next.js`
+- `How do I use the 'useState' hook in react 18? #fetch https://18.react.dev/reference/react/useState#usage`
+- `what are my open issues #github-mcp`
+- `Fix the issues in #problems`
+- `Summarize the #changes`
+
+### Images
+
+You can drag and drop an image from a web browser or file system onto the Chat view to add it as context.
+
+For examples:
+
+- Attach a screenshot of a block of code and ask to explain it
+- Attach a sketch of a UI and ask the agent to implement it
+
+### Browser Elements
+
+You can add elements from the [Simple Browser window](https://code.visualstudio.com/docs/copilot/chat/copilot-chat-context#_add-browser-elements-experimental) as context to your chat prompt.
+
+> [!INFO]
+> VS Code has a built-in browser that you can use to preview and interact with web pages inside VS Code.
+
+To do that:
+
+1. Enable selection from the Simple Browser with the `chat.sendElementsToChat.enabled` setting.
+2. Start your web application.
+3. Open the Simple Browser view by running the Simple Browser: Show command from the Command Palette.
+4. Select the Start button to start selecting elements from the current page.
+5. Hover over the elements of the web page and click to add them to the chat prompt.
+
+### Implicit context
+
+The following information is **implicitly** included in the chat context:
+- Current selected text.
+- The file name of the active editor.
+- The active file (**Ask** or **Edit**)
+
+## Perform actions
+
+- Use `#` to invoke tools
+- Use `/` to access common commands or run custom prompts
+
+### Analysis
+
+- Explain a code block (or anything): `/explain`
+
+### Testing
+
+- Set up testing for project: `/setupTests`
+- Run unit tests: `#runTests <keyword>`
+- Fix test failures: `Fix the failing tests #testFailure`
+- Fix a code block, compiler or linting errors: `/fix`
+- Generate tests for selected code: `/tests`
+
+> [!INFO]
+> When using agent with `#runTests`, it monitors the test output when running tests, and automatically attempts to fix and rerun failing tests.
+
+
+### Documentation
+
+- Generate code documentation: `/doc`
+
+### Terminal
+
+- Enable running commands in the terminal and reading the output: `#runCommands`
+- Run a shell command in the integrated terminal: `#runInTerminal <command>`
+
+### VS Code
+
+- Search extension: `#extensions <query>`
+- Install extension: `#installExtension <query>`
+- Ask about VS Code functionality: `#vscodeAPI <query>`
+- Generate a debug configuration (`launch.json`): `/startDebugging`
+
+### Scaffolding
+
+- Ask instructions for scaffolding new projects: `#getProjectSetupInfo <keyword>`
+- Scaffold a new workspace, file based on your requirements: `/new`, `#new`, `#newWorkspace`
+- Scaffold a new Jupyter notebook: `/newNotebook`
+
+### Others
+
+- Run a task in an isolated context using subagent: `#runSubagent <task>`
+- Find usage of a symbol: `#usages <symbol>` (function, class, variable, etc.)
+- Generate a search query for the Search view: `/search`
+- Start a new chat session in the Chat view: `/clear`
+- Track progress of a chat with a todo list: `#todos`
+
+
+## Ask questions
+
+Use `@` to mention chat participants to ask questions belong to a specific domain.
+
+- `@github`: Ask questions about GitHub repositories, issues, pull requests, and [more](https://docs.github.com/en/copilot/how-tos/chat-with-copilot/chat-in-ide#using-github-skills-for-copilot).
+- `@terminal`: Ask questions about the integrated terminal or shell commands.
+- `@vscode`: Ask questions about VS Code features, settings, and the VS Code extension APIs.
+- `@workspace`: Ask questions about the current workspace.
+
+Examples:
+- `@github What are all of the open PRs assigned to me?`
+- `@github Show me the recent merged PRs from @dancing-mona`
+- `@terminal list the 5 largest files in this workspace`
+- `@vscode how to enable word wrapping`
+- `@workspace how is authentication implemented?`
+
 ## Export a chat session
 
 Export a chat session as a JSON file by running the `Chat: Export Chat...` command from the Command Palette.
