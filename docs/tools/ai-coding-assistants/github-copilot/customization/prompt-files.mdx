@@ -1,15 +1,13 @@
 # Prompt files
 
-Prompt files are reusable prompts (in a Markdown files) you define for common and repeatable development tasks.
+Prompt files are reusable prompts (in Markdown files) you define for common and repeatable development tasks.
 
-They can be run directly in chat.
-
-They can include task-specific guidelines or reference custom instructions to ensure consistent execution.
+They can be run directly in chat and include task-specific guidelines or reference custom instructions to ensure consistent execution.
 
 Two types of prompt files (base on scopes):
 
-- Workspace prompt files: available within the workspace, stored in the `.github/prompts` folder.
-- User prompt files: available across multiple workspaces, stored in the current [VS Code profile](https://code.visualstudio.com/docs/configure/profiles).
+- **Workspace prompt files**: available within the workspace, stored in the `.github/prompts` folder.
+- **User prompt files**: available across multiple workspaces, stored in the current [VS Code profile](https://code.visualstudio.com/docs/configure/profiles).
 
 
 ## Use cases
@@ -17,8 +15,8 @@ Two types of prompt files (base on scopes):
 You can define prompts for:
 - **Common coding tasks**: scaffolding a new component, API route, or generating tests
 - **Code reviews**: checking for code quality, security vulnerabilities, or performance issues
-- Step-by-step guides for **complex processes** or **project-specific patterns**
-- Generating **implementation plans**, **architectural designs**, or **migration strategies**
+- **Step-by-step guides** for complex processes or project-specific patterns
+- **Generating documentation**: implementation plans, architectural designs, or migration strategies
 
 
 ## Prompt File Structure
@@ -121,13 +119,13 @@ Return the TODO list in a Markdown format, grouped by priority and issue type.
 
 You have multiple options to run a prompt file:
 
-1. In the Chat view, type `/` followed by the prompt name in the chat input field.
+1. In the **Chat view**, type `/` followed by the prompt name in the chat input field.
 
    You can add extra information in the chat input field. For example, `/create-react-form formName=MyForm` or `/create-api for listing customers`.
 
-2. Run the `Chat: Run Prompt` command from the Command Palette and select a prompt file from the **Quick Pick**.
+2. Run the `Chat: Run Prompt` command from the **Command Palette** and select a prompt file from the **Quick Pick**.
 
-3. Open the prompt file in the editor, and press the play button in the editor title area. You can choose to run the prompt in the current chat session or open a new chat session.
+3. Open the prompt file in the editor, and press the play button in the title area. You can choose to run the prompt in the current chat session or open a new chat session.
 
 
 ## Sync user prompt files
@@ -137,15 +135,11 @@ VS Code can sync your user prompt files across multiple devices by using [Settin
 
 ## Prompt files Tips
 
-Clearly describe what the prompt should accomplish and what output format is expected.
-
-Provide examples of the expected input and output to guide the AI's responses.
-
-Use Markdown links to reference custom instructions rather than duplicating guidelines in each prompt.
-
-Take advantage of built-in variables like `${selection}` and input variables to make prompts more flexible.
-
-Use the editor play button to test your prompts and refine them based on the results.
+- Clearly describe what the prompt should accomplish and what output format is expected.
+- Provide examples of the expected input and output to guide the AI's responses.
+- Use Markdown links to reference custom instructions rather than duplicating guidelines in each prompt.
+- Take advantage of built-in variables like `${selection}` and input variables to make prompts more flexible.
+- Use the editor play button to test your prompts and refine them based on the results.
 
 
 ## Reference

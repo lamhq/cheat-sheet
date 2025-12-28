@@ -1,14 +1,10 @@
-# Context engineering
+# Context Setup
 
-## Introduction
-
-Context engineering is a systematic approach to providing AI agents with targeted project information, to:
-- Improve the quality and accuracy of generated code.
-- Enable AI to make better decisions and maintain persistent knowledge across interactions.
+How to provide targeted project information to AI agents, enabling them to generate higher-quality code and make better architectural decisions aligned with your project's conventions and goals.
 
 ## Workflow
 
-Steps of high-level workflow for context engineering in **VS Code**:
+Workflow for context preparation:
 1. **Curate project-wide context**: use **custom instructions** to include relevant documentation (for example, architecture, design, contributor guidelines) as context to all agent interactions.
 2. **Generate implementation plan**: create a planning persona by using a **custom agent** and a prompt to generate a detailed feature implementation plan.
 3. **Generate implementation code**: use **custom instructions** to generate code based on the implementation plan that adheres to your coding guidelines.
@@ -37,7 +33,7 @@ Create a `.github/copilot-instructions.md` instructions file that provide a proj
 Suggest to update these documents if you find any incomplete or conflicting information during your work.
 ```
 
-> [!TIPS]
+> [!TIP]
 > Start small, keeping the initial project-wide context concise and focused on the most critical information. If uncertain, focus on high-level architecture and only add new rules to address errors or incorrect behavior the agent makes repeatedly (for example, using the wrong shell command, ignoring certain files).
 
 

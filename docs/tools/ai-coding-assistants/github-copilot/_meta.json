@@ -8,9 +8,10 @@
     "type": "dir",
     "collapsed": true
   },
+  "context",
   "code-review",
   "pull-requests",
   "coding-agent",
-  "provide-context",
+  "copilot-spaces",
   "best-practices"
 ]

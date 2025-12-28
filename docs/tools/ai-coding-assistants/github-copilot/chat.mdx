@@ -113,7 +113,7 @@ You can enable or disable tools on a per-request basis by using the tools picker
 
 ![](https://code.visualstudio.com/assets/docs/copilot/chat-tools/agent-mode-select-tools.png)
 
-When using agents, it autonomously chooses and invokes relevant tools as needed to accomplish the task.
+When using agent mode, it autonomously chooses and invokes relevant tools as needed to accomplish the task.
 
 ### Types
 
@@ -252,13 +252,16 @@ The following information is **implicitly** included in the chat context:
 
 - Set up testing for project: `/setupTests`
 - Run unit tests: `#runTests <keyword>`
-- Fix test failures: `Fix the failing tests #testFailure`
-- Fix a code block, compiler or linting errors: `/fix`
 - Generate tests for selected code: `/tests`
 
 > [!INFO]
 > When using agent with `#runTests`, it monitors the test output when running tests, and automatically attempts to fix and rerun failing tests.
 
+### Debugging
+
+- Generate a debug configuration (`launch.json`): `/startDebugging`
+- Fix a code block, compiler or linting errors: `/fix`
+- Fix test failures: `Fix the failing tests #testFailure`
 
 ### Documentation
 
@@ -274,7 +277,6 @@ The following information is **implicitly** included in the chat context:
 - Search extension: `#extensions <query>`
 - Install extension: `#installExtension <query>`
 - Ask about VS Code functionality: `#vscodeAPI <query>`
-- Generate a debug configuration (`launch.json`): `/startDebugging`
 
 ### Scaffolding
 
