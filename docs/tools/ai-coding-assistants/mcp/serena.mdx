@@ -57,7 +57,7 @@ The client needs to be provided with the command to run the MCP server (you do n
 For example, to run the server in stdio mode via `uvx`:
 
 ```bash
-uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context ide-assistant
+uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context ide
 ```
 
 ### Streamable HTTP Mode
@@ -67,7 +67,7 @@ You start the server and provide the MCP client with the URL to connect to it.
 For example, run Serena MCP server in streamable HTTP mode on port 9121 using below command then configure your client to connect to `http://localhost:9121/mcp`:
 
 ```bash
-uvx --from git+https://github.com/oraios/serena serena start-mcp-server --transport streamable-http --port 9121 --context ide-assistant
+uvx --from git+https://github.com/oraios/serena serena start-mcp-server --transport streamable-http --port 9121 --context ide
 ```
 
 
