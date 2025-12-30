@@ -14,16 +14,16 @@ Workflow for context preparation:
 
 ## Step 1: Curate project-wide context
 
-Collect key project information (product vision, architecture, guidelines) and adding it as chat context via custom instructions.
+1. Collect key project information (product vision, architecture, guidelines, etc).
+2. Create a `.github/copilot-instructions.md` instructions file that provides context and guidelines for all chat interactions. You can reference documentation files (using Markdown links)
 
-You can use AI to generate these project documentation files. For example:
-- `Generate an ARCHITECTURE.md (max 2 page) file that describes the overall architecture of the project.`
-- `Generate a PRODUCT.md (max 2 page) file that describes the product functionality of the project.`
-- `Generate a CONTRIBUTING.md (max 1 page) file that describes developer guidelines and best practices for contributing to the project.`
+**Tips**:
 
-Create a `.github/copilot-instructions.md` instructions file that provide a project overview, reference relevant supporting documentation files (using Markdown links). The file will be automatically included in all chat interactions as context for the AI agent.
+- Start small, keeping the initial project-wide context concise and focused on the most critical information
+- Only add new rules to address errors or incorrect behavior the agent makes repeatedly (using the wrong shell command, ignoring certain files, etc)
+- Avoid including context that is too specific or irrelevant
 
-```md
+```md title=".github/copilot-instructions.md"
 # [Project Name] Guidelines
 
 * [Product Vision and Goals](!../PRODUCT.md): Understand the high-level vision and objectives of the product to ensure alignment with business goals.
@@ -33,17 +33,15 @@ Create a `.github/copilot-instructions.md` instructions file that provide a proj
 Suggest to update these documents if you find any incomplete or conflicting information during your work.
 ```
 
-> [!TIP]
-> Start small, keeping the initial project-wide context concise and focused on the most critical information. If uncertain, focus on high-level architecture and only add new rules to address errors or incorrect behavior the agent makes repeatedly (for example, using the wrong shell command, ignoring certain files).
-
-
 ## Step 2: Create implementation plan
 
 Use AI to create a detailed implementation plan for new features or bug fixes.
 
-Create a planning document template `plan-template.md` that defines the structure and sections of the implementation plan document:
+1. Create a planning document template `plan-template.md` that defines the structure and sections of a implementation plan document:
+2. Create a custom agent (`.github/agents/plan.agent.md`) for planning to provide a dedicated persona with specific guidelines (this might require multiple rounds of refinement):
+3. Create a prompt file `.github/prompts/plan.prompt.md` that invokes plan agent and instructs the agent to create an implementation plan from a provided feature request.
 
-```md
+```md title="plan-template.md"
 ---
 title: [Short descriptive title of the feature]
 version: [optional version number]
@@ -63,9 +61,7 @@ Break down the implementation into smaller, manageable tasks using a Markdown ch
 Outline 1-3 open questions or uncertainties that need to be clarified.
 ```
 
-Create a custom agent (`.github/agents/plan.agent.md`) for planning to provide a dedicated persona with specific guidelines (this might require multiple rounds of refinement):
-
-```md
+```md title=".github/agents/plan.agent.md"
 ---
 description: 'Architect and planner to create detailed implementation plans.'
 tools: ['fetch', 'githubRepo', 'problems', 'usages', 'search', 'todos', 'runSubagent', 'github/github-mcp-server/get_issue', 'github/github-mcp-server/get_issue_comments', 'github/github-mcp-server/list_issues']
@@ -86,9 +82,7 @@ You are an architect focused on creating detailed and comprehensive implementati
 3. Pause for review: Based on user feedback or questions, iterate and refine the plan as needed.
 ```
 
-Create a prompt file `.github/prompts/plan.prompt.md` that invokes plan agent and instructs the agent to create an implementation plan from a provided feature request.
-
-```md title="plan.prompt.md"
+```md title=".github/prompts/plan.prompt.md"
 ---
 agent: plan
 description: Create a detailed implementation plan.
@@ -99,13 +93,11 @@ Briefly analyze my feature request, then ask me 3 questions to clarify the requi
 
 ## Step 3: Generate implementation code
 
-For smaller tasks, prompt the agent to generate code based on the implementation plan.
+1. For smaller tasks, prompt the agent to generate code based on the implementation plan.
+2. For larger or complex features, use a **Plan Agent** to generate & save the implementation plan to a file, reference it in a new chat session to keep context clean.
+3. For a more customized workflow, create a custom agent `.github/agents/implement.agent.md` specialized in implementing code based on a plan:
 
-For larger or complex features, use a Plan Agent to generate & save the implementation plan to a file, reference it in a new chat session to keep context clean.
-
-For a more customized workflow, create a custom agent `.github/agents/implement.agent.md` specialized in implementing code based on a plan:
-
-```md
+```md title=".github/agents/implement.agent.md"
 ---
 description: 'Execute a detailed implementation plan as a test-driven developer.'
 ---
