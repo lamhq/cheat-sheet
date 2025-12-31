@@ -18,18 +18,18 @@ npx create-next-app@latest
 
 ### IDE
 
-Next.js includes a custom TypeScript plugin and type checker, which VSCode and other code editors can use for advanced type-checking and auto-completion.
+Next.js includes a custom TypeScript plugin and type checker, enable advanced type-checking and auto-completion.
 
-You can enable the plugin in VS Code by:
+To enable the plugin in VS Code:
 
-1. Opening the command palette (`Ctrl/⌘` + `Shift` + `P`)
-2. Searching for "TypeScript: Select TypeScript Version"
-3. Selecting "Use Workspace Version"
+1. Opening the **Command Palette**
+2. Searching for `TypeScript: Select TypeScript Version`
+3. Selecting `Use Workspace Version`
 
 
-### Import Path Aliases
+### Using Path Aliases
 
-Next.js has in-built configuration for the `"paths"` and `"baseUrl"` options of `tsconfig.json`, allows using absolute import paths, making it easier and cleaner to import modules.
+Next.js allows using absolute import paths, making it easier and cleaner to import modules.
 
 ```jsx
 // Before
@@ -68,4 +68,4 @@ Each of the `"paths"` are relative to the `baseUrl` location.
 
 ## Set up ESLint
 
-Next.js automatically installs the necessary ESLint packages and configures the proper settings when you create a new project with `create-next-app`.
+No setup required! Next.js automatically installs the necessary ESLint packages and configures the proper settings when running `create-next-app`.
