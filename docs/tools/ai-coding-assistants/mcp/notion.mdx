@@ -1,0 +1,82 @@
+# Notion MCP Server
+
+## Overview
+
+Notion MCP Server is an MCP server implementation for the Notion API that enables LLM-based agents to interact with Notion workspaces.
+
+It provides tools tailored for AI agents to work with Notion pages, databases (data sources), blocks, and more, with optimized token consumption.
+
+Notion also offers a [remote MCP server](https://developers.notion.com/docs/mcp) with improved features including easy OAuth installation.
+
+## Prerequisites
+
+1. Node.js 18 or higher
+2. A Notion account with workspace access
+3. Create an integration in Notion and obtain an integration token
+
+
+## Workflow
+
+Adding Notion MCP Server involves the following steps:
+
+1. [Create a Notion integration](https://www.notion.so/profile/integrations) and obtain the integration token
+2. Configure integration access to your content (pages, databases)
+3. Add MCP server configuration to your client
+
+
+## Installation
+
+### 1. Create an integration
+
+Go to [https://www.notion.so/profile/integrations](https://www.notion.so/profile/integrations) and create a new internal integration.
+
+![Creating a Notion Integration token](https://github.com/makenotion/notion-mcp-server/raw/main/docs/images/integrations-creation.png)
+
+
+### 2. Configure integration access
+
+Ensure relevant pages and databases are accessible by the integration.
+
+Visit the Access tab in your internal integration settings. Edit access and select the pages you'd like to use.
+
+![Integration Access tab](https://github.com/makenotion/notion-mcp-server/raw/main/docs/images/integration-access.png)
+
+![Edit integration access](https://github.com/makenotion/notion-mcp-server/raw/main/docs/images/page-access-edit.png)
+
+
+### 3. Adding MCP config to your client
+
+For VS Code, add the following to your `.vscode/mcp.json`:
+
+```json title=".vscode/mcp.json"
+{
+  "servers": {
+    "notion": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@notionhq/notion-mcp-server"],
+      "env": {
+        "NOTION_TOKEN": "${input:notion_token}"
+      }
+    }
+  },
+  "inputs": [
+    {
+      "id": "notion_token",
+      "type": "promptString",
+      "description": "Enter your Notion integration token",
+      "password": true
+    }
+  ]
+}
+```
+
+Start the MCP server by clicking `Start` in the actions inline in the editor, then enter your Notion integration token when prompted.
+
+![](https://code.visualstudio.com/assets/docs/copilot/mcp-servers/mcp-server-config-lenses.png)
+
+
+## Reference
+
+- [Notion MCP Server](https://github.com/makenotion/notion-mcp-server)
+- [Notion API Documentation](https://developers.notion.com/reference/intro)

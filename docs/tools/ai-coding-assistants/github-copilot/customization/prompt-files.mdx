@@ -19,6 +19,11 @@ You can define prompts for:
 - **Generating documentation**: implementation plans, architectural designs, or migration strategies
 
 
+## Create a prompt file
+
+![](https://code.visualstudio.com/assets/docs/copilot/customization/configure-chat-instructions.png)
+
+
 ## Prompt File Structure
 
 Prompt files are Markdown files and use the `.prompt.md` extension and have this structure:
@@ -61,6 +66,33 @@ You can reference:
   - `${selection}`, `${selectedText}`
   - `${file}`, `${fileBasename}`, `${fileDirname}`, `${fileBasenameNoExtension}`
   - `${input:variableName}`, `${input:variableName:placeholder}` (pass values to the prompt from the chat input field)
+
+
+## Use a prompt file in chat
+
+You have multiple options to run a prompt file:
+
+1. In the **Chat view**, type `/` followed by the prompt name in the chat input field.
+
+   You can add extra information in the chat input field. For example, `/create-react-form formName=MyForm` or `/create-api for listing customers`.
+
+2. Run the `Chat: Run Prompt` command from the **Command Palette** and select a prompt file from the **Quick Pick**.
+
+3. Open the prompt file in the editor, and press the play button in the title area. You can choose to run the prompt in the current chat session or open a new chat session.
+
+
+## Sync user prompt files
+
+VS Code can sync your user prompt files across multiple devices by using [Settings Sync](https://code.visualstudio.com/docs/copilot/customization/prompt-files#_sync-user-prompt-files-across-devices).
+
+
+## Prompt files Tips
+
+- Clearly describe what the prompt should accomplish and what output format is expected.
+- Provide examples of the expected input and output to guide the AI's responses.
+- Use Markdown links to reference custom instructions rather than duplicating guidelines in each prompt.
+- Take advantage of built-in variables like `${selection}` and input variables to make prompts more flexible.
+- Use the editor play button to test your prompts and refine them based on the results.
 
 
 ## Examples
@@ -108,38 +140,6 @@ Perform a REST API security review and provide a TODO list of security issues to
 
 Return the TODO list in a Markdown format, grouped by priority and issue type.
 ```
-
-
-## Create a prompt file
-
-![](https://code.visualstudio.com/assets/docs/copilot/customization/configure-chat-instructions.png)
-
-
-## Use a prompt file in chat
-
-You have multiple options to run a prompt file:
-
-1. In the **Chat view**, type `/` followed by the prompt name in the chat input field.
-
-   You can add extra information in the chat input field. For example, `/create-react-form formName=MyForm` or `/create-api for listing customers`.
-
-2. Run the `Chat: Run Prompt` command from the **Command Palette** and select a prompt file from the **Quick Pick**.
-
-3. Open the prompt file in the editor, and press the play button in the title area. You can choose to run the prompt in the current chat session or open a new chat session.
-
-
-## Sync user prompt files
-
-VS Code can sync your user prompt files across multiple devices by using [Settings Sync](https://code.visualstudio.com/docs/copilot/customization/prompt-files#_sync-user-prompt-files-across-devices).
-
-
-## Prompt files Tips
-
-- Clearly describe what the prompt should accomplish and what output format is expected.
-- Provide examples of the expected input and output to guide the AI's responses.
-- Use Markdown links to reference custom instructions rather than duplicating guidelines in each prompt.
-- Take advantage of built-in variables like `${selection}` and input variables to make prompts more flexible.
-- Use the editor play button to test your prompts and refine them based on the results.
 
 
 ## Reference

@@ -14,6 +14,10 @@ Common ways to add an MCP server to VS Code:
 
 Run the `MCP: Add Server` command from the Command Palette.
 
+Start the MCP server by clicking `Start` in the actions inline in the editor.
+
+![](https://code.visualstudio.com/assets/docs/copilot/mcp-servers/mcp-server-config-lenses.png)
+
 
 ### Add MCP to a dev container
 
@@ -37,16 +41,35 @@ Add MCP server configuration to `customizations.vscode.mcp` section of the dev c
 }
 ```
 
-## Use MCP tools in chat
 
-Once you have added an MCP server, you can use the tools it provides in chat.
+## Using secret in MCP config
 
-For example, if [GitHub MCP server](https://github.com/mcp/io.github.github/github-mcp-server) is installed, when you ask `List my GitHub issues`, Copilot will automatically invoke the `List Issues` tool from the GitHub MCP server.
+For MCP servers that require API tokens or other secrets, use the `inputs` field in `mcp.json` to securely prompt for and store sensitive information.
 
-To configure MCP tools to be used in chat:
-1. Open the Chat view (`⌃⌘I`).
-2. Open the tool picker to select which tools the agent is allowed to use. MCP tools are grouped per MCP server.
-3. Tools are automatically invoked as needed based on your prompt.
+```json title=".vscode/mcp.json"
+{
+  "servers": {
+    "my-server": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@organization/my-mcp-server"],
+      "env": {
+        "API_TOKEN": "${input:api_token}"
+      }
+    }
+  },
+  "inputs": [
+    {
+      "id": "api_token",
+      "type": "promptString",
+      "description": "Enter your API token",
+      "password": true
+    }
+  ]
+}
+```
+
+When you start the MCP server, you'll be prompted to enter your inputs once, they will be encrypted and stored securely.
 
 
 ## Manage installed MCP servers
@@ -60,6 +83,18 @@ You can perform various actions on the installed MCP servers, such as:
 - Viewing the server logs
 - Browsing server resources
 - Uninstalling the server
+
+
+## Use MCP tools in chat
+
+Once you have added an MCP server, you can use the tools it provides in chat.
+
+For example, if [GitHub MCP server](https://github.com/mcp/io.github.github/github-mcp-server) is installed, when you ask `List my GitHub issues`, Copilot will automatically invoke the `List Issues` tool from the GitHub MCP server.
+
+To configure MCP tools to be used in chat:
+1. Open the Chat view (`⌃⌘I`).
+2. Open the tool picker to select which tools the agent is allowed to use. MCP tools are grouped per MCP server.
+3. Tools are automatically invoked as needed based on your prompt.
 
 
 ## Add MCP resources to chat context

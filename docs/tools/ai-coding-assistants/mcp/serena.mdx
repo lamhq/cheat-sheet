@@ -1,0 +1,144 @@
+# Serena
+
+## Overview
+
+Serena is a coding agent toolkit that integrates LLM with codebase.
+
+It provides tools that enable semantic code retrieval and editing, greatly enhance (token) efficiency.
+
+With it, agents no needs to read entire files, perform grep-like searches or string replacements to find and edit the right code.
+
+Serena can be integrated with LLMs in different ways:
+- Using the MCP server provided by Serena
+- By [using mcpo to connect it to ChatGPT](https://oraios.github.io/serena/03-special-guides/serena_on_chatgpt.html) or other clients that don’t support MCP but do support tool calling via OpenAPI.
+- By [incorporating Serena's tools into an agent framework](https://oraios.github.io/serena/03-special-guides/custom_agent.html) of your choice,
+
+
+List of supported programming languages can be found [here](https://oraios.github.io/serena/01-about/020_programming-languages.html).
+
+Find the full list of Serena’s tools [here](https://oraios.github.io/serena/01-about/035_tools.html).
+
+
+## Prerequisites
+
+1. Install the package manager [uv](https://docs.astral.sh/uv/getting-started/installation/).
+2. Install additional tools or SDKs required by the [programming language](https://oraios.github.io/serena/01-about/020_programming-languages.html) you are using.
+
+
+## Workflow
+
+Using Serena involves the following steps: 
+1. Create a new Serena project
+2. Indexing the project 
+3. [Activate project](https://oraios.github.io/serena/02-usage/040_workflow.html#project-activation) to make Serena aware of the project you want to work with
+4. Start Serena and let it create memory files (`.serena/memories/`). Agent can choose to read them in subsequent interactions. You can also add new ones or edit manually.
+
+```bash
+# Create a new project in the current directory and index it
+uvx --from git+https://github.com/oraios/serena serena project create --name "bid-up-api" --index
+```
+
+```bash
+# Index an existing project (auto-creates if needed)
+uvx --from git+https://github.com/oraios/serena serena project index
+```
+
+
+## Running Serena
+
+By default, Serena will start a web-based dashboard on localhost that will allow you to inspect the server’s operations, logs, and configuration.
+
+### Standard I/O Mode
+
+The MCP client (Claude Code, Cursor, etc.) run the MCP server as a subprocess and using the process's stdin/stdout streams to communicate with it.
+
+The client needs to be provided with the command to run the MCP server (you do not need to start the server yourself).
+
+For example, to run the server in stdio mode via `uvx`:
+
+```bash
+uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context ide
+```
+
+### Streamable HTTP Mode
+
+You start the server and provide the MCP client with the URL to connect to it.
+
+For example, run Serena MCP server in streamable HTTP mode on port 9121 using below command then configure your client to connect to `http://localhost:9121/mcp`:
+
+```bash
+uvx --from git+https://github.com/oraios/serena serena start-mcp-server --transport streamable-http --port 9121 --context ide
+```
+
+
+## Configure VS Code
+
+Paste the following into `<your_project>/.vscode/mcp.json`:
+
+```json title=".vscode/mcp.json"
+{
+  "servers": {
+    "oraios/serena": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/oraios/serena",
+        "serena",
+        "start-mcp-server",
+        "--context",
+        "ide",
+        "--project",
+        "${workspaceFolder}"
+      ]
+    }
+  },
+  "inputs": []
+}
+```
+
+
+## Useful Commands
+
+Edit Serena's configuration file:
+
+```bash
+uvx --from git+https://github.com/oraios/serena serena config edit
+```
+
+List available contexts:
+
+```bash
+uvx --from git+https://github.com/oraios/serena serena context list
+```
+
+List available modes:
+
+```bash
+uvx --from git+https://github.com/oraios/serena serena mode list
+```
+
+
+## Command-Line Arguments
+
+Some useful options include:
+
+- `--project <path|name>`: specify the project to work on by name or path.
+- `--project-from-cwd`: auto-detect the project from current working directory (for CLI-based agents, look for a directory containing `.serena/project.yml`, activating the current directory if none is found).
+- `--language-backend JetBrains`: use the Serena JetBrains Plugin as the language backend (overriding the default backend configured in the central configuration).
+- `--context <context>`: specify the operation context in which Serena shall operate.
+- `--mode <mode>`: specify one or more modes to enable (can be passed several times).
+- `--enable-web-dashboard <true|false>`: enable or disable the web dashboard (enabled by default).
+
+
+## Best Practices
+
+1. Have a well-structured codebase
+2. Use typed languages or type annotations (if supported)
+3. Start a code generation task from a clean git state
+4. Start an editing task from a state where all linting checks and tests pass.
+
+
+## Reference
+
+- [Serena](https://oraios.github.io/serena/index.html)
