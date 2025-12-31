@@ -21,11 +21,11 @@ Quickly switch to a specific task with predefined relevant tools and instruction
 
 ## Use Cases
 
-**Plan**: custom agent has read-only access to the codebase and can only generate implementation plans
+Provide context and guidelines for specific roles or tasks, such as:
 
-**Research**: custom agent can reach out to external resources to explore new technologies or gather information
-
-**Front-end developer**: custom agent can only generate and modify code related to front-end development
+- **Plan**: custom agent has read-only access to the codebase and can only generate implementation plans
+- **Research**: custom agent can reach out to external resources to explore new technologies or gather information
+- **Front-end developer**: custom agent can only generate and modify code related to front-end development
 
 
 ## Handoffs
@@ -55,6 +55,11 @@ handoffs:
     send: false
 ---
 ```
+
+
+## Create a custom agent
+
+Run the `Chat: New Custom Agent` command in the Command Palette.
 
 
 ## Custom agent file structure
@@ -109,11 +114,6 @@ The plan consists of a Markdown document that describes the implementation plan,
 ```
 
 View the [official doc](https://code.visualstudio.com/docs/copilot/customization/custom-agents#_custom-agent-file-structure) for more details.
-
-
-## Create a custom agent
-
-View the [official doc](https://code.visualstudio.com/docs/copilot/customization/custom-agents#_create-a-custom-agent) for more details.
 
 
 ## Usage
