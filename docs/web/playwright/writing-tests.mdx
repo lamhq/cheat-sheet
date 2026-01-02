@@ -51,29 +51,6 @@ test.describe('SauceDemo login flow', () => {
 ```
 
 
-## Test hooks
-
-- `describe`: declare a group of tests
-- `beforeEach`, `afterEach`: executed before/after each test
-- `beforeAll`, `afterAll`: executed once per worker before/after all tests
-
-```ts
-import { test, expect } from '@playwright/test';
-
-test.describe('navigation', () => {
-  test.beforeEach(async ({ page }) => {
-    // Go to the starting url before each test.
-    await page.goto('https://playwright.dev/');
-  });
-
-  test('main navigation', async ({ page }) => {
-    // Assertions use the expect API.
-    await expect(page).toHaveURL('https://playwright.dev/');
-  });
-});
-```
-
-
 ## Locators
 
 [Locators](https://playwright.dev/docs/locators) represent a way to find element(s) on the page.
@@ -87,6 +64,12 @@ test.describe('navigation', () => {
 - `getByTestId()` – use custom `data-testid` attributes  
 - `locator()` – use CSS or XPath selectors directly
 - `frameLocator()` - access `iframe` HTML tag to perform interactions inside the frame
+
+```ts
+await page.getByLabel('Password').fill('secret-password');
+
+await page.getByRole('button', { name: 'Sign in' }).click();
+```
 
 
 ## Actions
@@ -124,8 +107,14 @@ await page.goto('https://playwright.dev/');
 - `locator.isVisible()` – check if the element is visible  
 - `locator.count()` – count number of matching elements
 
+```ts
+await page.getByLabel('Password').fill('secret-password');
+```
+
 
 ## Assertions
+
+Check [here](https://playwright.dev/docs/test-assertions) for a list of available assertions.
 
 ### Element State Assertions
 
@@ -139,7 +128,12 @@ await page.goto('https://playwright.dev/');
 - `toBeFocused()` – element is focused 
 - `toHaveTitle()` – page has expected title  
 
+```ts
+await expect(page.getByText('Welcome, John!')).toBeVisible();
+```
+
 ### Content & Attribute Assertions
+
 - `toHaveText()` – element has exact text  
 - `toContainText()` – element contains partial text  
 - `toHaveAttribute()` – element has specific attribute  
@@ -148,12 +142,113 @@ await page.goto('https://playwright.dev/');
 - `toHaveCount()` – locator matches expected number of elements  
 - `toHaveCSS()` – element has specific CSS property  
 
+```ts
+await expect(page.getByTitle('Issues count')).toHaveText('25 issues');
+```
+
 ### Page-Level Assertions
 
 - `toHaveURL()` – page has expected URL  
 - `toHaveScreenshot()` – page matches screenshot  
 
-### API & Response Assertions
-- `toBeOK()` – response status is OK (200–299)  
+```ts
+await expect(page).toHaveURL(/inventory.html/);
+```
 
-Check [here](https://playwright.dev/docs/test-assertions) for a list of available assertions.
+### Response Assertions
+
+- `toBeOK()` – response status is OK (200–299)  
+- `toBe(statusCode)` – response has specific status code
+
+```ts
+import { test, expect } from '@playwright/test';
+
+test('API returns OK response', async ({ request }) => {
+  const response = await request.get('https://jsonplaceholder.typicode.com/posts/1');
+  await expect(response).toBeOK(); // ✅ passes if status is 200–299
+});
+```
+
+
+## Structuring tests
+
+- `describe`: declare a group of tests
+- `step`: declares a test step that is shown in the report
+
+```ts
+import { test, expect } from '@playwright/test';
+
+test.describe('Login flow', () => {
+  test('valid user can log in', async ({ page }) => {
+    await test.step('Navigate to login page', async () => {
+      await page.goto('https://www.saucedemo.com/');
+    });
+
+    await test.step('Fill credentials and submit', async () => {
+      await page.fill('#user-name', 'standard_user');
+      await page.fill('#password', 'secret_sauce');
+      await page.click('#login-button');
+    });
+
+    await test.step('Verify dashboard', async () => {
+      await expect(page).toHaveURL(/inventory.html/);
+      await expect(page.locator('.inventory_item_name').first())
+        .toHaveText('Sauce Labs Backpack');
+    });
+  });
+});
+```
+
+
+## Test Hooks
+
+- `beforeAll`, `afterAll`: executed once, before/after all tests in its scope (root or nested describe)
+- `beforeEach`, `afterEach`: executed before/after each test
+
+```ts
+import { test, expect } from '@playwright/test';
+
+// Global hooks: run once for ALL tests in this file
+test.beforeAll(() => console.log('🌍 Global beforeAll'));
+test.afterAll(() => console.log('🌍 Global afterAll'));
+
+test('Outside test #1', async ({ page }) => {
+  console.log('➡️ Outside test #1');
+  await page.goto('https://example.com');
+  await expect(page).toHaveTitle(/Example/);
+});
+
+test.describe('Inside describe block', () => {
+  // Local hooks: run once for tests in THIS block only
+  test.beforeAll(() => console.log('📦 Local beforeAll'));
+  test.afterAll(() => console.log('📦 Local afterAll'));
+
+  test('Inside test #1', async ({ page }) => {
+    console.log('➡️ Inside test #1');
+    await page.goto('https://example.com');
+    await expect(page.locator('h1')).toHaveText('Example Domain');
+  });
+
+  test('Inside test #2', async ({ page }) => {
+    console.log('➡️ Inside test #2');
+    await page.goto('https://example.com');
+    await expect(page).toHaveTitle(/Example/);
+  });
+});
+```
+
+## Annotations
+
+- `test.skip()`: Marks test as irrelevant; Playwright skips it. Use when not applicable in some configurations.
+- `test.fail()`: Marks test as expected to fail; runs and verifies failure. Complains if it passes.
+- `test.fixme()`: Marks test as failing; skips execution. Use when running is slow or crashes.
+- `test.slow()`: Marks test as slow; triples the timeout.
+- `test.only()`: Runs only this test; skips all others. Useful for focused debugging.
+
+Conditionally skip a test (or a group of tests):
+
+```ts
+test('skip this test', async ({ page, browserName }) => {
+  test.skip(browserName === 'firefox', 'Still working on it');
+});
+```
