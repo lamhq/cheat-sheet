@@ -1,11 +1,11 @@
 [
   "installation",
   "writing-tests",
+  "generate-tests",
   "configuration",
   "projects",
   "monitoring",
   "mock-api",
   "tracing",
-  "storage",
-  "linter"
+  "storage"
 ]

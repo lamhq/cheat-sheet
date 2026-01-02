@@ -1,0 +1,40 @@
+# Generate tests
+
+You can use the [Playwright Test for VSCode](https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright) extension to generate tests by recording your actions.
+
+**Benefits**:
+- Great for writing test actions without writing code from scratch.
+- Uses accessibility roles and text rather than brittle CSS selectors.
+
+**Steps**:
+1. Open the **Testing sidebar** in VS Code.
+2. Click **Record new** (or **Record at cursor** if you want to insert steps into an existing test).
+3. Navigate to the site you want to test.
+4. Perform interactions in the browser as a normal user.
+5. Each action is captured and written into a test file.
+
+![](https://user-images.githubusercontent.com/13063165/220961665-615d0ab8-3f0b-439c-ad0b-0424d9aa154b.png)
+
+Example output:
+```ts
+import { test, expect } from '@playwright/test';
+
+test('recorded test', async ({ page }) => {
+  await page.goto('https://example.com');
+  await page.getByRole('button', { name: 'Login' }).click();
+  await page.fill('#username', 'user1');
+  await page.fill('#password', 'password123');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page).toHaveURL('/dashboard');
+});
+```
+
+## Generate assertions
+
+You can also **generate assertions** by choosing one of the icons in the toolbar and then clicking on an element on the page to assert against. The following assertions can be generated:
+
+- **assert visibility**: assert that an element is visible
+- **assert text**: assert that an element contains specific text
+- **assert value**: assert that an element has a specific value
+
+![](https://github.com/microsoft/playwright/assets/13063165/d131eb35-b2ca-4bf4-a8ac-88b6e40dcf07)

@@ -2,31 +2,16 @@
 
 ## Overview
 
-Playwright tests are simple, they:
-- perform actions, and
-- assert the state against expectations.
+A Playwright test includes steps to:
+- perform actions on a web page
+- assert the state against expectations
 
 There is no need to wait to performing an action.
 
-Tests are isolated (each test runs in a clean, independent environment). By receiving a [page fixture](https://playwright.dev/docs/test-fixtures#built-in-fixtures), pages are isolated between tests due to the [Browser Context](https://playwright.dev/docs/browser-contexts), which is equivalent to a brand new browser profile.
+Tests are isolated. Each test runs in a clean, independent environment.
 
-
-## Test file name
-
-By default, Playwright automatically runs files that match: `.*(test|spec).(js|ts|mjs)`
-
-These files are typically located in the `tests` directory. You can configure a different path in `playwright.config.ts` using the `testDir` option.
-
-You can override the default pattern with `testMatch` in your config:
-
-```ts title="playwright.config.ts"
-import { defineConfig } from '@playwright/test';
-
-export default defineConfig({
-  // Glob patterns or regular expressions that match test files.
-  testMatch: 'tests/**/*.spec.ts'
-});
-```
+> [!INFO]
+> By receiving a [page fixture](https://playwright.dev/docs/test-fixtures#built-in-fixtures), pages are isolated between tests due to the [Browser Context](https://playwright.dev/docs/browser-contexts), which is equivalent to a brand new browser profile.
 
 
 ## Test hooks
@@ -54,7 +39,7 @@ test.describe('navigation', () => {
 
 ## Locators
 
-Locators represent a way to find element(s) on the page.
+[Locators](https://playwright.dev/docs/locators) represent a way to find element(s) on the page.
 
 - `getByRole()` – locate elements by ARIA role and accessible name  
 - `getByText()` – match visible text content  
@@ -66,10 +51,10 @@ Locators represent a way to find element(s) on the page.
 - `locator()` – use CSS or XPath selectors directly
 - `frameLocator()` - access `iframe` HTML tag to perform interactions inside the frame
 
-Check [here](https://playwright.dev/docs/locators) for different types of locators available.
-
 
 ## Actions
+
+Check [here](https://playwright.dev/docs/input) for all available actions.
 
 ### Page actions
 
@@ -102,19 +87,8 @@ await page.goto('https://playwright.dev/');
 - `locator.isVisible()` – check if the element is visible  
 - `locator.count()` – count number of matching elements
 
-Check [here](https://playwright.dev/docs/input) for a list of available actions.
-
 
 ## Assertions
-
-Playwright support different types of assertions:
-
-- **Non-retrying assertions** (generic matchers): Evaluate conditions once, useful for deterministic checks (e.g. `expect(value).toBe(42)`)
-- **Auto-retrying assertions**: Automatically wait for conditions like visibility, text, or state to be met (e.g. `await expect(locator).toBeVisible()`)
-- **Soft assertions**: Allow tests to continue even if the assertion fails, useful for diagnostics
-- **Negating matchers**: Assert that something is _not_ true (e.g. `expect(locator).not.toBeVisible()`)
-- **Custom matchers**: Extend `expect()` with your own logic using `expect.extend()`
-- **Polling assertions**: Retry custom logic until it passes using `expect.poll()` or `expect.toPass()`
 
 ### Element State Assertions
 

@@ -2,15 +2,15 @@
 
 ## Overview
 
-Projects are logical groupings of tests that run with specific configurations.
+Projects allow defining multiple configurations from a single Playwright config file.
 
-They allow you to run the same test suite across different environments, browsers, devices, or settings—all from a single config file.
+Each project typically corresponds to a specific browser (like Chromium, Firefox, or WebKit) with its own settings such as viewport size, device emulation, or other browser-specific options.
 
 Use cases:
-- Cross-Browser Testing. Run tests across Chromium, Firefox, WebKit, ...
-- Environment-Specific Testing. Run tests against staging and production with different setting
-- Split Test Suites. Separate smoke tests from full regression tests
-- Global setup and teardown
+- **Cross-Browser Testing**. Run tests across Chromium, Firefox, WebKit, ...
+- **Environment-Specific Testing**. Run tests against staging and production with different setting
+- **Split Test Suites**. Separate smoke tests from full regression tests
+- **Global setup and teardown**
 
 
 ## Configuring
