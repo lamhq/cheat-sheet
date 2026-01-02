@@ -13,6 +13,43 @@ Tests are isolated. Each test runs in a clean, independent environment.
 > [!INFO]
 > By receiving a [page fixture](https://playwright.dev/docs/test-fixtures#built-in-fixtures), pages are isolated between tests due to the [Browser Context](https://playwright.dev/docs/browser-contexts), which is equivalent to a brand new browser profile.
 
+```ts
+import { test, expect } from '@playwright/test';
+
+test.describe('SauceDemo login flow', () => {
+  test('should login successfully and show products page', async ({ page }) => {
+    // Step 1: Navigate to the site
+    await page.goto('https://www.saucedemo.com/');
+
+    // Step 2: Fill in login form
+    await page.fill('#user-name', 'standard_user');
+    await page.fill('#password', 'secret_sauce');
+
+    // Step 3: Submit the form
+    await page.click('#login-button');
+
+    // Step 4: Assert that we are on the products page
+    await expect(page).toHaveURL(/inventory.html/);
+
+    // Step 5: Assert that a product is visible
+    const firstProduct = page.locator('.inventory_item_name').first();
+    await expect(firstProduct).toHaveText('Sauce Labs Backpack');
+  });
+
+  test('should show error with invalid credentials', async ({ page }) => {
+    await page.goto('https://www.saucedemo.com/');
+
+    await page.fill('#user-name', 'wrong_user');
+    await page.fill('#password', 'wrong_password');
+    await page.click('#login-button');
+
+    // Assert error message
+    const errorMessage = page.locator('[data-test="error"]');
+    await expect(errorMessage).toContainText('Username and password do not match');
+  });
+});
+```
+
 
 ## Test hooks
 
