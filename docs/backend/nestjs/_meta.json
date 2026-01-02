@@ -1,5 +1,6 @@
 [
   "modules",
+  "configuration",
   {
     "name": "graphql",
     "type": "dir",
