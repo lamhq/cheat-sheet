@@ -1,0 +1,33 @@
+# Prisma
+
+## Other topics
+
+[Getting started](https://docs.nestjs.com/recipes/prisma#getting-started): Build a sample `NestJS` application with a `REST API` that can read and write data in a database using `SQLite`.
+
+[Create your NestJS project](https://docs.nestjs.com/recipes/prisma#create-your-nestjs-project): Install the `NestJS CLI` and create an app skeleton with commands to set up the project structure.
+
+[Set up Prisma](https://docs.nestjs.com/recipes/prisma#set-up-prisma): Install the `Prisma CLI` as a development dependency and initialize the `Prisma` setup with the `init` command.
+
+[Set the generator output path](https://docs.nestjs.com/recipes/prisma#set-the-generator-output-path): Specify the output path for the generated `Prisma` client in the schema or during initialization.
+
+[Configure the module format](https://docs.nestjs.com/recipes/prisma#configure-the-module-format): Set the `moduleFormat` in the generator to `cjs` to ensure compatibility with `NestJS`'s `CommonJS` setup.
+
+[Set the database connection](https://docs.nestjs.com/recipes/prisma#set-the-database-connection): Configure the `datasource` block in `schema.prisma` for `SQLite` and update the `DATABASE_URL` in `.env` to point to a local file.
+
+[Create two database tables with Prisma Migrate](https://docs.nestjs.com/recipes/prisma#create-two-database-tables-with-prisma-migrate): Add `User` and `Post` models to `schema.prisma` and run `prisma migrate dev` to generate and apply migration files.
+
+[Install and generate Prisma Client](https://docs.nestjs.com/recipes/prisma#install-and-generate-prisma-client): Install `@prisma/client` and the appropriate driver adapter, then generate the type-safe client with `npx prisma generate`.
+
+[Use Prisma Client in your NestJS services](https://docs.nestjs.com/recipes/prisma#use-prisma-client-in-your-nestjs-services): Create a `PrismaService` to instantiate `PrismaClient` and build services for `User` and `Post` models with `CRUD` operations.
+
+[Implement your REST API routes in the main app controller](https://docs.nestjs.com/recipes/prisma#implement-your-rest-api-routes-in-the-main-app-controller): Replace the contents of `app.controller.ts` with routes for fetching, creating, updating, and deleting posts and users using the services.
+
+[GET](https://docs.nestjs.com/recipes/prisma#get): Define routes to fetch a single post by `id`, all published posts, and filter posts by search string.
+
+[POST](https://docs.nestjs.com/recipes/prisma#post): Define routes to create a new post with title, content, and author email, and to create a new user with email and optional name.
+
+[PUT](https://docs.nestjs.com/recipes/prisma#put): Define a route to publish a post by its `id`.
+
+[DELETE](https://docs.nestjs.com/recipes/prisma#delete): Define a route to delete a post by its `id`.
+
+[Summary](https://docs.nestjs.com/recipes/prisma#summary): Review the implementation of a `REST API` using `NestJS` and `Prisma`, and explore additional resources for further learning.

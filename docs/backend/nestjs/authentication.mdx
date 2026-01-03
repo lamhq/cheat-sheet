@@ -358,3 +358,15 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   }
 }
 ```
+
+
+## Other topics
+
+- [Authentication](https://docs.nestjs.com/security/authentication#authentication): Introduce authentication concepts and requirements for issuing JWT tokens after username/password authentication.
+- [Creating an authentication module](https://docs.nestjs.com/security/authentication#creating-an-authentication-module): Generate `AuthModule`, `AuthService`, `AuthController`, `UsersModule`, and `UsersService` to encapsulate user operations.
+- [Implementing the "Sign in" endpoint](https://docs.nestjs.com/security/authentication#implementing-the-sign-in-endpoint): Create `signIn` method in `AuthService` to verify user credentials and return user data, update `AuthModule` to import `UsersModule`, and implement `signIn` endpoint in `AuthController`.
+- [JWT token](https://docs.nestjs.com/security/authentication#jwt-token): Install `@nestjs/jwt` package, update `AuthService` to generate JWT tokens, create `constants.ts` for JWT secret, and configure `JwtModule` in `AuthModule`.
+- [Implementing the authentication guard](https://docs.nestjs.com/security/authentication#implementing-the-authentication-guard): Create `AuthGuard` to protect routes by verifying JWT tokens, update `AuthController` to use `AuthGuard` on protected routes like `GET /profile`.
+- [Enable authentication globally](https://docs.nestjs.com/security/authentication#enable-authentication-globally): Register `AuthGuard` as global guard, create `@Public` decorator for public routes, and update `AuthGuard` to skip authentication for public endpoints.
+- [Passport integration](https://docs.nestjs.com/security/authentication#passport-integration): Integrate Passport library with NestJS using `@nestjs/passport` module for authentication strategies.
+- [Example](https://docs.nestjs.com/security/authentication#example): Reference complete code example for JWT authentication in NestJS sample repository.

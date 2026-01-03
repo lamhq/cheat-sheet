@@ -1,0 +1,181 @@
+import { PackageManagerTabs } from '@theme'
+
+# Validation
+
+## Setup
+
+Install the required dependencies:
+
+<PackageManagerTabs command="install class-validator class-transformer" />
+
+Register the `ValidationPipe` as a global pipe:
+
+```ts title="main.ts"
+import { ValidationPipe } from '@nestjs/common';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(new ValidationPipe({
+    skipMissingProperties: true,
+    transform: true,
+  }));
+  await app.listen(process.env.PORT ?? 3000);
+}
+
+bootstrap();
+```
+
+Options supported when instantiating the `ValidationPipe`:
+
+- `skipMissingProperties` (boolean): Skips validation of properties that are null or undefined in the validating object.
+- `whitelist` (boolean):Removes any properties from the input that don't have validation decorators.
+- `forbidNonWhitelisted` (boolean): Throws an error if the input has properties without validation decorators.
+- `transform` (boolean): Automatically converts input data to match the expected types in your DTOs and handles basic type changes.
+- `disableErrorMessages` (boolean): Disables detailed error messages in response bodies.
+- `exceptionFactory` (Function): A custom function that creates the error to throw based on validation issues.
+- `enableDebugMessages` (boolean): Prints extra warning messages to the console when something is not right.
+- `skipUndefinedProperties` (boolean): Skips validation of properties that are undefined in the validating object.
+- `skipNullProperties` (boolean): Skips validation of properties that are null in the validating object.
+- `forbidUnknownValues` (boolean): Fails validation immediately if the input contains unexpected objects.
+- `errorHttpStatusCode` (number): Specifies the exception type used in case of an error (defaults to `BadRequestException`).
+- `always` (boolean): Makes validation decorators always run, even if other conditions aren't met.
+- `groups` (string[]): Groups to be used during validation of the object.
+- `strictGroups` (boolean): Ignores decorators that belong to groups unless groups are specified.
+- `dismissDefaultMessages` (boolean): Prevents use of default messages; error message is undefined if not explicitly set.
+- `validationError.target` (boolean): Indicates if target should be exposed in ValidationError.
+- `validationError.value` (boolean): Indicates if validated value should be exposed in ValidationError.
+- `stopAtFirstError` (boolean): Stops validation of a property after encountering the first error (defaults to false).
+
+
+## Validating request body
+
+```ts title="create-user.dto.ts"
+import { IsEmail, IsNotEmpty } from 'class-validator';
+
+export class CreateUserDto {
+  @IsEmail()
+  email: string;
+
+  @IsNotEmpty()
+  password: string;
+}
+```
+
+```ts title="user.controller.ts"
+@Post()
+create(@Body() createUserDto: CreateUserDto) {
+  return 'This action adds a new user';
+}
+```
+
+
+## Validating request params
+
+```ts title="user.controller.ts"
+@Get(':id')
+findOne(@Param() params: FindOneParams) {
+  return 'This action returns a user';
+}
+```
+
+```ts title="find-one-params.dto.ts"
+import { IsNumberString } from 'class-validator';
+
+export class FindOneParams {
+  @IsNumberString()
+  id: number;
+}
+```
+
+## Transform payload objects
+
+Enable auto-transformation at method level (using `ValidationPipe` with `transform` option):
+
+```ts title="cats.controller.ts"
+import { Post, Body, UsePipes } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
+import { CreateCatDto } from './create-cat.dto';
+
+@Post()
+@UsePipes(new ValidationPipe({ transform: true }))
+async create(@Body() createCatDto: CreateCatDto) {
+  this.catsService.create(createCatDto);
+}
+```
+
+Enable auto-transformation globally by setting `transform` option on global `ValidationPipe`:
+
+```ts title="main.ts"
+import { ValidationPipe } from '@nestjs/common';
+
+app.useGlobalPipes(
+  new ValidationPipe({
+    transform: true,
+  }),
+);
+```
+
+Automatically convert string path parameters to specified types like `number` when `transform` is enabled:
+
+```ts title="user.controller.ts"
+import { Get, Param } from '@nestjs/common';
+
+@Get(':id')
+findOne(@Param('id') id: number) {
+  console.log(typeof id === 'number'); // true
+  return 'This action returns a user';
+}
+```
+
+
+## Explicit conversion
+
+With auto-transformation disabled, you have to explicitly cast values using the `ParseIntPipe` or `ParseBoolPipe`:
+
+```ts title="user.controller.ts"
+import { Get, Param, Query, ParseIntPipe, ParseBoolPipe } from '@nestjs/common';
+
+@Get(':id')
+findOne(
+  @Param('id', ParseIntPipe) id: number,
+  @Query('sort', ParseBoolPipe) sort: boolean,
+) {
+  console.log(typeof id === 'number'); // true
+  console.log(typeof sort === 'boolean'); // true
+  return 'This action returns a user';
+}
+```
+
+
+## Parsing and validating arrays
+
+```ts
+@Post()
+createBulk(
+  @Body(new ParseArrayPipe({ items: CreateUserDto }))
+  createUserDtos: CreateUserDto[],
+) {
+  return 'This action adds new users';
+}
+```
+
+```ts
+// GET /?ids=1,2,3
+@Get()
+findByIds(
+  @Query('id', new ParseArrayPipe({ items: Number, separator: ',' }))
+  ids: number[],
+) {
+  return 'This action returns users by ids';
+}
+```
+
+
+## Other Topics
+
+- [Auto-validation](https://docs.nestjs.com/techniques/validation#auto-validation): Bind `ValidationPipe` globally to protect all endpoints from incorrect data and enforce validation rules in DTOs.
+- [Disable detailed errors](https://docs.nestjs.com/techniques/validation#disable-detailed-errors): Configure `ValidationPipe` to disable detailed error messages in response bodies for production environments.
+- [Mapped types](https://docs.nestjs.com/techniques/validation#mapped-types): Utilize utility functions like `PartialType`, `PickType`, `OmitType`, and `IntersectionType` to create variations of DTOs for CRUD operations.
+- [Parsing and validating arrays](https://docs.nestjs.com/techniques/validation#parsing-and-validating-arrays): Use `ParseArrayPipe` to validate arrays in request bodies or query parameters with specified item types.
+- [WebSockets and Microservices](https://docs.nestjs.com/techniques/validation#websockets-and-microservices): Apply `ValidationPipe` to WebSockets and microservices transports for consistent validation.
+- [Learn more](https://docs.nestjs.com/techniques/validation#learn-more): Look at the `class-validator` package for custom validators, error messages, and available decorators.

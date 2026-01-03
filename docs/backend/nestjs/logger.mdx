@@ -152,3 +152,17 @@ export class CatsService {
   }
 }
 ```
+
+
+## Other topics
+
+- [Logger](https://docs.nestjs.com/techniques/logger#logger): Introduces the built-in text-based logger in NestJS for system logging and outlines customization options like disabling, formatting, and overriding.
+- [Basic customization](https://docs.nestjs.com/techniques/logger#basic-customization): Configures basic logger settings such as disabling logging, enabling specific log levels, disabling colorized output, and setting prefixes using the `logger` property in `NestFactory.create()`.
+- [JSON logging](https://docs.nestjs.com/techniques/logger#json-logging): Enables structured JSON logging by setting `json: true` in `ConsoleLogger` for integration with log aggregators and platforms like AWS ECS.
+- [Using the logger for application logging](https://docs.nestjs.com/techniques/logger#using-the-logger-for-application-logging): Instantiates `Logger` class in services with context for consistent logging behavior across Nest system and application events.
+- [Logs with timestamps](https://docs.nestjs.com/techniques/logger#logs-with-timestamps): Adds timestamps to log messages by setting `timestamp: true` in `Logger` constructor to display time differences between messages.
+- [Custom implementation](https://docs.nestjs.com/techniques/logger#custom-implementation): Implements a custom logger by fulfilling the `LoggerService` interface and supplying it via the `logger` property for full control over logging.
+- [Extend built-in logger](https://docs.nestjs.com/techniques/logger#extend-built-in-logger): Extends `ConsoleLogger` class to override selected methods for tailored logging logic while delegating to parent class.
+- [Dependency injection](https://docs.nestjs.com/techniques/logger#dependency-injection): Registers custom logger as a provider in a module for dependency injection, enabling injection of services like `ConfigService` and use for system logging via `app.useLogger()`.
+- [Injecting a custom logger](https://docs.nestjs.com/techniques/logger#injecting-a-custom-logger): Creates transient-scoped custom logger extending `ConsoleLogger` for unique instances in feature modules, allowing context-aware logging and custom methods.
+- [Use external logger](https://docs.nestjs.com/techniques/logger#use-external-logger): Integrates external logging libraries like `Winston` or `Pino` for advanced production logging requirements such as filtering and centralized logging.
