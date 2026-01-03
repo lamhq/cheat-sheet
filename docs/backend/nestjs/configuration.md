@@ -99,54 +99,84 @@ ConfigModule.forRoot({
 ```
 
 
-## Custom env file path
+## Configuration namespaces
 
-You can also specify multiple paths for `.env` files like this:
+For complex projects, instead of using a [single configuration file](#define-configuration-files), you can define multiple configuration files and load them under their respective namespaces, using the `registerAs` function.
 
-```ts
-ConfigModule.forRoot({
-  envFilePath: ['.env.development.local', '.env.development'],
-});
+Create a namespaced configuration file using the `registerAs` function to organize related settings:
+
+```typescript title="config/database.config.ts"
+export default registerAs('database', () => ({
+  host: process.env.DATABASE_HOST,
+  port: process.env.DATABASE_PORT || 5432
+}));
 ```
 
+Load the namespaced configuration in the root module via the `load` property:
 
-## Validate config's schema
-
-It is standard practice to throw an exception during application startup if required environment variables haven't been provided or if they don't meet certain validation rules.
-
-```shell
-yarn add @hapi/joi
-yarn add --dev @types/hapi__joi
-```
-
-```ts
-import * as Joi from '@hapi/joi';
+```typescript title="app.module.ts"
+import databaseConfig from './config/database.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      validationSchema: Joi.object({
-        NODE_ENV: Joi.string()
-          .valid('development', 'production', 'test', 'provision')
-          .default('development'),
-        PORT: Joi.number().default(3000),
-      }),
-      validationOptions: {
-        allowUnknown: false,
-        abortEarly: true,
-      },
+      load: [databaseConfig],
     }),
   ],
 })
 export class AppModule {}
 ```
 
+Retrieve a value from the database namespace using dot notation with `ConfigService.get`:
 
-## Using in the `main.ts`
-
-```ts
-import { ConfigService } from '@nestjs/config';
-
-const configService = app.get(ConfigService<IConfiguration, true>);
-const port = configService.get('port', { infer: true });
+```typescript
+const dbHost = this.configService.get<string>('database.host');
 ```
+
+Inject the database namespace directly for strong typing using `Inject` and `ConfigType`:
+
+```typescript
+constructor(
+  @Inject(databaseConfig.KEY)
+  private dbConfig: ConfigType<typeof databaseConfig>,
+) {}
+```
+
+
+## Other topics
+
+- [Custom env file path](https://docs.nestjs.com/techniques/configuration#custom-env-file-path)  
+  Specify alternative paths for the `.env` file using the `envFilePath` property.
+
+- [Disable env variables loading](https://docs.nestjs.com/techniques/configuration#disable-env-variables-loading)  
+  Prevent loading of the `.env` file by setting `ignoreEnvFile` to `true`.
+
+- [Namespaced configurations in modules](https://docs.nestjs.com/techniques/configuration#namespaced-configurations-in-modules)  
+  Integrate namespaced configurations into other modules using `asProvider`.
+
+- [Cache environment variables](https://docs.nestjs.com/techniques/configuration#cache-environment-variables)  
+  Enable caching to improve performance of `ConfigService.get` for `process.env` variables.
+
+- [Partial registration](https://docs.nestjs.com/techniques/configuration#partial-registration)  
+  Load feature-specific configurations in individual modules using `forFeature`.
+
+- [Schema validation](https://docs.nestjs.com/techniques/configuration#schema-validation)  
+  Validate environment variables using Joi schemas during startup.
+
+- [Custom validate function](https://docs.nestjs.com/techniques/configuration#custom-validate-function)  
+  Implement a custom validate function with `class-validator` for configuration validation.
+
+- [Custom getter functions](https://docs.nestjs.com/techniques/configuration#custom-getter-functions)  
+  Add getter functions to `ConfigService` for a more natural coding style.
+
+- [Environment variables loaded hook](https://docs.nestjs.com/techniques/configuration#environment-variables-loaded-hook)  
+  Ensure variables are loaded from `.env` file before accessing `process.env`.
+
+- [Conditional module configuration](https://docs.nestjs.com/techniques/configuration#conditional-module-configuration)  
+  Conditionally load modules based on environment variables.
+
+- [Expandable variables](https://docs.nestjs.com/techniques/configuration#expandable-variables)  
+  Enable environment variable expansion to reference variables within others.
+
+- [Using in the main.ts](https://docs.nestjs.com/techniques/configuration#using-in-the-maints)  
+  Access `ConfigService` in `main.ts` to retrieve configuration values like port or CORS host.
