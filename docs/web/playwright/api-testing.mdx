@@ -1,0 +1,78 @@
+# API testing
+
+Send requests to the server directly from Playwright tests.
+
+## Configuration
+
+Configure parameters for all requests:
+
+```typescript title="playwright.config.ts"
+import { defineConfig } from '@playwright/test';
+export default defineConfig({
+  use: {
+    // All requests we send go to this API endpoint.
+    baseURL: 'https://api.github.com',
+    extraHTTPHeaders: {
+      // We set this header per GitHub guidelines.
+      'Accept': 'application/vnd.github.v3+json',
+      // Add authorization token to all requests.
+      // Assuming personal access token available in the environment.
+      'Authorization': `token ${process.env.API_TOKEN}`,
+    },
+  },
+});
+```
+
+
+## Writing tests
+
+Use the `request` fixture to send requests to API server:
+
+```typescript title="test.spec.ts"
+import { test, expect } from '@playwright/test';
+
+const REPO = 'test-repo-1';
+const USER = 'github-username';
+
+test('should create a bug report', async ({ request }) => {
+  const newIssue = await request.post(`/repos/${USER}/${REPO}/issues`, {
+    data: {
+      title: '[Bug] report 1',
+      body: 'Bug description',
+    }
+  });
+  expect(newIssue.ok()).toBeTruthy();
+
+  const issues = await request.get(`/repos/${USER}/${REPO}/issues`);
+  expect(issues.ok()).toBeTruthy();
+  expect(await issues.json()).toContainEqual(expect.objectContaining({
+    title: '[Bug] report 1',
+    body: 'Bug description'
+  }));
+});
+
+test('should create a feature request', async ({ request }) => {
+  const newIssue = await request.post(`/repos/${USER}/${REPO}/issues`, {
+    data: {
+      title: '[Feature] request 1',
+      body: 'Feature description',
+    }
+  });
+  expect(newIssue.ok()).toBeTruthy();
+
+  const issues = await request.get(`/repos/${USER}/${REPO}/issues`);
+  expect(issues.ok()).toBeTruthy();
+  expect(await issues.json()).toContainEqual(expect.objectContaining({
+    title: '[Feature] request 1',
+    body: 'Feature description'
+  }));
+});
+```
+
+
+## Other topics
+
+- [Using request context](https://playwright.dev/docs/api-testing#using-request-context): Manually create `APIRequestContext` for isolated requests.
+- [Sending API requests from UI tests](https://playwright.dev/docs/api-testing#sending-api-requests-from-ui-tests): Combine API calls with browser tests for preconditions.
+- [Reusing authentication state](https://playwright.dev/docs/api-testing#reusing-authentication-state): Retrieve and reuse storage state between contexts.
+- [Context request vs global request](https://playwright.dev/docs/api-testing#context-request-vs-global-request): Compare cookie sharing in `BrowserContext` vs isolated requests.
