@@ -1,0 +1,236 @@
+# Modules
+
+## Introduction
+
+A module is a class annotated with a `@Module()` decorator.
+
+Modules group related components (controllers, providers) together.
+
+Providers registered in a module are available only within that module unless exported. Other modules can import a module to access its exported providers.
+
+![](https://docs.nestjs.com/assets/Modules_1.png)
+
+
+## Benefits
+
+1. **Maintainability**: Modules help organize code into cohesive blocks, making it easier to manage and scale applications.
+2. **Encapsulation**: A module can hide internal details and only expose what’s necessary. This prevents accidental coupling between unrelated parts of the app.
+3. **Reusability**: Modules can be reused across different applications.
+4. **Clear Dependencies**: Modules explicitly declare their dependencies via imports, making it clear what each module relies on.
+5. **Scalability**: As your app grows, you can split features into separate modules.
+
+
+## Creating a module
+
+```bash
+nest g module cats
+```
+
+
+## Module definition
+
+The `@Module()` decorator takes a single object whose properties describe the module:
+
+- `providers`: services, factories, or values available via DI.
+- `exports`: providers made available to other modules.
+- `controllers`: classes handling incoming requests.
+- `imports`: other modules this module depends on.
+
+
+```ts title="app.module.ts"
+import { Module } from '@nestjs/common';
+import { CatsModule } from './cats/cats.module';
+
+@Module({
+  imports: [CatsModule],
+})
+export class AppModule {}
+```
+
+
+## Using a Module
+
+You use a module by importing it into another module
+
+```ts
+import { Module } from '@nestjs/common';
+import { UsersModule } from './users/users.module';
+
+@Module({
+  imports: [UsersModule], // <-- using the module here
+})
+export class AppModule {}
+```
+
+
+## Module re-exporting
+
+Modules can export their internal providers. In addition, they can re-export modules that they import.
+
+```ts
+@Module({
+  imports: [CommonModule],
+  exports: [CommonModule],
+})
+export class CoreModule {}
+```
+
+
+## Dependency injection
+
+A module class's constructor can have injected providers as well:
+
+```ts title="cats.module.ts"
+import { Module } from '@nestjs/common';
+import { CatsController } from './cats.controller';
+import { CatsService } from './cats.service';
+
+@Module({
+  controllers: [CatsController],
+  providers: [CatsService],
+})
+export class CatsModule {
+  constructor(private catsService: CatsService) {}
+}
+```
+
+## Global modules
+
+When you want to use providers exported from a module, you have to import that module first.
+
+To avoid importing the same module in multiple places, you can make a module global with the `@Global()` decorator.
+
+```ts
+import { Module, Global } from '@nestjs/common';
+import { CatsController } from './cats.controller';
+import { CatsService } from './cats.service';
+
+@Global()
+@Module({
+  controllers: [CatsController],
+  providers: [CatsService],
+  exports: [CatsService],
+})
+export class CatsModule {}
+```
+
+
+## Dynamic module
+
+Dynamic modules allow creating modules at runtime with configurable options.
+
+This is useful when you need to provide flexible, customizable modules where the providers can be created based on certain options or configurations.
+
+
+### Defining a Dynamic Module
+
+Implement static method (commonly called `forRoot` or `forRootAsync`) that returns a `DynamicModule` object.
+
+For example, create a configurable Logger Module:
+
+```ts
+import { Module, DynamicModule } from '@nestjs/common';
+
+@Module({})
+export class LoggerModule {
+  static forRoot(prefix: string): DynamicModule {
+    return {
+      module: LoggerModule,
+      providers: [
+        {
+          provide: 'LOGGER_PREFIX',
+          useValue: prefix,
+        },
+        {
+          provide: 'LoggerService',
+          useFactory: (prefix: string) => new LoggerService(prefix),
+          inject: ['LOGGER_PREFIX'],
+        },
+      ],
+      exports: ['LoggerService'],
+    };
+  }
+}
+```
+
+- `LOGGER_PREFIX`: this registers a token in the DI container. Whenever something asks for `LOGGER_PREFIX`, NestJS will supply the value of `prefix`.
+- `LoggerService`: this registers a service under the token `LoggerService`.
+
+
+### Using a Dynamic Module
+
+You import it into another module and configure it:
+
+```ts
+import { Module } from '@nestjs/common';
+import { LoggerModule } from './logger.module';
+
+@Module({
+  imports: [
+    LoggerModule.forRoot('MyApp'),  // pass configuration here
+  ],
+})
+export class AppModule {}
+```
+
+Now, anywhere you inject `LoggerService`, it will be configured with the prefix `"MyApp"`.
+
+```ts
+import { Injectable, Inject } from '@nestjs/common';
+
+@Injectable()
+export class AppService {
+  constructor(
+    @Inject('LoggerService') private readonly logger: LoggerService,
+  ) {}
+
+  doSomething() {
+    this.logger.log('Hello world'); // logs with prefix "MyApp"
+  }
+}
+```
+
+
+### Async Configuration
+
+If you need to load configs asynchronously (e.g., from environment variables or a config service):
+
+```ts
+@Module({})
+export class LoggerModule {
+  static forRootAsync(options: {
+    useFactory: (...args: any[]) => Promise<string> | string,
+    inject?: any[],
+  }): DynamicModule {
+    return {
+      module: LoggerModule,
+      providers: [
+        {
+          provide: 'LOGGER_PREFIX',
+          useFactory: options.useFactory,
+          inject: options.inject || [],
+        },
+        {
+          provide: 'LoggerService',
+          useFactory: (prefix: string) => new LoggerService(prefix),
+          inject: ['LOGGER_PREFIX'],
+        },
+      ],
+      exports: ['LoggerService'],
+    };
+  }
+}
+```
+
+Usage:
+
+```ts
+@Module({
+  imports: [
+    LoggerModule.forRootAsync({
+      useFactory: async () => process.env.LOGGER_PREFIX || 'DefaultApp',
+    }),
+  ],
+})
+export class AppModule {}
+```

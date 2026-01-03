@@ -1,0 +1,41 @@
+# Debugging Tests
+
+The [Playwright Test for VSCode](https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright) extension provides debugging tools to help you identify and fix issues in your tests.
+
+You can:
+- Set breakpoints
+- Inspect variables
+- View detailed error messages
+- Get AI-powered suggestions to resolve test failures
+- Use trace viewer to analyze test execution step-by-step
+
+
+## Use Breakpoints
+
+Set a breakpoint by clicking in the gutter next to a line number. Right-click the test and select **Debug Test**.
+
+![](https://playwright.dev/assets/images/debug-mode-e145cba936d960900fc79b646016a9ba.png)
+
+
+## Pick locator
+
+While debugging you can use the **Pick Locator** button to select an element on the page and see the locator that Playwright would use to find that element.
+
+![](https://playwright.dev/assets/images/ui-mode-pick-locator-91b71dca4af49fdfad305a57b9d657b8.png)
+
+
+## Fix with AI
+
+When a test fails, click the sparkle icon next to the error to get an AI-powered fix suggestion from Copilot.
+
+![](https://playwright.dev/assets/images/fix-with-ai-011728a352c48c0083ac472fe739815d.png)
+
+
+## Use Trace Viewer
+
+Enable the **Show Trace Viewer** option in the Playwright sidebar. When your test finishes, a detailed trace will automatically open, providing you with a complete timeline of your test execution.
+
+![](https://playwright.dev/assets/images/trace-viewer-debug-1386da3466791b55394091f252ec2ca9.png)
+
+> [!INFO]
+> Flaky tests are tests that sometimes pass and sometimes fail without any changes to the code or environment.

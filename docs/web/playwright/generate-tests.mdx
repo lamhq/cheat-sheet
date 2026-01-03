@@ -1,0 +1,55 @@
+# Generate tests
+
+## Introduction
+
+You can use the [Playwright Test for VSCode](https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright) extension to generate tests (CodeGen) by recording your actions.
+
+Instead of writing tests by hand, you can simply navigate through the browser while CodeGen captures your actions and converts them into reliable test code with proper locators and assertions.
+
+
+## Benefits
+
+- Great for writing test actions without writing code from scratch.
+- Uses proper locators (accessibility roles and text) rather than brittle CSS selectors.
+
+
+## Generate tests
+
+1. Open the **Testing sidebar** in VS Code.
+2. Click **Record new** (or **Record at cursor** if you want to insert code into an existing test).
+3. Navigate to the site you want to test.
+4. Perform interactions in the browser as a normal user.
+5. Each action is captured and written into a test file.
+
+![](https://user-images.githubusercontent.com/13063165/220961665-615d0ab8-3f0b-439c-ad0b-0424d9aa154b.png)
+
+You can also **generate tests when debugging**:
+1. Set a breakpoint in your test.
+2. Run your test in debug mode.
+3. When paused at the breakpoint, use the **Pick Locator** tool in **Test Explorer** to display the recording toolbar in the browser.
+4. Click the **Start Recording** button in the toolbar.
+5. Each action is captured and written into the opening file in the IDE.
+
+![](https://playwright.dev/assets/images/pick-locator-21752d14dc07a83f5fb1bd67b6c0e0c0.png)
+
+![](https://playwright.dev/assets/images/record-test-js-648272d0798f11b3f4b97eb2b9ff5dd6.png)
+
+
+## Generate assertions
+
+You can also **generate assertions** by choosing one of the icons in the toolbar and then clicking on an element on the page to assert against. The following assertions can be generated:
+
+- **assert visibility**: assert that an element is visible
+- **assert text**: assert that an element contains specific text
+- **assert value**: assert that an element has a specific value
+
+![](https://github.com/microsoft/playwright/assets/13063165/d131eb35-b2ca-4bf4-a8ac-88b6e40dcf07)
+
+
+## Pick a Locator
+
+Use the **Pick locator** tool and click on any element in the opened browser, Playwright will determine the best locator and copy it to your clipboard, ready to be pasted into your code.
+
+![](https://playwright.dev/assets/images/pick-locator-21752d14dc07a83f5fb1bd67b6c0e0c0.png)
+
+![](https://playwright.dev/assets/images/pick-locator-js-7a89c3d033ccf3f1cf20d9548ad7b475.png)

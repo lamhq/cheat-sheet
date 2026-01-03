@@ -2,11 +2,13 @@
 
 ## Overview
 
-Tracing records a detailed log of test execution, including browser actions, page state, and network activity.
+Tracing records a detailed log of test execution into a `.zip` file.
 
-The output is a `.zip` trace file that can be opened in the **Playwright Trace Viewer**, a GUI tool for debugging.
+Playwright Trace Viewer is a GUI tool that lets you view trace files. You can go back and forward through each action of your test and visually see what was happening during each action.
 
-It include:
+Traces are normally run in a Continuous Integration(CI) environment, because locally you can use UI Mode for developing and debugging tests.
+
+Trace files include:
 - **DOM snapshots** before, during, and after each action  
 - **Screenshots** rendered as a filmstrip  
 - **Network requests and responses**  
@@ -15,23 +17,30 @@ It include:
 - **Execution timeline** with duration and failure points  
 - **Metadata** like browser type, viewport, and test duration
 
-Use Cases:
+## Use Cases
+
 - **Debugging flaky tests**: See exactly where and why a test failed  
 - **CI troubleshooting**: Automatically record traces on failure or retry  
 - **Visual inspection**: Replay test steps with DOM and screenshot context  
 - **Performance analysis**: Identify slow actions or network bottlenecks  
 - **Team collaboration**: Share trace files for remote debugging
 
-Traces are normally run in a Continuous Integration(CI) environment, because locally you can use UI Mode for developing and debugging tests.
-
 
 ## Enable Tracing
 
-In your config:
+By default, traces are recorded on the first retry of a failed test (not on the first run and not on the second retry).
+
+You can customize it in config:
+
 ```ts title="playwright.config.ts"
-use: {
-  trace: 'on-first-retry' // or 'retain-on-failure', 'on', 'off'
-}
+import { defineConfig } from '@playwright/test';
+export default defineConfig({
+  retries: process.env.CI ? 2 : 0, // set to 2 when running on CI
+  // ...
+  use: {
+    trace: 'on-first-retry', // record traces on first retry of each test
+  },
+});
 ```
 
 Or manually in code:
@@ -44,10 +53,6 @@ await page.goto('https://example.com');
 await context.tracing.stop({ path: 'trace.zip' });
 ```
 
-Or you can enable tracing when running tests with `--trace on`:
-```sh
-npx playwright test --trace on
-```
 
 ## Viewing trace
 
@@ -56,7 +61,11 @@ Using command line to view a trace file:
 npx playwright show-trace trace.zip
 ```
 
-Or open the HTML report, clicking on a test will open the detailed view where you can see more information on your tests such as the errors, the test steps and the trace:
+Or you can view traces from the generated HTML report after running tests:
 ```sh
-npx playwright show-report
+npx playwright show-report [name-of-playwright-report-directory]
 ```
+
+Click on the trace icon next to the test's file name, you can then view the trace of your tests and inspect each action to try to find out why the tests are failing.
+
+![](https://playwright.dev/assets/images/html-report-failed-tests-465ab63abc3dcd0728f6449628ffa906.png)

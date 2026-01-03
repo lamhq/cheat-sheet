@@ -1,0 +1,284 @@
+import { PackageManagerTabs } from '@theme'
+
+# Logger
+
+Logging functionality is provided via the `Logger` class in the `@nestjs/common` package.
+
+## Disable logging
+
+To disable logging, set the `logger` property to `false` in the `NestFactory.create()` method.
+
+```ts title="main.ts"
+const app = await NestFactory.create(AppModule, {
+  logger: false,
+});
+await app.listen(3000);
+```
+
+
+## Enable specific logging levels
+
+Set the `logger` property to an array of strings specifying the log levels to display:
+
+```ts title="main.ts"
+const app = await NestFactory.create(AppModule, {
+  logger: ['error', 'warn'],
+});
+await app.listen(3000);
+```
+
+Values in the array can be any combination of `'log'`, `'fatal'`, `'error'`, `'warn'`, `'debug'`, and `'verbose'`.
+
+
+## Disable color
+
+```ts title="main.ts"
+const app = await NestFactory.create(AppModule, {
+  logger: new ConsoleLogger({
+    colors: false,
+  }),
+});
+```
+
+## Set log prefix
+
+```ts title="main.ts"
+const app = await NestFactory.create(AppModule, {
+  logger: new ConsoleLogger({
+    prefix: 'MyApp', // Default is "Nest"
+  }),
+});
+```
+
+
+## Use logger
+
+```ts
+import { Logger, Injectable } from '@nestjs/common';
+
+@Injectable()
+class MyService {
+  private readonly logger = new Logger('context name');
+
+  doSomething() {
+    this.logger.log('Doing something...');
+  }
+}
+```
+
+
+## Define custom logger
+
+Define custom logger from scratch by implementing the `LoggerService` interface:
+
+```ts
+import { LoggerService } from '@nestjs/common';
+
+export class MyLogger implements LoggerService {
+  /**
+   * Write a 'log' level log.
+   */
+  log(message: any, ...optionalParams: any[]) {}
+
+  /**
+   * Write an 'error' level log.
+   */
+  error(message: any, ...optionalParams: any[]) {}
+
+  /**
+   * Write a 'warn' level log.
+   */
+  warn(message: any, ...optionalParams: any[]) {}
+
+  /**
+   * Write a 'debug' level log.
+   */
+  debug?(message: any, ...optionalParams: any[]) {}
+
+  /**
+   * Write a 'verbose' level log.
+   */
+  verbose?(message: any, ...optionalParams: any[]) {}
+}
+```
+
+Or extend the built-in logger:
+
+```ts
+import { ConsoleLogger } from '@nestjs/common';
+
+export class MyLogger extends ConsoleLogger {
+  error(message: any, stack?: string, context?: string) {
+    // add your tailored logic here
+    super.error.apply(this, arguments);
+  }
+}
+```
+
+
+## Use custom logger
+
+To use the custom logger, create a module and export it from that module:
+
+```ts
+import { Module } from '@nestjs/common';
+import { MyLogger } from './my-logger.service';
+
+@Module({
+  providers: [MyLogger],
+  exports: [MyLogger],
+})
+export class LoggerModule {}
+```
+
+Ensure that at least one application module imports the `LoggerModule` to trigger Nest to instantiate a `MyLogger` instance.
+
+Instruct Nest to use `MyLogger`:
+
+```ts
+const app = await NestFactory.create(ApplicationModule, {
+  // make sure all logs will be buffered until a custom logger is attached 
+  bufferLogs: true,
+});
+app.useLogger(app.get(MyLogger));
+await app.listen(3000);
+```
+
+Use the logger in other services via dependency injection:
+
+```ts
+import { Injectable } from '@nestjs/common';
+import { MyLogger } from './my-logger.service';
+
+@Injectable()
+export class CatsService {
+  private readonly cats: Cat[] = [];
+
+  constructor(private myLogger: MyLogger) {
+    // Due to transient scope, CatsService has its own unique instance of MyLogger,
+    // so setting context here will not affect other instances in other services
+    this.myLogger.setContext('CatsService');
+  }
+
+  findAll(): Cat[] {
+    // You can call all the default methods
+    this.myLogger.warn('About to return cats!');
+    // And your custom methods
+    this.myLogger.customLog();
+    return this.cats;
+  }
+}
+```
+
+
+## Pino
+
+**Pino** is a fast, low-overhead logging library for Node.js.
+
+It's designed for high-performance applications where logging speed and efficiency matter.  
+
+**Benefits**:
+
+- Extremely fast logging with minimal overhead  
+- Output structured logs in JSON format for easy parsing  
+- Better integration with log management tools  
+- Handles high-throughput apps without slowdown  
+- Works seamlessly with NestJS LoggerService  
+- Supports request/response auto logging  
+- Request context binding for traceability  
+- Easy to test and mock in unit tests  
+- Pretty-print logs in dev with `pino-pretty`  
+- Production-ready logging for distributed systems  
+
+### Installation
+
+Install `nestjs-pino` and `pino-http`:
+
+<PackageManagerTabs command="install nestjs-pino pino-http" />
+
+For better dev experience, install `pino-pretty`:
+
+<PackageManagerTabs command="install pino-pretty" />
+
+
+### Register Pino module
+
+Import `LoggerModule` in your root module (e.g., `app.module.ts`):
+
+```ts title="app.module.ts"
+import { LoggerModule } from 'nestjs-pino';
+
+@Module({
+  imports: [
+    LoggerModule.forRoot({
+      pinoHttp: {
+        name: 'MyApp',
+        level: process.env.NODE_ENV !== 'production' ? 'debug' : 'info',
+        transport: process.env.NODE_ENV !== 'production'
+          ? { target: 'pino-pretty' }
+          : undefined,
+      },
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+In local development, logs will be pretty-printed with colors and formatting. In production, logs will be in JSON format for efficient parsing and storage.
+
+In `main.ts`, set up the app logger:
+
+```ts title="main.ts"
+import { Logger } from 'nestjs-pino';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  app.useLogger(app.get(Logger));
+  await app.listen(3000);
+}
+bootstrap();
+```
+
+
+### Use Pino for logging
+
+Use the standard NestJS `Logger` in your services:
+
+```ts title="my-service.ts"
+import { Injectable, Logger } from '@nestjs/common';
+
+@Injectable()
+export class MyService {
+  private readonly logger = new Logger(MyService.name);
+
+  doSomething() {
+    this.logger.log('Doing something...');
+    this.logger.debug('Debug info', { data: 'value' });
+    this.logger.error('An error occurred', error.stack);
+  }
+}
+```
+
+For more advanced usage, inject `PinoLogger`:
+
+```ts title="my-service.ts"
+import { Injectable } from '@nestjs/common';
+import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
+
+@Injectable()
+export class MyService {
+  constructor(
+    @InjectPinoLogger(MyService.name)
+    private readonly logger: PinoLogger,
+  ) {}
+
+  doSomething() {
+    this.logger.error({ err: new Error('Something went wrong') }, 'Error occurred');
+    this.logger.debug('foo %s %o', 'bar', { baz: 'qux' });
+    this.logger.trace({ foo: 'bar' }, 'baz %s', 'qux');
+    this.logger.info({ userId: 123 }, 'User action performed');
+  }
+}
+```
+
+Logs will automatically include request context (like `req.id`) for traceability.

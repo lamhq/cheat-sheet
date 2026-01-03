@@ -15,6 +15,11 @@
     "collapsed": true
   },
   {
+    "name": "nestjs",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
     "name": "nodejs",
     "type": "dir",
     "collapsed": true

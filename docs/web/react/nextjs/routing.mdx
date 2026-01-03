@@ -1,0 +1,53 @@
+# Routing
+
+## How routing works
+
+In the `app` directory. Each folder represents a route segment that is mapped to a corresponding segment in a URL path.
+
+Nested folders define nested routes.
+
+A route is **only publicly accessible** if a `page.js` or `route.js` file exists in a route segment.
+
+![A diagram showing how a route is not publicly accessible until a page.js or route.js file is added to a route segment.](https://h8DxKfmAPhn8O0p3.public.blob.vercel-storage.com/docs/light/project-organization-not-routable.png)
+
+Only the content returned by `page.js` or `route.js` is sent to the client, other components are not.
+
+![A diagram showing colocated project files are not routable even when a segment contains a page.js or route.js file.](https://h8DxKfmAPhn8O0p3.public.blob.vercel-storage.com/docs/light/project-organization-colocation.png)
+
+
+## Private folders
+
+Private folders can be created by prefixing a folder with an underscore: `_folderName`.
+
+![An example folder structure using private folders](https://h8DxKfmAPhn8O0p3.public.blob.vercel-storage.com/docs/light/project-organization-private-folders.png)
+
+They can be useful for:
+
+- Separating UI logic from routing logic explicitly.
+- Consistently organizing internal files across a project and the Next.js ecosystem.
+- Sorting and grouping files in code editors.
+- Avoiding potential naming conflicts with future Next.js file conventions.
+
+> [!INFO]
+> You can create URL segments that start with an underscore by prefixing the folder name with `%5F` (the URL-encoded form of an underscore): `%5FfolderName`.
+
+
+## Route groups
+
+Route groups are a way to group related routes together without adding an extra segment to the URL.
+
+For example, we want to group `/about` and `/blog` under the `marketing` feature without adding a `marketing` segment to the URL:
+
+![An example folder structure using route groups](https://h8DxKfmAPhn8O0p3.public.blob.vercel-storage.com/docs/light/project-organization-route-groups.png)
+
+Route groups are useful for:
+
+- **Organizing/grouping routes without affecting the URL**
+- **Using multiple layouts in a same segment**:
+  ![Route Groups with Multiple Layouts](https://h8DxKfmAPhn8O0p3.public.blob.vercel-storage.com/docs/light/route-group-multiple-layouts.png)
+  _In this example, even though routes inside `(marketing)` and `(shop)` share the same URL hierarchy, you can create a different layout for each group by adding a `layout.js` file inside their folders._
+- **Using the same layout for different segments**:
+  ![Route Groups with Opt-in Layouts](https://h8DxKfmAPhn8O0p3.public.blob.vercel-storage.com/docs/light/route-group-opt-in-layouts.png)
+  _In this example, the `/account` and `/cart` segments share the same layout `(shop)/layout.js`._
+- **Using multiple root layouts**. Remove the top-level `layout.js` file, and add a `layout.js` file inside each route group. This is useful for partitioning an application into sections that have a completely different UI or experience. The `<html>` and `<body>` tags need to be added to each root layout.
+  ![Route Groups with Multiple Root Layouts](https://h8DxKfmAPhn8O0p3.public.blob.vercel-storage.com/docs/light/route-group-multiple-root-layouts.png)
