@@ -1,33 +1,201 @@
+import { PackageManagerTabs } from '@theme'
+
 # Prisma
 
-## Other topics
+Use Prisma along with NestJS to read and write data in a database (SQLite).
 
-[Getting started](https://docs.nestjs.com/recipes/prisma#getting-started): Build a sample `NestJS` application with a `REST API` that can read and write data in a database using `SQLite`.
+## Set up Prisma
 
-[Create your NestJS project](https://docs.nestjs.com/recipes/prisma#create-your-nestjs-project): Install the `NestJS CLI` and create an app skeleton with commands to set up the project structure.
+Install the `Prisma CLI`:
 
-[Set up Prisma](https://docs.nestjs.com/recipes/prisma#set-up-prisma): Install the `Prisma CLI` as a development dependency and initialize the `Prisma` setup with the `init` command.
+<PackageManagerTabs command="install prisma -D" />
 
-[Set the generator output path](https://docs.nestjs.com/recipes/prisma#set-the-generator-output-path): Specify the output path for the generated `Prisma` client in the schema or during initialization.
+Initialize Prisma:
+```bash
+npx prisma init
+```
 
-[Configure the module format](https://docs.nestjs.com/recipes/prisma#configure-the-module-format): Set the `moduleFormat` in the generator to `cjs` to ensure compatibility with `NestJS`'s `CommonJS` setup.
+This command creates a new `prisma` directory with the following contents:
 
-[Set the database connection](https://docs.nestjs.com/recipes/prisma#set-the-database-connection): Configure the `datasource` block in `schema.prisma` for `SQLite` and update the `DATABASE_URL` in `.env` to point to a local file.
+- `schema.prisma`: Specifies your database connection and contains the database schema
+- `prisma.config.ts`: A configuration file for your projects
+- `.env`: A dotenv file, typically used to store your database credentials in a group of environment variables
 
-[Create two database tables with Prisma Migrate](https://docs.nestjs.com/recipes/prisma#create-two-database-tables-with-prisma-migrate): Add `User` and `Post` models to `schema.prisma` and run `prisma migrate dev` to generate and apply migration files.
+Specify the output path for the generated `Prisma` client in your Prisma schema:
 
-[Install and generate Prisma Client](https://docs.nestjs.com/recipes/prisma#install-and-generate-prisma-client): Install `@prisma/client` and the appropriate driver adapter, then generate the type-safe client with `npx prisma generate`.
+```prisma title="schema.prisma"
+generator client {
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+}
+```
 
-[Use Prisma Client in your NestJS services](https://docs.nestjs.com/recipes/prisma#use-prisma-client-in-your-nestjs-services): Create a `PrismaService` to instantiate `PrismaClient` and build services for `User` and `Post` models with `CRUD` operations.
+Set `moduleFormat` in the generator to `cjs` because Prisma v7 uses ES module by default, which does not work with NestJS's CommonJS setup:
 
-[Implement your REST API routes in the main app controller](https://docs.nestjs.com/recipes/prisma#implement-your-rest-api-routes-in-the-main-app-controller): Replace the contents of `app.controller.ts` with routes for fetching, creating, updating, and deleting posts and users using the services.
+```prisma title="schema.prisma"
+generator client {
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+  moduleFormat    = "cjs"
+}
+```
 
-[GET](https://docs.nestjs.com/recipes/prisma#get): Define routes to fetch a single post by `id`, all published posts, and filter posts by search string.
+## Set the database connection
 
-[POST](https://docs.nestjs.com/recipes/prisma#post): Define routes to create a new post with title, content, and author email, and to create a new user with email and optional name.
+Set the database connection in the `datasource` block in `schema.prisma` file:
 
-[PUT](https://docs.nestjs.com/recipes/prisma#put): Define a route to publish a post by its `id`.
+```prisma title="schema.prisma"
+datasource db {
+  provider = "sqlite"
+}
+```
 
-[DELETE](https://docs.nestjs.com/recipes/prisma#delete): Define a route to delete a post by its `id`.
+Specifiy the `DATABASE_URL` in the `.env` file:
 
-[Summary](https://docs.nestjs.com/recipes/prisma#summary): Review the implementation of a `REST API` using `NestJS` and `Prisma`, and explore additional resources for further learning.
+```env title=".env"
+DATABASE_URL="file:./dev.db"
+```
+
+> [!NOTE]
+> Make sure you have a `ConfigModule` configured, otherwise the `DATABASE_URL` variable will not be picked up from `.env`
+
+
+## Specify database tables
+
+Add the following two models to your `schema.prisma` file:
+
+```prisma title="schema.prisma"
+model User {
+  id    Int     @default(autoincrement()) @id
+  email String  @unique
+  name  String?
+  posts Post[]
+}
+
+model Post {
+  id        Int      @default(autoincrement()) @id
+  title     String
+  content   String?
+  published Boolean? @default(false)
+  author    User?    @relation(fields: [authorId], references: [id])
+  authorId  Int?
+}
+```
+
+
+## Generate migration files
+
+Create migration files in the `prisma` directory:
+
+```sh
+npx prisma migrate dev --name init
+```
+
+
+## Install and generate Prisma Client
+
+Install Prisma Client in your project:
+
+<PackageManagerTabs command="install @prisma/client" />
+
+Install driver adapter for the database type:
+
+<PackageManagerTabs command="install @prisma/adapter-better-sqlite3" />
+
+Generate types and client:
+
+```sh
+npx prisma generate
+```
+
+If any changes are made to your schema, you will need to rerun the `generate` command to keep those types in sync.
+
+
+## Use Prisma Client in NestJS services
+
+Create a new `PrismaService` that takes care of instantiating `PrismaClient` and connecting to database:
+
+```ts title="src/prisma.service.ts"
+import { Injectable } from '@nestjs/common';
+import { PrismaClient } from './generated/prisma/client';
+import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
+
+@Injectable()
+export class PrismaService extends PrismaClient {
+  constructor() {
+    const adapter = new PrismaBetterSqlite3({ url: process.env.DATABASE_URL });
+    super({ adapter });
+  }
+}
+```
+
+Use the `PrismaService` in other services:
+
+```ts title="src/user/user.service.ts"
+
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from './prisma.service';
+import { User, Prisma } from 'generated/prisma';
+
+@Injectable()
+export class UsersService {
+  constructor(private prisma: PrismaService) {}
+
+  async user(
+    userWhereUniqueInput: Prisma.UserWhereUniqueInput,
+  ): Promise<User | null> {
+    return this.prisma.user.findUnique({
+      where: userWhereUniqueInput,
+    });
+  }
+
+  async users(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.UserWhereUniqueInput;
+    where?: Prisma.UserWhereInput;
+    orderBy?: Prisma.UserOrderByWithRelationInput;
+  }): Promise<User[]> {
+    const { skip, take, cursor, where, orderBy } = params;
+    return this.prisma.user.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+    });
+  }
+
+  async createUser(data: Prisma.UserCreateInput): Promise<User> {
+    return this.prisma.user.create({
+      data,
+    });
+  }
+
+  async updateUser(params: {
+    where: Prisma.UserWhereUniqueInput;
+    data: Prisma.UserUpdateInput;
+  }): Promise<User> {
+    const { where, data } = params;
+    return this.prisma.user.update({
+      data,
+      where,
+    });
+  }
+
+  async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
+    return this.prisma.user.delete({
+      where,
+    });
+  }
+}
+```
+
+
+## References
+
+- [NestJS & Prisma](https://www.prisma.io/nestjs)
+- [Ready-to-run example projects for REST & GraphQL](https://github.com/prisma/prisma-examples/)
+- [Production-ready starter kit](https://github.com/notiz-dev/nestjs-prisma-starter#instructions)
+- [Video: Accessing Databases using NestJS with Prisma (5min)](https://www.youtube.com/watch?v=UlVJ340UEuk&ab_channel=Prisma)
+- [Marc Stammerjohann](https://github.com/marcjulian) (author's GitHub profile)

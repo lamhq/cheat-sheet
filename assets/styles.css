@@ -4,7 +4,7 @@
 }
 
 /* Dark mode color overrides */
-.dark {
+.dark .rspress-doc {
   --rp-c-text-1: #9ba3b4;  /* Main text color (paragraphs) */
   --header-foreground: #c3d0e5;
   --text-bold: #ebcb8b;
