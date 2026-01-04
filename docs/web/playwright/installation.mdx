@@ -24,33 +24,6 @@ Install [Playwright Test for VSCode](https://marketplace.visualstudio.com/items?
 ![](https://playwright.dev/assets/images/vscode-extension-ce873e1c0d856b8c255e9de0781eb8d9.png)
 
 
-## Configure ESLint (optional)
-
-Configure ESLint to lint Playwright test files.
-
-Install the [eslint-plugin-playwright](https://github.com/playwright-community/) plugin:
-
-<PackageManagerTabs command="install --save-dev eslint-plugin-playwright" />
-
-
-Update ESLint config file:
-
-```js title="eslint.config.js" {2,9}
-import { defineConfig } from "eslint/config";
-import playwright from 'eslint-plugin-playwright'
-
-export default defineConfig([
-  {
-    name: 'Playwright Tests',
-    files: ['tests/**/*.spec.ts'],
-    extends: [
-      playwright.configs['flat/recommended']
-    ],
-  },
-]);
-```
-
-
 ## Run test
 
 ### Using command line

@@ -46,28 +46,6 @@ npm run format
 ```
 
 
-## Integrating with ESLint
-
-<PackageManagerTabs command="install --save-dev eslint-config-prettier" />
-
-Update ESLint config file:
-
-```js title="eslint.config.js" {2,6}
-import { defineConfig } from "eslint/config";
-import eslintConfigPrettier from "eslint-config-prettier/flat";
-
-export default defineConfig([
-  // other configs ...
-  eslintConfigPrettier,
-]);
-```
-
-- `eslint-config-prettier` export an ESLint config that turn off rules that conflict or are unnecessary with Prettier, makes sure to put it after other configs.
-
-> [!NOTE]
-> `eslint-plugin-prettier` isn't installed due to separation of concerns between linters and formatters
-
-
 ## Enabling Organize Import
 
 <PackageManagerTabs command="install --save-dev prettier-plugin-organize-imports@^4.1.0" />
@@ -80,7 +58,7 @@ Update Prettier config `.prettierrc` file:
 ```
 
 
-## Setting up Visual Studio Code
+## Setting up VS Code
 
 Install [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) extension (`esbenp.prettier-vscode`).
 
@@ -99,7 +77,7 @@ Update workspace setting file:
 npx mrm@2 lint-staged
 ```
 
-This will install `husky` and `lint-staged`, then add a configuration to the project’s package.json that will automatically format supported files in a pre-commit hook.
+This will install `husky` and `lint-staged`, then add a configuration to the project’s `package.json` that will automatically format supported files in a pre-commit hook.
 
 
 ## Run Prettier on CI
@@ -140,4 +118,3 @@ jobs:
 ## References
 
 - https://prettier.io
-- [eslint-config-prettier](https://github.com/prettier/eslint-config-prettier)

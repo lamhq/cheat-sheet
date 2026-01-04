@@ -13,12 +13,12 @@ Finish the [basic setup](../installation.mdx#basic-setup) first, then run below 
 
 Update ESLint config file to use shared configurations:
 
-```js title="eslint.config.js" {10,15,16}
+```js title="eslint.config.js" {10,14,15}
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    name: 'TypeScript',
+    name: 'TypeScript files',
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       parserOptions: {

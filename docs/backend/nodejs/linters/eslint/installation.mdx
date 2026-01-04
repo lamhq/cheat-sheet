@@ -15,7 +15,7 @@ Install the core packages:
 For configuration of specific languages and tools (React, Jest, Storybook ...), refer to the guides under **Installation** category.
 
 
-## Enable ES modules
+## Enable ES module syntax
 
 Set `"type":"module"` in `package.json` to enable ECMAScript module (ESM) support in your ESLint config file:
 
@@ -28,9 +28,9 @@ Set `"type":"module"` in `package.json` to enable ECMAScript module (ESM) suppor
 Otherwise you have to name your config file with `.mjs` extension.
 
 
-## Set up Visual Studio Code
+## Set up VS Code
 
-1. Install [ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
+1. Install [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) extension
 2. Update your VS Code setting to auto fix ESLint errors on save:
 
 ```json title=".vscode/settings.json"
@@ -39,34 +39,6 @@ Otherwise you have to name your config file with `.mjs` extension.
     "source.fixAll.eslint": "always"
   }
 }
-```
-
-
-## Lint staged files on commit
-
-Install `lint-staged`:
-
-<PackageManagerTabs command="install --save-dev lint-staged" />
-
-Add `lint-staged` configuration to `package.json`:
-
-```json
-{
-  "lint-staged": {
-    "*.ts?(x)": "eslint --fix"
-  }
-}
-```
-
-Install Husky:
-```sh
-npx husky init
-```
-
-Add a Git Hook to run `lint-staged` on commit:
-
-```sh
-echo "npx lint-staged" > .husky/pre-commit
 ```
 
 

@@ -4,6 +4,5 @@
   "mocking",
   "snapshot",
   "test-projects",
-  "test-context",
-  "linter"
+  "test-context"
 ]

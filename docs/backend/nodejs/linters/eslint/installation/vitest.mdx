@@ -1,24 +1,23 @@
 import { PackageManagerTabs } from '@theme'
 
-# Linter
-
-Integration with Linter
+# Vitest
 
 ## Installation
 
-<PackageManagerTabs command="install --save-dev eslint-plugin-jest" />
+<PackageManagerTabs command="install --save-dev @vitest/eslint-plugin" />
 
 Update ESLint config file:
 
 ```js title="eslint.config.js" {2,8}
 import { defineConfig } from "eslint/config";
-import jest from 'eslint-plugin-jest'
+import vitest from '@vitest/eslint-plugin'
 
 export default defineConfig([
   {
+    name: 'Vitest tests',    
     files: ['**/*.test.ts(x)?'],
     extends: [
-      jest.configs['flat/recommended'],
+      vitest.configs.recommended,
     ],
   },
 ]);
@@ -27,4 +26,4 @@ export default defineConfig([
 
 ## References
 
-- [eslint-plugin-jest](https://www.npmjs.com/package/eslint-plugin-jest)
+- [@vitest/eslint-plugin](https://github.com/vitest-dev/eslint-plugin-vitest)

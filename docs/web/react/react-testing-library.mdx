@@ -404,26 +404,3 @@ screen.debug(screen.getAllByText('multi-test'))
 ## Cheat sheet
 
 Refer to https://testing-library.com/docs/react-testing-library/cheatsheet
-
-
-## Integrate with Linter
-
-<PackageManagerTabs command="install --save-dev eslint-plugin-testing-library" />
-
-```js title="eslint.config.js" {2,9}
-import { defineConfig } from "eslint/config";
-import testingLibrary from "eslint-plugin-testing-library";
-
-export default defineConfig([
-  {
-    name: 'React Testing Library',    
-    files: ['**/*.test.tsx'],
-    extends: [
-      testingLibrary.configs['flat/react'],
-    ],
-  },
-]);
-```
-
-References:
-- [eslint-plugin-testing-library](https://github.com/testing-library/eslint-plugin-testing-library?tab=readme-ov-file#react)

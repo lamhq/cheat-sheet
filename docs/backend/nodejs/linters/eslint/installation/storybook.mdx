@@ -1,6 +1,6 @@
 import { PackageManagerTabs } from '@theme'
 
-# ESLint Integration
+# Storybook
 
 ## Installation
 
@@ -12,7 +12,7 @@ import { PackageManagerTabs } from '@theme'
 Update ESLint config file (flat config format):
 
 ```js title="eslint.config.js" {2,5}
-import tseslint from 'typescript-eslint';
+import { defineConfig } from "eslint/config";
 import storybook from 'eslint-plugin-storybook';
 
 export default defineConfig([

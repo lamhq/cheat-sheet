@@ -1,0 +1,27 @@
+import { PackageManagerTabs } from '@theme'
+
+# Playwright
+
+Configure ESLint to lint Playwright test files.
+
+Install the [eslint-plugin-playwright](https://github.com/playwright-community/) plugin:
+
+<PackageManagerTabs command="install --save-dev eslint-plugin-playwright" />
+
+
+Update ESLint config file:
+
+```js title="eslint.config.js" {2,9}
+import { defineConfig } from "eslint/config";
+import playwright from 'eslint-plugin-playwright'
+
+export default defineConfig([
+  {
+    name: 'Playwright tests',
+    files: ['tests/**/*.spec.ts'],
+    extends: [
+      playwright.configs['flat/recommended']
+    ],
+  },
+]);
+```
