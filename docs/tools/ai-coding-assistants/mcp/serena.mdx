@@ -25,23 +25,15 @@ Find the full list of Serena’s tools [here](https://oraios.github.io/serena/01
 2. Install additional tools or SDKs required by the [programming language](https://oraios.github.io/serena/01-about/020_programming-languages.html) you are using.
 
 
-## Workflow
+## Installation
 
 Using Serena involves the following steps: 
-1. Create a new Serena project
-2. Indexing the project 
-3. [Activate project](https://oraios.github.io/serena/02-usage/040_workflow.html#project-activation) to make Serena aware of the project you want to work with
-4. Start Serena and let it create memory files (`.serena/memories/`). Agent can choose to read them in subsequent interactions. You can also add new ones or edit manually.
-
-```bash
-# Create a new project in the current directory and index it
-uvx --from git+https://github.com/oraios/serena serena project create --name "bid-up-api" --index
-```
-
-```bash
-# Index an existing project (auto-creates if needed)
-uvx --from git+https://github.com/oraios/serena serena project index
-```
+1. Create a new Serena project & index it
+   ```bash
+   uvx --from git+https://github.com/oraios/serena serena project create --name "bid-up-api" --index
+   ```
+2. [Activate project](https://oraios.github.io/serena/02-usage/040_workflow.html#project-activation) to make Serena aware of the project you want to work with
+3. Start Serena and let it create memory files (`.serena/memories/`). Agent can choose to read them in subsequent interactions. You can also add new ones or edit manually.
 
 
 ## Running Serena
@@ -99,6 +91,12 @@ Paste the following into `<your_project>/.vscode/mcp.json`:
 
 
 ## Useful Commands
+
+Index an existing project (auto-creates if needed):
+
+```bash
+uvx --from git+https://github.com/oraios/serena serena project index
+```
 
 Edit Serena's configuration file:
 
