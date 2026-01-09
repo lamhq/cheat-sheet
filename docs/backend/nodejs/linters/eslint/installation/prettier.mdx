@@ -1,0 +1,22 @@
+import { PackageManagerTabs } from '@theme'
+
+# Prettier
+
+<PackageManagerTabs command="install --save-dev eslint-config-prettier" />
+
+Update ESLint config file:
+
+```js title="eslint.config.js" {2,6}
+import { defineConfig } from "eslint/config";
+import eslintConfigPrettier from "eslint-config-prettier/flat";
+
+export default defineConfig([
+  // other configs ...
+  eslintConfigPrettier,
+]);
+```
+
+- [`eslint-config-prettier`](https://github.com/prettier/eslint-config-prettier) export an ESLint config that turn off rules that conflict or are unnecessary with Prettier, makes sure to put it after other configs.
+
+> [!NOTE]
+> `eslint-plugin-prettier` isn't installed due to separation of concerns between linters and formatters

@@ -4,6 +4,7 @@
   "concepts",
   "components",
   "layouts",
+  "routing",
   "navigation",
   "fetching-data",
   "updating-data",

@@ -1,0 +1,150 @@
+# Authentication
+
+## Protecting endpoints
+
+For simplicity, we'll demonstrate how to protect endpoints by requiring a header be present on the request.
+
+```ts title="auth/auth.guard.ts
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { Request } from 'express';
+
+@Injectable()
+export class AuthGuard implements CanActivate {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const request = context.switchToHttp().getRequest<Request>();
+
+    // Require that a specific header is present
+    const apiKey = request.headers['x-api-key'];
+
+    if (!apiKey) {
+      throw new UnauthorizedException('Missing required header: x-api-key');
+    }
+
+    // ✅ If header exists, allow the request
+    return true;
+  }
+}
+```
+
+Update the `AuthController` to apply the `AuthGuard` to the profile route and handle user requests:
+
+```typescript title="auth/auth.controller.ts"
+import {
+  Controller,
+  Get,
+  Request,
+  UseGuards
+} from '@nestjs/common';
+import { AuthGuard } from './auth.guard';
+
+@Controller('auth')
+export class AuthController {
+
+  @UseGuards(AuthGuard)
+  @Get('profile')
+  getProfile(@Request() req) {
+    return req.user;
+  }
+}
+```
+
+
+## Enable authentication globally
+
+If the vast majority of your endpoints should be protected by default, you can register the authentication guard as a global guard, and flag which routes should be public.
+
+Register the `AuthGuard` as a global guard in the `AuthModule` to protect all endpoints by default:
+
+```typescript title="auth/auth.module.ts"
+import { Module } from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth.guard';
+
+@Module({
+  providers: [
+    AuthService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
+})
+export class AuthModule {}
+```
+
+Implement a custom `Public` decorator to mark routes as public when authentication is globally enabled:
+
+```typescript title="auth/public.decorator.ts"
+import { SetMetadata } from '@nestjs/common';
+
+export const IS_PUBLIC_KEY = 'isPublic';
+export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
+```
+
+Apply the `Public` decorator to routes that should be accessible without authentication:
+
+```typescript title="example.controller.ts"
+@Public()
+@Get()
+findAll() {
+  return [];
+}
+```
+
+Update the `AuthGuard` to check for the `isPublic` metadata and skip authentication for public routes:
+
+```typescript title="auth/auth.guard.ts"
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { Request } from 'express';
+import { Reflector } from '@nestjs/core';
+import { IS_PUBLIC_KEY } from './public.decorator';
+
+@Injectable()
+export class AuthGuard implements CanActivate {
+  constructor(private reflector: Reflector) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+    if (isPublic) {
+      // ✅ Skip guard if route is marked public
+      return true;
+    }
+
+    const request = context.switchToHttp().getRequest<Request>();
+
+    // Require a specific header (example: x-api-key)
+    const apiKey = request.headers['x-api-key'];
+
+    if (!apiKey) {
+      throw new UnauthorizedException('Missing required header: x-api-key');
+    }
+
+    // ✅ If header exists, allow the request
+    return true;
+  }
+}
+```
+
+
+## References
+
+- [Authentication](https://docs.nestjs.com/security/authentication)
+
+
+## Other topics
+
+- [Passport integration](https://docs.nestjs.com/security/authentication#passport-integration): Integrate Passport library with NestJS using `@nestjs/passport` module for authentication strategies.

@@ -1,0 +1,13 @@
+[
+  "modules",
+  "configuration",
+  "validation",
+  "prisma",
+  "authentication",
+  "logger",
+  {
+    "name": "graphql",
+    "type": "dir",
+    "collapsed": true
+  }
+]

@@ -1,33 +1,55 @@
+import { PackageManagerTabs } from '@theme'
+
 # Installation
 
-## Using the terminal
+## Install Playwright
 
-Initializes a new project with Playwright, or adds Playwright setup to your current project:
+Initialize a new project or adds Playwright to an existing one:
 
 ```sh
 pnpm create playwright
 ```
 
-Playwright will download the browsers needed and create:
-- Playwright config file
-- Sample tests
+The command will:
+- Prompt to choose a language (JavaScript, TypeScript)
+- Add a GitHub Actions workflow (for CI)
+- Download & install Playwright browsers
+- Create a Playwright config file with sample tests
 
 
-## Using VS Code
+## Set up VS Code
 
-- Install [VS Code extension](https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright).
-- Open the testing sidebar to run tests
+Install [Playwright Test for VSCode](https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright) extension allowing you to run, debug, and generate tests using VS Code UI.
 
-For more information, see [Getting started - VS Code](https://playwright.dev/docs/getting-started-vscode)
+![](https://playwright.dev/assets/images/vscode-extension-ce873e1c0d856b8c255e9de0781eb8d9.png)
 
 
-## Running test
+## Run test
+
+### Using command line
 
 ```sh
 npx playwright test
-```
 
-To run tests with UI Mode:
-```sh
+# To run tests with UI Mode
 npx playwright test --ui
 ```
+
+### Using Test Explorer view
+
+Click the Testing icon in the VS Code Activity Bar to open the Test Explorer. It displays:
+- All detected tests in your project
+- Playwright sidebar for managing projects, tools, and settings
+
+![](https://playwright.dev/assets/images/testing-sidebar-25b968f725bc3c175a12a4aa8b662c81.png)
+
+Here you can:
+- Run a Single Test
+- Run All Tests
+- Run tests on Multiple Browsers by selecting the projects (browsers) you want to test against
+- Show the browser while running tests
+
+
+## References
+
+https://playwright.dev/docs/getting-started-vscode

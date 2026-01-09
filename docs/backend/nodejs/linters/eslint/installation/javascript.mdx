@@ -2,7 +2,7 @@
 
 ## Configuration
 
-Add the below configuration object to your ESLint config file:
+Add below configuration to ESLint config file to enable linting for JavaScript files:
 
 ```js title="eslint.config.js" {2,8}
 import { defineConfig } from 'eslint/config';
@@ -10,7 +10,7 @@ import js from '@eslint/js';
 
 export default defineConfig([
   {
-    name: 'JavaScript',
+    name: 'JavaScript files',
     files: ['**/*.{js,ts,jsx,tsx}'],
     extends: [js.configs.recommended],
   },
@@ -20,9 +20,9 @@ export default defineConfig([
 - `defineConfig()`: a helper utility that wraps your ESLint flat config array to provide type safety, editor autocompletion, and better tooling support
 
 
-## Lint CLI config files
+## Lint config files
 
-For tools that use a JavaScript file for configuration (e.g., ESLint, Vite), set the `globals` option to `globals.node` when linting those files, as they run in a Node.js environment:
+For tools that use a JavaScript file for configuration (e.g., `eslint.config.js`, `jest.config.js`, `vitest.config.js`), set the `globals` option to `globals.node` when linting those files, as they run in a Node.js environment:
 
 ```js title="eslint.config.js" {2,9}
 import { defineConfig } from 'eslint/config';
@@ -31,7 +31,7 @@ import globals from 'globals';
 export default defineConfig([
   {
     name: 'Config files',
-    files: ['**/*.js'],
+    files: [`eslint.config.js`, `jest.config.js`, `vitest.config.js`],
     languageOptions: {
       globals: globals.node,
     },

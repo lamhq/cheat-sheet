@@ -1,0 +1,29 @@
+import { PackageManagerTabs } from '@theme'
+
+# Jest
+
+## Installation
+
+<PackageManagerTabs command="install --save-dev eslint-plugin-jest" />
+
+Update ESLint config file:
+
+```js title="eslint.config.js" {2,8}
+import { defineConfig } from "eslint/config";
+import jest from 'eslint-plugin-jest'
+
+export default defineConfig([
+  {
+    name: 'Jest tests',
+    files: ['**/*.test.ts(x)?'],
+    extends: [
+      jest.configs['flat/recommended'],
+    ],
+  },
+]);
+```
+
+
+## References
+
+- [eslint-plugin-jest](https://www.npmjs.com/package/eslint-plugin-jest)

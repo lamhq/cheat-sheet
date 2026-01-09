@@ -1,0 +1,21 @@
+import { PackageManagerTabs } from '@theme'
+
+# Storybook
+
+## Installation
+
+<PackageManagerTabs command="install --save-dev eslint-plugin-storybook" />
+
+
+## Configuration
+
+Update ESLint config file (flat config format):
+
+```js title="eslint.config.js" {2,5}
+import { defineConfig } from "eslint/config";
+import storybook from 'eslint-plugin-storybook';
+
+export default defineConfig([
+  ...storybook.configs['flat/recommended'],
+]);
+```

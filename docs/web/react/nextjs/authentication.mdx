@@ -1,82 +1,228 @@
 # Authentication
 
-Three key components:
+## Login
 
-- **Authentication**: Verifying a user's identity (login, sign-up).
-- **Session Management**: Tracks the user's auth state across requests (session management, access token).
-- **Authorization**: Decides what routes and data the user can access (verify token, role-based access control).
+Render Login page:
 
-![Diagram showing the authentication flow with React and Next.js features](https://h8DxKfmAPhn8O0p3.public.blob.vercel-storage.com/docs/light/authentication-overview.png)
+```ts title="login/page.tsx"
+"use client";
+
+import { useFormState } from "react-dom";
+import login from "./action";
+
+export default function Login() {
+  const [state, formAction] = useFormState(login, { error: "" });
+
+  return (
+    <form action={formAction}>
+      {state.error && <span style={{ color: 'red' }}>{state.error}</span>}
+      <label>Email<input name="email" type="email" required /></label>
+      <label>Password<input name="password" type="password" required /></label>
+      <button type="submit">Login</button>
+    </form>
+  );
+}
+```
+
+Define a server action for handling login. It will:
+- sends form data to backend API and retrieve auth token
+- return the auth token to the browser via http-only cookie, this ensures:
+   - the token is not accessible via JavaScript, enhancing security
+   - future requests from the browser will automatically include the auth token in cookie
+- on failure, return error message to the form
+
+```ts title="login/action.ts"
+"use server";
+
+import { jwtDecode } from "jwt-decode";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { API_URL } from "@/app/common/constants/api";
+import { getErrorMessage } from "@/app/common/util/errors";
+import { FormError } from "@/app/common/interfaces/form-error.interface";
+import { AUTHENTICATION_COOKIE } from "../auth-cookie";
+
+export default async function login(_prevState: FormError, formData: FormData) {
+  const res = await fetch(`${API_URL}/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(Object.fromEntries(formData)),
+  });
+  const parsedRes = await res.json();
+  if (!res.ok) {
+    return { error: getErrorMessage(parsedRes) };
+  }
+  setAuthCookie(res);
+  redirect("/");
+}
+
+function setAuthCookie(response: Response) {
+  const setCookieHeader = response.headers.get("Set-Cookie");
+  if (setCookieHeader) {
+    const token = setCookieHeader.split(";")[0].split("=")[1];
+    cookies().set({
+      name: AUTHENTICATION_COOKIE,
+      value: token,
+      secure: true,
+      httpOnly: true,
+      expires: new Date(jwtDecode(token).exp! * 1000),
+    });
+  }
+};
+```
+
+## Authenticate requests
+
+To include the auth token in requests from server components, include the cookies (sent from the client) in the request header when calling the `fetch` API.
+
+```ts title="fetch-with-auth.ts"
+import { cookies } from "next/headers";
+import { API_URL } from "../constants/api";
+
+export const get = async (path: string) => {
+  const res = await fetch(`${API_URL}/${path}`, {
+    headers: {
+      Cookie: cookies().toString(),
+    },
+  });
+  return res.json();
+};
+
+// export const post = ... (similar to get)
+```
+
+```ts title="profile/page.tsx"
+import get from "@utils/fetch-with-auth.ts";
+
+export default async function Profile() {
+  const me = await get("users/me");
+  console.log(me);
+  return <></>;
+}
+```
 
 
-## Authentication
+## Protect routes
 
-Implement Sign-up and login functionality:
+Define a server action that checks if the user is authenticated:
+  
+```ts title="authenticated.ts"
+"use server";
+import { cookies } from "next/headers";
+import { AUTHENTICATION_COOKIE } from "./auth-cookie";
 
-1. Render [sign-up and login forms](https://nextjs.org/docs/app/guides/authentication#1-capture-user-credentials) using `<form>` element and trigger a Server Action on submit.
-2. Validate form fields on the server.
-3. Display validation errors on the form with `useActionState` hook.
-4. Create user record in the database on sign-up (or retrieve on login).
-5. Generate an [auth state](#session-management) and return it as an HTTP-only cookie.
+export default function authenticated() {
+  return !!cookies().get(AUTHENTICATION_COOKIE)?.value;
+}
+```
 
+Define a Next.js middleware that redirects unauthenticated users to the login page unless the requested path matches public routes.
 
-## Session Management
+```ts
+import { NextRequest } from "next/server";
+import authenticated from "./app/auth/authenticated";
+import { unauthenticatedRoutes } from "./app/common/constants/routes";
 
-A session identifies the user interacting with the application. It's generated securely on the server and sent to client after login.
+export function middleware(request: NextRequest) {
+  if (
+    !authenticated() &&
+    !unauthenticatedRoutes.some((route) =>
+      request.nextUrl.pathname.startsWith(route.path)
+    )
+  ) {
+    return Response.redirect(new URL("/auth/login", request.url));
+  }
+}
 
-There're two ways to manage user sessions: **Stateless** and **Stateful**.
-
-### Stateless
-
-Session data is encrypted and sent to client.
-
-On subsequent requests, the client includes this data, allowing the server to decrypt it and identify the user.
-
-To end a session, the server clears the cookie when the user send a logout request.
-
-✅ Pros:
-- **Scalable**: No server-side storage, so it's easy to scale horizontally.
-- **Fast**: No database lookup needed on each request.
-- **Simple setup**: Easier to implement for small apps or MVPs.
-- **No server-side persistence**: Useful for serverless environments.
-
-❌ Cons:
-- **Size limits**: Cookies have size restrictions (~4KB).
-- **Security risks**: If encryption is weak or misconfigured, sensitive data could leak.
-- **No easy revocation**: Once issued, sessions can't be invalidated until they expire.
-- **Harder to rotate secrets**: Changing encryption keys can invalidate all sessions.
-
-
-### Stateful
-
-Session data is stored in a database, and an encrypted session ID is sent to the client.
-
-On subsequent requests, the client includes this data, allowing the server to decrypt it, retrieve the session from the database, and identify the user.
+export const config = {
+  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+};
+```
 
 
-✅ Pros:
-- **Secure**: Sensitive data stays on the server.
-- **Revocable**: Sessions can be invalidated anytime (e.g., logout, ban).
-- **Flexible**: Can store more data and support complex session logic.
-- **Auditable**: Easier to track user activity or session history.
+## Access auth state
 
-❌ Cons:
-- **Slower**: Requires a database read on each request.
-- **Less scalable**: Needs session storage infrastructure (e.g., Redis, SQL).
-- **More complex**: Requires session cleanup, expiration logic, and storage management.
+Modify the application's provider component to accept an auth state via props and provides it to the rest of the app via React Context.
+
+```ts title="provider.tsx"
+"use client";
+
+import { ReactElement } from "react";
+import { AuthContext } from "./auth/auth-context";
+
+interface ProviderProps {
+  children: ReactElement[];
+  authenticated: boolean;
+}
+
+export default function Providers({ children, authenticated }: ProviderProps) {
+  return (
+    <AuthContext.Provider value={authenticated}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+```
+
+Render the provider in the root layout, passing the auth state retrieved from cookies.
+
+```ts title="layout.tsx"
+import type { Metadata } from "next";
+import Providers from "./providers";
+import authenticated from "./auth/authenticated";
+
+export default async function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  const isAuthenticated = await authenticated();
+
+  return (
+    <html lang="en">
+      <body>
+        <Providers authenticated={isAuthenticated}>
+          {children}
+        </Providers>
+      </body>
+    </html>
+  );
+}
+```
+
+Access the auth state in client components:
+
+```ts title="header.tsx"
+"use client";
+
+import { AuthContext } from "../auth/auth-context";
+import { useContext } from "react";
+
+interface HeaderProps {
+  logout: () => Promise<void>;
+}
+
+export default function Header({ logout }: HeaderProps) {
+  const isAuthenticated = useContext(AuthContext);
+
+  if (!isAuthenticated) return null;
+
+  return (
+    <button onClick={logout}>Logout</button>
+  );
+}
+```
 
 
 ## Authorization
 
-Once a user is authenticated and a session is created, You can implement authorization to check if the user is authorized to access a route or perform an action within your application.
+Once authenticated, you can implement authorization to check if the user is authorized to access a route or perform an action within your application.
 
-Two main types of authorization checks:
-1. **Optimistic**: store the user roles or permission **in the cookie**. Useful for quick operations, such as showing/hiding UI elements or redirecting users based on permissions or roles.
-2. **Secure**: store the user roles or permission **in the database**. More secure and are used for operations that require access to sensitive data or actions.
+**On the client**:
+1. Upon login, the API returns user roles or permissions to the client 
+2. They are used for quick operations, such as showing/hiding UI elements or redirecting users based on permissions or roles.
 
-You can use [Middleware](https://nextjs.org/docs/app/guides/authentication#optimistic-checks-with-middleware-optional) to perform optimistic checks. Since Middleware runs on every route, it's a good way to centralize redirect logic and pre-filter unauthorized users. It's important to avoid database checks to prevent performance issues.
+**On the server**, use a middelware to perform authentication & authorization checks on every request. Avoid database checks to prevent performance issues.
 
-Steps to implement:
-1. Define a [`verifySession()`](https://nextjs.org/docs/app/guides/authentication#creating-a-data-access-layer-dal) function that verifies the user's session
-2. Invoke the function in your [Server Components](https://nextjs.org/docs/app/guides/authentication#server-components), [Server Actions](https://nextjs.org/docs/app/guides/authentication#server-actions), [Route Handlers](https://nextjs.org/docs/app/guides/authentication#route-handlers)
-3. Be cautious when doing checks in [Layouts](https://nextjs.org/docs/app/guides/authentication#layouts-and-auth-checks) as these don't re-render on navigation, meaning the user session won't be checked on every route change.
+> [!CAUTION]
+> Be cautious when doing checks in [Layouts](https://nextjs.org/docs/app/guides/authentication#layouts-and-auth-checks) as these don't re-render on navigation, meaning the user session won't be checked on every route change.

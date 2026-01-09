@@ -31,13 +31,37 @@ echo "npm test" > .husky/pre-commit
 ```
 
 
-## Use cases
+## Recipes
+
+### Lint staged files on commit
+
+Install `lint-staged`:
+
+<PackageManagerTabs command="install --save-dev lint-staged" />
+
+Add `lint-staged` configuration to `package.json`:
+
+```json
+{
+  "lint-staged": {
+    "*.ts?(x)": "eslint --fix"
+  }
+}
+```
+
+Run `lint-staged` command before commit (via pre-commit hook):
+
+```sh
+echo "npx lint-staged" > .husky/pre-commit
+```
+
 
 ### Check branch name before commit
 
 <PackageManagerTabs command="install -D git-branch-is@^4.0.0 " />
 
-Add hook:
+Add branch name check before push (via pre-push hook):
+
 ```sh
 echo "npx git-branch-is -r '^(feature|fix)/[a-z\\-\\d\\.]+$'" > .husky/pre-push
 ```
@@ -45,7 +69,14 @@ echo "npx git-branch-is -r '^(feature|fix)/[a-z\\-\\d\\.]+$'" > .husky/pre-push
 
 ### Run unit test before push
 
+Add a test script to `package.json`:
+
+```sh
+npm pkg set scripts.test:cov="jest --coverage"
+```
+
+Run test command before commit (via pre-commit hook):
+
 ```sh
 echo "npm run test:cov" > .husky/pre-commit
-npm pkg set scripts.test:cov="jest --coverage"
 ```

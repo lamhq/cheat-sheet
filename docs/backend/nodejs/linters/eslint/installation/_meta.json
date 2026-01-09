@@ -2,34 +2,9 @@
   "javascript",
   "typescript",
   "react",
-  {
-    "type": "custom-link",
-    "link": "/backend/javascript/linters/prettier#integrating-with-eslint",
-    "label": "Prettier"
-  },
-  {
-    "type": "custom-link",
-    "link": "/web/storybook/eslint",
-    "label": "Storybook"
-  },
-  {
-    "type": "custom-link",
-    "link": "/backend/javascript/testing/jest/linter",
-    "label": "Jest"
-  },
-  {
-    "type": "custom-link",
-    "link": "/backend/javascript/testing/vitest/linter",
-    "label": "Vitest"
-  },
-  {
-    "type": "custom-link",
-    "link": "/web/react/react-testing-library#integrate-with-linter",
-    "label": "React Testing Library"
-  },
-  {
-    "type": "custom-link",
-    "link": "/web/playwright/linter",
-    "label": "Playwright"
-  }
+  "storybook",
+  "prettier",
+  "jest",
+  "vitest",
+  "playwright"
 ]

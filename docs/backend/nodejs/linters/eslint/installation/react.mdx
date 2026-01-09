@@ -9,18 +9,18 @@ Install and configure ESLint for a React (TypeScript) project.
 
 Finish the [basic setup](../installation.mdx#basic-setup) first, then run below command to install additional packages:
 
-<PackageManagerTabs command="install --save-dev eslint-plugin-react eslint-plugin-react-hooks globals" />
+<PackageManagerTabs command="install --save-dev eslint-plugin-react eslint-plugin-react-hooks" />
 
 Update ESLint config file:
 
-```js title="eslint.config.js" {2,3,10,16,17}
+```js title="eslint.config.js" {10,13}
 import { defineConfig } from "eslint/config";
 import reactPlugin from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 
 export default defineConfig([
   {
-    name: 'TypeScript React',
+    name: 'React (TypeScript) files',
     files: ['**/*.tsx'],
     languageOptions: {
       globals: globals.browser,
@@ -39,7 +39,7 @@ export default defineConfig([
 - `react: { version: 'detect' }`: automatically detect the React version from your dependencies
 
 
-## Integrate with Bundler
+## Integrate with Module bundler
 
 <PackageManagerTabs command="install --save-dev eslint-plugin-react-refresh" />
 
