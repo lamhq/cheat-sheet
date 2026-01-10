@@ -14,5 +14,6 @@
   "route-handlers",
   "middleware",
   "font",
-  "images"
+  "images",
+  "file-upload"
 ]
