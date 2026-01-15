@@ -18,7 +18,8 @@
 	},
 	"dependencies": {
 		"rspress": "^1.40.2",
-		"rspress-plugin-katex": "^0.3.0"
+		"rspress-plugin-katex": "^0.3.0",
+		"rspress-plugin-mermaid": "^1.0.0"
 	},
 	"devDependencies": {
 		"@types/node": "^18.11.17",

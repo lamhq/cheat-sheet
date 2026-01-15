@@ -1,6 +1,7 @@
 import * as path from 'node:path';
 import { defineConfig } from 'rspress/config';
 import katex from 'rspress-plugin-katex';
+import mermaid from 'rspress-plugin-mermaid';
 
 const projectRoot = path.join(__dirname, '..');
 const docRoot = path.join(projectRoot, 'docs');
@@ -15,7 +16,7 @@ const baseConfig = {
   },
 
   // enable math syntax
-  plugins: [katex()],
+  plugins: [katex(), mermaid()],
 
   // add custom styles
   globalStyles: path.join(projectRoot, 'assets', 'styles.css'),
