@@ -1,0 +1,704 @@
+import { PackageManagerTabs } from '@theme'
+
+# Stripe
+
+Integrate Stripe payment gateway into a NestJS application.
+
+
+## Payment Flow Overview
+
+The Stripe integration follows this flow:
+
+1. **User initiates checkout**. User clicks "Buy Now" on a product
+2. **Create a checkout session**. Backend creates a Stripe checkout session with product details
+3. **Redirect to Stripe**. User is redirected to Stripe's hosted checkout page
+4. **Payment processing**. User enters payment information on Stripe's secure page
+5. **Redirect to app**. User is redirected back to your application
+6. **Webhook notification**. Stripe sends webhook events to your backend
+7. **Post-payment processing**. Backend performs business logic after payment (marking the product as sold, sending confirmation emails, etc.)
+
+
+## Stripe Account Setup
+
+### 1. Create a Stripe Account
+
+Visit [stripe.com](https://stripe.com) and sign up for a free account. No payment information is required to get started.
+
+### 2. Obtain API Keys
+
+Once logged in:
+
+1. Navigate to **Developers** → **API keys**
+2. You'll see two types of keys:
+   - **Publishable Key** - Used on the client-side (frontend)
+   - **Secret Key** - Used on the server-side (backend) - **Keep this secure!**
+
+3. Copy your **Secret Key** for backend use
+
+> [!CAUTION]
+> Never commit your secret key to version control. Always use environment variables.
+
+
+## Installing Dependencies
+
+Install the Stripe Node.js library:
+
+<PackageManagerTabs command="install stripe" />
+
+For TypeScript support, types are included in the package.
+
+
+## Environment Configuration
+
+Add Stripe configuration to your `.env` file:
+
+```env
+STRIPE_SECRET_KEY=sk_test_your_secret_key_here
+STRIPE_SUCCESS_URL=http://localhost:3000
+STRIPE_CANCEL_URL=http://localhost:3000
+```
+
+## Creating a Checkout Module
+
+
+### 2. Configure Stripe Provider
+
+In checkout.module.ts:
+
+````typescript
+import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import Stripe from 'stripe';
+import { CheckoutController } from './checkout.controller';
+import { CheckoutService } from './checkout.service';
+import { ProductsModule } from '../products/products.module';
+
+@Module({
+  imports: [ConfigModule, ProductsModule],
+  controllers: [CheckoutController],
+  providers: [
+    CheckoutService,
+    {
+      provide: Stripe,
+      useFactory: (configService: ConfigService) =>
+        new Stripe(configService.getOrThrow('STRIPE_SECRET_KEY')),
+      inject: [ConfigService],
+    },
+  ],
+})
+export class CheckoutModule {}
+````
+
+---
+
+## Implementing Checkout Sessions
+
+### 2. Configure Stripe Provider
+
+````typescript
+import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import Stripe from 'stripe';
+import { CheckoutController } from './checkout.controller';
+import { CheckoutService } from './checkout.service';
+import { ProductsModule } from '../products/products.module';
+
+@Module({
+  providers: [
+    CheckoutService,
+    {
+      provide: Stripe,
+      useFactory: (configService: ConfigService) =>
+        new Stripe(configService.getOrThrow('STRIPE_SECRET_KEY')),
+      inject: [ConfigService],
+    },
+  ],
+})
+export class CheckoutModule {}
+````
+
+### 3. Implement Checkout Service
+
+````typescript
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import Stripe from 'stripe';
+import { ProductsService } from '../products/products.service';
+
+@Injectable()
+export class CheckoutService {
+  constructor(
+    private readonly stripe: Stripe,
+    private readonly productService: ProductsService,
+    private readonly configService: ConfigService,
+  ) {}
+
+  async createSession(productId: number) {
+    const product = await this.productService.getProduct(productId);
+    
+    return this.stripe.checkout.sessions.create({
+      metadata: {
+        productId: productId.toString(),
+      },
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            unit_amount: Math.round(product.price * 100),
+            product_data: {
+              name: product.name,
+              description: product.description,
+            },
+          },
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      success_url: this.configService.getOrThrow('STRIPE_SUCCESS_URL'),
+      cancel_url: this.configService.getOrThrow('STRIPE_CANCEL_URL'),
+    });
+  }
+
+  async handleCheckoutWebhook(event: any) {
+    if (event.type !== 'checkout.session.completed') {
+      return;
+    }
+
+    const session = await this.stripe.checkout.sessions.retrieve(
+      event.data.object.id,
+    );
+    
+    await this.productService.update(
+      parseInt(session.metadata.productId),
+      { sold: true }
+    );
+  }
+}
+````
+
+### 4. Update Product Schema
+
+Add a `sold` field to schema.prisma:
+
+```prisma
+model Product {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String
+  price       Float
+  user        User    @relation(fields: [userId], references: [id])
+  userId      Int
+  sold        Boolean @default(false)  // Add this line
+}
+```
+
+Run migration:
+
+```bash
+npx prisma migrate dev --name sold
+```
+
+### 5. Implement Product Update Method
+
+In products.service.ts:
+
+````typescript
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { ProductUpdateInput } from '../generated/prisma/models';
+
+@Injectable()
+export class ProductsService {
+  constructor(private readonly prismaService: PrismaService) {}
+
+  async update(productId: number, data: ProductUpdateInput) {
+    await this.prismaService.product.update({
+      where: { id: productId },
+      data,
+    });
+  }
+}
+````
+
+---
+
+## Setting Up Webhooks
+
+### Understanding Webhook Events
+
+Stripe sends various events during the checkout process:
+
+- `checkout.session.completed` - Payment successfully completed
+- `charge.succeeded` - Charge was successful
+- `payment_intent.succeeded` - Payment intent succeeded
+- `payment_intent.created` - Payment intent created
+
+We primarily listen for `checkout.session.completed` to mark products as sold.
+
+### Metadata Pattern
+
+When creating the checkout session, include metadata:
+
+```typescript
+metadata: {
+  productId: productId.toString(),
+}
+```
+
+This metadata persists through the checkout flow and is available in webhook events, allowing you to identify which product was purchased.
+
+---
+
+## Testing Webhooks Locally
+
+### 1. Install Stripe CLI
+
+**macOS (using Homebrew):**
+```bash
+brew install stripe/stripe-cli/stripe
+```
+
+**Windows:**
+```bash
+scoop bucket add stripe https://github.com/stripe/scoop-stripe-cli.git
+scoop install stripe
+```
+
+**Linux:**
+```bash
+wget https://github.com/stripe/stripe-cli/releases/latest/download/stripe_linux_x86_64.tar.gz
+tar -xvf stripe_linux_x86_64.tar.gz
+sudo mv stripe /usr/local/bin
+```
+
+See [Stripe CLI documentation](https://stripe.com/docs/stripe-cli) for more options.
+
+### 2. Authenticate CLI
+
+```bash
+stripe login
+```
+
+This opens a browser window to authorize the CLI with your Stripe account.
+
+### 3. Forward Webhooks to Local Server
+
+```bash
+stripe listen --forward-to localhost:3001/checkout/webhook
+```
+
+This command:
+- Listens for events in your Stripe account
+- Forwards them to your local NestJS server
+- Shows all webhook events in the terminal
+
+### 4. View Active Listeners
+
+In your Stripe Dashboard:
+1. Go to **Developers** → **Webhooks**
+2. Click **Local listeners** tab
+3. See your active local webhook endpoints
+
+### 5. Test the Flow
+
+1. Start your NestJS server:
+   ```bash
+   npm run start:dev
+   ```
+
+2. In another terminal, start Stripe CLI listener:
+   ```bash
+   stripe listen --forward-to localhost:3001/checkout/webhook
+   ```
+
+3. Make a test purchase through your application
+
+4. Use test card numbers from [Stripe Testing](https://stripe.com/docs/testing):
+   - **Success**: `4242 4242 4242 4242`
+   - **Decline**: `4000 0000 0000 0002`
+   - Use any future date for expiry, any 3 digits for CVC
+
+5. Monitor the Stripe CLI output to see webhook events
+
+---
+
+## Production Deployment
+
+### 1. Configure Production Webhook Endpoint
+
+1. Go to **Developers** → **Webhooks** in Stripe Dashboard
+2. Click **Add endpoint**
+3. Enter your production URL: `https://your-domain.com/checkout/webhook`
+4. Select events to listen for:
+   - `checkout.session.completed`
+5. Copy the **Signing secret** (starts with `whsec_`)
+
+### 2. Update Environment Variables
+
+In your production environment:
+
+```env
+STRIPE_SECRET_KEY=sk_live_your_production_key
+STRIPE_SUCCESS_URL=https://your-domain.com/success
+STRIPE_CANCEL_URL=https://your-domain.com/cancel
+STRIPE_WEBHOOK_SECRET=whsec_your_webhook_signing_secret
+```
+
+### 3. Verify Webhook Signatures (Recommended)
+
+Update checkout.service.ts:
+
+````typescript
+import { Injectable, BadRequestException } from '@nestjs/common';
+import Stripe from 'stripe';
+
+@Injectable()
+export class CheckoutService {
+  constructor(
+    private readonly stripe: Stripe,
+    private readonly configService: ConfigService,
+  ) {}
+
+  async handleCheckoutWebhook(body: Buffer, signature: string) {
+    const webhookSecret = this.configService.get('STRIPE_WEBHOOK_SECRET');
+    
+    let event: Stripe.Event;
+    
+    try {
+      event = this.stripe.webhooks.constructEvent(
+        body,
+        signature,
+        webhookSecret,
+      );
+    } catch (err) {
+      throw new BadRequestException(`Webhook Error: ${err.message}`);
+    }
+
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object as Stripe.Checkout.Session;
+      await this.productService.update(
+        parseInt(session.metadata.productId),
+        { sold: true }
+      );
+    }
+  }
+}
+````
+
+Update controller to receive raw body:
+
+````typescript
+import { Body, Controller, Headers, Post, RawBodyRequest, Req } from '@nestjs/common';
+import { Request } from 'express';
+
+@Controller('checkout')
+export class CheckoutController {
+  @Post('webhook')
+  async handleCheckoutWebhooks(
+    @Req() request: RawBodyRequest<Request>,
+    @Headers('stripe-signature') signature: string,
+  ) {
+    return this.checkoutService.handleCheckoutWebhook(
+      request.rawBody,
+      signature,
+    );
+  }
+}
+````
+
+### 4. Enable Raw Body for Webhooks
+
+In main.ts:
+
+````typescript
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule, {
+    rawBody: true, // Enable raw body for webhooks
+  });
+  await app.listen(3001);
+}
+bootstrap();
+````
+
+---
+
+## Additional Topics
+
+### 1. Handling Multiple Payment Methods
+
+Stripe supports various payment methods beyond credit cards:
+
+````typescript
+async createSession(productId: number) {
+  const product = await this.productService.getProduct(productId);
+  
+  return this.stripe.checkout.sessions.create({
+    payment_method_types: ['card', 'klarna', 'afterpay_clearpay'],
+    // ... rest of configuration
+  });
+}
+````
+
+### 2. Customer Management
+
+Store Stripe customer IDs for returning customers:
+
+````typescript
+// Add to User model in schema.prisma
+model User {
+  id            Int       @id @default(autoincrement())
+  email         String    @unique
+  stripeCustomerId String?  @unique
+  // ... other fields
+}
+````
+
+````typescript
+async createSession(productId: number, userId: number) {
+  const user = await this.usersService.getUser({ id: userId });
+  
+  let customerId = user.stripeCustomerId;
+  
+  if (!customerId) {
+    const customer = await this.stripe.customers.create({
+      email: user.email,
+    });
+    customerId = customer.id;
+    await this.usersService.updateStripeCustomerId(userId, customerId);
+  }
+  
+  return this.stripe.checkout.sessions.create({
+    customer: customerId,
+    // ... rest of configuration
+  });
+}
+````
+
+### 3. Subscriptions
+
+Implement recurring billing:
+
+````typescript
+async createSubscription(userId: number, priceId: string) {
+  const user = await this.usersService.getUser({ id: userId });
+  
+  return this.stripe.checkout.sessions.create({
+    customer: user.stripeCustomerId,
+    mode: 'subscription',
+    line_items: [
+      {
+        price: priceId, // Stripe price ID for subscription
+        quantity: 1,
+      },
+    ],
+    success_url: this.configService.getOrThrow('STRIPE_SUCCESS_URL'),
+    cancel_url: this.configService.getOrThrow('STRIPE_CANCEL_URL'),
+  });
+}
+````
+
+### 4. Refunds
+
+Implement refund functionality:
+
+````typescript
+async refundPayment(paymentIntentId: string, amount?: number) {
+  return this.stripe.refunds.create({
+    payment_intent: paymentIntentId,
+    amount, // Optional: partial refund amount in cents
+  });
+}
+````
+
+### 5. Invoice Generation
+
+Create and send invoices:
+
+````typescript
+async createInvoice(customerId: string, items: Array<{ price: string; quantity: number }>) {
+  // Create invoice items
+  for (const item of items) {
+    await this.stripe.invoiceItems.create({
+      customer: customerId,
+      price: item.price,
+      quantity: item.quantity,
+    });
+  }
+  
+  // Create and finalize invoice
+  const invoice = await this.stripe.invoices.create({
+    customer: customerId,
+    auto_advance: true, // Auto-finalize and charge
+  });
+  
+  return this.stripe.invoices.finalizeInvoice(invoice.id);
+}
+````
+
+### 6. Payment Intents (Advanced)
+
+For custom payment flows with more control:
+
+````typescript
+async createPaymentIntent(amount: number, currency: string = 'usd') {
+  return this.stripe.paymentIntents.create({
+    amount: Math.round(amount * 100),
+    currency,
+    automatic_payment_methods: {
+      enabled: true,
+    },
+  });
+}
+````
+
+### 7. Error Handling
+
+Implement comprehensive error handling:
+
+````typescript
+import { BadRequestException, InternalServerErrorException } from '@nestjs/common';
+
+async createSession(productId: number) {
+  try {
+    const product = await this.productService.getProduct(productId);
+    
+    if (product.sold) {
+      throw new BadRequestException('Product is already sold');
+    }
+    
+    return await this.stripe.checkout.sessions.create({
+      // ... configuration
+    });
+  } catch (error) {
+    if (error instanceof Stripe.errors.StripeError) {
+      throw new BadRequestException(`Stripe error: ${error.message}`);
+    }
+    throw new InternalServerErrorException('Failed to create checkout session');
+  }
+}
+````
+
+### 8. Logging and Monitoring
+
+Add logging for webhook events:
+
+````typescript
+import { Logger } from '@nestjs/common';
+
+@Injectable()
+export class CheckoutService {
+  private readonly logger = new Logger(CheckoutService.name);
+
+  async handleCheckoutWebhook(event: any) {
+    this.logger.log(`Received webhook event: ${event.type}`);
+    
+    if (event.type === 'checkout.session.completed') {
+      this.logger.log(`Processing completed checkout for session: ${event.data.object.id}`);
+      // ... handle event
+    }
+  }
+}
+````
+
+### 9. Testing Strategies
+
+Create test helpers:
+
+````typescript
+import { Test } from '@nestjs/testing';
+import Stripe from 'stripe';
+
+describe('CheckoutService', () => {
+  let service: CheckoutService;
+  let mockStripe: jest.Mocked<Stripe>;
+
+  beforeEach(async () => {
+    mockStripe = {
+      checkout: {
+        sessions: {
+          create: jest.fn(),
+          retrieve: jest.fn(),
+        },
+      },
+    } as any;
+
+    const module = await Test.createTestingModule({
+      providers: [
+        CheckoutService,
+        { provide: Stripe, useValue: mockStripe },
+        // ... other providers
+      ],
+    }).compile();
+
+    service = module.get<CheckoutService>(CheckoutService);
+  });
+
+  it('should create a checkout session', async () => {
+    const mockSession = { id: 'cs_test_123', url: 'https://checkout.stripe.com/...' };
+    mockStripe.checkout.sessions.create.mockResolvedValue(mockSession as any);
+
+    const result = await service.createSession(1);
+    
+    expect(result).toEqual(mockSession);
+    expect(mockStripe.checkout.sessions.create).toHaveBeenCalled();
+  });
+});
+````
+
+### 10. Security Best Practices
+
+- Always validate webhook signatures in production
+- Never expose secret keys in client-side code
+- Use HTTPS for all webhook endpoints
+- Implement rate limiting on checkout endpoints
+- Store sensitive data securely
+- Regularly rotate API keys
+- Monitor for suspicious activity in Stripe Dashboard
+
+---
+
+## Resources
+
+- [Stripe API Documentation](https://stripe.com/docs/api)
+- [Stripe Checkout Documentation](https://stripe.com/docs/payments/checkout)
+- [Stripe Webhooks Guide](https://stripe.com/docs/webhooks)
+- [Stripe Testing](https://stripe.com/docs/testing)
+- [Stripe CLI Documentation](https://stripe.com/docs/stripe-cli)
+- [NestJS Documentation](https://docs.nestjs.com)
+
+---
+
+## Troubleshooting
+
+### Webhook Not Firing Locally
+
+1. Ensure Stripe CLI is running: `stripe listen --forward-to localhost:3001/checkout/webhook`
+2. Check your NestJS server is running on the correct port
+3. Verify the webhook endpoint URL matches your controller route
+
+### Webhook Signature Verification Failing
+
+1. Ensure you're using the webhook signing secret (starts with `whsec_`)
+2. Make sure raw body is enabled in main.ts
+3. Verify the signature header is being passed correctly
+
+### Session Not Creating
+
+1. Check your Stripe secret key is correct
+2. Verify product exists in database
+3. Check amount is valid (positive number)
+4. Ensure currency is supported
+
+### Product Not Updating After Payment
+
+1. Verify webhook is receiving events (check Stripe CLI output)
+2. Check `handleCheckoutWebhook` logic
+3. Ensure product ID metadata is being passed correctly
+4. Check database connection and update permissions
+
+---
+
+This guide provides a comprehensive overview of integrating Stripe into your NestJS application. Adjust configurations based on your specific requirements and always test thoroughly before deploying to production.

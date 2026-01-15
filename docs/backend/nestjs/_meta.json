@@ -3,8 +3,13 @@
   "configuration",
   "validation",
   "prisma",
-  "authentication",
   "logger",
+  "authentication",
+  {
+    "name": "payment",
+    "type": "dir",
+    "collapsed": true
+  },
   {
     "name": "graphql",
     "type": "dir",
