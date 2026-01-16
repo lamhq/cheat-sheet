@@ -1,0 +1,76 @@
+# Uploading Files
+
+## Render upload form
+
+```tsx title="create-product-form.tsx"
+"use client";
+
+import { useState } from "react";
+import { FormResponse } from "./interfaces/form-response.interface";
+import createProduct from "./actions/create-product";
+
+export default function CreateProductForm() {
+  const [response, setResponse] = useState<FormResponse>();
+  const [fileName, setFileName] = useState("");
+
+  return (
+    <div>
+      <form
+        action={async (formData) => {
+          const response = await createProduct(formData);
+          setResponse(response);
+        }}
+      >
+        <input
+          type="file"
+          name="image"
+          onChange={(e) =>
+            e.target.files && setFileName(e.target.files[0].name)
+          }
+        />
+        <p>{fileName}</p>
+        {response?.error && <p>{response.error}</p>}
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  );
+}
+```
+
+
+## Upload file
+
+Define a server action for uploading file to backend API:
+
+```ts title="actions/create-product.ts"
+"use server";
+
+import { API_URL } from "@/app/common/constants/api";
+
+export default async function createProduct(formData: FormData) {
+  const res = await fetch(`${API_URL}/products`, {
+    method: "POST",
+    body: formData,
+  });
+  const response = await res.json();
+  const productImage = formData.get("image");
+  if (productImage instanceof File && !response.error) {
+    await uploadProductImage(response.data.id, productImage);
+  }
+  return response;
+}
+
+async function uploadProductImage(productId: number, file: File) {
+  const formData = new FormData();
+  formData.append("image", file);
+  await fetch(`${API_URL}/products/${productId}/image`, {
+    body: formData,
+    method: "POST",
+  });
+}
+```
+
+- `createProduct` action sends form data to backend API to create a new product. If an image file is provided, it calls `uploadProductImage` to upload the image after adding the product.
+
+> [!NOTE]
+> The backend API should accept `Content-Type: multipart/form-data` for these POST requests, as the data is sent using FormData.

@@ -3,10 +3,16 @@
   "configuration",
   "validation",
   "prisma",
-  "authentication",
   "logger",
+  "authentication",
+  "websocket",
   {
     "name": "graphql",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "payment",
     "type": "dir",
     "collapsed": true
   }
