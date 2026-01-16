@@ -5,13 +5,14 @@
   "prisma",
   "logger",
   "authentication",
+  "websocket",
   {
-    "name": "payment",
+    "name": "graphql",
     "type": "dir",
     "collapsed": true
   },
   {
-    "name": "graphql",
+    "name": "payment",
     "type": "dir",
     "collapsed": true
   }
