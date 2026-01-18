@@ -24,7 +24,8 @@
 	"devDependencies": {
 		"@types/node": "^18.11.17",
 		"husky": "^9.1.7",
-		"lint-staged": "^16.1.2"
+		"lint-staged": "^16.1.2",
+		"prettier": "^3.8.0"
 	},
 	"lint-staged": {
 		"*.mdx": "node scripts/lint-markdown.js"
