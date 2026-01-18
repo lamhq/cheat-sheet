@@ -10,9 +10,10 @@
 		"dev:web": "rspress dev -c configs/web.ts --port 5005",
 		"dev:se": "rspress dev -c configs/se.ts --port 5001",
 		"dev:devops": "rspress dev -c configs/devops.ts --port 5003",
+		"dev:english": "rspress dev -c configs/english.ts --port 5007",
 		"dev:de": "rspress dev -c configs/de.ts --port 5002",
 		"build": "rspress build",
-		"preview": "rspress preview --port 5002",
+		"preview": "rspress preview --port 5008",
 		"lint": "ls docs/**/*.mdx | node scripts/lint-markdown.js",
 		"prepare": "node .husky/install.mjs"
 	},

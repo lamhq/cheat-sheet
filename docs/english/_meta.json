@@ -1,0 +1,11 @@
+[
+  {
+    "name": "index",
+    "label": "English"
+  },
+  {
+    "name": "communication",
+    "type": "dir",
+    "collapsed": true
+  }
+]
