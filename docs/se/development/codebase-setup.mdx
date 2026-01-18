@@ -1,0 +1,38 @@
+# Codebase Setup
+
+Steps to create a development-ready codebase.
+
+## For all projects
+
+1. Create project from framework's guide ([NestJS](../../backend/nestjs.mdx), [Next.js](../../web/react/nextjs.mdx), [Vite](../../web/build-tools/vite.mdx), etc.)
+2. Specify package manager to use, migrate from the current package manager if needed ([PNPM](../../backend/nodejs/pkg-mgm/pnpm.mdx))
+3. Install & configure code formatter ([Prettier](../../backend/nodejs/linters/prettier.mdx))
+4. Install & configure linter for code standards ([ESLint](../../backend/nodejs/linters/eslint.mdx))
+5. Create IDE configuration file (`.vscode/settings.json`) and install recommended extensions for the project's tech stack (VS Code)
+6. Set up unit testing ([Jest](../../backend/nodejs/testing/jest.mdx), [Vitest](../../backend/nodejs/testing/vitest.mdx))
+7. Set up end-to-end testing ([Playwright](../../web/playwright.mdx))
+8. Set up environments config (dotenv)
+9. Configure CI/CD pipeline ([GitHub Actions](../../devops/github-actions.mdx)) for:
+  - Automated builds and tests
+  - Deployment automation
+  - Code quality checks
+10. Set up git hooks ([Husky](../../se/development/version-control/git/husky.mdx)) for:
+  - Commit message linting
+  - Pre-commit file linting
+11. Add [skills](../../tools/ai-coding-assistants/agent-skills.mdx) / [instructions](../../tools/ai-coding-assistants/github-copilot/customization/instructions.mdx) for AI agents to understand the codebase
+12. Create `README.md` with:
+  - Project overview
+  - Development prerequisites
+  - Local setup instructions
+  - Run and test instructions
+  - Architecture documentation
+
+
+## For API App
+
+- Enable automatic API documentation (Swagger)
+
+
+## For Web App
+
+- Integrate UI documentation tool (Storybook)
