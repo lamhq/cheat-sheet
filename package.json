@@ -4,7 +4,7 @@
 	"description": "Albert's cheat sheet",
 	"type": "module",
 	"scripts": {
-		"dev": "rspress dev -c configs/base.ts --port 5000",
+		"dev": "rspress dev -c configs/base.ts --port 5007",
 		"dev:tools": "rspress dev -c configs/tools.ts --port 5004",
 		"dev:backend": "rspress dev -c configs/backend.ts --port 5006",
 		"dev:web": "rspress dev -c configs/web.ts --port 5005",
@@ -24,7 +24,8 @@
 	"devDependencies": {
 		"@types/node": "^18.11.17",
 		"husky": "^9.1.7",
-		"lint-staged": "^16.1.2"
+		"lint-staged": "^16.1.2",
+		"prettier": "^3.8.0"
 	},
 	"lint-staged": {
 		"*.mdx": "node scripts/lint-markdown.js"

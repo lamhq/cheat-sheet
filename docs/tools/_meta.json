@@ -10,10 +10,10 @@
     "label": "Visual Studio Code"
   },
   {
-    "name": "ai-coding-assistants",
+    "name": "ai-agents",
     "type": "dir",
     "collapsed": true,
-    "label": "AI Coding Assistants"
+    "label": "AI Agents"
   },
   {
     "name": "macos",

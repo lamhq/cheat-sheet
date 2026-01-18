@@ -13,9 +13,9 @@ It's particularly loved for its speed and reliability compared to npm and Yarn.
 - Avoids dependency conflicts by creating a non-flat `node_modules` structure.
 
 
-## Installation (macOS)
+## Installation
 
-Install pnpm using standalone script. It allows you to install and manage multiple versions of Node.js.
+Install pnpm to your machince using standalone script. It allows you to install and manage multiple versions of Node.js.
 
 ```sh
 curl -fsSL https://get.pnpm.io/install.sh | sh -
@@ -26,12 +26,45 @@ You can install a specific version:
 curl -fsSL https://get.pnpm.io/install.sh | env PNPM_VERSION=<version> sh -
 ```
 
-
-### Making a shorter alias
+### Making alias
 
 `pnpm` might be hard to type, so you may use a shorter alias like `pn` instead.
 
 For POSIX systems (like macOS), just put the following line to your `.bashrc`, `.zshrc`, or `config.fish`:
 ```sh
 alias pn=pnpm
+```
+
+
+## Set up project to use pnpm
+
+Enfoce PNPM as project's package:
+
+```sh title=".npmrc"
+package-manager=pnpm@10.0.0 
+```
+
+Declares which versions of Node.js and pnpm your project supports.
+
+```json title="package.json"
+{
+  "engines": {
+    "node": ">=22.12.0",
+    "pnpm": ">=10.0.0"
+  }
+}
+```
+
+
+## Migrate from other package managers
+
+Generate a `pnpm-lock.yaml` from another package manager's lockfile.
+
+Supported source files:
+- `package-lock.json`
+- `npm-shrinkwrap.json`
+- `yarn.lock`
+
+```sh
+pnpm import
 ```

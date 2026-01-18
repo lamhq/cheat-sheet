@@ -23,7 +23,7 @@ npx husky init
 ```
 
 
-## Adding a Hook
+## Add Hook
 
 To add a hook:
 ```sh
@@ -33,7 +33,7 @@ echo "npm test" > .husky/pre-commit
 
 ## Recipes
 
-### Lint staged files on commit
+### Lint staged files
 
 Install `lint-staged`:
 
@@ -53,6 +53,51 @@ Run `lint-staged` command before commit (via pre-commit hook):
 
 ```sh
 echo "npx lint-staged" > .husky/pre-commit
+```
+
+
+### Lint commit message
+
+Install commitlint:
+
+<PackageManagerTabs command="install -D @commitlint/cli @commitlint/config-conventional" />
+
+Add commitlint configuration:
+
+```js title="commitlint.config.mjs"
+export default {
+  extends: ['@commitlint/config-conventional'],
+  rules: {
+    'type-enum': [
+      2,
+      'always',
+      [
+        'feat',
+        'fix',
+        'docs',
+        'style',
+        'refactor',
+        'perf',
+        'test',
+        'build',
+        'ci',
+        'chore',
+        'revert',
+      ],
+    ],
+    'type-case': [2, 'always', 'lowerCase'],
+    'type-empty': [2, 'never'],
+    'subject-empty': [2, 'never'],
+    'subject-full-stop': [2, 'never', '.'],
+    'header-max-length': [2, 'always', 72],
+  },
+};
+```
+
+Create a commit-msg hook file to run `commitlint`:
+
+```sh title=".husky/commit-msg"
+npx --no -- commitlint --edit "$1" 
 ```
 
 
