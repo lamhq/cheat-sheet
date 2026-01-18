@@ -1,5 +1,6 @@
 [
   "prompt",
+  "agent-skills",
   {
     "name": "mcp",
     "type": "dir",
