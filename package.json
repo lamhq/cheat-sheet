@@ -4,7 +4,7 @@
 	"description": "Albert's cheat sheet",
 	"type": "module",
 	"scripts": {
-		"dev": "rspress dev -c configs/base.ts --port 5000",
+		"dev": "rspress dev -c configs/base.ts --port 5007",
 		"dev:tools": "rspress dev -c configs/tools.ts --port 5004",
 		"dev:backend": "rspress dev -c configs/backend.ts --port 5006",
 		"dev:web": "rspress dev -c configs/web.ts --port 5005",
