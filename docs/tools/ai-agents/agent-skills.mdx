@@ -55,6 +55,146 @@ The **Body** contains the instructions, guidelines, and examples that Copilot sh
 - References to any included scripts or resources
 
 
+## Examples
+
+### Coding Best Practices
+
+Help writing React/Next.js code that follows best practices.
+
+This example illustrates how to instruct the agent to:
+- Know when to use the skill
+- Automatically read additional files when applied
+
+Below is a briefed version of [Vercel React Best Practices](https://github.com/vercel-labs/agent-skills/blob/main/skills/react-best-practices/SKILL.md) skill:
+
+````markdown title="my-skill/SKILL.md"
+---
+name: vercel-react-best-practices
+description: React and Next.js performance optimization guidelines from Vercel Engineering. This skill should be used when writing, reviewing, or refactoring React/Next.js code to ensure optimal performance patterns. Triggers on tasks involving React components, Next.js pages, data fetching, bundle optimization, or performance improvements.
+license: MIT
+metadata:
+  author: vercel
+  version: "1.0.0"
+---
+
+# React/Next.js Coding Best Practices
+
+## When to Apply
+
+Reference these guidelines when:
+- Writing new React components or Next.js pages
+- Implementing data fetching (client or server-side)
+- Reviewing code for performance issues
+- Refactoring existing React/Next.js code
+- Optimizing bundle size or load times
+
+## Rule Categories by Priority
+
+| Priority | Category | Impact | Prefix |
+|----------|----------|--------|--------|
+| 1 | Eliminating Waterfalls | CRITICAL | `async-` |
+| 2 | Bundle Size Optimization | CRITICAL | `bundle-` |
+| 3 | Server-Side Performance | HIGH | `server-` |
+
+## Quick Reference
+
+### 1. Eliminating Waterfalls (CRITICAL)
+
+- `async-defer-await` - Move await into branches where actually used
+- `async-parallel` - Use Promise.all() for independent operations
+- `async-dependencies` - Use better-all for partial dependencies
+- `async-api-routes` - Start promises early, await late in API routes
+- `async-suspense-boundaries` - Use Suspense to stream content
+
+### 2. Bundle Size Optimization (CRITICAL)
+
+- `bundle-barrel-imports` - Import directly, avoid barrel files
+- `bundle-dynamic-imports` - Use next/dynamic for heavy components
+- `bundle-defer-third-party` - Load analytics/logging after hydration
+- `bundle-conditional` - Load modules only when feature is activated
+- `bundle-preload` - Preload on hover/focus for perceived speed
+
+### 3. Server-Side Performance (HIGH)
+
+- `server-cache-react` - Use React.cache() for per-request deduplication
+- `server-cache-lru` - Use LRU cache for cross-request caching
+- `server-serialization` - Minimize data passed to client components
+- `server-parallel-fetching` - Restructure components to parallelize fetches
+- `server-after-nonblocking` - Use after() for non-blocking operations
+
+## How to Use
+
+Read individual rule files for detailed explanations and code examples:
+
+```
+rules/async-parallel.md
+rules/bundle-barrel-imports.md
+rules/_sections.md
+```
+
+Each rule file contains:
+- Brief explanation of why it matters
+- Incorrect code example with explanation
+- Correct code example with explanation
+- Additional context and references
+````
+
+
+### Review Web UI
+
+Review UI code for compliance with web interface best practices.
+
+This example illustrates how to instruct the agent to:
+- Know when to use the skill
+- Follow a step-by-step process when executing the skill
+- Use WebFetch to get external content
+- Ask user to provide input if not given
+
+Below is a briefed version of [Web Interface Guidelines](https://github.com/vercel-labs/agent-skills/blob/main/skills/web-design-guidelines/SKILL.md) skill:
+
+````markdown title="my-skill/SKILL.md"
+---
+name: web-design-guidelines
+description: Review UI code for Web Interface Guidelines compliance. Use when asked to "review my UI", "check accessibility", "audit design", "review UX", or "check my site against best practices".
+metadata:
+  author: vercel
+  version: "1.0.0"
+  argument-hint: <file-or-pattern>
+---
+
+# Web Interface Guidelines
+
+Review files for compliance with Web Interface Guidelines.
+
+## How It Works
+
+1. Fetch the latest guidelines from the source URL below
+2. Read the specified files (or prompt user for files/pattern)
+3. Check against all rules in the fetched guidelines
+4. Output findings in the terse `file:line` format
+
+## Guidelines Source
+
+Fetch fresh guidelines before each review:
+
+```
+https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md
+```
+
+Use WebFetch to retrieve the latest rules. The fetched content contains all the rules and output format instructions.
+
+## Usage
+
+When a user provides a file or pattern argument:
+1. Fetch guidelines from the source URL above
+2. Read the specified files
+3. Apply all rules from the fetched guidelines
+4. Output findings using the format specified in the guidelines
+
+If no files specified, ask the user which files to review.
+````
+
+
 ## References
 
 - [Vercel's Agent Skills](https://github.com/vercel-labs/agent-skills)
