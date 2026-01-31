@@ -2,9 +2,11 @@
 
 ## Introduction
 
-Custom Agents are specialized versions of the Copilot Coding Agent that you can tailor to specific roles or tasks.
+Custom agents are Coding Agents that you tailored for specific roles or tasks.
 
-Custom agents consist of a set of instructions and tools that are applied when you switch to that agent.
+A custom agent consists of instructions and tools that are applied when you switch to that agent.
+
+It allows you to create specialized agents tailored to specific roles, tasks, or workflows.
 
 _For example, a "Plan" agent could include instructions for generating an implementation plan and only use read-only tools._
 
@@ -12,52 +14,17 @@ _For example, a "Plan" agent could include instructions for generating an implem
 > This feature is available with the **GitHub Copilot Pro, GitHub Copilot Pro+, GitHub Copilot Business**, and **GitHub Copilot Enterprise** plans.
 
 
-## Why custom agents?
-
-Different tasks require different capabilities.
-
-Quickly switch to a specific task with predefined relevant tools and instructions, without having to manually select them each time.
-
-
 ## Use Cases
 
-Provide context and guidelines for specific roles or tasks, such as:
+Use custom agents when you want to provide context and guidelines for specific roles or tasks.
 
-- **Plan**: custom agent has read-only access to the codebase and can only generate implementation plans
-- **Research**: custom agent can reach out to external resources to explore new technologies or gather information
-- **Front-end developer**: custom agent can only generate and modify code related to front-end development
-
-
-## Handoffs
-
-Handoffs enable you to create guided workflows between agents.
-
-After a chat response completes, **handoff buttons** let users move to the next agent with relevant context and a pre-filled prompt.
-
-Handoffs are useful for orchestrating multi-step workflows.
-
-For example:
-
-- **Planning → Implementation**: Generate a plan in planning agent, then hand off to implementation agent to start coding.
-- **Implementation → Review**: Complete implementation, then switch to a code review agent to check for quality and security issues.
-- **Write Failing Tests → Write Passing Tests**: Generate failing tests that are easier to review than big implementations, then hand off to make those tests pass by implementing the required code changes.
-
-To **define handoffs**, edit the frontmatter of the agent file. Specify the target agent, the button label, and an optional prompt to send:
-
-```
----
-description: Generate an implementation plan
-tools: ['search', 'fetch']
-handoffs:
-  - label: Start Implementation
-    agent: implementation
-    prompt: Now implement the plan outlined above.
-    send: false
----
-```
+Examples:
+- _Plan_: custom agent has read-only access to the codebase and can only generate implementation plans
+- _Research_: custom agent can reach out to external resources to explore new technologies or gather information
+- _Front-end developer_: custom agent can only generate and modify code related to front-end development
 
 
-## Create a custom agent
+## Create custom agents
 
 Run the `Chat: New Custom Agent` command in the Command Palette.
 
@@ -85,37 +52,6 @@ You can reference other files by using Markdown links (reuse instructions files)
 To reference agent tools, use the `#tool:<tool-name>` syntax.
 
 
-### Example
-
-A "Plan" custom agent file that generates an implementation plan and doesn't make any code edits:
-
-```markdown
----
-description: Generate an implementation plan for new features or refactoring existing code.
-name: Planner
-tools: ['fetch', 'githubRepo', 'search', 'usages']
-model: Claude Sonnet 4
-handoffs:
-  - label: Implement Plan
-    agent: agent
-    prompt: Implement the plan outlined above.
-    send: false
----
-# Planning instructions
-You are in planning mode. Your task is to generate an implementation plan for a new feature or for refactoring existing code.
-Don't make any code edits, just generate a plan.
-
-The plan consists of a Markdown document that describes the implementation plan, including the following sections:
-
-* Overview: A brief description of the feature or refactoring task.
-* Requirements: A list of requirements for the feature or refactoring task.
-* Implementation Steps: A detailed list of steps to implement the feature or refactoring task.
-* Testing: A list of tests that need to be implemented to verify the feature or refactoring task.
-```
-
-View the [official doc](https://code.visualstudio.com/docs/copilot/customization/custom-agents#_custom-agent-file-structure) for more details.
-
-
 ## Usage
 
 Once created, Custom Agents are available wherever the Copilot Coding Agent can be used, including:
@@ -125,13 +61,40 @@ Once created, Custom Agents are available wherever the Copilot Coding Agent can 
 - Visual Studio Code and other supported IDEs.
 
 
-## Share custom agents across workspaces
+## Handoffs between Agents
+
+After a chat response completes, **handoff buttons** let users move to the next agent with relevant context and a pre-filled prompt, enable you to create guided workflows between agents.
+
+Handoffs are useful for orchestrating multi-step workflows.
+
+For example:
+
+- _Planning → Implementation_: Generate a plan in planning agent, then hand off to implementation agent to start coding.
+- _Implementation → Review_: Complete implementation, then switch to a code review agent to check for quality and security issues.
+- _Write Failing Tests → Write Passing Tests_: Generate failing tests that are easier to review than big implementations, then hand off to make those tests pass by implementing the required code changes.
+
+To **define handoffs**, edit the frontmatter of the agent file. Specify the target agent, the button label, and an optional prompt to send:
+
+```
+---
+description: Generate an implementation plan
+tools: ['search', 'fetch']
+handoffs:
+  - label: Start Implementation
+    agent: implementation
+    prompt: Now implement the plan outlined above.
+    send: false
+---
+```
+
+
+## Share custom agents
 
 View the [official doc](https://code.visualstudio.com/docs/copilot/customization/custom-agents#_share-custom-agents-across-teams-experimental) for more details.
 
 
 ## References
 
+- [Custom agents in VS Code](https://code.visualstudio.com/docs/copilot/customization/custom-agents)
 - [GitHub Docs: About Custom Agents](https://docs.github.com/en/copilot/concepts/agents/coding-agent/about-custom-agents)
 - [Example Agent Profiles](https://docs.github.com/en/copilot/tutorials/customization-library/custom-agents/your-first-custom-agent)
-- [Awesome GitHub Copilot Customizations](https://github.com/github/awesome-copilot/tree/main)

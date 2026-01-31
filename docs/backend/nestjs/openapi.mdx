@@ -1,16 +1,17 @@
-# Swagger
+import { PackageManagerTabs } from '@theme'
+
+# OpenAPI
 
 ## Installation
 
-```sh
-yarn add @nestjs/swagger
-```
+<PackageManagerTabs command="install @nestjs/swagger" />
 
 
 ## Bootstrap
 
-```ts
-// main.ts
+Open the `main.ts` file and initialize Swagger using the SwaggerModule class:
+
+```js title="main.ts"
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
@@ -18,19 +19,37 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const options = new DocumentBuilder()
+  const config = new DocumentBuilder()
     .setTitle('Cats example')
     .setDescription('The cats API description')
     .setVersion('1.0')
     .addTag('cats')
     .build();
-  const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('api', app, document);
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, documentFactory);
 
-  await app.listen(3000);
+  await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
 ```
+
+Start the API and navigate to http://localhost:3000/api. You should see the Swagger UI.
+
+![](https://docs.nestjs.com/assets/swagger1.png)
+
+
+## YAML API definition
+
+```ts
+SwaggerModule.setup('docs', app, documentFactory, {
+  yamlDocumentUrl: '/docs/swagger.yaml',
+});
+```
+
+Start the API and navigate to http://localhost:3000/docs/swagger.yaml. You should see the YAML definition of your API.
+
+
+## References
 
 ```ts
 import { ApiProperty } from '@nestjs/swagger';
@@ -79,7 +98,7 @@ export class AppController {
 ```
 
 
-## Mapped types
+### Mapped types
 
 Creating new types using utility functions:
 
@@ -89,7 +108,7 @@ Creating new types using utility functions:
 - `IntersectionType`
 
 
-## Enums
+### Enums
 
 With `isArray` set to `true`, the enum can be selected as a multi-select:
 
@@ -105,7 +124,7 @@ async filterByRole(@Query('role') role: UserRole = UserRole.User) {}
 ```
 
 
-## Raw definitions
+### Raw definitions
 
 ```ts
 @ApiProperty({
@@ -136,7 +155,7 @@ async create(@Body() coords: number[][]) {}
 ```
 
 
-## oneOf, anyOf, allOf
+### oneOf, anyOf, allOf
 
 ```ts
 @ApiProperty({
@@ -166,7 +185,7 @@ pets: Pet[];
 ```
 
 
-## Tags
+### Tags
 
 ```ts
 @ApiTags('cats')
@@ -175,7 +194,7 @@ export class CatsController {}
 ```
 
 
-## Headers
+### Headers
 
 ```ts
 @ApiHeader({
@@ -187,7 +206,7 @@ export class CatsController {}
 ```
 
 
-## Responses
+### Responses
 
 - `@ApiOkResponse()`
 - `@ApiCreatedResponse()`
@@ -255,7 +274,7 @@ async findAll(
 ```
 
 
-## Basic authentication
+### Basic authentication
 
 ```ts
 const options = new DocumentBuilder().addBasicAuth();
@@ -268,7 +287,7 @@ export class CatsController {}
 ```
 
 
-## Bearer authentication
+### Bearer authentication
 
 ```ts
 const options = new DocumentBuilder().addBearerAuth();
@@ -281,7 +300,7 @@ export class CatsController {}
 ```
 
 
-## File upload
+### File upload
 
 ```ts
 @UseInterceptors(FileInterceptor('file'))
@@ -300,7 +319,7 @@ class FileUploadDto {
 }
 ```
 
-## Decorators
+### Decorators
 
 | Decorator                | Level               |
 | ------------------------ | ------------------- |
