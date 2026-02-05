@@ -23,6 +23,10 @@
         "link": "/tools"
       },
       {
+        "text": "Game",
+        "link": "/game"
+      },
+      {
         "text": "Data Engineering",
         "link": "/de"
       }

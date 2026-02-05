@@ -32,6 +32,7 @@ export enum DocSection {
   SE = 'se',
   TOOLS = 'tools',
   WEB = 'web',
+  GAME = 'game',
 }
 
 /**
