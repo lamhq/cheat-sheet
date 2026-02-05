@@ -149,4 +149,117 @@ Example code:
 - [wallet.entity.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/wallet/domain/wallet.entity.ts) (notice `validate` method. This is a simplified example of enforcing a domain invariant).
 
 
+### Enforcing invariants using Value Objects
+
+Most of the code bases operate on primitive types – `strings`, `numbers` etc. In the Domain Model, this level of abstraction may be too low.
+
+Significant business concepts can be expressed using specific types and classes as **Value Objects**.
+
+For example, `email` of type `string`:
+
+```typescript
+const email: string = 'john@gmail.com';
+```
+
+could be represented as a Value Object instead:
+
+```typescript
+export class Email extends ValueObject<string> {
+  constructor(value: string) {
+    super({ value });
+  }
+
+  get value(): string {
+    return this.props.value;
+  }
+}
+
+const email: Email = new Email('john@gmail.com');
+```
+
+Now the only way to make an email is to create a new instance of `Email` class first, this ensures it will be validated on creation and a wrong value won't get into **Entities**.
+
+Using Value Objects for primitive types is also called a **domain primitive**. This allows behavior of the domain primitive to be encapsulated in one place. By having the domain primitive own and control domain operations, you reduce the risk of bugs caused by lack of detailed domain knowledge of the concepts involved in the operation.
+
+Creating an object for primitive values may be cumbersome, but it somewhat forces a developer to study domain more in details instead of just throwing a primitive type without even thinking what that value represents in domain. The goal here is to encapsulate validations and business logic related only to the represented fields and make it impossible to pass around raw values by forcing a creation of valid **Value Objects** first.
+
+Benefits of using Value Objects instead of primitives:
+
+- Makes code easier to understand by using ubiquitous language instead of just string.
+- Improves security by ensuring invariants of every property.
+- Encapsulates specific business rules associated with a value.
+
+If every argument and return value of a method is valid by definition (by using **Value Objects**), you’ll have input and output validation in every single method in your codebase without any extra effort. This will make application more resilient to errors and will protect it from a whole class of bugs and security vulnerabilities caused by invalid input data.
+
+Without domain primitives, responsibilities fall on the entity code to validate, compare, and format the data, among other tasks. The entity code will be burdened with a lot of tasks, rather than focusing on the central business flow-of-state changes that it models. Using domain primitives can counteract the tendency for entities to grow overly complex.
+
+> [!WARNING]
+> Don't include Value Objects in objects that can be sent to other processes, like dtos, events, database models etc. Serialize them to primitive types first.
+
+> [!INFO]
+> This technique works best in languages like Scala with its value classes that represents such classes as primitives at runtime, meaning that object Email will be represented as String at runtime.
+
+> [!INFO]
+> if you are using nodejs, [Runtypes](https://www.npmjs.com/package/runtypes) is a nice library that you can use instead of creating your own value objects for primitives.
+
+> [!NOTE]
+> Some people consider making a class/object for every primitive may be overengineering (unless you are using Scala with its value classes). For less complex and smaller projects it's definitely an overkill.
+
+If you notice that creating a class for every primitive doesn't give you much benefit:
+1. create classes just for those primitives that have specific rules or behavior,
+2. or just validate them only outside of domain using some validation framework.
+
+
+### Validation at compile time
+
+Use **types** to prevent errors at compile time, so IDE will show type errors right away.
+
+For example, imagine that business logic requires to have contact info of a person by either having email, or phone, or both. This could be presented as a union type:
+
+```typescript
+type ContactInfo = Email | Phone | [Email, Phone];
+```
+
+Now only either Email, or Phone, or both must be provided. If nothing is provided, the IDE will show a type error right away. Now business rule validation is moved from runtime to compile time, which makes the application more secure and gives a faster feedback when something is not used as intended.
+
+This is called a *typestate* pattern.
+
+
+### Validation at runtime
+
+There are a lot of cases when invalid data may end up in a domain. For example, if data comes from external API, database, or if it's just a programmer error. Things that can't be validated at compile time (like user input) are validated at runtime.
+
+**First** line of defense is validation of user input DTOs.
+
+**Second** line of defense are Domain Objects (guarding). Entities and value objects have to protect their invariants. You can use techniques like [Design by contract](https://en.wikipedia.org/wiki/Design_by_contract) by defining preconditions in object constructors and checking postconditions and invariants before saving an object to the database.
+
+> [!TIP]
+> By combining compile and runtime validations, using objects instead of primitives, enforcing self-validation and invariants of your domain objects, using **Design by contract**, [Algebraic Data Types (ADT)](https://en.wikipedia.org/wiki/Algebraic_data_type) and typestate pattern, and other similar techniques, you can achieve an architecture where it's hard, or even impossible, to end up in illegal states, thus improving security and robustness of your application dramatically (at a cost of extra boilerplate code).
+
+
+## Guarding vs Validating
+
+Validation happens at the application boundary (e.g., DTOs) to filter out incorrect external input before it reaches the domain.  
+
+Guarding happens inside the domain layer to enforce invariants and ensure the domain model remains always valid.  
+
+Validation is about filtration: rejecting bad input with error messages, nothing exceptional.  
+
+Guarding is about failsafe protection: violations here indicate bugs and must throw exceptions.  
+
+Once data passes validation, it is assumed valid inside the domain. Any violation inside the domain means that you’ve introduced a bug.
+
+Guards reveal bugs early and follow the [Fail Fast principle](https://enterprisecraftsmanship.com/posts/fail-fast-principle) by immediately throwing runtime exceptions.  
+
+Domain classes must always guard themselves against becoming invalid.
+
+
 ## Domain Errors
+
+Application's core and domain layers shouldn't throw HTTP exceptions since it shouldn't know in what context it's used, since it can be used by anything: HTTP controller, Microservice event handler, Command Line Interface etc.
+
+A better approach is to create custom error classes with appropriate error codes.
+
+Exceptions are for exceptional situations. Complex domains usually have a lot of errors that are not exceptional, but a part of a business logic (like "seat already booked, choose another one"). Those errors may need special handling. In those cases returning explicit error types can be a better approach than throwing.
+
+Returning an error instead of throwing explicitly shows a type of each exception that a method can return so you can handle it accordingly. It can make an error handling and tracing easier.
