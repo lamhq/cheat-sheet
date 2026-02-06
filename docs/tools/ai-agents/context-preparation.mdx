@@ -1,0 +1,127 @@
+# Context preparation
+
+To make AI agents generate accurate code, you need to prepare the following documents as context for the AI agents:
+
+## 1. Project Overview
+- An overview of the project, including its goals, scope, and timeline  
+- A detailed description of the application's purpose, target audience, and key features  
+
+```md
+# Project Overview
+
+## 1. Purpose  
+*(Briefly explain why the application exists and what problem it solves.)*
+
+## 2. Goals  
+- *(List the main objectives of the project, e.g., improve customer experience, streamline workflows.)*  
+- *(Include any secondary goals if relevant.)*
+
+## 3. Scope & Timeline  
+- **Scope**: *(What’s included in this project, what’s not.)*  
+- **Timeline**: *(Key phases or milestones, e.g., launch date, major deliverables.)*
+
+## 4. Target Audience  
+- *(Describe who will use the application — roles, demographics, or customer segments.)*  
+- *(Include main use cases or scenarios.)*
+
+## 5. Key Features  
+- *(List the most important features with short descriptions.)*  
+- *(Highlight must-have vs. nice-to-have features.)*
+
+## 6. Business Rules & Constraints  
+- *(Document any rules the system must follow, e.g., “Users must be 18+ to register.”)*  
+- *(Include compliance or policy constraints, e.g., GDPR, company policies.)*
+```
+
+## 2. System Architecture & Design
+- Information about the technologies, frameworks, libraries, and tools used in the project  
+- Codebase architecture including modules, components, and their interactions  
+- Design patterns / coding recipes with example code snippets  
+- Technical documents such as API documentation, database schema, and deployment processes  
+
+```md
+# System Architecture & Design
+
+## 1. Overview  
+*(Provide a high-level description of the system’s structure and purpose. Include a diagram if possible.)*  
+
+- **System type**: *(e.g., web application, mobile app, microservices platform)*  
+- **Key components**: *(List the major subsystems or services.)*  
+- **Interaction summary**: *(How components communicate, e.g., REST APIs, message queues.)*  
+
+## 2. Tech Stack  
+- **Languages**: *(e.g., Python, JavaScript, Go)*  
+- **Frameworks**: *(e.g., React, Django, Spring Boot)*  
+- **Libraries**: *(e.g., Redux, NumPy, Lodash)*  
+- **Tools**: *(e.g., Docker, Kubernetes, GitHub Actions)*  
+- **Databases**: *(e.g., PostgreSQL, MongoDB)*  
+- **Cloud/Infrastructure**: *(e.g., AWS, Azure, GCP)*  
+
+## 3. Architecture Documentation  
+- **System Diagram**: *(Include or reference diagrams showing components and their relationships.)*  
+- **Modules & Components**:  
+  - *(List each module, its responsibilities, and dependencies.)*  
+- **Data Flow**:  
+  - *(Describe how data moves through the system — from input to storage to output.)*  
+- **Integration Points**:  
+  - *(External APIs, services, or third-party tools the system interacts with.)*  
+
+## 4. Codebase Architecture  
+- **Directory Structure**: *(Explain how the codebase is organized.)*  
+- **Core Components**: *(Highlight key classes, services, or modules.)*  
+- **Interactions**: *(Describe how components call or depend on each other.)*  
+
+## 5. Design Patterns / Coding Recipes 
+- **Patterns Used**: *(e.g., MVC, Repository, Singleton, Observer.)*  
+- **Examples**: *(Provide short code snippets or pseudocode showing how patterns are applied.)*  
+- **Rationale**: *(Why these patterns were chosen — scalability, maintainability, readability.)*  
+```
+
+
+## 3. Development Guidelines
+- Coding standards / best practices to be followed  
+- Version Control & Branching Strategy
+
+
+## 4. Business Requirements
+- Include functional requirements and user stories
+- Any specific business rules or constraints that need to be followed
+- Documents must be organized in separated domains / modules
+
+```md
+# 4. Business Requirements
+
+## 4.1 Domain / Module: [Module Name]  
+*(e.g., User Management, Payments, Reporting)*  
+
+### Functional Requirements  
+- **FR-1**: *(Describe the function clearly, e.g., “System must allow users to register with email and password.”)*  
+- **FR-2**: *(“System must validate email format before submission.”)*  
+
+### User Stories  
+- **US-1**: *As a [user role], I want [feature] so that [benefit].*  
+- **US-2**: *As an [admin], I want to [action] so that [outcome].*  
+
+### Business Rules & Constraints  
+- **Rule-1**: *(e.g., “A user must be at least 18 years old to register.”)*  
+- **Rule-2**: *(e.g., “Payment transactions must be processed within 30 seconds.”)*  
+- **Constraint-1**: *(e.g., “System must comply with GDPR data retention policies.”)*  
+
+## 4.2 Domain / Module: [Module Name]  
+*(Repeat the same structure for each domain/module.)*  
+
+### Functional Requirements  
+- **FR-1**: …  
+- **FR-2**: …  
+
+### User Stories  
+- **US-1**: …  
+- **US-2**: …  
+
+### Business Rules & Constraints  
+- **Rule-1**: …  
+- **Constraint-1**: …  
+
+## 4.n Additional Modules  
+*(Add more domains/modules as needed, following the same format.)*
+```
