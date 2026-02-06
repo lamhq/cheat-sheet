@@ -1,5 +1,7 @@
 # Prompt files
 
+## Introduction
+
 Prompt files are reusable prompts (in Markdown files) you define for common and repeatable development tasks.
 
 They can be run directly in chat and include task-specific guidelines or reference custom instructions to ensure consistent execution.
@@ -19,7 +21,7 @@ You can define prompts for:
 - **Generating documentation**: implementation plans, architectural designs, or migration strategies
 
 
-## Create a prompt file
+## Creating prompt file
 
 ![](https://code.visualstudio.com/assets/docs/copilot/customization/configure-chat-instructions.png)
 
@@ -68,7 +70,7 @@ You can reference:
   - `${input:variableName}`, `${input:variableName:placeholder}` (pass values to the prompt from the chat input field)
 
 
-## Use a prompt file in chat
+## Using prompt files
 
 You have multiple options to run a prompt file:
 
@@ -79,11 +81,6 @@ You have multiple options to run a prompt file:
 2. Run the `Chat: Run Prompt` command from the **Command Palette** and select a prompt file from the **Quick Pick**.
 
 3. Open the prompt file in the editor, and press the play button in the title area. You can choose to run the prompt in the current chat session or open a new chat session.
-
-
-## Sync user prompt files
-
-VS Code can sync your user prompt files across multiple devices by using [Settings Sync](https://code.visualstudio.com/docs/copilot/customization/prompt-files#_sync-user-prompt-files-across-devices).
 
 
 ## Prompt files Tips
@@ -140,6 +137,11 @@ Perform a REST API security review and provide a TODO list of security issues to
 
 Return the TODO list in a Markdown format, grouped by priority and issue type.
 ```
+
+
+## Sync prompt files
+
+VS Code can sync your user prompt files across multiple devices by using [Settings Sync](https://code.visualstudio.com/docs/copilot/customization/prompt-files#_sync-user-prompt-files-across-devices).
 
 
 ## Reference
