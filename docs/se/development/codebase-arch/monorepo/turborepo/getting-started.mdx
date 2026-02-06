@@ -2,14 +2,14 @@ import { PackageManagerTabs } from '@theme';
 
 # Getting Started
 
-## Install Turborepo
+## Installation
 
 Install turbo globally to quickly scaffold new project anywhere:
 
 <PackageManagerTabs command="install turbo --global" />
 
 
-## Creating new workspace
+## Creating project
 
 Create a full-stack NestJS + Next.js monorepo:
 
@@ -17,7 +17,7 @@ Create a full-stack NestJS + Next.js monorepo:
 npx create-turbo@latest -e with-nestjs
 ```
 
-Useful links:
+Useful templates:
 - [Vite React Example](https://github.com/vercel/turborepo/tree/main/examples/with-vite-react)
 - [Next.js Examples](https://github.com/vercel/turborepo/tree/main/examples/with-nextjs)
 - [All Turborepo Examples](https://github.com/vercel/turborepo/tree/main/examples)
@@ -34,6 +34,31 @@ Useful links:
 7. Enabling Remote Caching in [CI](https://turborepo.com/docs/crafting-your-repository/constructing-ci)
 
 View the detailed instructions [here](https://turborepo.com/docs/getting-started/add-to-existing-repository).
+
+
+## Adding applications
+
+### NestJS
+
+1. Create a new NestJS application using the Nest CLI:
+    ```bash
+    npx @nestjs/cli new nestjs-app --package-manager pnpm --language ts --strict
+    ```
+2. Move the generated NestJS app into the `apps` directory of your TurboRepo monorepo.
+3. Install the `typescript-config` package to the NestJS app:
+   ```bash
+   pnpm add @your-monorepo/typescript-config -D --filter=nestjs-app
+   ```
+4. Update the `tsconfig.json` of the NestJS app to extend the shared TypeScript configuration:
+    ```json
+    {
+      "extends": "@repo/typescript-config/nestjs.json",
+      "compilerOptions": {
+        "outDir": "./dist",
+      }
+    }
+    ```
+5. Update `package.json` script names of the NestJS app to match with the root `package.json` scripts to when running commands from the project root will cascade to all apps and packages.
 
 
 ## Exploring the workspace

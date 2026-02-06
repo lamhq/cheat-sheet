@@ -1,0 +1,151 @@
+# Multiplayer
+
+This guide focuses on Remote master model:
+- The game master is run on a separate server, which computes the next game state before broadcasting it to other clients.
+- Client sends updates to the remote master via a WebSocket whenever a move is made. No optimistic updates performed in the client.
+
+
+## Client Implementation
+
+In order to connect a client to a remote master, we use the multiplayer option and specify the location of the server:
+
+```tsx
+import { SocketIO } from 'boardgame.io/multiplayer'
+
+const TicTacToeClient = Client({
+  game: TicTacToe,
+  board: TicTacToeBoard,
+  multiplayer: SocketIO({ server: 'localhost:8000' }),
+});
+```
+
+Then render the game client for a specific player by passing in the `playerID` prop:
+
+```tsx
+<TicTacToeClient playerID="0" />
+```
+
+
+## Server Implementation
+
+We import a Server module provided by `boardgame.io` and configure it with our TicTacToe game object and a list of URL origins we want to allow to connect to the server.
+
+```ts title="src/server.js"
+const { Server, Origins } = require('boardgame.io/server');
+const { TicTacToe } = require('./Game');
+
+const server = Server({
+  games: [TicTacToe],
+  origins: [Origins.LOCALHOST],
+});
+
+server.run(8000);
+```
+
+Then we start the server by running:
+
+```bash
+node src/server.js
+```
+
+
+## Multiple Game Types
+
+You can serve multiple types of games from the same server:
+
+```ts
+const app = Server({ games: [TicTacToe, Chess] });
+```
+
+Make sure that each game configuration has a name:
+
+```ts
+const TicTacToe = {
+  name: 'tic-tac-toe',
+  // ...
+};
+```
+
+
+## Game Instances (Matches)
+
+To have multiple matches of the same game, pass `matchID` to your client:
+
+```tsx
+<TicTacToeClient matchID="match-id"/>
+```
+
+
+## Secret State
+
+In some games you might need to hide information from players or spectators.
+
+*For example, you might not want to reveal the hands of opponents in card games*.
+
+To do this, use the `playerView` setting in the game object. It accepts a function that receives an object containing `G`, `ctx`, and `playerID` (for current player), and returns a stripped version of `G` that doesn't contain any information that should be hidden from that player.
+
+```ts
+const game = {
+  // `playerID` could also be null or undefined for spectators.
+  playerView: ({ G, ctx, playerID }) => {
+    return StripSecrets(G, playerID);
+  },
+  // ...
+};
+```
+
+### Default Implementation
+
+The framework provide a `PlayerView.STRIP_SECRETS` function that does the following:
+- It removes a key named `secret` from `G`
+- If `G` contains a players object, it removes all keys except for the one that matches `playerID`
+
+```ts
+import { PlayerView } from 'boardgame.io/core';
+
+const game = {
+  // ...
+  playerView: PlayerView.STRIP_SECRETS,
+};
+```
+
+For example, given the following `G`:
+```js
+G: {
+  secret: { ... },
+
+  players: {
+    '0': { ... },
+    '1': { ... },
+    '2': { ... },
+  }
+}
+```
+
+It becomes the following for player `1`:
+
+```js
+G: {
+  players: {
+    '1': { ... },
+  }
+}
+```
+
+### Disabling moves on the client
+
+Moves that manipulate secret state often cannot run on the client because the client doesn’t have all the necessary data to process such moves. 
+
+These can be marked as server-only by setting `client: false` on move:
+
+```js
+moves: {
+  moveThatUsesSecret: {
+    move: ({ G, random }) => {
+      G.secret.value = random.Number();
+    },
+
+    client: false,
+  }
+}
+```
