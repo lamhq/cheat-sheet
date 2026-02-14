@@ -1,19 +1,18 @@
 # Multiplayer
 
-This guide focuses on Remote master model:
-- The game master is run on a separate server, which computes the next game state before broadcasting it to other clients.
-- Client sends updates to the remote master via a WebSocket whenever a move is made. No optimistic updates performed in the client.
+## Client
 
+A boardgame.io client is what you create using the `Client` call. You initialize it with your game object.
 
-## Client Implementation
+In a multiplayer setup, clients delegate the running of the game to a game master. Clients emit moves / events, but the game logic runs on the master.
 
-In order to connect a client to a remote master, we use the multiplayer option and specify the location of the server:
+To connect a client to a remote master, we use the multiplayer option and specify the location of the server:
 
 ```tsx
 import { SocketIO } from 'boardgame.io/multiplayer'
 
 const TicTacToeClient = Client({
-  game: TicTacToe,
+  game: TicTacToeGame,
   board: TicTacToeBoard,
   multiplayer: SocketIO({ server: 'localhost:8000' }),
 });
@@ -26,16 +25,20 @@ Then render the game client for a specific player by passing in the `playerID` p
 ```
 
 
-## Server Implementation
+## Master
 
-We import a Server module provided by `boardgame.io` and configure it with our TicTacToe game object and a list of URL origins we want to allow to connect to the server.
+The master subscribes to moves / events and computes the next game state before broadcasting it to other clients.
 
-```ts title="src/server.js"
-const { Server, Origins } = require('boardgame.io/server');
-const { TicTacToe } = require('./Game');
+To create a remote master, we use the `Server` class provided by `boardgame.io/server` module and configure it with:
+- The game object
+- List of URL origins we want to allow to connect to the server
+
+```ts title="src/server.ts"
+import { Server, Origins } from 'boardgame.io/server';
+import { TicTacToeGame } from './games/tic-tac-toe';
 
 const server = Server({
-  games: [TicTacToe],
+  games: [TicTacToeGame],
   origins: [Origins.LOCALHOST],
 });
 
@@ -45,7 +48,7 @@ server.run(8000);
 Then we start the server by running:
 
 ```bash
-node src/server.js
+ts-node src/server.ts
 ```
 
 
@@ -54,13 +57,13 @@ node src/server.js
 You can serve multiple types of games from the same server:
 
 ```ts
-const app = Server({ games: [TicTacToe, Chess] });
+const app = Server({ games: [TicTacToeGame, Chess] });
 ```
 
 Make sure that each game configuration has a name:
 
 ```ts
-const TicTacToe = {
+const TicTacToeGame = {
   name: 'tic-tac-toe',
   // ...
 };
@@ -85,7 +88,7 @@ In some games you might need to hide information from players or spectators.
 To do this, use the `playerView` setting in the game object. It accepts a function that receives an object containing `G`, `ctx`, and `playerID` (for current player), and returns a stripped version of `G` that doesn't contain any information that should be hidden from that player.
 
 ```ts
-const game = {
+const TicTacToeGame = {
   // `playerID` could also be null or undefined for spectators.
   playerView: ({ G, ctx, playerID }) => {
     return StripSecrets(G, playerID);
@@ -94,7 +97,7 @@ const game = {
 };
 ```
 
-### Default Implementation
+### Framework Default Behavior
 
 The framework provide a `PlayerView.STRIP_SECRETS` function that does the following:
 - It removes a key named `secret` from `G`
@@ -103,7 +106,7 @@ The framework provide a `PlayerView.STRIP_SECRETS` function that does the follow
 ```ts
 import { PlayerView } from 'boardgame.io/core';
 
-const game = {
+const TicTacToeGame = {
   // ...
   playerView: PlayerView.STRIP_SECRETS,
 };
@@ -134,11 +137,11 @@ G: {
 
 ### Disabling moves on the client
 
-Moves that manipulate secret state often cannot run on the client because the client doesn’t have all the necessary data to process such moves. 
+Moves that manipulate secret state often cannot run on the client because the client doesn't have all the necessary data to process such moves. 
 
 These can be marked as server-only by setting `client: false` on move:
 
-```js
+```ts
 moves: {
   moveThatUsesSecret: {
     move: ({ G, random }) => {

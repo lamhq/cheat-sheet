@@ -3,22 +3,27 @@
 Create a simple Tic-Tac-Toe game with React (TypeScript) and Boardgame.io.
 
 
-## Defining a Game
+## Defining a Game object
 
-```ts tile="src/Game.ts"
+```ts title="src/games/tic-tac-toe.ts"
 import type { Game } from "boardgame.io";
 
-export interface MyGameState {
-  // aka 'G', your game's state
+// Define the game state shape
+export interface GameState {
+  cells: (string | null)[];
 }
 
-export const GameConfig: Game<MyGameState> = {
+// Define the game moves
+const clickCell: Move<GameState> = ({ G, playerID }, id) => {
+  G.cells[id] = playerID;
+};
+
+// Define the game configuration
+export const TicTacToeGame: Game<GameState> = {
   setup: () => ({ cells: Array(9).fill(null) }),
 
   moves: {
-    clickCell: ({ G, playerID }, id) => {
-      G.cells[id] = playerID;
-    },
+    clickCell,
   },
 };
 ```
@@ -32,9 +37,9 @@ export const GameConfig: Game<MyGameState> = {
 
 ```js title="src/App.js"
 import { Client } from 'boardgame.io/react';
-import { TicTacToe } from './Game';
+import { TicTacToeGame } from './games/tic-tac-toe';
 
-const App = Client({ game: TicTacToe });
+const App = Client({ game: TicTacToeGame });
 
 export default App;
 ```
@@ -51,21 +56,23 @@ To prevent players from clicking on already occupied cells, we can add validatio
 ```js
 import { INVALID_MOVE } from 'boardgame.io/core';
 
-clickCell: ({ G, playerID }, id) => {
+const clickCell: Move<GameState> = ({ G, playerID }, id) => {
   if (G.cells[id] !== null) {
     return INVALID_MOVE;
   }
   G.cells[id] = playerID;
-}
+};
 ```
 
 
 ## Controlling Turns
 
+### Max moves
+
 Automatically end a player’s turn after a single move has been made using `maxMoves`:
 
 ```js
-export const GameConfig = {
+export const TicTacToeGame = {
   setup: () => { /* ... */ },
 
   moves: { /* ... */ },
@@ -76,10 +83,12 @@ export const GameConfig = {
 };
 ```
 
+### Min moves
+
 Require players to make a move before ending their turn using `minMoves`:
 
 ```js
-export const GameConfig = {
+export const TicTacToeGame = {
   setup: () => { /* ... */ },
 
   moves: { /* ... */ },
@@ -120,7 +129,7 @@ function IsDraw(cells) {
 Then, add an `endIf` method to the game. This method will be called each time state is updated to check if the game is over:
 
 ```js
-export const GameConfig = {
+export const TicTacToeGame = {
   setup: () => { /* ... */ },
 
   moves: { /* ... */ },
@@ -144,13 +153,13 @@ Render the game state `G` into actual cells that are clickable by creating a Rea
 ```tsx title="src/Board.tsx" {3}
 import React from 'react';
 import type { BoardProps } from 'boardgame.io/react';
-import type { MyGameState } from './Game.ts'
+import type { GameState } from './games/tic-tac-toe.ts'
 
-interface MyGameProps extends BoardProps<MyGameState> {
+interface TicTacToeBoardProps extends BoardProps<GameState> {
   // Additional custom properties for your component
 }
 
-export function MyGameBoard({ ctx, G, moves }: MyGameProps) {
+export function TicTacToeBoard({ ctx, G, moves }: TicTacToeBoardProps) {
   const onClick = (id) => moves.clickCell(id);
 
   let winner;
@@ -208,7 +217,7 @@ A bot works by looking at all allowed moves and finding moves that tend to produ
 To do this, add an `ai` section to the game definition with an `enumerate` function that returns an array of possible moves (in this case it returns a `clickCell` move for every empty cell):
 
 ```js
-export const GameConfig = {
+export const TicTacToeGame = {
   setup: () => { /* ... */ },
 
   moves: { /* ... */ },
