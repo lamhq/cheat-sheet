@@ -1,0 +1,67 @@
+# Domain-Driven Hexagon
+
+## Pros & Cons
+
+Pros:
+- Independent of external frameworks, technologies, databases, etc. Frameworks and external resources can be plugged/unplugged with much less effort.
+- Testable.
+- Secure. Some security principles are baked into the design itself.
+- Clear separation of concerns. Different teams can contribute and maintain together without stepping on each other's toes.
+- Scalable. Easier to add new features. The difficulty of adding new features remains constant and relatively small.
+
+Cons:
+- Sophisticated architecture. Requires an expert to drive the solution and prevent it from evolving in the wrong way and accumulating technical debt.
+- Added up-front complexity to support all those building blocks and layers, boilerplate code, abstractions, data mapping, etc. Not recommended for small/medium-sized applications with limited business logic.
+
+
+## Data Flow
+
+![](https://github.com/Sairyss/domain-driven-hexagon/blob/master/assets/images/DomainDrivenHexagon.png?raw=true)
+
+Data flow (from left to right in the diagram):
+1. **Request/CLI command/event** is sent to the controller using a plain **DTO**.
+2. **Controller** parses this DTO, maps it to a **Command/Query object** format, and passes it to an Application service.
+3. **Application service** handles this Command/Query, executes business logic using **domain services** and **entities/aggregates**, and uses the infrastructure layer through ports (interfaces).
+4. **Infrastructure layer**:
+   - Maps data to the required format.
+   - Retrieves/persists data from/to a database.
+   - Uses **adapters** for other I/O communications (e.g., sending an event to an external broker or calling external APIs).
+   - Maps data back to the domain format and returns it to the Application service.
+5. After the Application service finishes its job, it returns data/confirmation back to **Controllers**.
+6. **Controllers** return data back to the user (if the application has presenters/views, those are returned instead).
+
+Each layer is responsible for its own logic and follows the Single Responsibility Principle.
+
+Different projects can have more or fewer steps/layers/building blocks.
+
+## Modules
+
+The codebase uses the principle of separation by modules to ensure loose coupling:
+- Refactoring of a module's internals can be done more easily because the outside world only depends on the module's public interface.
+- Each module can be easily separated into a microservice if needed, without touching any domain logic or requiring major refactoring (if bounded contexts are designed properly).
+
+Each module should reflect an important concept from the Domain and have its own folder as a dedicated codebase.
+
+Each module contains business use cases, each in its own folder.
+
+Think of a module as a "box" that groups together related business logic, or a mini-application bounded by a single context.
+
+Keep your modules small. It should be possible to rewrite a module in a relatively short period of time.
+
+A few pieces of advice to avoid coupling:
+- Every module should be independent, and interactions between modules should be kept minimal.
+- Try not to create dependencies between modules or use cases. Instead, move shared logic into separate files and make both depend on that, rather than on each other.
+- Avoid directly importing a module's internal components, as this creates tight coupling and can turn your code into [spaghetti](https://en.wikipedia.org/wiki/Spaghetti_code) and your application into a [big ball of mud](https://en.wikipedia.org/wiki/Big_ball_of_mud).
+- Modules can cooperate through a [mediator](https://en.wikipedia.org/wiki/Mediator_pattern#:~:text=In%20software%20engineering%2C%20the%20mediator,often%20consist%20of%20many%20classes.) or a public [facade](https://en.wikipedia.org/wiki/Facade_pattern), hiding all private internals of the module to avoid misuse, and giving public access only to certain functionality meant to be public.
+- Modules can communicate with each other by using messages. *For example, you can send commands using a command bus or subscribe to events that other modules emit.*
+
+Each module consists of layers:
+- Application Layer
+- Domain Layer
+- Interface Adapters
+- Infrastructure Layer
+
+
+## References
+
+- [Sairyss / domain-driven-hexagon](https://github.com/Sairyss/domain-driven-hexagon)

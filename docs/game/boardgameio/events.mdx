@@ -1,0 +1,53 @@
+# Events
+
+## Introduction
+
+Events are similar to moves, except that while a move changes `G` (game state), an event changes `ctx`.
+
+Events are provided by the framework.
+
+
+## Triggering an event
+
+### From moves
+
+```ts
+moves: {
+  drawCard: ({ G, ctx, events }) => {
+    events.endPhase();
+  };
+}
+```
+
+### From client
+
+```ts
+import React from 'react';
+
+function Board({ events }) {
+  const onClick = () => {
+    events.endTurn();
+  };
+
+  return <button onClick={onClick}>End Turn</button>;
+}
+```
+
+### From hooks
+
+The events API is available in game hooks like it is inside moves. Howerver, certain [events cannot be called from certain hooks](https://boardgame.io/documentation/#/events?id=calling-events-from-hooks).
+
+
+## Disabling events
+
+```ts
+const game = {
+  events: {
+    endGame: false,
+    // ...
+  },
+};
+```
+
+> [!CAUTION]
+> This doesn't apply to events in moves or hooks, but just the ability to call an event directly from a client.

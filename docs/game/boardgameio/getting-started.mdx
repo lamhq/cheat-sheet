@@ -1,0 +1,248 @@
+# Getting Started
+
+Create a simple Tic-Tac-Toe game with React (TypeScript) and Boardgame.io.
+
+
+## Defining a Game object
+
+```ts title="src/games/tic-tac-toe.ts"
+import type { Game } from "boardgame.io";
+
+// Define the game state shape
+export interface GameState {
+  cells: (string | null)[];
+}
+
+// Define the game moves
+const clickCell: Move<GameState> = ({ G, ctx, playerID }, id) => {
+  G.cells[id] = playerID;
+};
+
+// Define the game configuration
+export const TicTacToeGame: Game<GameState> = {
+  setup: () => ({ cells: Array(9).fill(null) }),
+
+  moves: {
+    clickCell,
+  },
+};
+```
+
+- `setup`: set the initial value of the game state `G`, and a `moves` object containing the moves that make up the game.
+- `moves`: object containing the game moves.
+- `clickCell`: it take the ID of the cell that was clicked and update that cell with the ID of the player who clicked it.
+
+
+## Creating a Client
+
+```js title="src/App.js"
+import { Client } from 'boardgame.io/react';
+import { TicTacToeGame } from './games/tic-tac-toe';
+
+const App = Client({ game: TicTacToeGame });
+
+export default App;
+```
+
+With no UI built yet, boardgame.io renders a Debug Panel. This panel allows you to simulate moves and see the game state change in real-time.
+- You can make a move by clicking on `clickCell` on the Debug Panel, entering a number between `0` and `8` and pressing **Enter**
+- You can end the turn by clicking `endTurn` and pressing **Enter**.
+
+
+## Validating Moves
+
+To prevent players from clicking on already occupied cells, we can add validation logic to the `clickCell` move.
+
+```js
+import { INVALID_MOVE } from 'boardgame.io/core';
+
+const clickCell: Move<GameState> = ({ G, playerID }, id) => {
+  if (G.cells[id] !== null) {
+    return INVALID_MOVE;
+  }
+  G.cells[id] = playerID;
+};
+```
+
+
+## Controlling Turns
+
+### Max moves
+
+Automatically end a player’s turn after a single move has been made using `maxMoves`:
+
+```js
+export const TicTacToeGame = {
+  setup: () => { /* ... */ },
+
+  moves: { /* ... */ },
+
+  turn: {
+    maxMoves: 1,
+  },
+};
+```
+
+### Min moves
+
+Require players to make a move before ending their turn using `minMoves`:
+
+```js
+export const TicTacToeGame = {
+  setup: () => { /* ... */ },
+
+  moves: { /* ... */ },
+
+  turn: {
+    minMoves: 1,
+  },
+};
+```
+
+
+## Victory Condition
+
+First declare two helper functions to check for a win or a draw:
+
+```js
+// Return true if `cells` is in a winning configuration.
+function IsVictory(cells) {
+  const positions = [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6],
+    [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]
+  ];
+
+  const isRowComplete = row => {
+    const symbols = row.map(i => cells[i]);
+    return symbols.every(i => i !== null && i === symbols[0]);
+  };
+
+  return positions.map(isRowComplete).some(i => i === true);
+}
+
+// Return true if all `cells` are occupied.
+function IsDraw(cells) {
+  return cells.filter(c => c === null).length === 0;
+}
+```
+
+Then, add an `endIf` method to the game. This method will be called each time state is updated to check if the game is over:
+
+```js
+export const TicTacToeGame = {
+  setup: () => { /* ... */ },
+
+  moves: { /* ... */ },
+
+  endIf: ({ G, ctx }) => {
+    if (IsVictory(G.cells)) {
+      return { winner: ctx.currentPlayer };
+    }
+    if (IsDraw(G.cells)) {
+      return { draw: true };
+    }
+  },
+};
+```
+
+
+## Rendering Game Board
+
+Render the game state `G` into actual cells that are clickable by creating a React component with required props:
+
+```tsx title="src/Board.tsx" {3}
+import React from 'react';
+import type { BoardProps } from 'boardgame.io/react';
+import type { GameState } from './games/tic-tac-toe.ts'
+
+interface TicTacToeBoardProps extends BoardProps<GameState> {
+  // Additional custom properties for your component
+}
+
+export function TicTacToeBoard({ ctx, G, moves }: TicTacToeBoardProps) {
+  const onClick = (id) => moves.clickCell(id);
+
+  let winner;
+  if (ctx.gameover) {
+    winner =
+      ctx.gameover.winner !== undefined ? (
+        <div id="winner">Winner: {ctx.gameover.winner}</div>
+      ) : (
+        <div id="winner">Draw!</div>
+      );
+  }
+
+  const cellStyle = {
+    border: '1px solid #555',
+    width: '50px',
+    height: '50px',
+    lineHeight: '50px',
+    textAlign: 'center',
+  };
+
+  let tbody = [];
+  for (let i = 0; i < 3; i++) {
+    let cells = [];
+    for (let j = 0; j < 3; j++) {
+      const id = 3 * i + j;
+      cells.push(
+        <td key={id}>
+          {G.cells[id] ? (
+            <div style={cellStyle}>{G.cells[id]}</div>
+          ) : (
+            <button style={cellStyle} onClick={() => onClick(id)} />
+          )}
+        </td>
+      );
+    }
+    tbody.push(<tr key={i}>{cells}</tr>);
+  }
+
+  return (
+    <div>
+      <table id="board">
+        <tbody>{tbody}</tbody>
+      </table>
+      {winner}
+    </div>
+  );
+}
+```
+
+
+## Creating Bots
+
+A bot works by looking at all allowed moves and finding moves that tend to produce winning results.
+
+To do this, add an `ai` section to the game definition with an `enumerate` function that returns an array of possible moves (in this case it returns a `clickCell` move for every empty cell):
+
+```js
+export const TicTacToeGame = {
+  setup: () => { /* ... */ },
+
+  moves: { /* ... */ },
+
+  ai: {
+    enumerate: (G, ctx) => {
+      let moves = [];
+      for (let i = 0; i < 9; i++) {
+        if (G.cells[i] === null) {
+          moves.push({ move: 'clickCell', args: [i] });
+        }
+      }
+      return moves;
+    },
+  },
+};
+```
+
+The framework will take care of selecting and executing one of these moves for you.
+
+You can open the AI section of the Debug Panel to test:
+- `play` causes the bot to calculate and make a single move (shortcut: `2`)
+- `simulate` causes the bot to play the entire game by itself (shortcut: `3`)
+
+
+## References
+
+https://boardgame.io/documentation/#/tutorial

@@ -6,5 +6,10 @@
     "collapsed": true
   },
   "layered",
-  "modular"
+  "modular",
+  {
+    "name": "domain-driven-hexagon",
+    "type": "dir",
+    "collapsed": true
+  }
 ]

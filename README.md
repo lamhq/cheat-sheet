@@ -32,19 +32,27 @@ pnpm install
 
 ## Running the Project
 
-Start the development server:
+### Using command line
+
+Start the dev server:
 
 ```bash
 npm run dev
 ```
 
-Then open http://localhost:5002
+Then open http://localhost:5007
 
-**Use VS Code launch config**:
+Since starting the whole project take a bit of time, you can also start only the part you want to work on. For example, to start only the game cheatsheet:
 
-A launch config is available in `.vscode/launch.json`.
+```bash
+npm run dev:game
+```
 
-You can start it from the Run and Debug panel to run `npm run dev` in the integrated terminal.
+## Using GitHub Copilot
+
+1. Open the documentation file you want to view in Visual Studio Code
+2. In the Chat view, enter custom prompt: `/preview-view`
+3. It will start the dev server for you and provide a link to view the documentation in your browser.
 
 
 ## Deployment

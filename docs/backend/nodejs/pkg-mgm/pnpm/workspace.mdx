@@ -66,26 +66,23 @@ packages:
 
 ## Creating Workspace
 
-To quickly scaffold a workspace, use a monorepo solution like Turborepo or Nx. Configure them to use PNPM as the package manager.
+To quickly scaffold a workspace, use a monorepo solution like **Turborepo** or **Nx**. Configure them to use PNPM as the package manager.
 
 
 ## Install dependencies
 
-Install dependencies in multiple packages:
+Install a npm package to a repo in the workspace:
 
 ```sh
-pnpm add jest --save-dev --recursive --filter=web --filter=@repo/ui --filter=docs
+pnpm add jest -D -F @apps/web
 ```
 - `--recursive` run command in every project of a workspace
-- `--filter` run command in specific projects
+- `-F` (or `--filter`) run command in specific projects
 
-
-## Linking internal packages
-
-To link a package in the workspace, in the consumer package, run:
+Install an internal package to a repo in the same workspace:
 
 ```sh
-pnpm add @your-org/utils --workspace
+pnpm add @libs/utils -F @apps/web --workspace
 ```
 
 This adds a reference to the consumer's `package.json`:
@@ -110,7 +107,7 @@ You can also specify the exact versions of the dependencies:
 To run a script of a specific package:
 
 ```bash
-pnpm --filter <package-name> run <script-name>
+pnpm -F <package-name> run <script-name>
 ```
 
 > [!INFO]
@@ -118,7 +115,7 @@ pnpm --filter <package-name> run <script-name>
 
 This runs the `build` script defined in `apps/web-app/package.json`:
 ```bash
-pnpm --filter web-app run build
+pnpm -F web-app run build
 ```
 
 To run a script across **all packages** in the workspace:
@@ -129,15 +126,15 @@ pnpm -r run <script-name>
 
 Run in all packages under `apps/`:
 ```bash
-pnpm --filter 'apps/**' run dev
+pnpm -F 'apps/**' run dev
 ```
 
 Run in packages that depend on `utils`:
 ```bash
-pnpm --filter '...utils' run build
+pnpm -F '...utils' run build
 ```
 
 Use `pnpm exec` to run binaries from dependencies:
 ```bash
-pnpm --filter web-app exec jest
+pnpm -F web-app exec jest
 ```
