@@ -3,5 +3,9 @@
   "multiplayer",
   "debug",
   "testing",
-  "randomness"
+  "randomness",
+  "turn-order",
+  "phases",
+  "stages",
+  "events"
 ]

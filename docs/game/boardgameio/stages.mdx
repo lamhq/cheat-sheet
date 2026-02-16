@@ -1,0 +1,62 @@
+# Stages
+
+## Introduction
+
+Stages are a way to break down a turn into smaller parts. They are useful for games that have multiple actions per turn, or for games that have different phases within a turn.
+
+An example use case is to allow more than one player to play during a turn. *For example, the current player might play a card that requires every other player in the game to discard a card*.
+
+
+## Defining Stages
+
+```ts
+const game = {
+  moves: { ... },
+
+  turn: {
+    stages: {
+      discard: {
+        moves: { DiscardCard },
+      },
+    },
+  },
+};
+```
+
+The example above defines a stage called `discard` that has a move called `DiscardCard`. Players enter this stage when they are required to discard a card (players are not allowed to make any moves from the global `moves` section while they are in that stage).
+
+If a stage does not contain a `moves` section, then players can make moves from the global `moves`.
+
+
+## Entering Stages
+
+A stage can be entered by calling the `setStage` event. This takes the player that called the event into the specified stage:
+
+```ts
+setStage('discard');
+```
+
+
+## Exiting Stages
+
+Calling the `endStage` event removes the player from the stage that they are currently in and returns them to a state where they aren’t in any stage.
+
+```ts
+endStage();
+```
+
+To take a player to a specific stage when `endStage` is called, specify a `next` option in the stage config.
+
+The below example will cycle between the three stages:
+
+```ts
+stages: {
+  A: { next: 'B' },
+  B: { next: 'C' },
+  C: { next: 'A' },
+}
+```
+
+## Moving multiple players into a stage
+
+To move a group of players into a stage (instead of just the player that called the event), use the [`setActivePlayers`](https://boardgame.io/documentation/#/stages?id=advanced) event.

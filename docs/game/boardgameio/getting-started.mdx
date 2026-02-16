@@ -14,7 +14,7 @@ export interface GameState {
 }
 
 // Define the game moves
-const clickCell: Move<GameState> = ({ G, playerID }, id) => {
+const clickCell: Move<GameState> = ({ G, ctx, playerID }, id) => {
   G.cells[id] = playerID;
 };
 

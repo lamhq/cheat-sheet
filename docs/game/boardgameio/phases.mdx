@@ -1,0 +1,111 @@
+# Phases
+
+## Introduction
+
+A game might have a phase at the beginning where players are drafting cards before entering a playing phase, for example.
+
+A phase in boardgame.io defines a set of game configuration options (moves, turn order, etc.) that are applied for the duration of that phase.
+
+
+## Defining phases
+
+Let's say we want the game to work in two phases:
+
+- a first phase where the players only draw cards (until the deck is empty).
+- a second phase where the players only play cards.
+
+In order to do this, we define two phases. Each phase can specify its own list of moves, which come into effect during that phase:
+
+```ts title="src/games/tic-tac-toe.ts"
+const game = {
+  setup: ({ ctx }) => ({ deck: 6, hand: Array(ctx.numPlayers).fill(0) }),
+  turn: { minMoves: 1, maxMoves: 1 },
+
+  phases: {
+    draw: {
+      moves: { DrawCard },
+      start: true, // start the game in the draw phase
+      endIf: ({ G }) => (G.deck <= 0), // end the draw phase when the deck is empty
+      next: 'play', // transition to the play phase after the draw phase ends
+    },
+
+    play: {
+      moves: { PlayCard },
+    },
+  },
+};
+
+function DrawCard({ G, playerID }) {
+  G.deck--;
+  G.hand[playerID]++;
+}
+
+function PlayCard({ G, playerID }) {
+  G.deck++;
+  G.hand[playerID]--;
+}
+```
+
+
+## Transitioning between phases
+
+### Using `endIf` and `next`
+
+```ts
+phases: {
+  phaseA: {
+    next: 'phaseB',
+    endIf: ({ G, ctx }) => true,
+  },
+  phaseB: { ... },
+},
+```
+
+or:
+
+```ts
+phases: {
+  phaseA: {
+    next: ({ G }) => {
+      return G.condition ? 'phaseC' : 'phaseB';
+    },
+  },
+  phaseB: { ... },
+  phaseC: { ... },
+},
+```
+
+
+### Using events
+
+- `endPhase`: ends the current phase and move the the next phase if specified, otherwise returns the game to a state where no phase is active.
+- `setPhase`: ends the current phase and moves the game into the phase specified by the argument.
+
+Events are dispatched from the client:
+
+```ts
+props.events.endPhase():
+props.events.setPhase():
+```
+
+
+## Setup and Cleanup hooks
+
+You can also run code automatically at the beginning or end of a phase.
+
+```js
+phases: {
+  phaseA: {
+    onBegin: ({ G, ctx }) => { ... },
+    onEnd: ({ G, ctx }) => { ... },
+  },
+};
+```
+
+> [!INFO]
+> Hooks like onBegin and onEnd are run only on the server in multiplayer games. Moves, on the other hand, run on both client and server. They are run on the client in order to facilitate a lag-free experience, and are run on the server to calculate the authoritative game state.
+
+
+## References
+
+https://boardgame.io/documentation/#/phases
