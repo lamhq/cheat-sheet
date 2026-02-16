@@ -4,6 +4,7 @@
   "validation",
   "prisma",
   "logger",
+  "openapi",
   "authentication",
   "websocket",
   {

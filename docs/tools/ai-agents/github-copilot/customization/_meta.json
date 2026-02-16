@@ -1,8 +1,9 @@
 [
+  "custom-agents",
   "instructions",
   "prompt-files",
-  "custom-agents",
   "agent-skills",
   "mcp",
-  "ai-models"
+  "ai-models",
+  "examples"
 ]

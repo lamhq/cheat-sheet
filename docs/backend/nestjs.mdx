@@ -38,10 +38,12 @@ Install Nest CLI:
 
 <PackageManagerTabs command="install -g @nestjs/cli" />
 
-Create a new project:
+Create a new project with PNPM as the package manager:
+
+It creates a new NestJS project named `project-name` using **pnpm** as the package manager, **TypeScript** as the language, and enables **strict mode** for stronger type checking.
 
 ```shell
-nest new project-name
+nest new --package-manager pnpm --language ts --strict project-name
 ```
 
 

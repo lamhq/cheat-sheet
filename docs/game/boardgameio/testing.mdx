@@ -1,0 +1,168 @@
+# Testing Strategies
+
+## Testing move functions
+
+```ts title="src/games/tic-tac-toe.ts"
+import type { Move } from "boardgame.io";
+
+export interface GameState {
+  cells: (string | null)[];
+}
+
+export const clickCell: Move<GameState> = ({ G, playerID }, id) => {
+  G.cells[id] = playerID;
+};
+
+export const TicTacToeGame = {
+  moves: { clickCell },
+  // ...
+}
+```
+
+```ts title="src/game.test.ts"
+import { clickCell } from './games/tic-tac-toe';
+
+it('should place the correct value in the cell', () => {
+  // original state.
+  const G = {
+    cells: [null, null, null, null, null, null, null, null, null],
+  };
+
+  // make move.
+  clickCell({ G, playerID: '1' }, 3);
+
+  // verify new state.
+  expect(G).toEqual({
+    cells: [null, null, null, '1', null, null, null, null, null],
+  });
+});
+```
+
+
+## Verifying game state
+
+Simulate moves on the game object and verify the resulting game state.
+
+```ts title="src/game.test.ts"
+import { Client } from 'boardgame.io/client';
+import { TicTacToeGame } from './games/tic-tac-toe';
+
+it('should declare player 1 as the winner', () => {
+  // set up a specific board scenario
+  const TicTacToeGameCustomScenario = {
+    ...TicTacToeGame,
+    setup: () => ({
+      cells: ['0', '0', null, '1', '1', null, null, null, null],
+    }),
+  };
+
+  // initialize the client with your custom scenario
+  const client = Client({
+    game: TicTacToeGameCustomScenario,
+  });
+
+  // make some game moves
+  client.moves.clickCell(8);
+  client.moves.clickCell(5);
+
+  // get the latest game state
+  const { G, ctx } = client.getState();
+
+  // the board should look like this now
+  expect(G.cells).toEqual(['0', '0', null, '1', '1', '1', null, null, '0']);
+  // player '1' should be declared the winner
+  expect(ctx.gameover).toEqual({ winner: '1' });
+});
+```
+
+
+## Testing Randomness
+
+If you are testing a move that uses the Random API, these strategies can be used to make the move deterministic and testable:
+
+
+### Seed the random value
+
+Set a value for the `seed` option to the game client and you'll see a predictable sequence of results from calls to random API methods:
+
+```ts {14}
+import { Client } from 'boardgame.io/client';
+
+const TicTacToeGame = {
+  moves: {
+    rollDice: ({ G, random }) => {
+      G.roll = random.D6();
+    },
+  },
+};
+
+it('updates G.roll with a random number', () => {
+  const client = Client({
+      // Set seed so PRNG always starts in same state
+    game: { ...TicTacToeGame, seed: 'fixed-seed' },
+  });
+  client.moves.rollDice();
+  const { G } = client.getState();
+  expect(G.roll).toMatchInlineSnapshot(`4`);
+});
+```
+
+
+### Override Random API
+
+You can override the Random API entirely to allow complete control of the results of API methods:
+
+```ts {15}
+import { Client } from 'boardgame.io/client';
+import { MockRandom } from 'boardgame.io/testing';
+
+// Create a mock of the random plugin, where the D6 method always returns 6.
+// Any methods you don’t provide an implementation for will behave as usual.
+const randomPlugin = MockRandom({
+  D6: () => 6,
+});
+
+it ('rolls a six', () => {
+  const client = Client({
+    game: {
+      ...TicTacToeGame,
+      // Add the random plugin mock to the game’s plugins.
+      plugins: [...(TicTacToeGame.plugins || []), randomPlugin]
+    },
+  });
+  client.moves.rollDice();
+  const { G } = client.getState();
+  expect(G.roll).toMatchInlineSnapshot(`6`);
+});
+```
+
+
+## Multiplayer Tests
+
+Use the local multiplayer mode to simulate multiplayer interactions in unit tests.
+
+```ts
+import { Local } from 'boardgame.io/multiplayer';
+
+it('multiplayer test', () => {
+  const spec = {
+    game: TicTacToeGame,
+    multiplayer: Local(),
+  };
+
+  const p0 = Client({ ...spec, playerID: '0' });
+  const p1 = Client({ ...spec, playerID: '1' });
+
+  p0.start();
+  p1.start();
+
+  p0.moves.moveA();
+  p0.events.endTurn();
+
+  // Player 1's state reflects the moves made by Player 0.
+  expect(p1.getState()).toEqual(...);
+
+  p1.moves.moveA();
+  p1.events.endTurn();
+});
+```

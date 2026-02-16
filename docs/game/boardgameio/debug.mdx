@@ -1,0 +1,23 @@
+# Debugging
+
+## Using the Debug Panel in production
+
+The framework provides a debug panel that lets you interact with your game and game clients.
+
+When you build your app for production (i.e. when `NODE_ENV === 'production'`) this is stripped out from the final bundle.
+
+
+## Logging
+
+To log data to Log section of the debug panel, use the `log` object in `move`'s arguments:
+
+```ts
+const move = ({ log }) => {
+  log.setMetadata('metadata for this move');
+};
+```
+
+
+## Reference
+
+https://boardgame.io/documentation/#/debugging
