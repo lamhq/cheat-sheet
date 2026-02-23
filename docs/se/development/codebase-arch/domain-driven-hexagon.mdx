@@ -14,6 +14,13 @@ Cons:
 - Added up-front complexity to support all those building blocks and layers, boilerplate code, abstractions, data mapping, etc. Not recommended for small/medium-sized applications with limited business logic.
 
 
+## Use cases
+
+This architecture is suitable for creating software with complex business logic.
+
+For applications with not a lot of business logic, where code mostly exists as a glue between database and a client, consider [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller). Model-View-Controller is better suited for CRUD applications with little business logic since it tends to favor designs where software is mostly the view of the database.
+
+
 ## Data Flow
 
 ![](https://github.com/Sairyss/domain-driven-hexagon/blob/master/assets/images/DomainDrivenHexagon.png?raw=true)
@@ -60,6 +67,15 @@ Each module consists of layers:
 - Domain Layer
 - Interface Adapters
 - Infrastructure Layer
+
+
+## Architecture Best Practices
+
+Different projects most likely will have different requirements. Choose the best solution for the problem. Follow YAGNI principle and don't overengineer.
+
+Before implementing any pattern always analyze if benefit given by using it worth extra code complexity. Try to evaluate the cost and benefit of every pattern you implement and avoid overengineering.
+
+However, remember: "It's easier to refactor over-design than it's to refactor no design".
 
 
 ## References

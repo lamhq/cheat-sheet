@@ -1,0 +1,73 @@
+# Infrastructure layer
+
+## Introduction
+
+The Infrastructure layer is responsible for encapsulating technology.
+
+Can contain:
+- database repositories, ORM entities/Schemas
+- message brokers to emit messages/events
+- I/O services to access external resources
+- adapters
+- framework related code
+- periodic cron jobs or tasks launchers 
+- any code that represents a replaceable detail for the architecture
+
+It's the most volatile layer (things in this layer are likely to change). They are kept separate in order to make it easy to make changes or swap one component for another.
+
+
+## Adapters
+
+Infrastructure adapters enable a software system to interact with external systems by receiving, storing and providing data when requested (like persistence, message brokers, sending emails or messages, requesting 3rd party APIs etc).
+
+Adapters also can be used to interact with different domains inside single process to avoid coupling between those domains.
+
+Adapters are essentially an implementation of ports. They are not supposed to be called directly, only through ports (interfaces). Callers should depend on ports, not on concrete implementations of adapters.
+
+Adapters should have:
+- a port in domain layer that it implements;
+- a mapper that maps data from and to domain (if needed);
+- a DTO/interface for received data;
+- a validator to make sure incoming data is not corrupted (validation can reside in DTO class using decorators, or it can be validated by Value Objects).
+
+
+## Repositories
+
+Repositories are abstractions over collections of entities that are living in a database. They centralize common data access functionality and encapsulate the logic required to access that data.
+
+We use repositories to decouple the infrastructure or technology used to access databases from the domain model layer.
+
+Data flow:
+1. repository receives a domain Entity from application service
+2. maps it to database schema/ORM format
+3. does required operations (saving/updating/retrieving etc)
+4. maps it back to domain Entity format and returns it back to service
+
+Example code:
+- [repository.port.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/.src/libs/ddd/repository.port.ts)
+- [sql-repository.base.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/libs/db/sql-repository.base.ts)
+- [user.repository.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/database/user.repository.ts)
+
+Application's core usually is not allowed to depend on repositories directly, instead it depends on abstractions (ports/interfaces).
+
+In practice, it's not always useful. Most of the projects out there never change database technology. Another downside is that if you abstract a database you are more likely not using its full potential. 
+
+
+## Persistence models
+
+In DDD world domain model and persistence model should be separated because:
+- using a single entity for domain logic and database concerns leads to a database-centric architecture
+- Entities are modeled to best accommodates domain logic, it may be not in the best shape to save in a database.
+
+Persistence models can be created that have a shape that is best represented in a particular database that is used. For example, when performing a database normalization data can spread across multiple tables rather than being in one table, or vice-versa for denormalization
+
+Domain layer should not know anything about persistence models, and it should not care.
+
+Downside: separating domain and persistence models may be overkill for smaller applications. It requires a lot of effort creating and maintaining boilerplate code like mappers and abstractions.
+
+Example code:
+- [`user.repository.ts`](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/database/user.repository.ts). notice `userSchema` and `UserModel` type that describe how user looks in a database
+- [`user.mapper.ts`](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/user.mapper.ts). Persistence models should also have a corresponding mapper to map from domain to persistence and back.
+
+> [!TIP]
+> For smaller projects you could use ORM libraries like Typeorm for simplicity. 

@@ -1,4 +1,7 @@
 [
   "application",
-  "domain"
+  "domain",
+  "interface-adapters",
+  "infrastructure",
+  "structure"
 ]

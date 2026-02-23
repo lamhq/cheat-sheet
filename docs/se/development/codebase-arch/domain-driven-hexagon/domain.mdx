@@ -282,4 +282,14 @@ Example code:
 
 ## Using libraries inside Application's core
 
-https://github.com/Sairyss/domain-driven-hexagon?tab=readme-ov-file#using-libraries-inside-applications-core
+Libraries imported in application's core should be single responsibility libraries that help to implement domain logic (like working with numbers).
+
+Libraries imported in application's core shouldn't:
+- Expose functionality to access any out-of-process resources (http calls, database access etc);
+- Expose functionality not relevant to domain (frameworks, technology details like ORMs, Logger etc.).
+- Expose functionality that brings randomness (generating random IDs, timestamps etc.) since this makes tests unpredictable
+- Have a lot of dependencies of its own 
+
+You should be able to extract your domain layer and build a new infrastructure around it using any other framework without breaking your business logic.
+
+Try to minimize what your software depends on (dependencies) - the less that can go wrong, the less will go wrong. Finding a good balance is important, this skill requires experience.
