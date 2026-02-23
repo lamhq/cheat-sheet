@@ -5,7 +5,7 @@
 - Divide application by modules
 - Divide each module by business domain
 - Divide each business domain by use cases
-- Keep files that change together close to each other (Common Closure Principle and Vertical Slicing)
+- Keep files that change together close to each other ([Common Closure Principle](https://ericbackhage.net/clean-code/the-common-closure-principle/) and [Vertical Slicing](https://jimmybogard.com/vertical-slice-architecture/))
 - Group files by behavior (create user, delete user, etc.), not by type (controllers, services, repositories, etc.)
 - Shared files like domain objects (entities/aggregates), repositories, shared DTOs, interfaces, etc. are stored outside of feature directory since they are usually reused by multiple subcomponents.
 - Respect boundaries in your code, inner layers are not allowed to import outer layers

@@ -1,81 +1,80 @@
 # Domain-Driven Hexagon
 
+## Introduction
+
+This architecture combines several patterns and styles:
+- [Domain-Driven Design (DDD)](https://en.wikipedia.org/wiki/Domain-driven_design)
+- [Hexagonal Architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)) (Ports and Adapters)
+- [Secure by Design](https://www.manning.com/books/secure-by-design)
+- [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+- [SOLID Principles](https://en.wikipedia.org/wiki/SOLID)
+
+
 ## Pros & Cons
 
-Pros:
-- Independent of external frameworks, technologies, databases, etc. Frameworks and external resources can be plugged/unplugged with much less effort.
-- Testable.
-- Secure. Some security principles are baked into the design itself.
-- Clear separation of concerns. Different teams can contribute and maintain together without stepping on each other's toes.
-- Scalable. Easier to add new features. The difficulty of adding new features remains constant and relatively small.
+**Pros**:
+- Framework-agnostic: external frameworks, DBs, and services can be swapped with minimal changes.
+- Secure: security principles are integrated into the design.
+- Clear separation of concerns: teams can work independently.
+- Testable & Scalable: adding features is easier and remains manageable.
 
-Cons:
-- Sophisticated architecture. Requires an expert to drive the solution and prevent it from evolving in the wrong way and accumulating technical debt.
-- Added up-front complexity to support all those building blocks and layers, boilerplate code, abstractions, data mapping, etc. Not recommended for small/medium-sized applications with limited business logic.
+**Cons**:
+- Sophisticated architecture. Requires experienced architects to avoid misuse and technical debt.
+- Added up-front complexity: more boilerplate, layers, and mappings.
+- Not recommended for small/CRUD apps with little business logic.
 
 
 ## Use cases
 
-This architecture is suitable for creating software with complex business logic.
+Suitable for applications with complex business logic.
 
-For applications with not a lot of business logic, where code mostly exists as a glue between database and a client, consider [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller). Model-View-Controller is better suited for CRUD applications with little business logic since it tends to favor designs where software is mostly the view of the database.
+> [!CAUTION]
+> Not recommended for simple CRUD apps that mainly map the database to a client; use [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) instead.
 
 
 ## Data Flow
 
 ![](https://github.com/Sairyss/domain-driven-hexagon/blob/master/assets/images/DomainDrivenHexagon.png?raw=true)
 
-Data flow (from left to right in the diagram):
-1. **Request/CLI command/event** is sent to the controller using a plain **DTO**.
-2. **Controller** parses this DTO, maps it to a **Command/Query object** format, and passes it to an Application service.
-3. **Application service** handles this Command/Query, executes business logic using **domain services** and **entities/aggregates**, and uses the infrastructure layer through ports (interfaces).
-4. **Infrastructure layer**:
-   - Maps data to the required format.
-   - Retrieves/persists data from/to a database.
-   - Uses **adapters** for other I/O communications (e.g., sending an event to an external broker or calling external APIs).
-   - Maps data back to the domain format and returns it to the Application service.
-5. After the Application service finishes its job, it returns data/confirmation back to **Controllers**.
-6. **Controllers** return data back to the user (if the application has presenters/views, those are returned instead).
+Data flow (left → right):
+1. **Request/CLI command/event** arrives as a plain **DTO** to a **Controller**.
+2. **Controller** maps the DTO to a **Command/Query object** and calls an Application service.
+3. **Application service** runs business logic using **domain services** and **entities/aggregates**, and calls ports to reach infrastructure.
+4. **Infrastructure layer** maps data, persists/retrieves data, calls external APIs/brokers via **adapters**, and maps results back for the domain.
+5. Application service returns results to the **Controller**.
+6. **Controller** returns data to the user or to a presenter/view.
 
-Each layer is responsible for its own logic and follows the Single Responsibility Principle.
+Each layer owns its logic and follows the Single Responsibility Principle. Different projects may use fewer or additional layers.
 
-Different projects can have more or fewer steps/layers/building blocks.
 
 ## Modules
 
-The codebase uses the principle of separation by modules to ensure loose coupling:
-- Refactoring of a module's internals can be done more easily because the outside world only depends on the module's public interface.
-- Each module can be easily separated into a microservice if needed, without touching any domain logic or requiring major refactoring (if bounded contexts are designed properly).
+The codebase is organized into small, independent modules that reflect domain concepts.
 
-Each module should reflect an important concept from the Domain and have its own folder as a dedicated codebase.
+Each module lives in its own folder and contains related use cases.
 
-Each module contains business use cases, each in its own folder.
+**Benefits**:
+- Refactor internals without affecting other modules (public interface isolation).
+- Easier to split into a microservice when bounded contexts are well defined.
 
-Think of a module as a "box" that groups together related business logic, or a mini-application bounded by a single context.
-
-Keep your modules small. It should be possible to rewrite a module in a relatively short period of time.
-
-A few pieces of advice to avoid coupling:
-- Every module should be independent, and interactions between modules should be kept minimal.
-- Try not to create dependencies between modules or use cases. Instead, move shared logic into separate files and make both depend on that, rather than on each other.
-- Avoid directly importing a module's internal components, as this creates tight coupling and can turn your code into [spaghetti](https://en.wikipedia.org/wiki/Spaghetti_code) and your application into a [big ball of mud](https://en.wikipedia.org/wiki/Big_ball_of_mud).
-- Modules can cooperate through a [mediator](https://en.wikipedia.org/wiki/Mediator_pattern#:~:text=In%20software%20engineering%2C%20the%20mediator,often%20consist%20of%20many%20classes.) or a public [facade](https://en.wikipedia.org/wiki/Facade_pattern), hiding all private internals of the module to avoid misuse, and giving public access only to certain functionality meant to be public.
-- Modules can communicate with each other by using messages. *For example, you can send commands using a command bus or subscribe to events that other modules emit.*
+**Best practices to reduce coupling**:
+- Keep module interactions minimal; prefer small, explicit interfaces.
+- Move shared logic to common utilities rather than creating cross-module dependencies.
+- Avoid importing another module's internals; use a [mediator](https://en.wikipedia.org/wiki/Mediator_pattern#:~:text=In%20software%20engineering%2C%20the%20mediator,often%20consist%20of%20many%20classes.) or a public [facade](https://en.wikipedia.org/wiki/Facade_pattern).
+- Prefer message-based communication (command bus or events) when modules need to coordinate.
 
 Each module consists of layers:
-- Application Layer
-- Domain Layer
+- Application
+- Domain
 - Interface Adapters
-- Infrastructure Layer
+- Infrastructure
 
 
 ## Architecture Best Practices
 
-Different projects most likely will have different requirements. Choose the best solution for the problem. Follow YAGNI principle and don't overengineer.
-
-Before implementing any pattern always analyze if benefit given by using it worth extra code complexity. Try to evaluate the cost and benefit of every pattern you implement and avoid overengineering.
-
-However, remember: "It's easier to refactor over-design than it's to refactor no design".
+- Choose patterns that fit your project's needs; avoid overengineering.
+- Follow the YAGNI principle: don't add features or patterns before they are needed.
+- Evaluate the cost vs benefit before introducing a pattern or abstraction.
 
 
 ## References
