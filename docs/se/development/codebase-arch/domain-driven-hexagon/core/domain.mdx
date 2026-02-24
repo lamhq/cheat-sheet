@@ -1,10 +1,20 @@
-# Domain Layer
+# Domain
 
-This layer contains the application's business rules.
+Holds the pure business logic. Defines the rules, invariants, and behaviors of the system.
+
+Completely independent of frameworks, databases, or external technologies.
+
+Remains the most stable part of the architecture.
 
 Domain should operate using domain objects described by [ubiquitous language](https://martinfowler.com/bliki/UbiquitousLanguage.html).
 
-Most important domain building blocks are described below:
+Contains:
+- **Entities**: contain domain business logic and attributes and has an identity (id).
+- **Aggregates**: similar to entities, but encapsulate a cluster of domain objects.
+- **Value Objects**: wrap one or multiple attributes and the logic associated with those attributes; has no identity.
+- **Domain Services**: orchestrates domain logic between multiple Entities.
+- **Domain Events**: Capture and broadcast significant changes in the domain.
+- **Domain Errors**: Explicit error handling using result objects instead of exceptions.
 
 
 ## Entities

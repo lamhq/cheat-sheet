@@ -1,0 +1,113 @@
+## Application
+
+## Introduction
+
+Defines the **use cases** (how business rules are applied to achieve goals).
+
+Acts as the bridge between the **Interface** Layer (controllers, DTOs) and the **Domain** Layer:
+- Translates external requests into domain operations and orchestrates workflows.
+- Ensures business rules are applied consistently by delegating to the Domain Layer.
+
+> [!INFO]
+> A use case is a list of actions/steps defining the interactions between an actor (UML) and a system to achieve a goal.
+
+Contains **Application Services**, **Commands**, **Queries**, and **Ports**.
+
+
+## Application Services
+
+Application Services are used to orchestrate the steps required to fulfill use cases imposed by client.
+
+Connect the Interface Layer (controllers, DTOs) with the Domain Layer (entities, value objects).  
+
+Operate on scalar types, transforming them into Domain types. 
+
+> [!INFO]
+> A scalar type includes primitive types and types that don't belong to the Domain.
+
+Don't contain business rules but delegate to domain **entities**, **aggregates**, and **services** to enforce them.
+
+Can call **Infrastructure**'s services through **ports** to perform tasks required by use cases (don't depend on Infrastructure).
+
+Ensure consistency across operations, often wrapping domain actions in a unit of work.  
+
+Should not depend on other application services, as this may cause problems (such as cyclic dependencies).
+
+It's a good practice to have one Application Service per use case.
+
+For example, in an e-commerce system, an **OrderApplicationService** might:  
+1. Accept a `PlaceOrderCommand` from the controller.  
+2. Validate input and call the `Order` aggregate to create a new order.  
+3. Use a repository (via a port) to persist the order.  
+4. Publish a domain event like `OrderPlaced`.  
+
+Example code:
+- [`create-user.service.ts`](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/create-user.service.ts)
+
+
+## Commands and Queries
+
+The Interface Layer converts external input into commands/queries objects and delegates them to Application Services, which execute the use case using the Domain Layer.
+
+Commands and Queries are two distinct ways of handling requests, following the [CQRS principle](https://en.wikipedia.org/wiki/Command%E2%80%93query_separation). One changes data, another just retrieves data.
+
+
+### Command
+
+A `Command` is a data object expressing user intent (e.g., `CreateUserCommand`). It describes an action but does not execute it.
+
+`Commands` are used to perform state changes (create, update, delete), for example creating a user and saving it to the database.
+
+Command handlers may return an ID, redirect URL, confirmation, status, or other metadata.
+
+Use a **Command Bus** to run commands instead of importing services. This decouples the invoker from the handler and lets you send commands from anywhere.
+
+Avoid command handlers calling other commands (Command → Command). Use events and chain follow-up commands inside event handlers (Command → Event → Command).
+
+Example code:
+- [create-user.command.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/create-user.command.ts) – a command object.
+- [create-user.message.controller.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/create-user.message.controller.ts) – controller uses a command bus to execute a command.
+- [create-user.service.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/create-user.service.ts) – a command handler.
+
+
+### Queries
+
+A `Query` is a read-model object expressing intent to retrieve data (e.g., `FindUsersQuery`).
+
+Queries must not change state — no writes to the database, files, or external APIs.
+
+Query handlers may query the database directly and can bypass domain objects when appropriate.
+
+Use a `Query Bus` to execute queries without importing Application Services directly and avoid tight coupling.
+
+Example code:
+- [find-users.query-handler.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/modules/user/queries/find-users/find-users.query-handler.ts) - a query handler that queries the database directly (more info [here](https://codeopinion.com/should-you-use-the-repository-pattern-with-cqrs-yes-and-no/)).
+
+> [!NOTE]
+> This guide uses [NestJS CQRS](https://docs.nestjs.com/recipes/cqrs) package that provides a command/query bus.
+
+
+## Ports
+
+Ports are interfaces that define contracts adapters must implement.
+
+Use ports to abstract side effects and technology details (databases, I/O, external APIs, legacy code).
+
+Ports need to be designed to match Domain needs — do not merely mirror tool APIs.
+
+Implementations of Ports live in Infrastructure and are injected into the Application via [DI](https://en.wikipedia.org/wiki/Dependency_injection). This keeps business logic technology-independent and testable.
+
+Split large ports when sensible, but avoid excessive fragmentation ([Interface segregation principle](https://en.wikipedia.org/wiki/Interface_segregation_principle)).
+
+Only add ports for things likely to change (databases, external services, frameworks) to avoid needless abstraction ([unnecessary abstractions](https://mortoray.com/2014/08/01/the-false-abstraction-antipattern/)).
+
+Example code:
+- [repository.port.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/libs/ddd/repository.port.ts) - generic repository port
+- [user.repository.port.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/modules/user/database/user.repository.port.ts) - user repository port
+- [find-users.query-handler.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/modules/user/queries/find-users/find-users.query-handler.ts) - query handler that depends on a port
+- [logger.port.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/libs/ports/logger.port.ts) - application logger port
+
+Benefits:
+- **Testability:** mock implementations to test application logic in isolation.
+- **Flexibility:** swap implementations without changing domain code.
+- **Delayed decisions:** implement Domain before choosing technologies.
