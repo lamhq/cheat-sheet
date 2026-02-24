@@ -1,6 +1,9 @@
 # Core
 
-- **Entities**: contain domain business logic and attributes and has an identity (id).
-- **Aggregates**: similar to entities, but encapsulate a cluster of domain objects.
-- **Value Objects**: wrap one or multiple attributes and the logic associated with those attributes; has no identity.
-- **Domain Services**: orchestrates domain logic between multiple Entities.
+## Introduction
+
+The center of the architecture, independent of frameworks, databases, or external systems.
+
+Ensures the system’s business logic remains pure and technology-agnostic.
+
+Divided into [Application Layer](./core/application.mdx) and [Domain Layer](./core/domain.mdx).
