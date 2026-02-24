@@ -1,73 +1,82 @@
-# Infrastructure layer
+# Infrastructure
 
 ## Introduction
 
-The Infrastructure layer is responsible for encapsulating technology.
+The Infrastructure layer provides the technical capabilities needed to support the application and domain.
+
+Depends on the Core layer. Provides concrete adapters (e.g., database repositories, message brokers, external APIs) that implement ports defined in the Application Layer.
+
+Handles data persistence, networking, logging, caching, authentication, integration with external systems.
+
+It's the most volatile layer. It's kept separate in order to make it easy to make changes or swap one component for another.
 
 Can contain:
-- database repositories, ORM entities/Schemas
-- message brokers to emit messages/events
-- I/O services to access external resources
-- adapters
 - framework related code
-- periodic cron jobs or tasks launchers 
-- any code that represents a replaceable detail for the architecture
+- I/O services that access external resources
+- database repositories
+- ORM entities/Schemas
+- messages/events publishers
+- email services
+- file storage services
+- etc.
 
-It's the most volatile layer (things in this layer are likely to change). They are kept separate in order to make it easy to make changes or swap one component for another.
+Example:
+1. The Application Layer defines an `OrderRepositoryPort`.
+2. The Infrastructure Layer provides `PostgresOrderRepository` or `MongoOrderRepository` that implements this port.
+3. At runtime, a DI library injects the chosen implementation into the Application Service.  
 
 
 ## Adapters
 
-Infrastructure adapters enable a software system to interact with external systems by receiving, storing and providing data when requested (like persistence, message brokers, sending emails or messages, requesting 3rd party APIs etc).
+Infrastructure adapters enable interaction with external systems (databases, message brokers, 3rd party APIs, etc.).
 
 Adapters also can be used to interact with different domains inside single process to avoid coupling between those domains.
 
-Adapters are essentially an implementation of ports. They are not supposed to be called directly, only through ports (interfaces). Callers should depend on ports, not on concrete implementations of adapters.
+Adapters implement ports and should only be accessed through them. Callers depend on ports, not adapter implementations.
 
-Adapters should have:
-- a port in domain layer that it implements;
-- a mapper that maps data from and to domain (if needed);
-- a DTO/interface for received data;
-- a validator to make sure incoming data is not corrupted (validation can reside in DTO class using decorators, or it can be validated by Value Objects).
+Key components of adapters:
+- A port in the domain layer they implement.
+- A mapper that maps data from and to domain (if needed).
+- A DTO/interface for received data.
+- A validator to ensure data integrity (via decorators in DTO class or Value Objects).
 
 
 ## Repositories
 
-Repositories are abstractions over collections of entities that are living in a database. They centralize common data access functionality and encapsulate the logic required to access that data.
+Repositories abstract collections of entities in a database. They centralize data access and encapsulate logic for accessing data.
 
-We use repositories to decouple the infrastructure or technology used to access databases from the domain model layer.
+They are used to decouple database technology from the domain model layer.
 
 Data flow:
-1. repository receives a domain Entity from application service
-2. maps it to database schema/ORM format
-3. does required operations (saving/updating/retrieving etc)
-4. maps it back to domain Entity format and returns it back to service
+1. Receive a domain Entity from the application service.
+2. Map it to a database schema/ORM format.
+3. Perform operations (save, update, retrieve, etc.).
+4. Map it back to a domain Entity and return it.
 
 Example code:
-- [repository.port.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/.src/libs/ddd/repository.port.ts)
-- [sql-repository.base.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/libs/db/sql-repository.base.ts)
-- [user.repository.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/database/user.repository.ts)
+- [repository.port.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/libs/ddd/repository.port.ts) - defines the generic port that repositories should implement
+- [sql-repository.base.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/libs/db/sql-repository.base.ts) - abstract repository class that allows to make basic CRUD operations
+- [user.repository.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/database/user.repository.ts) - concrete repository that extends `SqlRepositoryBase` and implements `RepositoryPort`
 
-Application's core usually is not allowed to depend on repositories directly, instead it depends on abstractions (ports/interfaces).
-
-In practice, it's not always useful. Most of the projects out there never change database technology. Another downside is that if you abstract a database you are more likely not using its full potential. 
+> [!NOTE]
+> The application's core usually depends on abstractions (ports/interfaces), not repositories. However, this abstraction may be unnecessary for projects unlikely to change database technology. It can also limit the use of database-specific features.
 
 
 ## Persistence models
 
-In DDD world domain model and persistence model should be separated because:
-- using a single entity for domain logic and database concerns leads to a database-centric architecture
-- Entities are modeled to best accommodates domain logic, it may be not in the best shape to save in a database.
+In DDD, domain models and persistence models should be separate to avoid a database-centric architecture. Domain models focus on logic, while persistence models suit database needs.
 
-Persistence models can be created that have a shape that is best represented in a particular database that is used. For example, when performing a database normalization data can spread across multiple tables rather than being in one table, or vice-versa for denormalization
+Benefits:
+- Avoids mixing domain logic with database concerns.
+- Allows database normalization or denormalization as needed.
 
-Domain layer should not know anything about persistence models, and it should not care.
-
-Downside: separating domain and persistence models may be overkill for smaller applications. It requires a lot of effort creating and maintaining boilerplate code like mappers and abstractions.
+Challenges:
+- Requires effort to create and maintain mappers and abstractions.
+- May be overkill for smaller applications.
 
 Example code:
-- [`user.repository.ts`](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/database/user.repository.ts). notice `userSchema` and `UserModel` type that describe how user looks in a database
-- [`user.mapper.ts`](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/user.mapper.ts). Persistence models should also have a corresponding mapper to map from domain to persistence and back.
+- [`user.repository.ts`](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/database/user.repository.ts): Defines `userSchema` and `UserModel` for database representation.
+- [`user.mapper.ts`](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/user.mapper.ts): Maps between domain and persistence models.
 
 > [!TIP]
-> For smaller projects you could use ORM libraries like Typeorm for simplicity. 
+> For smaller projects, consider using ORM libraries like TypeORM for simplicity.
