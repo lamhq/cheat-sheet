@@ -1,6 +1,21 @@
 # Interface Adapters
 
+Aka **Driving/Primary Adapters**.
+
+Interface Adapters layer contains user-facing interfaces:
+- Input/Output DTOs
+- CLI Controllers
+- Event Handlers (handle external events)
+- etc.
+
+They wrap around an application core and adapt its input/output to a delivery mechanism (e.g., HTML, JSON (REST), JSON (GraphQL), CLI, gRPC, etc.).
+
+Depend on **Core** layer. Communicate with it by executing **Commands**/**Queries**, which are handled by **Application Services**.
+
+
 ## Introduction
+
+They are the entry point for the users of your app.
 
 Interface adapters (also called driving/primary adapters) are client-facing interfaces that:
 - take input data from the **client** (user, external system, etc.) and repackage it in a form that is convenient for the **use cases**(services/command handlers) and **entities**.

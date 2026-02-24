@@ -2,79 +2,93 @@
 
 ## Introduction
 
-This architecture combines several patterns and styles:
+This architecture combines several architectural styles and principles:
 - [Domain-Driven Design (DDD)](https://en.wikipedia.org/wiki/Domain-driven_design)
 - [Hexagonal Architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)) (Ports and Adapters)
-- [Secure by Design](https://www.manning.com/books/secure-by-design)
 - [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 - [SOLID Principles](https://en.wikipedia.org/wiki/SOLID)
+- [Secure by Design](https://www.manning.com/books/secure-by-design)
+
+The goal is to build applications that are technology-agnostic, modular, testable, and scalable while keeping business logic at the center.
 
 
 ## Pros & Cons
 
 **Pros**:
-- Framework-agnostic: external frameworks, DBs, and services can be swapped with minimal changes.
+- Framework-agnostic: external frameworks, databases, and services can be swapped with minimal changes.
 - Secure: security principles are integrated into the design.
 - Clear separation of concerns: teams can work independently.
-- Testable & Scalable: adding features is easier and remains manageable.
+- Testable and scalable: adding features is easier and remains manageable.
 
 **Cons**:
-- Sophisticated architecture. Requires experienced architects to avoid misuse and technical debt.
-- Added up-front complexity: more boilerplate, layers, and mappings.
-- Not recommended for small/CRUD apps with little business logic.
+- Sophisticated architecture: requires strong expertise in DDD, Clean/Hexagonal architecture, and SOLID.
+- Added up-front complexity: extra layers, abstractions, and boilerplate.
 
 
-## Use cases
+## When to Use?
 
 Suitable for applications with complex business logic.
 
 > [!CAUTION]
-> Not recommended for simple CRUD apps that mainly map the database to a client; use [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) instead.
+> Not recommended for simple CRUD apps that mainly map the database to a client; consider [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) instead.
+
+## Architecture Overview
+
+The codebase is organized into small, independent [modules](#modules) that reflect domain concepts.
+
+Each module consists of layers:
+- [Core](./domain-driven-hexagon/core.mdx): encapsulates business logic with entities, aggregates, value objects, domain services, and events. It’s framework-independent and represents the heart of the system.
+- [Interface](./domain-driven-hexagon/interface.mdx): provides entry points (controllers, DTOs) for users or external systems, translating requests into commands/queries and returning responses.
+- [Infrastructure](./domain-driven-hexagon/infrastructure.mdx): implements technical details like repositories, persistence models, messaging, and external API integrations, fulfilling contracts defined by ports while staying outside core business logic.
+
+![](https://github.com/Sairyss/domain-driven-hexagon/blob/master/assets/images/DomainDrivenHexagon.png?raw=true)
 
 
 ## Data Flow
 
-![](https://github.com/Sairyss/domain-driven-hexagon/blob/master/assets/images/DomainDrivenHexagon.png?raw=true)
-
-Data flow (left → right):
-1. **Request/CLI command/event** arrives as a plain **DTO** to a **Controller**.
-2. **Controller** maps the DTO to a **Command/Query object** and calls an Application service.
-3. **Application service** runs business logic using **domain services** and **entities/aggregates**, and calls ports to reach infrastructure.
-4. **Infrastructure layer** maps data, persists/retrieves data, calls external APIs/brokers via **adapters**, and maps results back for the domain.
-5. Application service returns results to the **Controller**.
+Data flow:
+1. **Request/CLI command/event** arrives as a plain **DTO** to a Controller.
+2. **Controller** maps the DTO to a **Command/Query object** and calls an Application Service.
+3. **Application Service** orchestrates business logic using **entities/aggregates/domain services** and calls Infrastructure via **ports**.
+4. **Infrastructure** layer:
+   1. Maps data to the format it needs.
+   2. Persists/retrieves data.
+   3. Calls external APIs or sends events via **adapters**.
+   4. Maps results back for the domain.
+5. Application Service returns results to the **Controller**.
 6. **Controller** returns data to the user or to a presenter/view.
-
-Each layer owns its logic and follows the Single Responsibility Principle. Different projects may use fewer or additional layers.
 
 
 ## Modules
 
-The codebase is organized into small, independent modules that reflect domain concepts.
-
-Each module lives in its own folder and contains related use cases.
+Each module lives in its own folder and represents a bounded context or business capability.
 
 **Benefits**:
-- Refactor internals without affecting other modules (public interface isolation).
-- Easier to split into a microservice when bounded contexts are well defined.
+- Refactor internals without affecting other modules.
+- Easier to split into a microservice when bounded contexts are well-defined.
 
 **Best practices to reduce coupling**:
 - Keep module interactions minimal; prefer small, explicit interfaces.
 - Move shared logic to common utilities rather than creating cross-module dependencies.
 - Avoid importing another module's internals; use a [mediator](https://en.wikipedia.org/wiki/Mediator_pattern#:~:text=In%20software%20engineering%2C%20the%20mediator,often%20consist%20of%20many%20classes.) or a public [facade](https://en.wikipedia.org/wiki/Facade_pattern).
-- Prefer message-based communication (command bus or events) when modules need to coordinate.
+- Prefer message-based communication when modules need to coordinate (send commands using a command bus or subscribe to events that other modules emit).
 
-Each module consists of layers:
-- Application
-- Domain
-- Interface Adapters
-- Infrastructure
+> [!TIPS]
+> Keep modules small. You should be able to rewrite a module in a relatively short period of time.
 
 
-## Architecture Best Practices
+## Use Case
+
+A use case is a list of actions/steps defining the interactions between an actor (UML) and a system to achieve a goal.
+
+
+## Best Practices
+
+Architectural Best Practices:
 
 - Choose patterns that fit your project's needs; avoid overengineering.
 - Follow the YAGNI principle: don't add features or patterns before they are needed.
-- Evaluate the cost vs benefit before introducing a pattern or abstraction.
+- Evaluate the cost vs. benefit before introducing a pattern or abstraction.
 
 
 ## References

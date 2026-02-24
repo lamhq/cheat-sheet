@@ -1,7 +1,8 @@
 [
+  "core",
+  "interface",
+  "infrastructure",
   "application",
   "domain",
-  "interface-adapters",
-  "infrastructure",
   "structure"
 ]
