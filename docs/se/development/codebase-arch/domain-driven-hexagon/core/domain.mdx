@@ -4,9 +4,11 @@
 
 This layer contains the application's business rules.
 
+Should be framework/technologies-agnostic, allow to rebuild infrastructure without breaking business logic.
+
 Should operate using domain objects described by [ubiquitous language](https://martinfowler.com/bliki/UbiquitousLanguage.html).
 
-Completely independent of frameworks, databases, or external technologies.
+Should minimize dependencies to reduce potential issues, balancing simplicity and functionality.
 
 Most important domain building blocks are:
 - **Entities**: domain objects with identity (ID) and behavior.
@@ -79,20 +81,21 @@ Example Code:
 
 ## Value objects
 
-Some Attributes and behaviors can be moved out of the entity itself and put into Value Objects.
+**Value Objects** are domain concepts that are defined by their **attributes**, not by identity.
 
-Value Objects:
+Unlike entities, they don't have a unique identifier and are considered equal if all their properties match.  
 
-- Have no identity. Equality is determined through structural property.
-- Are immutable.
-- Can be used as an attribute of entities and other value objects.
-- Explicitly defines and enforces important constraints (invariants).
+Value object should form a well-defined concept in the domain model, even if it contains only one attribute.
 
-Value object shouldn’t be just a convenient grouping of attributes but should form a well-defined concept in the domain model. This is true even if it contains only one attribute.
+**Key Characteristics**:
+- **No identity**: Two value objects with the same values are indistinguishable.  
+- **Immutable**: Once created, they cannot be changed; instead, a new instance is created if values differ.  
+- **Behavior-focused**: They can contain logic relevant to their values (e.g., validation, formatting).  
+- **Lightweight**: Often used to model concepts like money, dates, addresses, or email addresses.  
 
-For example, imagine you have a **User** entity which needs to have an **address** of a user. Usually an address is simply a complex value that has no identity in the domain and is composed of multiple other values, like country, street, postalCode etc., so it can be modeled and treated as a **Value Object** with its own business logic.
-
-**Value object** isn’t just a data structure that holds values. It can also encapsulate logic associated with the concept it represents.
+**Examples**:
+- **EmailAddress** value object ensures the string is valid. If two email addresses have the same value, they are equal.  
+- **Address** of a user is composed of multiple other values, like country, street, postalCode etc., so it can be modeled and treated as a **Value Object** with its own business logic.
 
 Example code:
 - [address.value-object.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/domain/value-objects/address.value-object.ts)
@@ -100,43 +103,37 @@ Example code:
 
 ## Domain Services
 
-Domain Service is a specific type of domain layer class that is used to execute domain logic that relies on two or more **Entities**.
+Domain Services execute logic involving two or more **Entities**. 
 
-Domain Services are used when putting the logic on a particular Entity would break encapsulation and require the **Entity** to know about things it really shouldn't be concerned with.
+They are used when placing logic in an **Entity** would break encapsulation or require the **Entity** to handle unrelated concerns. They hold operations that don't fit well into **Value Objects** or **Entities**.
 
-Domain services operate only on types belonging to the Domain. They contain meaningful concepts that can be found within the Ubiquitous Language. They hold operations that don't fit well into **Value Objects** or **Entities**.
+Domain services operate only on types belonging to the Domain. They contain meaningful concepts that can be found within the Ubiquitous Language.
 
 
 ## Domain Invariants
 
-Domain [invariants](https://en.wikipedia.org/wiki/Invariant_(mathematics)#Invariants_in_computer_science) are the policies and conditions that are always met for the Domain in particular context. Invariants determine what is possible or what is prohibited in the context.
+Domain [invariants](https://en.wikipedia.org/wiki/Invariant_(mathematics)#Invariants_in_computer_science) are rules that must always hold true in a specific context. They define what is allowed or prohibited.
 
-For example:
+Examples:
+- Money transfers require a positive amount and a valid receiver card number.
+- Products out of stock cannot be purchased.
+- Wallet balances cannot drop below zero.
 
-- When sending money, amount must always be a positive integer, and there always must be a receiver credit card number in a correct format;
-- Client cannot purchase a product that is out of stock;
-- Client's wallet cannot have less than 0 balance;
-
-Domain objects (especially of the entities and aggregate roots) are responsible for enforcing invariants. They should not be able to exist without following business rules.
+Domain objects (entities, aggregate roots, value objects) enforce invariants to ensure business rules are followed.
 
 Example code:
-- [wallet.entity.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/wallet/domain/wallet.entity.ts) (notice `validate` method. This is a simplified example of enforcing a domain invariant).
+- [wallet.entity.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/wallet/domain/wallet.entity.ts) (see `validate` method).
 
 
 ### Enforcing invariants using Value Objects
 
-Most of the code bases operate on primitive types – `strings`, `numbers` etc. In the Domain Model, this level of abstraction may be too low.
+Primitive types like `strings` and `numbers` are often too basic for Domain Models. Significant business concepts could use **Value Objects** to encapsulate logic and validation.
 
-Significant business concepts can be expressed using specific types and classes as **Value Objects**.
-
-For example, `email` of type `string`:
-
+For example, an email with type string:
 ```typescript
 const email: string = 'john@gmail.com';
 ```
-
-could be represented as a Value Object instead:
-
+can become:
 ```typescript
 export class Email extends ValueObject<string> {
   constructor(value: string) {
@@ -147,48 +144,35 @@ export class Email extends ValueObject<string> {
     return this.props.value;
   }
 }
-
-const email: Email = new Email('john@gmail.com');
 ```
 
 Now the only way to make an email is to create a new instance of `Email` class first, this ensures it will be validated on creation and a wrong value won't get into **Entities**.
 
-Using Value Objects for primitive types is also called a **domain primitive**. This allows behavior of the domain primitive to be encapsulated in one place. By having the domain primitive own and control domain operations, you reduce the risk of bugs caused by lack of detailed domain knowledge of the concepts involved in the operation.
+Using **Value Objects** for primitive types, also called **domain primitives**, encapsulates behavior and reduces bugs caused by lack of domain knowledge.
 
-Creating an object for primitive values may be cumbersome, but it somewhat forces a developer to study domain more in details instead of just throwing a primitive type without even thinking what that value represents in domain. The goal here is to encapsulate validations and business logic related only to the represented fields and make it impossible to pass around raw values by forcing a creation of valid **Value Objects** first.
+Creating objects for primitives ensures validation and encapsulates business logic. This prevents passing raw values and enforces rules.
 
-Benefits of using Value Objects instead of primitives:
-
-- Makes code easier to understand by using ubiquitous language instead of just string.
-- Improves security by ensuring invariants of every property.
-- Encapsulates specific business rules associated with a value.
-
-If every argument and return value of a method is valid by definition (by using **Value Objects**), you’ll have input and output validation in every single method in your codebase without any extra effort. This will make application more resilient to errors and will protect it from a whole class of bugs and security vulnerabilities caused by invalid input data.
-
-Without domain primitives, responsibilities fall on the entity code to validate, compare, and format the data, among other tasks. The entity code will be burdened with a lot of tasks, rather than focusing on the central business flow-of-state changes that it models. Using domain primitives can counteract the tendency for entities to grow overly complex.
+**Benefits:**
+- Simplifies code with ubiquitous language.
+- Ensures property invariants and improves security.
+- Encapsulates specific business rules.
 
 > [!WARNING]
-> Don't include Value Objects in objects that can be sent to other processes, like dtos, events, database models etc. Serialize them to primitive types first.
+> Serialize **Value Objects** to primitives before sending them to other processes (e.g., DTOs, events).
 
 > [!INFO]
-> This technique works best in languages like Scala with its value classes that represents such classes as primitives at runtime, meaning that object Email will be represented as String at runtime.
+> Libraries like [Runtypes](https://www.npmjs.com/package/runtypes) simplify creating **Value Objects** in Node.js.
 
-> [!INFO]
-> if you are using nodejs, [Runtypes](https://www.npmjs.com/package/runtypes) is a nice library that you can use instead of creating your own value objects for primitives.
-
-> [!NOTE]
-> Some people consider making a class/object for every primitive may be overengineering (unless you are using Scala with its value classes). For less complex and smaller projects it's definitely an overkill.
-
-If you notice that creating a class for every primitive doesn't give you much benefit:
-1. create classes just for those primitives that have specific rules or behavior,
-2. or just validate them only outside of domain using some validation framework.
+If creating classes for all primitives feels excessive:
+1. Use classes only for primitives that have specific rules or behavior.
+2. Validate them outside the domain using libraries or frameworks.
 
 
 ### Validation at compile time
 
-Use **types** to prevent errors at compile time, so IDE will show type errors right away.
+Use **types** to catch errors early during development.
 
-For example, imagine that business logic requires to have contact info of a person by either having email, or phone, or both. This could be presented as a union type:
+For example, enforce business rules like requiring contact info to include either an email, phone, or both:
 
 ```typescript
 type ContactInfo = Email | Phone | [Email, Phone];
@@ -201,104 +185,76 @@ This is called a *typestate* pattern.
 
 ### Validation at runtime
 
-There are a lot of cases when invalid data may end up in a domain. For example, if data comes from external API, database, or if it's just a programmer error. Things that can't be validated at compile time (like user input) are validated at runtime.
+Invalid data can enter a domain at runtime (from APIs, databases, or programming errors). 
 
-**First** line of defense is validation of user input DTOs.
+Runtime validation is required to ensure data integrity.
 
-**Second** line of defense are Domain Objects (guarding). Entities and value objects have to protect their invariants. You can use techniques like [Design by contract](https://en.wikipedia.org/wiki/Design_by_contract) by defining preconditions in object constructors and checking postconditions and invariants before saving an object to the database.
-
-> [!TIP]
-> By combining compile and runtime validations, using objects instead of primitives, enforcing self-validation and invariants of your domain objects, using **Design by contract**, [Algebraic Data Types (ADT)](https://en.wikipedia.org/wiki/Algebraic_data_type) and typestate pattern, and other similar techniques, you can achieve an architecture where it's hard, or even impossible, to end up in illegal states, thus improving security and robustness of your application dramatically (at a cost of extra boilerplate code).
+**Steps:**
+1. Validate input DTOs (validating).
+2. Domain objects protect their invariants (guarding) by defining preconditions (in constructor) and checking postconditions and invariants before saving an object to the database.
 
 
 ### Guarding vs Validating
 
-Validation happens at the application boundary (e.g., DTOs) to filter out incorrect external input before it reaches the domain.  
+- **Validation**: Filters bad input at application boundaries (e.g., DTOs). Returns errors for invalid data.
+- **Guarding**: Enforces invariants within the domain. Violations indicate bugs and must throw exceptions.
 
-Guarding happens inside the domain layer to enforce invariants and ensure the domain model remains always valid.  
-
-Validation is about filtration: rejecting bad input with error messages, nothing exceptional.  
-
-Guarding is about failsafe protection: violations here indicate bugs and must throw exceptions.  
-
-Once data passes validation, it is assumed valid inside the domain. Any violation inside the domain means that you’ve introduced a bug.
-
-Guards reveal bugs early and follow the [Fail Fast principle](https://enterprisecraftsmanship.com/posts/fail-fast-principle) by immediately throwing runtime exceptions.  
-
-Domain classes must always guard themselves against becoming invalid.
+Guards follow the [Fail Fast principle](https://enterprisecraftsmanship.com/posts/fail-fast-principle) by immediately throwing runtime exceptions, which helps revealing bugs early.
 
 
 ## Domain Events
 
-Domain Event indicates that something happened in a domain that you want other parts of the same domain (**in the same process**) to be aware of.
+A **Domain Event** signals that something significant occurred within the domain, notifying other parts of the same domain (**in the same process**).
 
-Domain events are just messages pushed to an in-memory Domain Event dispatcher.
+Domain Events are messages sent to an in-memory dispatcher. For example, when a user makes a purchase, you might:
+- Update their shopping cart.
+- Deduct money from their wallet.
+- Create a shipping order.
+- Trigger other domain-specific operations unrelated to the "buy" command.
 
-For example, if a user buys something, you may want to:
-- Update his shopping cart;
-- Withdraw money from his wallet;
-- Create a new shipping order;
-- Perform other domain operations that are not a concern of an aggregate that executes a "buy" command.
+If a command affects multiple aggregates, you can design and implement those side effects to be triggered by Domain Events. Handlers can subscribe to these events to propagate state changes across aggregates. 
 
-If executing a command requires additional domain rules to be run on one or more additional aggregates, you can design and implement those side effects to be triggered by Domain Events. Propagation of state changes across multiple aggregates within the same domain model can be performed by subscribing to a concrete Domain Event and creating as many event handlers as needed. 
+Domain Events are also useful for creating audit logs by saving events to the database. Changes triggered by Domain Events can be saved in a single database transaction.
 
-Domain Events may be useful for creating an audit log to track all changes to important entities by saving each event to the database.
-
-All changes caused by Domain Events across multiple aggregates in a single process can be saved in a single database transaction. 
-
-Example code:
-
-- [user-created.domain-event.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/modules/user/domain/events/user-created.domain-event.ts) - simple object that holds data related to published event.
-- [create-wallet-when-user-is-created.domain-event-handler.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/modules/wallet/application/event-handlers/create-wallet-when-user-is-created.domain-event-handler.ts) - this is an example of Domain Event Handler that executes some actions when a domain event is raised (in this case, when user is created it also creates a wallet for that user).
-- [sql-repository.base.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/libs/db/sql-repository.base.ts) - repository publishes all domain events for execution when it persists changes to an aggregate.
-- [create-user.service.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/create-user.service.ts) - in a service we execute a global transaction to make sure all the changes done by Domain Events across the application are stored atomically (all or nothing).
+**Examples:**
+- [user-created.domain-event.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/modules/user/domain/events/user-created.domain-event.ts): Holds event data.
+- [create-wallet-when-user-is-created.domain-event-handler.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/modules/wallet/application/event-handlers/create-wallet-when-user-is-created.domain-event-handler.ts): Handles events (e.g., creating a wallet when a user is created).
+- [sql-repository.base.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/libs/db/sql-repository.base.ts): Publishes events when persisting aggregates.
+- [create-user.service.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/create-user.service.ts): Executes global transactions to ensure atomic changes across events.
 
 
 ## Integration Events
 
-Integration Events are events sent to external process (microservices, external APIs).
+**Integration Events** are events sent to external processes (e.g., microservices, APIs). They should only be published after all **Domain Events** are processed and changes are saved.
 
-Integration Events usually should be published only after all Domain Events finished executing and saving all changes to the database.
+To handle these events, use external tools like RabbitMQ or Kafka, along with patterns such as:
+- Transactional Outbox
+- Change Data Capture
+- Sagas
+- Process Manager
 
-To handle integration events you may need an external message broker / event bus like RabbitMQ or Kafka together with patterns like Transactional outbox, Change Data Capture, Sagas or a Process Manager to maintain eventual consistency.
+These ensure eventual consistency across systems.
 
 
 ## Domain Errors
 
-Application's core and domain layers **shouldn't throw HTTP exceptions** since it shouldn't know in what context it's used, since it can be used by anything: HTTP controller, Microservice event handler, Command Line Interface etc.
+The core and domain layers **shouldn't throw HTTP exceptions** since they are context-agnostic and may be used in various environments (e.g., HTTP controllers, CLI tools).
 
-A better approach is to create custom error classes with appropriate error codes.
+Instead, use custom error classes with appropriate error codes. This approach:
+- Makes error handling and tracing easier.
+- Explicitly shows the types of errors a method can return.
+- Avoids invisible runtime exceptions.
 
-Exceptions are for exceptional situations. Complex domains usually have a lot of errors that are not exceptional, but a part of a business logic (like "seat already booked, choose another one"). Those errors may need special handling. In those cases returning explicit error types can be a better approach than throwing.
+**Throwing exceptions** is suitable for unrecoverable errors (e.g., out of memory). For recoverable errors, return explicit error types using [Algebraic Data Types (ADT)](https://en.wikipedia.org/wiki/Algebraic_data_type) or a Result object with Success/Failure conditions. This ensures errors are visible and manageable.
 
-Returning an error instead of throwing explicitly shows a type of each exception that a method can return so you can handle it accordingly. It can make an error handling and tracing easier.
-
-You can create an [Algebraic Data Types (ADT)](https://en.wikipedia.org/wiki/Algebraic_data_type) for your errors and use some kind of Result object type with a Success or a Failure condition.
-
-Unlike throwing exceptions, this approach allows defining types (ADTs) for every error and will let you see and handle them explicitly instead of using try/catch and avoid throwing exceptions that are invisible at compile time.
-
-**Throwing** makes errors invisible for the consumer of your functions/methods (until those errors happen at runtime, or until you dig deeply into the source code and find them). This means those errors are less likely to be handled properly.
-
-**Returning** errors instead of throwing them adds some extra boilerplate code, but can make your application robust and secure since errors are now explicitly documented and visible as return types. You decide what to do with each error: propagate it further, transform it, add extra metadata, or try to recover from it (for example, by retrying the operation).
+**Benefits of returning errors:**
+- Explicitly documents error types.
+- Allows handling errors (e.g., retrying, transforming, or propagating).
+- Improves robustness and security.
 
 > [!WARNING]
-> Some errors/exceptions are non-recoverable and should be thrown, not returned (connection failed, process out of memory, etc.). Analyze if the error is "likely recoverable" or "likely unrecoverable". If an error is most likely a recoverable error, it's a great candidate for using it in a Result object. If an error is most likely unrecoverable, throw it.
+> Use exceptions for non-recoverable errors (e.g., connection failures).
 
-Example code:
-- [user.errors.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/domain/user.errors.ts) - user errors
-- [create-user.service.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/create-user.service.ts) - `UserAlreadyExistsError()` is returned instead of throwing it.
-
-
-## Using libraries inside Application's core
-
-Libraries imported in application's core should be single responsibility libraries that help to implement domain logic (like working with numbers).
-
-Libraries imported in application's core shouldn't:
-- Expose functionality to access any out-of-process resources (http calls, database access etc);
-- Expose functionality not relevant to domain (frameworks, technology details like ORMs, Logger etc.).
-- Expose functionality that brings randomness (generating random IDs, timestamps etc.) since this makes tests unpredictable
-- Have a lot of dependencies of its own 
-
-You should be able to extract your domain layer and build a new infrastructure around it using any other framework without breaking your business logic.
-
-Try to minimize what your software depends on (dependencies) - the less that can go wrong, the less will go wrong. Finding a good balance is important, this skill requires experience.
+**Examples:**
+- [user.errors.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/domain/user.errors.ts): Defines user-related errors.
+- [create-user.service.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/create-user.service.ts): Returns `UserAlreadyExistsError()` instead of throwing it.
