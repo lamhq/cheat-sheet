@@ -1,0 +1,20 @@
+# Core
+
+## Introduction
+
+The center of the architecture, independent of frameworks, databases, or external systems.
+
+Ensures the system’s business logic remains pure and technology-agnostic.
+
+Divided into [Application Layer](./core/application.mdx) and [Domain Layer](./core/domain.mdx).
+
+
+## Using libraries
+
+Libraries in the core layer should be single responsibility libraries that help to implement domain logic (e.g., working with numbers).
+
+Avoid libraries that:
+- Access out-of-process resources (e.g., HTTP calls, database access).
+- Add irrelevant functionality (e.g., frameworks, ORMs, loggers).
+- Introduce randomness (e.g., random IDs, timestamps) that complicates testing.
+- Have excessive dependencies.

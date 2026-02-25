@@ -76,6 +76,38 @@ it('should declare player 1 as the winner', () => {
 ```
 
 
+## Multiplayer Tests
+
+Use the local multiplayer mode to simulate multiplayer interactions in unit tests.
+
+```ts
+import { Local } from 'boardgame.io/multiplayer';
+import { Client } from 'boardgame.io/client';
+
+it('multiplayer test', () => {
+  const spec = {
+    game: TicTacToeGame,
+    multiplayer: Local(),
+  };
+
+  const p0 = Client({ ...spec, playerID: '0' });
+  const p1 = Client({ ...spec, playerID: '1' });
+
+  p0.start();
+  p1.start();
+
+  p0.moves.moveA();
+  p0.events.endTurn();
+
+  // Player 1's state reflects the moves made by Player 0.
+  expect(p1.getState()).toEqual(...);
+
+  p1.moves.moveA();
+  p1.events.endTurn();
+});
+```
+
+
 ## Testing Randomness
 
 If you are testing a move that uses the Random API, these strategies can be used to make the move deterministic and testable:
@@ -133,36 +165,5 @@ it ('rolls a six', () => {
   client.moves.rollDice();
   const { G } = client.getState();
   expect(G.roll).toMatchInlineSnapshot(`6`);
-});
-```
-
-
-## Multiplayer Tests
-
-Use the local multiplayer mode to simulate multiplayer interactions in unit tests.
-
-```ts
-import { Local } from 'boardgame.io/multiplayer';
-
-it('multiplayer test', () => {
-  const spec = {
-    game: TicTacToeGame,
-    multiplayer: Local(),
-  };
-
-  const p0 = Client({ ...spec, playerID: '0' });
-  const p1 = Client({ ...spec, playerID: '1' });
-
-  p0.start();
-  p1.start();
-
-  p0.moves.moveA();
-  p0.events.endTurn();
-
-  // Player 1's state reflects the moves made by Player 0.
-  expect(p1.getState()).toEqual(...);
-
-  p1.moves.moveA();
-  p1.events.endTurn();
 });
 ```

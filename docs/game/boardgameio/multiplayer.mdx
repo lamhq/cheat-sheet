@@ -4,7 +4,7 @@
 
 A boardgame.io client is what you create using the `Client` call. You initialize it with your game object.
 
-In a multiplayer setup, clients delegate the running of the game to a game master. Clients emit moves / events, but the game logic runs on the master.
+In a multiplayer setup, clients delegate the running of the game to a game master. Clients emit moves/events, but the game logic runs on the master.
 
 To connect a client to a remote master, we use the multiplayer option and specify the location of the server:
 
@@ -27,7 +27,7 @@ Then render the game client for a specific player by passing in the `playerID` p
 
 ## Master
 
-The master subscribes to moves / events and computes the next game state before broadcasting it to other clients.
+The master subscribes to moves/events and computes the next game state before broadcasting it to other clients.
 
 To create a remote master, we use the `Server` class provided by `boardgame.io/server` module and configure it with:
 - The game object
@@ -70,7 +70,7 @@ const TicTacToeGame = {
 ```
 
 
-## Game Instances (Matches)
+## Matches
 
 To have multiple matches of the same game, pass `matchID` to your client:
 
@@ -141,7 +141,7 @@ Moves that manipulate secret state often cannot run on the client because the cl
 
 These can be marked as server-only by setting `client: false` on move:
 
-```ts
+```ts {7}
 moves: {
   moveThatUsesSecret: {
     move: ({ G, random }) => {

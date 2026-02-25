@@ -1,0 +1,294 @@
+# Application
+
+## Introduction
+
+Defines the **use cases** (how business rules are applied to achieve goals).
+
+Acts as the bridge between the **Interface** Layer (controllers, DTOs) and the **Domain** Layer:
+- Translates external requests into domain operations and orchestrates workflows.
+- Ensures business rules are applied consistently by delegating to the Domain Layer.
+
+> [!INFO]
+> A use case is a list of actions/steps defining the interactions between an actor (UML) and a system to achieve a goal.
+
+Contains **Application Services**, **Commands**, **Queries**, and **Ports**.
+
+
+## Application Services
+
+Application Services are used to orchestrate the steps required to fulfill use cases imposed by client.
+
+Connect the Interface Layer (controllers, DTOs) with the Domain Layer (entities, value objects).  
+
+Operate on scalar types, transforming them into Domain types. 
+
+> [!INFO]
+> A scalar type includes primitive types and types that don't belong to the Domain.
+
+Don't contain business rules but delegate to domain **entities**, **aggregates**, and **services** to enforce them.
+
+Can call **Infrastructure**'s services through **ports** to perform tasks required by use cases (don't depend on Infrastructure).
+
+Ensure consistency across operations, often wrapping domain actions in a unit of work.  
+
+Should not depend on other application services, as this may cause problems (such as cyclic dependencies).
+
+It's a good practice to have one Application Service per use case.
+
+For example, in an e-commerce system, an **OrderApplicationService** might:  
+1. Accept a `PlaceOrderCommand` from the controller.  
+2. Validate input and call the `Order` aggregate to create a new order.  
+3. Use a repository (via a port) to persist the order.  
+4. Publish a domain event like `OrderPlaced`.  
+
+Define an application service:
+```ts title="create-user.service.ts"
+@CommandHandler(CreateUserCommand)
+export class CreateUserService implements ICommandHandler {
+  constructor(
+    @Inject(USER_REPOSITORY)
+    protected readonly userRepo: UserRepositoryPort,
+  ) {}
+
+  async execute(
+    command: CreateUserCommand,
+  ): Promise<Result<AggregateID, UserAlreadyExistsError>> {
+    const user = UserEntity.create({
+      email: command.email,
+      address: new Address({
+        country: command.country,
+        postalCode: command.postalCode,
+        street: command.street,
+      }),
+    });
+
+    try {
+      /* Wrapping operation in a transaction to make sure
+         that all domain events are processed atomically */
+      await this.userRepo.transaction(async () => this.userRepo.insert(user));
+      return Ok(user.id);
+    } catch (error: any) {
+      if (error instanceof ConflictException) {
+        return Err(new UserAlreadyExistsError(error));
+      }
+      throw error;
+    }
+  }
+}
+```
+
+
+## Commands and Queries
+
+The Interface Layer converts external input into commands/queries objects and delegates them to Application Services, which execute the use case using the Domain Layer.
+
+Commands and Queries are two distinct ways of handling requests, following the [CQRS principle](https://en.wikipedia.org/wiki/Command%E2%80%93query_separation). One changes data, another just retrieves data.
+
+
+### Command
+
+A `Command` is a data object expressing user intent (e.g., `CreateUserCommand`). It describes an action but does not execute it.
+
+`Commands` are used to perform state changes (create, update, delete), for example creating a user and saving it to the database.
+
+Command handlers may return an ID, redirect URL, confirmation, status, or other metadata.
+
+Use a **Command Bus** to run commands instead of importing services. This decouples the invoker from the handler and lets you send commands from anywhere.
+
+Avoid command handlers calling other commands (Command → Command). Use events and chain follow-up commands inside event handlers (Command → Event → Command).
+
+Define a command:
+```ts title="create-user.command.ts"
+export class CreateUserCommand extends Command {
+  readonly email: string;
+
+  readonly country: string;
+
+  readonly postalCode: string;
+
+  readonly street: string;
+
+  constructor(props: CommandProps<CreateUserCommand>) {
+    super(props);
+    this.email = props.email;
+    this.country = props.country;
+    this.postalCode = props.postalCode;
+    this.street = props.street;
+  }
+}
+```
+
+Execute a command:
+```ts title="create-user.message.controller.ts"
+export class CreateUserMessageController {
+  constructor(private readonly commandBus: CommandBus) {}
+
+  @MessagePattern('user.create') // <- Subscribe to a microservice message
+  async create(message: CreateUserRequestDto): Promise<IdResponse> {
+    const command = new CreateUserCommand(message);
+
+    const id = await this.commandBus.execute(command);
+
+    return new IdResponse(id.unwrap());
+  }
+}
+```
+
+Handle a command:
+```ts title="create-user.service.ts"
+@CommandHandler(CreateUserCommand)
+export class CreateUserService implements ICommandHandler {
+  constructor(
+    @Inject(USER_REPOSITORY)
+    protected readonly userRepo: UserRepositoryPort,
+  ) {}
+
+  async execute(
+    command: CreateUserCommand,
+  ): Promise<Result<AggregateID, UserAlreadyExistsError>> {
+    const user = UserEntity.create({
+      email: command.email,
+      address: new Address({
+        country: command.country,
+        postalCode: command.postalCode,
+        street: command.street,
+      }),
+    });
+
+    try {
+      /* Wrapping operation in a transaction to make sure
+         that all domain events are processed atomically */
+      await this.userRepo.transaction(async () => this.userRepo.insert(user));
+      return Ok(user.id);
+    } catch (error: any) {
+      if (error instanceof ConflictException) {
+        return Err(new UserAlreadyExistsError(error));
+      }
+      throw error;
+    }
+  }
+}
+```
+
+
+### Queries
+
+A `Query` is a read-model object expressing intent to retrieve data (e.g., `FindUsersQuery`).
+
+Queries must not change state — no writes to the database, files, or external APIs.
+
+Query handlers may query the database directly and can bypass domain objects when appropriate.
+
+Use a `Query Bus` to execute queries without importing Application Services directly and avoid tight coupling.
+
+Define a query:
+```ts title="find-users.query-handler.ts"
+export class FindUsersQuery extends PaginatedQueryBase {
+  readonly country?: string;
+
+  readonly postalCode?: string;
+
+  readonly street?: string;
+
+  constructor(props: PaginatedParams<FindUsersQuery>) {
+    super(props);
+    this.country = props.country;
+    this.postalCode = props.postalCode;
+    this.street = props.street;
+  }
+}
+```
+
+Handle a query:
+```ts title="find-users.query-handler.ts"
+@QueryHandler(FindUsersQuery)
+export class FindUsersQueryHandler implements IQueryHandler {
+  constructor(
+    @InjectPool()
+    private readonly pool: DatabasePool,
+  ) {}
+
+  /**
+   * In read model we don't need to execute
+   * any business logic, so we can bypass
+   * domain and repository layers completely
+   * and execute query directly
+   */
+  async execute(
+    query: FindUsersQuery,
+  ): Promise<Result<Paginated<UserModel>, Error>> {
+    /**
+     * Constructing a query with Slonik.
+     * More info: https://contra.com/p/AqZWWoUB-writing-composable-sql-using-jav
+   a-script                                                                             */
+    const statement = sql.type(userSchema)`
+         SELECT *
+         FROM users
+         WHERE
+           ${query.country ? sql`country = ${query.country}` : true} AND
+           ${query.street ? sql`street = ${query.street}` : true} AND
+           ${query.postalCode ? sql`"postalCode" = ${query.postalCode}` : true}
+         LIMIT ${query.limit}
+         OFFSET ${query.offset}`;
+
+    const records = await this.pool.query(statement);
+
+    return Ok(
+      new Paginated({
+        data: records.rows,
+        count: records.rowCount,
+        limit: query.limit,
+        page: query.page,
+      }),
+    );
+  }
+}
+```
+
+> [!NOTE]
+> This guide uses [NestJS CQRS](https://docs.nestjs.com/recipes/cqrs) package that provides a command/query bus.
+
+
+## Ports
+
+Ports are interfaces that define contracts adapters must implement.
+
+Use ports to abstract side effects and technology details (databases, I/O, external APIs, legacy code).
+
+Ports need to be designed to match Domain needs — do not merely mirror tool APIs.
+
+Implementations of Ports live in Infrastructure and are injected into the Application via [DI](https://en.wikipedia.org/wiki/Dependency_injection). This keeps business logic technology-independent and testable.
+
+Split large ports when sensible, but avoid excessive fragmentation ([Interface segregation principle](https://en.wikipedia.org/wiki/Interface_segregation_principle)).
+
+Only add ports for things likely to change (databases, external services, frameworks) to avoid needless abstraction ([unnecessary abstractions](https://mortoray.com/2014/08/01/the-false-abstraction-antipattern/)).
+
+Define a repository port for user:
+
+```ts title="user.repository.port.ts"
+export interface FindUsersParams extends PaginatedQueryParams {
+  readonly country?: string;
+  readonly postalCode?: string;
+  readonly street?: string;
+}
+
+export interface UserRepositoryPort extends RepositoryPort<UserEntity> {
+  findOneByEmail(email: string): Promise<UserEntity | null>;
+}
+```
+
+Application logger port:
+
+```ts title="logger.port.ts"
+export interface LoggerPort {
+  log(message: string, ...meta: unknown[]): void;
+  error(message: string, trace?: unknown, ...meta: unknown[]): void;
+  warn(message: string, ...meta: unknown[]): void;
+  debug(message: string, ...meta: unknown[]): void;
+}
+```
+
+**Benefits**:
+- **Testability:** mock implementations to test application logic in isolation.
+- **Flexibility:** swap implementations without changing domain code.
+- **Delayed decisions:** implement Domain before choosing technologies.

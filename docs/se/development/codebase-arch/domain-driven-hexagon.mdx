@@ -1,65 +1,192 @@
 # Domain-Driven Hexagon
 
+## Introduction
+
+This architecture combines several architectural styles and principles:
+- [Domain-Driven Design (DDD)](https://en.wikipedia.org/wiki/Domain-driven_design)
+- [Hexagonal Architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)) (Ports and Adapters)
+- [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+- [SOLID Principles](https://en.wikipedia.org/wiki/SOLID)
+- [Secure by Design](https://www.manning.com/books/secure-by-design)
+
+The goal is to build applications that are technology-agnostic, modular, testable, and scalable while keeping business logic at the center.
+
+
 ## Pros & Cons
 
-Pros:
-- Independent of external frameworks, technologies, databases, etc. Frameworks and external resources can be plugged/unplugged with much less effort.
-- Testable.
-- Secure. Some security principles are baked into the design itself.
-- Clear separation of concerns. Different teams can contribute and maintain together without stepping on each other's toes.
-- Scalable. Easier to add new features. The difficulty of adding new features remains constant and relatively small.
+**Pros**:
+- Framework-agnostic: external frameworks, databases, and services can be swapped with minimal changes.
+- Secure: security principles are integrated into the design.
+- Clear separation of concerns: teams can work independently.
+- Testable and scalable: adding features is easier and remains manageable.
 
-Cons:
-- Sophisticated architecture. Requires an expert to drive the solution and prevent it from evolving in the wrong way and accumulating technical debt.
-- Added up-front complexity to support all those building blocks and layers, boilerplate code, abstractions, data mapping, etc. Not recommended for small/medium-sized applications with limited business logic.
+**Cons**:
+- Sophisticated architecture: requires strong expertise in DDD, Clean/Hexagonal architecture, and SOLID.
+- Added up-front complexity: extra layers, abstractions, and boilerplate.
+
+
+## When to Use?
+
+Suitable for applications with complex business logic.
+
+> [!CAUTION]
+> Not recommended for simple CRUD apps that mainly map the database to a client; consider [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) instead.
+
+## Architecture Overview
+
+The codebase is organized into small, independent [modules](#modules) that reflect domain concepts.
+
+Each module consists of layers:
+- [Core](./domain-driven-hexagon/core.mdx): encapsulates business logic with entities, aggregates, value objects, domain services, and events. It’s framework-independent and represents the heart of the system.
+- [Interface](./domain-driven-hexagon/interface.mdx): provides entry points (controllers, DTOs) for users or external systems, translating requests into commands/queries and returning responses.
+- [Infrastructure](./domain-driven-hexagon/infrastructure.mdx): implements technical details like repositories, persistence models, messaging, and external API integrations, fulfilling contracts defined by ports while staying outside core business logic.
+
+![](https://github.com/Sairyss/domain-driven-hexagon/blob/master/assets/images/DomainDrivenHexagon.png?raw=true)
 
 
 ## Data Flow
 
-![](https://github.com/Sairyss/domain-driven-hexagon/blob/master/assets/images/DomainDrivenHexagon.png?raw=true)
+Data flow:
+1. **Request/CLI command/event** arrives as a plain **DTO** to a Controller.
+2. **Controller** maps the DTO to a **Command/Query object** and calls an Application Service.
+3. **Application Service** orchestrates business logic using **entities/aggregates/domain services** and calls Infrastructure via **ports**.
+4. **Infrastructure** layer:
+   1. Maps data to the format it needs.
+   2. Persists/retrieves data.
+   3. Calls external APIs or sends events via **adapters**.
+   4. Maps results back for the domain.
+5. Application Service returns results to the **Controller**.
+6. **Controller** returns data to the user or to a presenter/view.
 
-Data flow (from left to right in the diagram):
-1. **Request/CLI command/event** is sent to the controller using a plain **DTO**.
-2. **Controller** parses this DTO, maps it to a **Command/Query object** format, and passes it to an Application service.
-3. **Application service** handles this Command/Query, executes business logic using **domain services** and **entities/aggregates**, and uses the infrastructure layer through ports (interfaces).
-4. **Infrastructure layer**:
-   - Maps data to the required format.
-   - Retrieves/persists data from/to a database.
-   - Uses **adapters** for other I/O communications (e.g., sending an event to an external broker or calling external APIs).
-   - Maps data back to the domain format and returns it to the Application service.
-5. After the Application service finishes its job, it returns data/confirmation back to **Controllers**.
-6. **Controllers** return data back to the user (if the application has presenters/views, those are returned instead).
 
-Each layer is responsible for its own logic and follows the Single Responsibility Principle.
+## Sourcecode Structure
 
-Different projects can have more or fewer steps/layers/building blocks.
+core/
+   commands/
+   queries/
+   services/
+   ports/
+   entities/
+   aggregates/
+   value-objects/
+   domain-services/
+   events/
+   errors/
+infrastructure/
+   repositories/
+   models/
+interface/
+   dtos/
+   controllers/
+   resolvers/
+   event-handlers/
+
+- Divide application by modules
+- Divide each module by business domain
+- Divide each business domain by use cases
+- Keep files that change together close to each other ([Common Closure Principle](https://ericbackhage.net/clean-code/the-common-closure-principle/) and [Vertical Slicing](https://jimmybogard.com/vertical-slice-architecture/))
+- Group files by behavior (create user, delete user, etc.), not by type (controllers, services, repositories, etc.)
+- Shared files like domain objects (entities/aggregates), repositories, shared DTOs, interfaces, etc. are stored outside of feature directory since they are usually reused by multiple subcomponents.
+- Respect boundaries in your code, inner layers are not allowed to import outer layers
+- Avoid a lot of nested folders
+
+```
+src
+├── modules
+│   ├── user
+│   │   ├── commands
+│   │   │   ├── create-user
+│   │   │   │   ├── graphql-example
+│   │   │   │   │   ├── dtos
+│   │   │   │   │   │   ├── create-user.gql-request.dto.ts
+│   │   │   │   │   │   └── id.gql-response.dto.ts
+│   │   │   │   │   └── create-user.graphql-resolver.ts
+│   │   │   │   ├── create-user.cli.controller.ts
+│   │   │   │   ├── create-user.command.ts
+│   │   │   │   ├── create-user.http.controller.ts
+│   │   │   │   ├── create-user.message.controller.ts
+│   │   │   │   ├── create-user.request.dto.ts
+│   │   │   │   └── create-user.service.ts
+│   │   ├── database
+│   │   │   ├── user.repository.port.ts
+│   │   │   └── user.repository.ts
+│   │   ├── domain
+│   │   │   ├── events
+│   │   │   │   ├── user-address-updated.domain-event.ts
+│   │   │   │   ├── user-created.domain-event.ts
+│   │   │   │   ├── user-deleted.domain-event.ts
+│   │   │   │   └── user-role-changed.domain-event.ts
+│   │   │   ├── value-objects
+│   │   │   │   └── address.value-object.ts
+│   │   │   ├── user.entity.ts
+│   │   │   ├── user.errors.ts
+│   │   │   └── user.types.ts
+│   │   ├── dtos
+│   │   │   ├── graphql
+│   │   │   │   ├── user.graphql-response.dto.ts
+│   │   │   │   └── user.paginated-gql-response.dto.ts
+│   │   │   ├── user.paginated.response.dto.ts
+│   │   │   └── user.response.dto.ts
+│   │   ├── queries
+│   │   │   └── find-users
+│   │   │       ├── find-users.graphql-resolver.ts
+│   │   │       ├── find-users.http.controller.ts
+│   │   │       ├── find-users.query-handler.ts
+│   │   │       └── find-users.request.dto.ts
+│   │   ├── user.mapper.ts
+│   │   └── user.module.ts
+```
+
+### File names
+
+File name format: `{name}.{type}.ts`
+
+Where:
+- `{name}` is the name of the file, which should be descriptive of its purpose
+- `{type}` is the type of the file, which can be one of the following:
+  - `controller`
+  - `service`
+  - `repository`
+  - `entity`
+  - `aggregate`
+  - `dto`
+  - `interface`
+  - `mapper`
+  - `command`
+  - `query`
+
+Examples:
+- `create-user.controller.ts`
+- `user.service.ts`
+- `user.repository.ts`
+- `user.entity.ts`
+
 
 ## Modules
 
-The codebase uses the principle of separation by modules to ensure loose coupling:
-- Refactoring of a module's internals can be done more easily because the outside world only depends on the module's public interface.
-- Each module can be easily separated into a microservice if needed, without touching any domain logic or requiring major refactoring (if bounded contexts are designed properly).
+Each module lives in its own folder and represents a bounded context or business capability.
 
-Each module should reflect an important concept from the Domain and have its own folder as a dedicated codebase.
+**Benefits**:
+- Refactor internals without affecting other modules.
+- Easier to split into a microservice when bounded contexts are well-defined.
 
-Each module contains business use cases, each in its own folder.
+**Best practices to reduce coupling**:
+- Keep module interactions minimal; prefer small, explicit interfaces.
+- Move shared logic to common utilities rather than creating cross-module dependencies.
+- Avoid importing another module's internals; use a [mediator](https://en.wikipedia.org/wiki/Mediator_pattern#:~:text=In%20software%20engineering%2C%20the%20mediator,often%20consist%20of%20many%20classes.) or a public [facade](https://en.wikipedia.org/wiki/Facade_pattern).
+- Prefer message-based communication when modules need to coordinate (send commands using a command bus or subscribe to events that other modules emit).
 
-Think of a module as a "box" that groups together related business logic, or a mini-application bounded by a single context.
+> [!TIPS]
+> Keep modules small. You should be able to rewrite a module in a relatively short period of time.
 
-Keep your modules small. It should be possible to rewrite a module in a relatively short period of time.
 
-A few pieces of advice to avoid coupling:
-- Every module should be independent, and interactions between modules should be kept minimal.
-- Try not to create dependencies between modules or use cases. Instead, move shared logic into separate files and make both depend on that, rather than on each other.
-- Avoid directly importing a module's internal components, as this creates tight coupling and can turn your code into [spaghetti](https://en.wikipedia.org/wiki/Spaghetti_code) and your application into a [big ball of mud](https://en.wikipedia.org/wiki/Big_ball_of_mud).
-- Modules can cooperate through a [mediator](https://en.wikipedia.org/wiki/Mediator_pattern#:~:text=In%20software%20engineering%2C%20the%20mediator,often%20consist%20of%20many%20classes.) or a public [facade](https://en.wikipedia.org/wiki/Facade_pattern), hiding all private internals of the module to avoid misuse, and giving public access only to certain functionality meant to be public.
-- Modules can communicate with each other by using messages. *For example, you can send commands using a command bus or subscribe to events that other modules emit.*
+## Best Practices
 
-Each module consists of layers:
-- Application Layer
-- Domain Layer
-- Interface Adapters
-- Infrastructure Layer
+Architectural Best Practices:
+
+- Choose patterns that fit your project's needs; avoid overengineering.
+- Follow the [YAGNI](https://en.wikipedia.org/wiki/You_aren%27t_gonna_need_it) and [KISS](https://en.wikipedia.org/wiki/KISS_principle) principles: don't add features or patterns before they are needed.
+- Evaluate the cost vs. benefit before introducing a pattern or abstraction.
 
 
 ## References

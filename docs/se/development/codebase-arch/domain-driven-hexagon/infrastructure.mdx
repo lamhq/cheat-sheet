@@ -1,0 +1,199 @@
+# Infrastructure
+
+## Introduction
+
+The Infrastructure layer provides the technical capabilities needed to support the application and domain.
+
+Depends on the Core layer. Provides concrete adapters (e.g., database repositories, message brokers, external APIs) that implement ports defined in the Application Layer.
+
+Handles data persistence, networking, logging, caching, authentication, integration with external systems.
+
+It's the most volatile layer. It's kept separate in order to make it easy to make changes or swap one component for another.
+
+Can contain:
+- framework related code
+- I/O services that access external resources
+- database repositories
+- ORM entities/Schemas
+- messages/events publishers
+- email services
+- file storage services
+- etc.
+
+Example:
+1. The Application Layer defines an `OrderRepositoryPort`.
+2. The Infrastructure Layer provides `PostgresOrderRepository` or `MongoOrderRepository` that implements this port.
+3. At runtime, a DI library injects the chosen implementation into the Application Service.  
+
+
+## Adapters
+
+Infrastructure adapters enable interaction with external systems (databases, message brokers, 3rd party APIs, etc.).
+
+Adapters also can be used to interact with different domains inside single process to avoid coupling between those domains.
+
+Adapters implement ports and should only be accessed through them. Callers depend on ports, not adapter implementations.
+
+Key components of adapters:
+- A port in the domain layer they implement.
+- A mapper that maps data from and to domain (if needed).
+- A DTO/interface for received data.
+- A validator to ensure data integrity (via decorators in DTO class or Value Objects).
+
+
+## Repositories
+
+Repositories abstract collections of entities in a database. They centralize data access and encapsulate logic for accessing data.
+
+They are used to decouple database technology from the domain model layer.
+
+Data flow:
+1. Receive a domain Entity from the application service.
+2. Map it to a database schema/ORM format.
+3. Perform operations (save, update, retrieve, etc.).
+4. Map it back to a domain Entity and return it.
+
+### Example code
+
+Defines a generic port that repositories should implement:
+
+```ts title="repository.port.ts"
+export interface RepositoryPort<Entity> {
+  insert(entity: Entity | Entity[]): Promise<void>;
+  findOneById(id: string): Promise<Option<Entity>>;
+  findAll(): Promise<Entity[]>;
+  findAllPaginated(params: PaginatedQueryParams): Promise<Paginated<Entity>>;
+  delete(entity: Entity): Promise<boolean>;
+  transaction<T>(handler: () => Promise<T>): Promise<T>;
+}
+```
+
+Define user repository port:
+
+```ts title="user.repository.port.ts"
+import { PaginatedQueryParams, RepositoryPort } from '@libs/ddd';
+import { UserEntity } from '../domain/user.entity';
+
+export interface UserRepositoryPort extends RepositoryPort<UserEntity> {
+  findOneByEmail(email: string): Promise<UserEntity | null>;
+}
+```
+
+Concrete repository that implements `RepositoryPort`:
+
+```ts title="user.repository.ts"
+import { UserRepositoryPort } from './user.repository.port';
+import { UserMapper } from '../user.mapper';
+import { UserRoles } from '../domain/user.types';
+import { UserEntity } from '../domain/user.entity';
+
+@Injectable()
+export class UserRepository
+  extends SqlRepositoryBase<UserEntity, UserModel>
+  implements UserRepositoryPort
+{
+  constructor(
+    @InjectPool()
+    pool: DatabasePool,
+    mapper: UserMapper,
+    eventEmitter: EventEmitter2,
+  ) {
+    super(pool, mapper, eventEmitter, new Logger(UserRepository.name));
+  }
+
+  async findOneByEmail(email: string): Promise<UserEntity> {
+    const user = await this.pool.one(
+      sql.type(userSchema)`SELECT * FROM "users" WHERE email = ${email}`,
+    );
+
+    return this.mapper.toDomain(user);
+  }
+}
+```
+
+> [!NOTE]
+> The application's core usually depends on abstractions (ports/interfaces), not repositories. However, this abstraction may be unnecessary for projects unlikely to change database technology. It can also limit the use of database-specific features.
+
+
+## Persistence models
+
+In DDD, domain models and persistence models should be separate to avoid a database-centric architecture. Domain models focus on logic, while persistence models suit database needs.
+
+Benefits:
+- Avoids mixing domain logic with database concerns.
+- Allows database normalization or denormalization as needed.
+
+Challenges:
+- Requires effort to create and maintain mappers and abstractions.
+- May be overkill for smaller applications.
+
+### Example code
+
+Defines `userSchema` and `UserModel` for database representation:
+
+```ts
+import { z } from 'zod';
+
+export const userSchema = z.object({
+  id: z.string().uuid(),
+  createdAt: z.preprocess((val: any) => new Date(val), z.date()),
+  updatedAt: z.preprocess((val: any) => new Date(val), z.date()),
+  email: z.string().email(),
+  country: z.string().min(1).max(255),
+  postalCode: z.string().min(1).max(20),
+  street: z.string().min(1).max(255),
+  role: z.nativeEnum(UserRoles),
+});
+
+export type UserModel = z.TypeOf<typeof userSchema>;
+```
+
+Maps between domain and persistence models:
+
+```ts title="user.mapper.ts"
+import { Mapper } from '@libs/ddd';
+import { UserModel, userSchema } from './database/user.repository';
+import { Address } from './domain/value-objects/address.value-object';
+import { UserEntity } from './domain/user.entity';
+
+@Injectable()
+export class UserMapper
+  implements Mapper<UserEntity, UserModel, UserResponseDto>
+{
+  toPersistence(entity: UserEntity): UserModel {
+    const copy = entity.getProps();
+    const record: UserModel = {
+      id: copy.id,
+      createdAt: copy.createdAt,
+      updatedAt: copy.updatedAt,
+      email: copy.email,
+      country: copy.address.country,
+      postalCode: copy.address.postalCode,
+      street: copy.address.street,
+      role: copy.role,
+    };
+    return userSchema.parse(record);
+  }
+
+  toDomain(record: UserModel): UserEntity {
+    const entity = new UserEntity({
+      id: record.id,
+      createdAt: new Date(record.createdAt),
+      updatedAt: new Date(record.updatedAt),
+      props: {
+        email: record.email,
+        role: record.role,
+        address: new Address({
+          street: record.street,
+          postalCode: record.postalCode,
+          country: record.country,
+        }),
+      },
+    });
+    return entity;
+  }
+}
+```
+
+> [!TIP]
+> TypeORM Entity can be used as persistence model for small projects.

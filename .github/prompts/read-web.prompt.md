@@ -2,7 +2,7 @@
 agent: agent
 model: Grok Code Fast 1 (copilot)
 tools: ['web']
-description: Read a webpage by extracting key sections and providing brief descriptions for each.
+description: Fetch provided URL and extract brief descriptions for each section in the fetched content.
 ---
 use the fetch_webpage tool to get the content of the provided URL
 

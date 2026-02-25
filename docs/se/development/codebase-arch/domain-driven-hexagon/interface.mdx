@@ -1,0 +1,288 @@
+# Interface Adapters
+
+## Introduction
+
+Also known as **Driving/Primary Adapters**.
+
+This layer serves as the app's entry point.
+
+It provides user-facing interfaces like:
+- Input/Output (request/response) DTOs
+- CLI Controllers
+- Event Handlers
+
+It wraps the application core, adapting its input/output to delivery mechanisms (e.g., HTML, JSON, CLI, gRPC).
+
+It depends on the **Core** layer, communicating with it via **Commands**/**Queries** handled by **Application Services**. 
+
+Interface adapters:
+- Transform client input in a form that is convenient for **use cases** and **entities**.
+- Transform output from use cases and entities for client to display.
+
+
+## Controllers / Resolvers / Message Handlers
+
+Controllers are user-facing APIs that parse requests, trigger business logic, and present results to clients.
+
+Best Practices:
+- Use one controller per **use case** for clarity.
+- Separate controllers by trigger type (http, CLI, microservice message, GraphQL).
+
+
+### Example code
+
+HTTP Controller:
+
+```ts title="create-user.http.controller.ts"
+import { match, Result } from 'oxide.ts';
+import { CreateUserCommand } from './create-user.command';
+import { CreateUserRequestDto } from './create-user.request.dto';
+import { UserAlreadyExistsError } from '@modules/user/domain/user.errors';
+import { IdResponse } from '@libs/api/id.response.dto';
+import { AggregateID } from '@libs/ddd';
+
+@Controller(routesV1.version)
+export class CreateUserHttpController {
+  constructor(private readonly commandBus: CommandBus) {}
+
+  @ApiOperation({ summary: 'Create a user' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: IdResponse,
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: UserAlreadyExistsError.message,
+    type: ApiErrorResponse,
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    type: ApiErrorResponse,
+  })
+  @Post(routesV1.user.root)
+  async create(@Body() body: CreateUserRequestDto): Promise<IdResponse> {
+    const command = new CreateUserCommand(body);
+
+    const result: Result<AggregateID, UserAlreadyExistsError> =
+      await this.commandBus.execute(command);
+
+    return match(result, {
+      Ok: (id: string) => new IdResponse(id),
+      Err: (error: Error) => {
+        if (error instanceof UserAlreadyExistsError)
+          throw new ConflictHttpException(error.message);
+        throw error;
+      },
+    });
+  }
+}
+```
+
+CLI Controller:
+
+```ts title="create-user.cli.controller.ts"
+import { Inject, Logger } from '@nestjs/common';
+import { Command, Console } from 'nestjs-console';
+import { CommandBus } from '@nestjs/cqrs';
+import { CreateUserCommand } from './create-user.command';
+import { LoggerPort } from '@libs/ports/logger.port';
+
+@Console({
+  command: 'new',
+  description: 'A command to create a user',
+})
+export class CreateUserCliController {
+  constructor(
+    private readonly commandBus: CommandBus,
+    @Inject(Logger)
+    private readonly logger: LoggerPort,
+  ) {}
+
+  @Command({
+    command: 'user <email> <country> <postalCode> <street>',
+    description: 'Create a user',
+  })
+  async createUser(
+    email: string,
+    country: string,
+    postalCode: string,
+    street: string,
+  ): Promise<void> {
+    const command = new CreateUserCommand({
+      email,
+      country,
+      postalCode,
+      street,
+    });
+
+    const result = await this.commandBus.execute(command);
+
+    this.logger.log('User created:', result.unwrap());
+  }
+}
+```
+
+Microservices Message Controller:
+
+```ts title="create-user.message.controller.ts"
+import { Controller } from '@nestjs/common';
+import { MessagePattern } from '@nestjs/microservices';
+import { CommandBus } from '@nestjs/cqrs';
+import { CreateUserCommand } from './create-user.command';
+import { CreateUserRequestDto } from './create-user.request.dto';
+import { IdResponse } from '@libs/api/id.response.dto';
+
+@Controller()
+export class CreateUserMessageController {
+  constructor(private readonly commandBus: CommandBus) {}
+
+  @MessagePattern('user.create') // <- Subscribe to a microservice message
+  async create(message: CreateUserRequestDto): Promise<IdResponse> {
+    const command = new CreateUserCommand(message);
+
+    const id = await this.commandBus.execute(command);
+
+    return new IdResponse(id.unwrap());
+  }
+}
+```
+
+GraphQL Resolver:
+
+```ts title="create-user.graphql-resolver.ts"
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { CommandBus } from '@nestjs/cqrs';
+import { CreateUserCommand } from '../create-user.command';
+import { CreateUserGqlRequestDto } from './dtos/create-user.gql-request.dto';
+import { IdGqlResponse } from './dtos/id.gql-response.dto';
+import { AggregateID } from '@src/libs/ddd';
+import { UserAlreadyExistsError } from '@src/modules/user/domain/user.errors';
+import { Result } from 'oxide.ts';
+
+@Resolver()
+export class CreateUserGraphqlResolver {
+  constructor(private readonly commandBus: CommandBus) {}
+
+  @Mutation(() => IdGqlResponse)
+  async create(
+    @Args('input') input: CreateUserGqlRequestDto,
+  ): Promise<IdGqlResponse> {
+    const command = new CreateUserCommand(input);
+
+    const id: Result<AggregateID, UserAlreadyExistsError> =
+      await this.commandBus.execute(command);
+
+    return new IdGqlResponse(id.unwrap());
+  }
+}
+```
+
+
+## DTOs
+
+Data Transfer Objects (DTOs) carry data between processes and define contracts between APIs and clients.
+
+### Request DTOs
+
+Define the structure clients must follow to make valid requests.
+
+```ts title="create-user.request.dto.ts"
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsAlphanumeric,
+  IsEmail,
+  IsString,
+  Matches,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
+
+export class CreateUserRequestDto {
+  @ApiProperty({
+    example: 'john@gmail.com',
+    description: 'User email address',
+  })
+  @MaxLength(320)
+  @MinLength(5)
+  @IsEmail()
+  readonly email: string;
+
+  @ApiProperty({ example: 'France', description: 'Country of residence' })
+  @MaxLength(50)
+  @MinLength(4)
+  @IsString()
+  @Matches(/^[a-zA-Z ]*$/)
+  readonly country: string;
+
+  @ApiProperty({ example: '28566', description: 'Postal code' })
+  @MaxLength(10)
+  @MinLength(4)
+  @IsAlphanumeric()
+  readonly postalCode: string;
+
+  @ApiProperty({ example: 'Grande Rue', description: 'Street' })
+  @MaxLength(50)
+  @MinLength(5)
+  @Matches(/^[a-zA-Z ]*$/)
+  readonly street: string;
+}
+```
+
+### Response DTOs
+
+Ensure clients receive only the intended data, preventing data leaks.
+
+```ts title="create-user.response.dto.ts"
+import { ApiProperty } from '@nestjs/swagger';
+import { ResponseBase } from '@libs/api/response.base';
+
+export class UserResponseDto extends ResponseBase {
+  @ApiProperty({
+    example: 'joh-doe@gmail.com',
+    description: "User's email address",
+  })
+  email: string;
+
+  @ApiProperty({
+    example: 'France',
+    description: "User's country of residence",
+  })
+  country: string;
+
+  @ApiProperty({
+    example: '123456',
+    description: 'Postal code',
+  })
+  postalCode: string;
+
+  @ApiProperty({
+    example: 'Park Avenue',
+    description: 'Street where the user is registered',
+  })
+  street: string;
+}
+```
+
+### Benefits
+- Protect clients from internal data structure changes.
+- Maintain compatibility by mapping internal changes to DTOs.
+
+> [!NOTE]
+> Command objects may have similar structure to Request DTOs but serve internal domain communication, not client contracts.
+
+**Best Practices**:
+- DTOs's properties should be mostly primitives, flat structures.
+- When returning responses, prefer whitelisting (only allow predefined properties) over blacklisting (excluding certain properties) for security.
+- Place DTOs in a shared package if used across apps (e.g., frontend, backend) via .
+- Use validation/sanitization decorators like [class-validator](https://www.npmjs.com/package/class-validator) and [class-sanitizer](https://www.npmjs.com/package/class-sanitizer) for DTOs.
+- Transform data to DTOs using separated mappers or perform transformation in DTO constructors.
+
+### Local DTOs
+
+Local DTOs are used as contracts between the domain and other layers when you don't want to expose your domain objects (entities, .etc) outside of the domain layer.
+
+Local DTOs can be used to:
+- Prevent exposing domain objects outside the domain layer. They're contracts between the domain and other layers.
+- Decouple modules by avoiding leaking entities between them.
+
+Downsides of Local DTOs: adds complexity and requires extra boilerplate (e.g., defining interfaces, data mapping).
