@@ -20,34 +20,248 @@ Interface adapters:
 - Transform output from use cases and entities for client to display.
 
 
-## Controllers
+## Controllers / Resolvers / Message Handlers
 
 Controllers are user-facing APIs that parse requests, trigger business logic, and present results to clients.
 
 Best Practices:
 - Use one controller per **use case** for clarity.
-- Separate controllers by trigger type, e.g.,:
-  - HTTP requests: [create-user.http.controller.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/create-user.http.controller.ts)
-  - CLI access: [create-user.cli.controller.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/create-user.cli.controller.ts)
-  - External messages: [create-user.message.controller.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/create-user.message.controller.ts)
+- Separate controllers by trigger type (http, CLI, microservice message, GraphQL).
 
 
-## Resolvers
+### Example code
 
-If you are using GraphQL instead of controllers, you will use Resolvers.
+HTTP Controller:
 
-Example code:
+```ts title="create-user.http.controller.ts"
+import { match, Result } from 'oxide.ts';
+import { CreateUserCommand } from './create-user.command';
+import { CreateUserRequestDto } from './create-user.request.dto';
+import { UserAlreadyExistsError } from '@modules/user/domain/user.errors';
+import { IdResponse } from '@libs/api/id.response.dto';
+import { AggregateID } from '@libs/ddd';
 
-- [create-user.graphql-resolver.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/graphql-example/create-user.graphql-resolver.ts)
+@Controller(routesV1.version)
+export class CreateUserHttpController {
+  constructor(private readonly commandBus: CommandBus) {}
+
+  @ApiOperation({ summary: 'Create a user' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: IdResponse,
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: UserAlreadyExistsError.message,
+    type: ApiErrorResponse,
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    type: ApiErrorResponse,
+  })
+  @Post(routesV1.user.root)
+  async create(@Body() body: CreateUserRequestDto): Promise<IdResponse> {
+    const command = new CreateUserCommand(body);
+
+    const result: Result<AggregateID, UserAlreadyExistsError> =
+      await this.commandBus.execute(command);
+
+    return match(result, {
+      Ok: (id: string) => new IdResponse(id),
+      Err: (error: Error) => {
+        if (error instanceof UserAlreadyExistsError)
+          throw new ConflictHttpException(error.message);
+        throw error;
+      },
+    });
+  }
+}
+```
+
+CLI Controller:
+
+```ts title="create-user.cli.controller.ts"
+import { Inject, Logger } from '@nestjs/common';
+import { Command, Console } from 'nestjs-console';
+import { CommandBus } from '@nestjs/cqrs';
+import { CreateUserCommand } from './create-user.command';
+import { LoggerPort } from '@libs/ports/logger.port';
+
+@Console({
+  command: 'new',
+  description: 'A command to create a user',
+})
+export class CreateUserCliController {
+  constructor(
+    private readonly commandBus: CommandBus,
+    @Inject(Logger)
+    private readonly logger: LoggerPort,
+  ) {}
+
+  @Command({
+    command: 'user <email> <country> <postalCode> <street>',
+    description: 'Create a user',
+  })
+  async createUser(
+    email: string,
+    country: string,
+    postalCode: string,
+    street: string,
+  ): Promise<void> {
+    const command = new CreateUserCommand({
+      email,
+      country,
+      postalCode,
+      street,
+    });
+
+    const result = await this.commandBus.execute(command);
+
+    this.logger.log('User created:', result.unwrap());
+  }
+}
+```
+
+Microservices Message Controller:
+
+```ts title="create-user.message.controller.ts"
+import { Controller } from '@nestjs/common';
+import { MessagePattern } from '@nestjs/microservices';
+import { CommandBus } from '@nestjs/cqrs';
+import { CreateUserCommand } from './create-user.command';
+import { CreateUserRequestDto } from './create-user.request.dto';
+import { IdResponse } from '@libs/api/id.response.dto';
+
+@Controller()
+export class CreateUserMessageController {
+  constructor(private readonly commandBus: CommandBus) {}
+
+  @MessagePattern('user.create') // <- Subscribe to a microservice message
+  async create(message: CreateUserRequestDto): Promise<IdResponse> {
+    const command = new CreateUserCommand(message);
+
+    const id = await this.commandBus.execute(command);
+
+    return new IdResponse(id.unwrap());
+  }
+}
+```
+
+GraphQL Resolver:
+
+```ts title="create-user.graphql-resolver.ts"
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { CommandBus } from '@nestjs/cqrs';
+import { CreateUserCommand } from '../create-user.command';
+import { CreateUserGqlRequestDto } from './dtos/create-user.gql-request.dto';
+import { IdGqlResponse } from './dtos/id.gql-response.dto';
+import { AggregateID } from '@src/libs/ddd';
+import { UserAlreadyExistsError } from '@src/modules/user/domain/user.errors';
+import { Result } from 'oxide.ts';
+
+@Resolver()
+export class CreateUserGraphqlResolver {
+  constructor(private readonly commandBus: CommandBus) {}
+
+  @Mutation(() => IdGqlResponse)
+  async create(
+    @Args('input') input: CreateUserGqlRequestDto,
+  ): Promise<IdGqlResponse> {
+    const command = new CreateUserCommand(input);
+
+    const id: Result<AggregateID, UserAlreadyExistsError> =
+      await this.commandBus.execute(command);
+
+    return new IdGqlResponse(id.unwrap());
+  }
+}
+```
 
 
 ## DTOs
 
 Data Transfer Objects (DTOs) carry data between processes and define contracts between APIs and clients.
 
-### Request and Response DTOs
-- **Request DTOs**: Define the structure clients must follow to make valid requests. Example: [create-user.request.dto.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/create-user.request.dto.ts)
-- **Response DTOs**: Ensure clients receive only the intended data, preventing data leaks. Example: [create-user.response.dto.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/dtos/user.response.dto.ts)
+### Request DTOs
+
+Define the structure clients must follow to make valid requests.
+
+```ts title="create-user.request.dto.ts"
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsAlphanumeric,
+  IsEmail,
+  IsString,
+  Matches,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
+
+export class CreateUserRequestDto {
+  @ApiProperty({
+    example: 'john@gmail.com',
+    description: 'User email address',
+  })
+  @MaxLength(320)
+  @MinLength(5)
+  @IsEmail()
+  readonly email: string;
+
+  @ApiProperty({ example: 'France', description: 'Country of residence' })
+  @MaxLength(50)
+  @MinLength(4)
+  @IsString()
+  @Matches(/^[a-zA-Z ]*$/)
+  readonly country: string;
+
+  @ApiProperty({ example: '28566', description: 'Postal code' })
+  @MaxLength(10)
+  @MinLength(4)
+  @IsAlphanumeric()
+  readonly postalCode: string;
+
+  @ApiProperty({ example: 'Grande Rue', description: 'Street' })
+  @MaxLength(50)
+  @MinLength(5)
+  @Matches(/^[a-zA-Z ]*$/)
+  readonly street: string;
+}
+```
+
+### Response DTOs
+
+Ensure clients receive only the intended data, preventing data leaks.
+
+```ts title="create-user.response.dto.ts"
+import { ApiProperty } from '@nestjs/swagger';
+import { ResponseBase } from '@libs/api/response.base';
+
+export class UserResponseDto extends ResponseBase {
+  @ApiProperty({
+    example: 'joh-doe@gmail.com',
+    description: "User's email address",
+  })
+  email: string;
+
+  @ApiProperty({
+    example: 'France',
+    description: "User's country of residence",
+  })
+  country: string;
+
+  @ApiProperty({
+    example: '123456',
+    description: 'Postal code',
+  })
+  postalCode: string;
+
+  @ApiProperty({
+    example: 'Park Avenue',
+    description: 'Street where the user is registered',
+  })
+  street: string;
+}
+```
 
 ### Benefits
 - Protect clients from internal data structure changes.

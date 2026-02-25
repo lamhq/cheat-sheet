@@ -1,4 +1,4 @@
-## Application
+# Application
 
 ## Introduction
 
@@ -41,8 +41,41 @@ For example, in an e-commerce system, an **OrderApplicationService** might:
 3. Use a repository (via a port) to persist the order.  
 4. Publish a domain event like `OrderPlaced`.  
 
-Example code:
-- [`create-user.service.ts`](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/create-user.service.ts)
+Define an application service:
+```ts title="create-user.service.ts"
+@CommandHandler(CreateUserCommand)
+export class CreateUserService implements ICommandHandler {
+  constructor(
+    @Inject(USER_REPOSITORY)
+    protected readonly userRepo: UserRepositoryPort,
+  ) {}
+
+  async execute(
+    command: CreateUserCommand,
+  ): Promise<Result<AggregateID, UserAlreadyExistsError>> {
+    const user = UserEntity.create({
+      email: command.email,
+      address: new Address({
+        country: command.country,
+        postalCode: command.postalCode,
+        street: command.street,
+      }),
+    });
+
+    try {
+      /* Wrapping operation in a transaction to make sure
+         that all domain events are processed atomically */
+      await this.userRepo.transaction(async () => this.userRepo.insert(user));
+      return Ok(user.id);
+    } catch (error: any) {
+      if (error instanceof ConflictException) {
+        return Err(new UserAlreadyExistsError(error));
+      }
+      throw error;
+    }
+  }
+}
+```
 
 
 ## Commands and Queries
@@ -64,10 +97,78 @@ Use a **Command Bus** to run commands instead of importing services. This decoup
 
 Avoid command handlers calling other commands (Command → Command). Use events and chain follow-up commands inside event handlers (Command → Event → Command).
 
-Example code:
-- [create-user.command.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/create-user.command.ts) – a command object.
-- [create-user.message.controller.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/create-user.message.controller.ts) – controller uses a command bus to execute a command.
-- [create-user.service.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/create-user.service.ts) – a command handler.
+Define a command:
+```ts title="create-user.command.ts"
+export class CreateUserCommand extends Command {
+  readonly email: string;
+
+  readonly country: string;
+
+  readonly postalCode: string;
+
+  readonly street: string;
+
+  constructor(props: CommandProps<CreateUserCommand>) {
+    super(props);
+    this.email = props.email;
+    this.country = props.country;
+    this.postalCode = props.postalCode;
+    this.street = props.street;
+  }
+}
+```
+
+Execute a command:
+```ts title="create-user.message.controller.ts"
+export class CreateUserMessageController {
+  constructor(private readonly commandBus: CommandBus) {}
+
+  @MessagePattern('user.create') // <- Subscribe to a microservice message
+  async create(message: CreateUserRequestDto): Promise<IdResponse> {
+    const command = new CreateUserCommand(message);
+
+    const id = await this.commandBus.execute(command);
+
+    return new IdResponse(id.unwrap());
+  }
+}
+```
+
+Handle a command:
+```ts title="create-user.service.ts"
+@CommandHandler(CreateUserCommand)
+export class CreateUserService implements ICommandHandler {
+  constructor(
+    @Inject(USER_REPOSITORY)
+    protected readonly userRepo: UserRepositoryPort,
+  ) {}
+
+  async execute(
+    command: CreateUserCommand,
+  ): Promise<Result<AggregateID, UserAlreadyExistsError>> {
+    const user = UserEntity.create({
+      email: command.email,
+      address: new Address({
+        country: command.country,
+        postalCode: command.postalCode,
+        street: command.street,
+      }),
+    });
+
+    try {
+      /* Wrapping operation in a transaction to make sure
+         that all domain events are processed atomically */
+      await this.userRepo.transaction(async () => this.userRepo.insert(user));
+      return Ok(user.id);
+    } catch (error: any) {
+      if (error instanceof ConflictException) {
+        return Err(new UserAlreadyExistsError(error));
+      }
+      throw error;
+    }
+  }
+}
+```
 
 
 ### Queries
@@ -80,8 +181,69 @@ Query handlers may query the database directly and can bypass domain objects whe
 
 Use a `Query Bus` to execute queries without importing Application Services directly and avoid tight coupling.
 
-Example code:
-- [find-users.query-handler.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/modules/user/queries/find-users/find-users.query-handler.ts) - a query handler that queries the database directly (more info [here](https://codeopinion.com/should-you-use-the-repository-pattern-with-cqrs-yes-and-no/)).
+Define a query:
+```ts title="find-users.query-handler.ts"
+export class FindUsersQuery extends PaginatedQueryBase {
+  readonly country?: string;
+
+  readonly postalCode?: string;
+
+  readonly street?: string;
+
+  constructor(props: PaginatedParams<FindUsersQuery>) {
+    super(props);
+    this.country = props.country;
+    this.postalCode = props.postalCode;
+    this.street = props.street;
+  }
+}
+```
+
+Handle a query:
+```ts title="find-users.query-handler.ts"
+@QueryHandler(FindUsersQuery)
+export class FindUsersQueryHandler implements IQueryHandler {
+  constructor(
+    @InjectPool()
+    private readonly pool: DatabasePool,
+  ) {}
+
+  /**
+   * In read model we don't need to execute
+   * any business logic, so we can bypass
+   * domain and repository layers completely
+   * and execute query directly
+   */
+  async execute(
+    query: FindUsersQuery,
+  ): Promise<Result<Paginated<UserModel>, Error>> {
+    /**
+     * Constructing a query with Slonik.
+     * More info: https://contra.com/p/AqZWWoUB-writing-composable-sql-using-jav
+   a-script                                                                             */
+    const statement = sql.type(userSchema)`
+         SELECT *
+         FROM users
+         WHERE
+           ${query.country ? sql`country = ${query.country}` : true} AND
+           ${query.street ? sql`street = ${query.street}` : true} AND
+           ${query.postalCode ? sql`"postalCode" = ${query.postalCode}` : true}
+         LIMIT ${query.limit}
+         OFFSET ${query.offset}`;
+
+    const records = await this.pool.query(statement);
+
+    return Ok(
+      new Paginated({
+        data: records.rows,
+        count: records.rowCount,
+        limit: query.limit,
+        page: query.page,
+      }),
+    );
+  }
+}
+```
 
 > [!NOTE]
 > This guide uses [NestJS CQRS](https://docs.nestjs.com/recipes/cqrs) package that provides a command/query bus.
@@ -101,13 +263,32 @@ Split large ports when sensible, but avoid excessive fragmentation ([Interface s
 
 Only add ports for things likely to change (databases, external services, frameworks) to avoid needless abstraction ([unnecessary abstractions](https://mortoray.com/2014/08/01/the-false-abstraction-antipattern/)).
 
-Example code:
-- [repository.port.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/libs/ddd/repository.port.ts) - generic repository port
-- [user.repository.port.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/modules/user/database/user.repository.port.ts) - user repository port
-- [find-users.query-handler.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/modules/user/queries/find-users/find-users.query-handler.ts) - query handler that depends on a port
-- [logger.port.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/libs/ports/logger.port.ts) - application logger port
+Define a repository port for user:
 
-Benefits:
+```ts title="user.repository.port.ts"
+export interface FindUsersParams extends PaginatedQueryParams {
+  readonly country?: string;
+  readonly postalCode?: string;
+  readonly street?: string;
+}
+
+export interface UserRepositoryPort extends RepositoryPort<UserEntity> {
+  findOneByEmail(email: string): Promise<UserEntity | null>;
+}
+```
+
+Application logger port:
+
+```ts title="logger.port.ts"
+export interface LoggerPort {
+  log(message: string, ...meta: unknown[]): void;
+  error(message: string, trace?: unknown, ...meta: unknown[]): void;
+  warn(message: string, ...meta: unknown[]): void;
+  debug(message: string, ...meta: unknown[]): void;
+}
+```
+
+**Benefits**:
 - **Testability:** mock implementations to test application logic in isolation.
 - **Flexibility:** swap implementations without changing domain code.
 - **Delayed decisions:** implement Domain before choosing technologies.

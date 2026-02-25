@@ -48,9 +48,55 @@ Avoid placing business logic in Application Services unless necessary. This prev
 > [!CAUTION]
 > Avoid creating one module per entity. Group related entities with shared business logic in a module.
 
-Example code:
-- [user.entity.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/modules/user/domain/user.entity.ts)
-- [wallet.entity.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/modules/wallet/domain/wallet.entity.ts)
+Wallet Entity:
+
+```ts title="wallet.entity.ts"
+import { WalletCreatedDomainEvent } from './events/wallet-created.domain-event';
+import { WalletNotEnoughBalanceError } from './wallet.errors';
+
+export interface CreateWalletProps {
+  userId: AggregateID;
+}
+
+export interface WalletProps extends CreateWalletProps {
+  balance: number;
+}
+
+export class WalletEntity extends AggregateRoot<WalletProps> {
+  protected readonly _id: AggregateID;
+
+  static create(create: CreateWalletProps): WalletEntity {
+    const id = randomUUID();
+    const props: WalletProps = { ...create, balance: 0 };
+    const wallet = new WalletEntity({ id, props });
+
+    wallet.addEvent(
+      new WalletCreatedDomainEvent({ aggregateId: id, userId: create.userId }),
+    );
+
+    return wallet;
+  }
+
+  deposit(amount: number): void {
+    this.props.balance += amount;
+  }
+
+  withdraw(amount: number): Result<null, WalletNotEnoughBalanceError> {
+    if (this.props.balance - amount < 0) {
+      return Err(new WalletNotEnoughBalanceError());
+    }
+    this.props.balance -= amount;
+    return Ok(null);
+  }
+
+  public validate(): void {
+    // protect invariants
+    if (this.props.balance < 0) {
+      throw new ArgumentOutOfRangeException('Wallet balance cannot be less than 0');
+    }
+  }
+}
+```
 
 
 ## Aggregates
@@ -74,9 +120,116 @@ All changes to an aggregate must be saved, updated, or deleted together.
 
 Changes within an aggregate must maintain invariants and consistency. Protect invariants across the entire aggregate lifecycle.
 
-Example Code:
-- [aggregate-root.base.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/libs/ddd/aggregate-root.base.ts) - Abstract base class.
-- [user.entity.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/modules/user/domain/user.entity.ts) - Example of an aggregate root.
+
+Base class for Aggregate Roots:
+
+```ts title="aggregate-root.base.ts"
+import { DomainEvent } from './domain-event.base';
+import { Entity } from './entity.base';
+import { RequestContextService } from '../application/context/AppRequestContext';
+
+export abstract class AggregateRoot<EntityProps> extends Entity<EntityProps> {
+  private _domainEvents: DomainEvent[] = [];
+
+  get domainEvents(): DomainEvent[] {
+    return this._domainEvents;
+  }
+
+  protected addEvent(domainEvent: DomainEvent): void {
+    this._domainEvents.push(domainEvent);
+  }
+
+  public clearEvents(): void {
+    this._domainEvents = [];
+  }
+
+  public async publishEvents(
+    logger: LoggerPort,
+    eventEmitter: EventEmitter2,
+  ): Promise<void> {
+    await Promise.all(
+      this.domainEvents.map(async (event) => {
+        logger.debug(
+          `[${RequestContextService.getRequestId()}] "${event.constructor.name}" event published for aggregate ${this.constructor.name} : ${this.id}`,
+        );
+        return eventEmitter.emitAsync(event.constructor.name, event);
+      }),
+    );
+    this.clearEvents();
+  }
+}
+```
+
+User Entity:
+
+```ts title="user.entity.ts"
+import { UserCreatedDomainEvent } from './events/user-created.domain-event';
+import { Address, AddressProps } from './value-objects/address.value-object';
+import {
+  CreateUserProps,
+  UpdateUserAddressProps,
+  UserProps,
+  UserRoles,
+} from './user.types';
+import { UserDeletedDomainEvent } from './events/user-deleted.domain-event';
+import { UserRoleChangedDomainEvent } from './events/user-role-changed.domain-event';
+import { UserAddressUpdatedDomainEvent } from './events/user-address-updated.domain-event';
+
+export class UserEntity extends AggregateRoot<UserProps> {
+  protected readonly _id: AggregateID;
+
+  static create(create: CreateUserProps): UserEntity {
+    const id = randomUUID();
+    const props: UserProps = { ...create, role: UserRoles.guest };
+    const user = new UserEntity({ id, props });
+    // ...
+    user.addEvent(
+      new UserCreatedDomainEvent({
+        aggregateId: id,
+        email: props.email,
+        ...props.address.unpack(),
+      }),
+    );
+    return user;
+  }
+
+  get role(): UserRoles {
+    return this.props.role;
+  }
+
+  private changeRole(newRole: UserRoles): void {
+    this.addEvent(
+      new UserRoleChangedDomainEvent({
+        aggregateId: this.id,
+        oldRole: this.props.role,
+        newRole,
+      }),
+    );
+    // ...
+    this.props.role = newRole;
+  }
+
+  makeAdmin(): void {
+    this.changeRole(UserRoles.admin);
+  }
+
+  makeModerator(): void {
+    this.changeRole(UserRoles.moderator);
+  }
+
+  delete(): void {
+    this.addEvent(
+      new UserDeletedDomainEvent({
+        aggregateId: this.id,
+      }),
+    );
+  }
+
+  validate(): void {
+    // entity business rules validation to protect it's invariant before saving entity to a database
+  }
+}
+```
 
 
 ## Value objects
@@ -100,6 +253,40 @@ Value object should form a well-defined concept in the domain model, even if it 
 Example code:
 - [address.value-object.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/domain/value-objects/address.value-object.ts)
 
+```ts title="address.value-object.ts"
+export interface AddressProps {
+  country: string;
+  postalCode: string;
+  street: string;
+}
+
+export class Address extends ValueObject<AddressProps> {
+  get country(): string {
+    return this.props.country;
+  }
+
+  get postalCode(): string {
+    return this.props.postalCode;
+  }
+
+  get street(): string {
+    return this.props.street;
+  }
+
+  protected validate(props: AddressProps): void {
+    if (!Guard.lengthIsBetween(props.country, 2, 50)) {
+      throw new ArgumentOutOfRangeException('country is out of range');
+    }
+    if (!Guard.lengthIsBetween(props.street, 2, 50)) {
+      throw new ArgumentOutOfRangeException('street is out of range');
+    }
+    if (!Guard.lengthIsBetween(props.postalCode, 2, 10)) {
+      throw new ArgumentOutOfRangeException('postalCode is out of range');
+    }
+  }
+}
+```
+
 
 ## Domain Services
 
@@ -120,9 +307,6 @@ Examples:
 - Wallet balances cannot drop below zero.
 
 Domain objects (entities, aggregate roots, value objects) enforce invariants to ensure business rules are followed.
-
-Example code:
-- [wallet.entity.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/wallet/domain/wallet.entity.ts) (see `validate` method).
 
 
 ### Enforcing invariants using Value Objects
@@ -216,11 +400,47 @@ If a command affects multiple aggregates, you can design and implement those sid
 
 Domain Events are also useful for creating audit logs by saving events to the database. Changes triggered by Domain Events can be saved in a single database transaction.
 
-**Examples:**
-- [user-created.domain-event.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/modules/user/domain/events/user-created.domain-event.ts): Holds event data.
-- [create-wallet-when-user-is-created.domain-event-handler.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/modules/wallet/application/event-handlers/create-wallet-when-user-is-created.domain-event-handler.ts): Handles events (e.g., creating a wallet when a user is created).
-- [sql-repository.base.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/libs/db/sql-repository.base.ts): Publishes events when persisting aggregates.
-- [create-user.service.ts](https://github.com/sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/create-user.service.ts): Executes global transactions to ensure atomic changes across events.
+Define a domain event:
+
+```ts title="user-created.domain-event.ts"
+export class UserCreatedDomainEvent extends DomainEvent {
+  readonly email: string;
+  readonly country: string;
+  readonly postalCode: string;
+  readonly street: string;
+
+  constructor(props: DomainEventProps<UserCreatedDomainEvent>) {
+    super(props);
+    this.email = props.email;
+    this.country = props.country;
+    this.postalCode = props.postalCode;
+    this.street = props.street;
+  }
+}
+```
+
+Handle a domain event:
+
+```ts title="create-wallet-when-user-is-created.domain-event-handler.ts"
+import { WalletEntity } from '../../domain/wallet.entity';
+import { WALLET_REPOSITORY } from '../../wallet.di-tokens';
+
+@Injectable()
+export class CreateWalletWhenUserIsCreatedDomainEventHandler {
+  constructor(
+    @Inject(WALLET_REPOSITORY)
+    private readonly walletRepo: WalletRepositoryPort,
+  ) {}
+
+  @OnEvent(UserCreatedDomainEvent.name, { async: true, promisify: true })
+  async handle(event: UserCreatedDomainEvent): Promise<any> {
+    const wallet = WalletEntity.create({
+      userId: event.aggregateId,
+    });
+    return this.walletRepo.insert(wallet);
+  }
+}
+```
 
 
 ## Integration Events
@@ -255,6 +475,53 @@ Instead, use custom error classes with appropriate error codes. This approach:
 > [!WARNING]
 > Use exceptions for non-recoverable errors (e.g., connection failures).
 
-**Examples:**
-- [user.errors.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/domain/user.errors.ts): Defines user-related errors.
-- [create-user.service.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/create-user.service.ts): Returns `UserAlreadyExistsError()` instead of throwing it.
+Define a domain error:
+
+```ts title="user.errors.ts"
+export class UserAlreadyExistsError extends ExceptionBase {
+  static readonly message = 'User already exists';
+  public readonly code = 'USER.ALREADY_EXISTS';
+
+  constructor(cause?: Error, metadata?: unknown) {
+    super(UserAlreadyExistsError.message, cause, metadata);
+  }
+}
+```
+
+Return a domain error:
+```ts title="create-user.service.ts"
+import { Err, Ok, Result } from 'oxide.ts';
+import { CreateUserCommand } from './create-user.command';
+import { USER_REPOSITORY } from '../../user.di-tokens';
+
+@CommandHandler(CreateUserCommand)
+export class CreateUserService implements ICommandHandler {
+  constructor(
+    @Inject(USER_REPOSITORY)
+    protected readonly userRepo: UserRepositoryPort,
+  ) {}
+
+  async execute(
+    command: CreateUserCommand,
+  ): Promise<Result<AggregateID, UserAlreadyExistsError>> {
+    const user = UserEntity.create({
+      email: command.email,
+      address: new Address({
+        country: command.country,
+        postalCode: command.postalCode,
+        street: command.street,
+      }),
+    });
+
+    try {
+      await this.userRepo.transaction(async () => this.userRepo.insert(user));
+      return Ok(user.id);
+    } catch (error: any) {
+      if (error instanceof ConflictException) {
+        return Err(new UserAlreadyExistsError(error));
+      }
+      throw error;
+    }
+  }
+}
+```
