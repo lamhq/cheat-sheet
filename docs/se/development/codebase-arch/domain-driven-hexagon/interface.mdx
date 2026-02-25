@@ -1,38 +1,35 @@
 # Interface Adapters
 
-Aka **Driving/Primary Adapters**.
-
-Interface Adapters layer contains user-facing interfaces:
-- Input/Output DTOs
-- CLI Controllers
-- Event Handlers (handle external events)
-- etc.
-
-They wrap around an application core and adapt its input/output to a delivery mechanism (e.g., HTML, JSON (REST), JSON (GraphQL), CLI, gRPC, etc.).
-
-Depend on **Core** layer. Communicate with it by executing **Commands**/**Queries**, which are handled by **Application Services**.
-
-
 ## Introduction
 
-They are the entry point for the users of your app.
+Also known as **Driving/Primary Adapters**.
 
-Interface adapters (also called driving/primary adapters) are client-facing interfaces that:
-- take input data from the **client** (user, external system, etc.) and repackage it in a form that is convenient for the **use cases**(services/command handlers) and **entities**.
-- take the output from those use cases and entities and repackage it in a form that is convenient for displaying it back for the client. 
+This layer serves as the app's entry point.
 
-Interface Adapters contain **Controllers**, **Request/Response DTOs**, **Presenters** (or Views).
+It provides user-facing interfaces like:
+- Input/Output (request/response) DTOs
+- CLI Controllers
+- Event Handlers
+
+It wraps the application core, adapting its input/output to delivery mechanisms (e.g., HTML, JSON, CLI, gRPC).
+
+It depends on the **Core** layer, communicating with it via **Commands**/**Queries** handled by **Application Services**. 
+
+Interface adapters:
+- Transform client input in a form that is convenient for **use cases** and **entities**.
+- Transform output from use cases and entities for client to display.
+
 
 ## Controllers
 
-Controller is a user-facing API that is used for parsing requests, triggering business logic and presenting the result back to the client.
+Controllers are user-facing APIs that parse requests, trigger business logic, and present results to clients.
 
-One controller per **use case** is considered a good practice.
-
-One controller per trigger type can be used to have a clearer separation. For example:
-- [create-user.http.controller.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/create-user.http.controller.ts) for http requests (NestJS Controllers),
-- [create-user.cli.controller.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/create-user.cli.controller.ts) for command line interface access (NestJS Console)
-- [create-user.message.controller.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/create-user.message.controller.ts) for external messages (NestJS Microservices).
+Best Practices:
+- Use one controller per **use case** for clarity.
+- Separate controllers by trigger type, e.g.,:
+  - HTTP requests: [create-user.http.controller.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/create-user.http.controller.ts)
+  - CLI access: [create-user.cli.controller.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/create-user.cli.controller.ts)
+  - External messages: [create-user.message.controller.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/create-user.message.controller.ts)
 
 
 ## Resolvers
@@ -46,32 +43,32 @@ Example code:
 
 ## DTOs
 
-Data Transfer Object is an object that carries data between processes. It defines a contract between your API and clients.
+Data Transfer Objects (DTOs) carry data between processes and define contracts between APIs and clients.
 
-Using **Request DTOs** gives a contract that a client of your API has to follow to make a correct request. Examples: [create-user.request.dto.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/create-user.request.dto.ts)
+### Request and Response DTOs
+- **Request DTOs**: Define the structure clients must follow to make valid requests. Example: [create-user.request.dto.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/commands/create-user/create-user.request.dto.ts)
+- **Response DTOs**: Ensure clients receive only the intended data, preventing data leaks. Example: [create-user.response.dto.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/dtos/user.response.dto.ts)
 
-Using Response DTOs ensures clients only receive data described in DTOs contract, not everything that your model/entity owns (which may result in data leaks). Examples: [create-user.response.dto.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/dtos/user.response.dto.ts)
-
-DTO contracts protect your clients from internal data structure changes that may happen in your API. When internal data models change (like renaming variables or splitting tables), they can still be mapped to match a corresponding DTO to maintain compatibility for anyone using your API.
-
-When updating DTO interfaces, a new version of API can be created by prefixing an endpoint with a version number, for example: `v2/users`
+### Benefits
+- Protect clients from internal data structure changes.
+- Maintain compatibility by mapping internal changes to DTOs.
 
 > [!NOTE]
-> Command objects may have the same properties as Request DTOs, but they are not the same thing. Command objects are used for internal communication in the domain model, whereas DTOs are the data contracts for clients of your API. Without the DTOs, the API will have breaking changes with every modification of the domain model.
+> Command objects may have similar structure to Request DTOs but serve internal domain communication, not client contracts.
 
-### Best practices
-
-- DTOs should be data-oriented, not object-oriented. Its properties should be mostly primitives, flat structures (we are not modeling anything here).
-- When returning a Response prefer whitelisting (only allow predefined properties) over blacklisting (excluding certain properties) for security.
-- If you use the same DTOs in multiple apps (frontend and backend, or between microservices), you can keep them in a shared package
-- Request/Response DTO classes may be a good place to use validation and sanitization decorators like [class-validator](https://www.npmjs.com/package/class-validator) and [class-sanitizer](https://www.npmjs.com/package/class-sanitizer)
-- DTO can be just an interface instead of a class if not using decorators (for validation, documentation, etc.).
-- Data can be transformed to DTO format using a separate mapper or in the constructor of a DTO class.
+**Best Practices**:
+- DTOs's properties should be mostly primitives, flat structures.
+- When returning responses, prefer whitelisting (only allow predefined properties) over blacklisting (excluding certain properties) for security.
+- Place DTOs in a shared package if used across apps (e.g., frontend, backend) via .
+- Use validation/sanitization decorators like [class-validator](https://www.npmjs.com/package/class-validator) and [class-sanitizer](https://www.npmjs.com/package/class-sanitizer) for DTOs.
+- Transform data to DTOs using separated mappers or perform transformation in DTO constructors.
 
 ### Local DTOs
 
-Local DTOs can be used as contracts between the domain and other layers when you don't want to expose your domain objects (entities, .etc) outside of the domain layer.
+Local DTOs are used as contracts between the domain and other layers when you don't want to expose your domain objects (entities, .etc) outside of the domain layer.
 
-You can also use them to decouple modules. For example, when querying from one module to another you don't want to leak your entities between modules. In that case using a Local DTO may be justified.
+Local DTOs can be used to:
+- Prevent exposing domain objects outside the domain layer. They're contracts between the domain and other layers.
+- Decouple modules by avoiding leaking entities between them.
 
-The downside of using Local DTOs is that they add extra complexity and boilerplate code like interfaces and data mapping.
+Downsides of Local DTOs: adds complexity and requires extra boilerplate (e.g., defining interfaces, data mapping).
