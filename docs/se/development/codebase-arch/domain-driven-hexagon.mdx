@@ -59,107 +59,77 @@ Data flow:
 6. **Controller** returns data to the user or to a presenter/view.
 
 
-## Sourcecode Structure
+## Code Structuring
 
-core/
-   commands/
-   queries/
-   services/
-   ports/
-   entities/
-   aggregates/
-   value-objects/
-   domain-services/
-   events/
-   errors/
-infrastructure/
-   repositories/
-   models/
-interface/
-   dtos/
-   controllers/
-   resolvers/
-   event-handlers/
-
-- Divide application by modules
-- Divide each module by business domain
-- Divide each business domain by use cases
-- Keep files that change together close to each other ([Common Closure Principle](https://ericbackhage.net/clean-code/the-common-closure-principle/) and [Vertical Slicing](https://jimmybogard.com/vertical-slice-architecture/))
-- Group files by behavior (create user, delete user, etc.), not by type (controllers, services, repositories, etc.)
-- Shared files like domain objects (entities/aggregates), repositories, shared DTOs, interfaces, etc. are stored outside of feature directory since they are usually reused by multiple subcomponents.
-- Respect boundaries in your code, inner layers are not allowed to import outer layers
-- Avoid a lot of nested folders
-
+Here's an example structure of user module:
 ```
-src
-├── modules
-│   ├── user
-│   │   ├── commands
-│   │   │   ├── create-user
-│   │   │   │   ├── graphql-example
-│   │   │   │   │   ├── dtos
-│   │   │   │   │   │   ├── create-user.gql-request.dto.ts
-│   │   │   │   │   │   └── id.gql-response.dto.ts
-│   │   │   │   │   └── create-user.graphql-resolver.ts
-│   │   │   │   ├── create-user.cli.controller.ts
-│   │   │   │   ├── create-user.command.ts
-│   │   │   │   ├── create-user.http.controller.ts
-│   │   │   │   ├── create-user.message.controller.ts
-│   │   │   │   ├── create-user.request.dto.ts
-│   │   │   │   └── create-user.service.ts
-│   │   ├── database
-│   │   │   ├── user.repository.port.ts
+src/
+├── user/
+│   ├── core/
+│   │   ├── commands/
+│   │   │   └── create-user.command.ts
+│   │   ├── queries/
+│   │   │   └── find-users.query.ts
+│   │   ├── services/
+│   │   │   ├── find-users.service.ts
+│   │   │   └── create-user.service.ts
+│   │   ├── ports/
+│   │   │   └── user.repository.port.ts
+│   │   ├── entities/
+│   │   │   └── user.entity.ts
+│   │   ├── aggregates/
+│   │   ├── value-objects/
+│   │   │   └── address.value-object.ts
+│   │   ├── domain-services/
+│   │   ├── events/
+│   │   │   ├── user-address-updated.domain-event.ts
+│   │   │   ├── user-created.domain-event.ts
+│   │   │   ├── user-deleted.domain-event.ts
+│   │   │   └── user-role-changed.domain-event.ts
+│   │   ├── errors/
+│   │   │   └── user.errors.ts
+│   │   └── types/
+│   │       └── user.types.ts
+│   ├── infrastructure/
+│   │   ├── repositories/
 │   │   │   └── user.repository.ts
-│   │   ├── domain
-│   │   │   ├── events
-│   │   │   │   ├── user-address-updated.domain-event.ts
-│   │   │   │   ├── user-created.domain-event.ts
-│   │   │   │   ├── user-deleted.domain-event.ts
-│   │   │   │   └── user-role-changed.domain-event.ts
-│   │   │   ├── value-objects
-│   │   │   │   └── address.value-object.ts
-│   │   │   ├── user.entity.ts
-│   │   │   ├── user.errors.ts
-│   │   │   └── user.types.ts
-│   │   ├── dtos
-│   │   │   ├── graphql
-│   │   │   │   ├── user.graphql-response.dto.ts
-│   │   │   │   └── user.paginated-gql-response.dto.ts
+│   │   ├── models/
+│   │   │   └── user.model.ts
+│   │   └── mappers/
+│   │       └── user.mapper.ts
+│   ├── interface/
+│   │   ├── dtos/
+│   │   │   ├── create-user.gql-request.dto.ts
+│   │   │   ├── id.gql-response.dto.ts
+│   │   │   ├── user.graphql-response.dto.ts
+│   │   │   ├── user.paginated-gql-response.dto.ts
+│   │   │   ├── create-user.request.dto.ts
+│   │   │   ├── find-users.request.dto.ts
+│   │   │   ├── find-users.response.dto.ts
 │   │   │   ├── user.paginated.response.dto.ts
 │   │   │   └── user.response.dto.ts
-│   │   ├── queries
-│   │   │   └── find-users
-│   │   │       ├── find-users.graphql-resolver.ts
-│   │   │       ├── find-users.http.controller.ts
-│   │   │       ├── find-users.query-handler.ts
-│   │   │       └── find-users.request.dto.ts
-│   │   ├── user.mapper.ts
-│   │   └── user.module.ts
+│   │   ├── controllers/
+│   │   │   ├── create-user.cli.controller.ts
+│   │   │   ├── create-user.http.controller.ts
+│   │   │   ├── create-user.message.controller.ts
+│   │   │   └── find-users.http.controller.ts
+│   │   ├── resolvers/
+│   │   │   ├── create-user.graphql-resolver.ts
+│   │   │   └── find-users.graphql-resolver.ts
+│   │   └── event-handlers/
+│   └── user.module.ts
 ```
 
-### File names
-
-File name format: `{name}.{type}.ts`
-
-Where:
-- `{name}` is the name of the file, which should be descriptive of its purpose
-- `{type}` is the type of the file, which can be one of the following:
-  - `controller`
-  - `service`
-  - `repository`
-  - `entity`
-  - `aggregate`
-  - `dto`
-  - `interface`
-  - `mapper`
-  - `command`
-  - `query`
-
-Examples:
-- `create-user.controller.ts`
-- `user.service.ts`
-- `user.repository.ts`
-- `user.entity.ts`
+**Best practices**:
+- Divide application by modules
+- Divide each module by business domain
+- Keep files that change together close to each other ([Common Closure Principle](https://ericbackhage.net/clean-code/the-common-closure-principle/) and [Vertical Slicing](https://jimmybogard.com/vertical-slice-architecture/))
+- Group files by behavior (create user, delete user, etc.), not by type (controllers, services, repositories, etc.)
+- Respect boundaries in your code:
+  - **Interface** and  **Infrastructure** layer should only depend on the **Core** layer.
+  - **Core** layer should not depend on any other layer.
+  - Nested modules cannot import parent module.
+- Avoid a lot of nested folders
 
 
 ## Modules
@@ -176,7 +146,7 @@ Each module lives in its own folder and represents a bounded context or business
 - Avoid importing another module's internals; use a [mediator](https://en.wikipedia.org/wiki/Mediator_pattern#:~:text=In%20software%20engineering%2C%20the%20mediator,often%20consist%20of%20many%20classes.) or a public [facade](https://en.wikipedia.org/wiki/Facade_pattern).
 - Prefer message-based communication when modules need to coordinate (send commands using a command bus or subscribe to events that other modules emit).
 
-> [!TIPS]
+> [!TIP]
 > Keep modules small. You should be able to rewrite a module in a relatively short period of time.
 
 
