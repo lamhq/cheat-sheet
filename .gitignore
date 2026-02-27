@@ -93,5 +93,6 @@ venv.bak/
 
 # Rspress
 doc_build/
+tmp/
 
 /TODO.md

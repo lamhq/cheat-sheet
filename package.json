@@ -4,16 +4,9 @@
 	"description": "Albert's cheat sheet",
 	"type": "module",
 	"scripts": {
-		"dev": "rspress dev -c configs/base.ts --port 5007",
-		"dev:tools": "rspress dev -c configs/tools.ts --port 5004",
-		"dev:backend": "rspress dev -c configs/backend.ts --port 5006",
-		"dev:web": "rspress dev -c configs/web.ts --port 5005",
-		"dev:se": "rspress dev -c configs/se.ts --port 5001",
-		"dev:devops": "rspress dev -c configs/devops.ts --port 5003",
-		"dev:de": "rspress dev -c configs/de.ts --port 5002",
-		"dev:game": "rspress dev -c configs/game.ts --port 5008",
+		"dev": "rspress dev",
 		"build": "rspress build",
-		"preview": "rspress preview --port 5002",
+		"preview": "rspress preview",
 		"lint": "ls docs/**/*.mdx | node scripts/lint-markdown.js",
 		"prepare": "node .husky/install.mjs"
 	},

@@ -1,4 +1,4 @@
-# Learning Cheat sheet
+# Cheat sheet
 
 ## Overview
 
@@ -40,19 +40,11 @@ Start the dev server:
 npm run dev
 ```
 
-Then open http://localhost:5007
+Then open the URL output in the terminal to view the website in your browser.
 
-Since starting the whole project take a bit of time, you can also start only the part you want to work on. For example, to start only the game cheatsheet:
+### Using VS Code extension
 
-```bash
-npm run dev:game
-```
-
-## Using GitHub Copilot
-
-1. Open the documentation file you want to view in Visual Studio Code
-2. In the Chat view, enter custom prompt: `/preview-view`
-3. It will start the dev server for you and provide a link to view the documentation in your browser.
+To quickly view the documentation in the browser, you can install the [Cheat Sheet Utils](https://github.com/lamhq/cheat-sheet-utils) extension. It will start the dev server and open the correct url for the current opening markdown file.
 
 
 ## Deployment
