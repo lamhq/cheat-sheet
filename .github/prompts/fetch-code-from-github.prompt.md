@@ -2,7 +2,7 @@
 agent: agent
 model: Raptor mini (Preview) (copilot)
 tools: [vscode, read, edit, search, web, execute]
-description: Fetch code for all GitHub links in the file.
+description: Fetch code for all GitHub links in the file
 ---
 
 Steps:

@@ -1,7 +1,7 @@
 ---
 agent: agent
 model: Grok Code Fast 1 (copilot)
-description: Extract all code blocks in a webpage section and return them in a markdown format with descriptions.
+description: Extract all code blocks in a webpage section and return them in a markdown format with descriptions
 ---
 return all the code for the provided section name of the fetched webpage
 

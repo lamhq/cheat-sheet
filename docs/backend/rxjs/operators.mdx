@@ -1,0 +1,131 @@
+# Operators
+
+## Introduction
+
+Operators are functions.
+
+There're two types:
+
+- **Creation Operators**: Create new Observables from various sources.
+- **Pipeable Operators**: Attach to an Observable using `pipe` method to modify the data stream.
+
+
+## Creation Operators
+
+Creation Operators can be called as standalone functions to create a new Observable.
+
+Example: `of(1, 2, 3)` creates an Observable that emits `1`, `2`, and `3` sequentially.
+
+
+## Pipeable Operators
+
+Pipeable Operators are pure functions that take an Observable as input and return a new Observable as output.
+
+Subscribing to the output Observable automatically subscribes to the input Observable.
+
+
+## Transformation Operators
+
+### map
+
+The `map` operator transforms values in a stream, similar to `Array.prototype.map`.
+
+Example: Extracting the `name` property from a stream of user objects:
+
+```ts
+// RxJS v6+
+import { from } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+const source = from([
+  { name: 'Joe', age: 30 },
+  { name: 'Frank', age: 20 },
+  { name: 'Ryan', age: 50 }
+]);
+
+const example = source.pipe(map(({ name }) => name));
+example.subscribe(val => console.log(val));
+// Output: "Joe", "Frank", "Ryan"
+```
+
+### concatMap
+
+Maps values to inner Observables, subscribing to them sequentially. 
+
+Use when you have an observable that emits values, each execute another observable sequence, you want all sequences to be processed in order and not concurrently.
+
+Example: We want to ensure that if a user clicks "Update" multiple times, requests to server are queued to ensure each finishes before the next starts, rather than having concurrent requests finish out of sync.
+
+```ts
+import { fromEvent, of } from 'rxjs';
+import { concatMap, delay } from 'rxjs/operators';
+
+// 1. Simulate an API call that takes 2 seconds to complete
+const saveUserChanges = (id: number) => {
+  console.log(`--- Saving update for ID: ${id} ---`);
+  return of(`Saved ID: ${id}`).pipe(delay(2000));
+};
+
+// 2. Grab a button element from the DOM
+const saveButton = document.getElementById('save-btn');
+
+// 3. Handle clicks sequentially
+fromEvent(saveButton, 'click').pipe(
+  // Every click provides a mock incrementing ID
+  concatMap((_, index) => saveUserChanges(index + 1))
+).subscribe(result => {
+  console.log(`Server Response: ${result}`);
+});
+```
+
+
+## Multicasting Operators
+
+### shareReplay
+
+Share source and replay specified number of emissions on subscription.
+
+Use when:
+- you have side-effects or computations that you do not wish to be executed amongst multiple subscribers.
+- there're late subscribers to a stream that need access to previously emitted values
+
+Example: Sharing "User Profile" data across multiple components but only fetch the user profile data once:
+
+```ts
+import { shareReplay } from 'rxjs/operators';
+
+// This observable will fetch the data ONCE
+const userProfile$ = http.get('/api/user/profile').pipe(
+  shareReplay(1) // 1 means "remember the last 1 value"
+);
+
+// Subscriber 1 (Header) triggers the HTTP call
+userProfile$.subscribe(user => console.log('Header got:', user));
+
+// Subscriber 2 (Sidebar) joins 5 seconds later
+// It does NOT trigger a new HTTP call. 
+// It gets the result immediately from the "Replay" buffer.
+userProfile$.subscribe(user => console.log('Sidebar got:', user));
+```
+
+
+## Join Creation Operators
+
+### concat
+
+Subscribe to observables in order as previous completes.
+
+```ts
+// RxJS v6+
+import { of, concat } from 'rxjs';
+
+concat(
+  of(1, 2, 3),
+  // subscribed after first completes
+  of(4, 5, 6),
+  // subscribed after second completes
+  of(7, 8, 9)
+)
+  // log: 1, 2, 3, 4, 5, 6, 7, 8, 9
+  .subscribe(console.log);
+```

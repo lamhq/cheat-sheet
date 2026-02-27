@@ -1,0 +1,100 @@
+# RxJS
+
+## Introduction
+
+RxJS is a library that provides tools for working with asynchronous data streams.
+
+
+## Key features
+
+- **Declarative Operators:** Use pure functions like `map`, `filter`, and `switchMap` to transform and coordinate data streams without complex loops.
+- **Multicasting (Subjects):** Share a single data execution among multiple subscribers simultaneously, acting like a central event bus.
+- **Concurrency Management:** Handle overlapping asynchronous tasks with strategies to cancel, queue, or run requests in parallel.
+- **Lazy Evaluation:** Observables remain dormant and consume no resources until a subscriber explicitly starts the execution.
+- **Built-in Error Handling:** Gracefully recover from failures or automatically re-attempt failed operations using the `retry` operator.
+
+
+## Concepts
+
+- **Observable** (Producer): A blueprint for a stream of data that can emit multiple values over time.
+- **Observer** (Consumer): A collection of callbacks (`next`, `error`, `complete`) that listens to the Observable.
+- **Operators** (Processors): Pure functions (like `map`, `filter`, `switchMap`) used to transform or combine streams.
+- **Subscription**: The execution of an Observable; it’s what you "turn on" to start receiving data.
+- **Subject**: A special type of Observable that can multicast a value to many Observers at once.
+- **Scheduler**: The "traffic controller" that manages the timing and execution context of the data.
+
+
+## Stream
+
+A stream is a sequence of values that are emitted over time (think of them as "events" flowing through your program).
+
+A streams may be:
+- multi‑value & never complete (click events, `setInterval` counter),
+- single‑value then complete (a `setTimeout` or an HTTP request),
+- fixed number of values before finishing (like an array of items).
+
+Examples:
+- User clicks anywhere on the page → each click is an emitted value.
+- A `setInterval` timer emitting a counter every second.
+- A `setTimeout` acting as a single‑value stream that completes.
+
+
+## Example
+
+Let's look at a **Search-as-you-type** feature.
+
+Requirements:
+
+1. **Debounce:** Wait for the user to stop typing (so you don't hit the API on every keystroke).
+2. **Distinct:** Don't search if the text is the same as the last search.
+3. **Cancel:** If a new search starts, kill the previous pending request (preventing race conditions).
+
+The Standard JS Way:
+```javascript
+let timeout;
+let lastQuery = '';
+let controller; // For aborting fetch
+
+input.addEventListener('input', (e) => {
+  const query = e.target.value;
+  clearTimeout(timeout);
+
+  timeout = setTimeout(async () => {
+    if (query === lastQuery) return;
+    lastQuery = query;
+
+    if (controller) controller.abort(); // Cancel previous request
+    controller = new AbortController();
+
+    try {
+      const res = await fetch(`/api/search?q=${query}`, { signal: controller.signal });
+      const data = await res.json();
+      render(data);
+    } catch (err) { /* Handle abort/errors */ }
+  }, 300);
+});
+```
+
+With RxJS, it handles the timing, filtering, and cancellation internally via operators:
+
+```javascript
+import { fromEvent, map, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
+
+fromEvent(input, 'input').pipe(
+  map(e => e.target.value),          // 1. Get value
+  debounceTime(300),                 // 2. Wait for 300ms pause
+  distinctUntilChanged(),            // 3. Only if value changed
+  switchMap(query => fetchApi(query)) // 4. Switch to new request & cancel old
+).subscribe(data => render(data));
+```
+
+- **No Global Variables:** You don't need to track `timeout` or `lastQuery` in the outer scope.
+- **Automatic Cancellation:** `switchMap` is the "magic" operator. If a new value arrives while the `fetch` is still pending, it automatically unsubscribes from the old one, cancelling the network request.
+- **Readability:** The logic reads like a recipe (top-to-bottom) rather than a mess of nested `if` statements and timers.
+
+
+## References
+
+- [RxJS Documentation](https://rxjs.dev/guide/overview)
+- [Learn RxJS](https://www.learnrxjs.io/learn-rxjs/operators)
+- [RxJS Playground](https://stackblitz.com/edit/rxjs-playground-test)
