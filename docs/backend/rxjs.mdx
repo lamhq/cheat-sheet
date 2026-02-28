@@ -14,40 +14,14 @@ RxJS is a library that provides tools for working with asynchronous data streams
 - **Built-in Error Handling:** Gracefully recover from failures or automatically re-attempt failed operations using the `retry` operator.
 
 
-## Concepts
-
-- **Observable** (Producer): A blueprint for a stream of data that can emit multiple values over time.
-- **Observer** (Consumer): A collection of callbacks (`next`, `error`, `complete`) that listens to the Observable.
-- **Operators** (Processors): Pure functions (like `map`, `filter`, `switchMap`) used to transform or combine streams.
-- **Subscription**: The execution of an Observable; it’s what you "turn on" to start receiving data.
-- **Subject**: A special type of Observable that can multicast a value to many Observers at once.
-- **Scheduler**: The "traffic controller" that manages the timing and execution context of the data.
-
-
-## Stream
-
-A stream is a sequence of values that are emitted over time (think of them as "events" flowing through your program).
-
-A streams may be:
-- multi‑value & never complete (click events, `setInterval` counter),
-- single‑value then complete (a `setTimeout` or an HTTP request),
-- fixed number of values before finishing (like an array of items).
-
-Examples:
-- User clicks anywhere on the page → each click is an emitted value.
-- A `setInterval` timer emitting a counter every second.
-- A `setTimeout` acting as a single‑value stream that completes.
-
-
 ## Example
 
 Let's look at a **Search-as-you-type** feature.
 
 Requirements:
-
-1. **Debounce:** Wait for the user to stop typing (so you don't hit the API on every keystroke).
-2. **Distinct:** Don't search if the text is the same as the last search.
-3. **Cancel:** If a new search starts, kill the previous pending request (preventing race conditions).
+1. Wait for the user to stop typing (so you don't hit the API on every keystroke).
+2. Don't search if the text is the same as the last search.
+3. If a new search starts, kill the previous pending request (preventing race conditions).
 
 The Standard JS Way:
 ```javascript
@@ -91,6 +65,35 @@ fromEvent(input, 'input').pipe(
 - **No Global Variables:** You don't need to track `timeout` or `lastQuery` in the outer scope.
 - **Automatic Cancellation:** `switchMap` is the "magic" operator. If a new value arrives while the `fetch` is still pending, it automatically unsubscribes from the old one, cancelling the network request.
 - **Readability:** The logic reads like a recipe (top-to-bottom) rather than a mess of nested `if` statements and timers.
+
+
+## Concepts
+
+- **Observable** (Producer): A blueprint for a stream of data that can emit multiple values over time.
+- **Observer** (Consumer): A collection of callbacks (`next`, `error`, `complete`) that listens to the Observable.
+- **Operators** (Processors): Pure functions (like `map`, `filter`, `switchMap`) used to transform or combine streams.
+- **Subscription**: The execution of an Observable; it’s what you "turn on" to start receiving data.
+- **Subject**: A special type of Observable that can multicast a value to many Observers at once.
+- **Scheduler**: The "traffic controller" that manages the timing and execution context of the data.
+
+
+## Stream
+
+A stream is a sequence of values emitted over time, like events flowing through a program. Streams can:
+
+- Emit multiple values and never complete (e.g., click events, `setInterval`).
+- Emit a single value and complete (e.g., `setTimeout`, HTTP request).
+- Emit a fixed number of values before completing (e.g., an array).
+
+A stream can:
+
+- Complete: Ends its lifecycle without errors and stops emitting values.
+- Error: Ends with an error and stops emitting values.
+
+Completion and errors are mutually exclusive:
+
+- A completed stream cannot error afterward.
+- An errored stream cannot complete.
 
 
 ## References

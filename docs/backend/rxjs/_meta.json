@@ -1,5 +1,6 @@
 [
   "observables",
   "operators",
-  "observer"
+  "observer",
+  "error-handling"
 ]
