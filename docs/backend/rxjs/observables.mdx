@@ -1,0 +1,136 @@
+# Observable
+
+## Introduction
+
+An Observable is a blueprint for a stream of data. It doesn't do anything until someone listens to it. 
+
+
+## Example
+
+Here's an Observable that:
+- synchronously pushes two strings (`Hello` and `World`)
+- waits one second to push a third (`Delayed Value`)
+- signals it is finished to its subscriber
+
+```ts
+import { Observable } from 'rxjs';
+
+// 1. Define the Observable (The Blueprint)
+const stream$ = new Observable(subscriber => {
+  subscriber.next('Hello');   // Emit first value
+  subscriber.next('World');   // Emit second value
+  
+  setTimeout(() => {
+    subscriber.next('Delayed Value'); // Emit after 1 second
+    subscriber.complete();            // Close the stream
+  }, 1000);
+});
+
+// 2. Subscribe (The Execution)
+console.log('Starting...');
+stream$.subscribe({
+  next: val => console.log(val),
+  complete: () => console.log('Done!')
+});
+```
+
+## Creating Observables
+
+The `Observable` constructor takes a `subscribe` function as its argument. This function defines how the Observable emits values to its subscribers.
+
+The following example creates an Observable that emits the string `'hi'` every second to a subscriber:
+
+```ts
+import { Observable } from 'rxjs';
+
+const observable = new Observable(function subscribe(subscriber) {
+  const id = setInterval(() => {
+    subscriber.next('hi');
+  }, 1000);
+});
+```
+- When a subscriber subscribes to the Observable, the `subscribe` function is run for that given subscriber. Each subscriber gets its own execution of the `subscribe` function.
+
+
+## Subscribing to Observables
+
+```ts
+observable.subscribe(x => console.log(x));
+```
+
+## Executing Observables
+
+The `subscribe` function represents an **Observable execution**. It runs only when an Observer subscribes, producing values over time (synchronously or asynchronously).
+
+Observable executions deliver three types of values:
+- **Next**: Actual data (e.g., numbers, strings, objects).
+- **Error**: A JavaScript error or exception.
+- **Complete**: Signals the end of the stream.
+
+Example:
+
+```ts
+import { Observable } from 'rxjs';
+
+const observable = new Observable(function subscribe(subscriber) {
+  subscriber.next(1);
+  subscriber.next(2);
+  subscriber.next(3);
+  subscriber.complete();
+});
+```
+
+## Disposing Observable Executions
+
+Observable executions can be infinite. To stop receiving values, you can cancel the execution.
+
+When you call `observable.subscribe`, it returns a `Subscription` object. Use `subscription.unsubscribe()` to stop the execution:
+
+```ts
+import { from } from 'rxjs';
+
+const observable = from([10, 20, 30]);
+const subscription = observable.subscribe(x => console.log(x));
+
+// Later:
+subscription.unsubscribe();
+```
+
+Each Observable should define how to release resources when unsubscribed. You can do that by returning a custom `unsubscribe` function from the `subscribe` function:
+
+```ts
+import { Observable } from 'rxjs';
+
+const observable = new Observable(subscriber => {
+  const intervalId = setInterval(() => subscriber.next('hi'), 1000);
+
+  // Cleanup logic
+  return () => clearInterval(intervalId);
+});
+```
+
+## Promise vs Observable
+
+Although both handle asynchronous values, they behave quite differently:
+
+- **Execution**: A promise starts running immediately when created, while an observable stays dormant until you subscribe.
+- **Values**: A promise resolves or rejects once with a single value; an observable can emit any number of values over time.
+- **Cancellability**: Promises cannot be cancelled (you can only ignore the result); observables support unsubscribing to stop the stream.
+- **Lazy consumption**: Observables are lazy and repeatable – each subscription triggers a new execution. Promises are eager and always share the same outcome.
+- **Operators**: RxJS provides a rich set of operators to transform and combine observables. Promises rely on `.then()` chaining.
+
+Example comparison:
+
+```ts
+// Promise: runs immediately
+const promise = fetch('/api/data'); // network call starts now
+promise.then(res => res.json());
+
+// Observable: runs on subscribe
+const obs$ = new Observable(sub => {
+  fetch('/api/data').then(res => res.json()).then(data => sub.next(data));
+});
+obs$.subscribe(data => console.log(data));
+```
+
+Use a promise for a one‑time async value. Reach for an observable when you need a stream, composable operators, or the ability to cancel.

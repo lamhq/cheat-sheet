@@ -1,0 +1,274 @@
+# Operators
+
+## Introduction
+
+Operators are functions.
+
+There're two types:
+
+- **Creation Operators**: Create new Observables from various sources.
+- **Pipeable Operators**: Attach to an Observable using `pipe` method to modify the data stream.
+
+
+## Creation Operators
+
+Creation Operators can be called as standalone functions to create a new Observable.
+
+Example: `of(1, 2, 3)` creates an Observable that emits `1`, `2`, and `3` sequentially.
+
+
+## Pipeable Operators
+
+Pipeable Operators are pure functions that take an Observable as input and return a new Observable as output.
+
+Subscribing to the output Observable automatically subscribes to the input Observable.
+
+
+## Transformation Operators
+
+### map
+
+The `map` operator transforms values in a stream, similar to `Array.prototype.map`.
+
+Example: Extracting the `name` property from a stream of user objects:
+
+```ts
+// RxJS v6+
+import { from } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+const source = from([
+  { name: 'Joe', age: 30 },
+  { name: 'Frank', age: 20 },
+  { name: 'Ryan', age: 50 }
+]);
+
+const example = source.pipe(map(({ name }) => name));
+example.subscribe(val => console.log(val));
+// Output: "Joe", "Frank", "Ryan"
+```
+
+### concatMap
+
+Maps values to inner Observables, subscribing to them sequentially. 
+
+Use when you have an observable that emits values, each execute another observable sequence, you want all sequences to be processed in order and not concurrently.
+
+Example: Updating form data. Each update should finish before the next one starts, even if user submits the form multiple times.
+
+```ts
+import { fromEvent, of } from 'rxjs';
+import { concatMap, delay } from 'rxjs/operators';
+
+// 1. Simulate an API call that takes 2 seconds to complete
+const saveUserChanges = (id: number) => {
+  console.log(`--- Saving update for ID: ${id} ---`);
+  return of(`Saved ID: ${id}`).pipe(delay(2000));
+};
+
+// 2. Grab a button element from the DOM
+const saveButton = document.getElementById('save-btn');
+
+// 3. Handle clicks sequentially
+fromEvent(saveButton, 'click').pipe(
+  // Every click provides a mock incrementing ID
+  concatMap((_, index) => saveUserChanges(index + 1))
+).subscribe(result => {
+  console.log(`Server Response: ${result}`);
+});
+```
+
+
+### mergeMap / flatMap
+
+Maps values to inner Observables, subscribing to them as soon as they arrive.
+
+Use when you wish to flatten an inner observable but want to manually control the number of inner subscriptions.
+
+Example: uploading photos. Photos should be uploaded in parallel, not sequentially.
+
+```ts
+import { from, of } from 'rxjs';
+import { mergeMap, delay } from 'rxjs/operators';
+
+// 1. Mock upload function (takes 2 seconds)
+const uploadPhoto = (fileName: string) => {
+  console.log(`Starting upload: ${fileName}`);
+  return of(`Finished: ${fileName}`).pipe(delay(2000));
+};
+
+const photos = ['vacation.jpg', 'sunset.png', 'cat.gif'];
+
+// 2. Upload all photos in parallel
+from(photos).pipe(
+  mergeMap(file => uploadPhoto(file))
+).subscribe(console.log);
+
+// All 3 "Starting" logs appear immediately.
+// All 3 "Finished" logs appear 2 seconds later.
+```
+
+### exhaustMap
+
+Map to inner observable, ignore other values until that observable completes
+
+Use when events are triggered multiple times in rapid succession but where only the initial trigger should be acted upon until it completes.
+
+Example: Login form submission. If user clicks "Login" multiple times, only the first click should trigger the login process until it completes.
+
+```ts
+import { fromEvent, of } from 'rxjs';
+import { exhaustMap, delay, tap } from 'rxjs/operators';
+
+// 1. Simulate a login API call (takes 3 seconds)
+const loginRequest = (attempt: number) => {
+  console.log(`--- Attempting Login #${attempt} ---`);
+  return of(`Success for attempt #${attempt}`).pipe(delay(3000));
+};
+
+const loginBtn = document.getElementById('login-btn');
+
+// 2. Ignore clicks while a request is "In Flight"
+fromEvent(loginBtn, 'click').pipe(
+  exhaustMap((_, index) => loginRequest(index + 1))
+).subscribe(result => {
+  console.log(result);
+});
+```
+
+### switchMap
+
+Map to observable, unsubscribe previous inner observable and subscribe to the new one when new value arrives.
+
+Use when you want to cancel previous work and switch to new work.
+
+Example: Auto-Complete Search. Cancel previous search request if user types a new character before the previous request completes.
+
+```ts
+import { fromEvent, Observable, of } from 'rxjs';
+import { switchMap, map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+
+const searchInput = document.getElementById('search-input');
+
+// 1. A cancelable fetch observable
+const searchApi = (term: string) => new Observable(observer => {
+  const controller = new AbortController();
+  
+  fetch(`https://api.example.com/search?q=${term}`, { signal: controller.signal })
+    .then(res => res.json())
+    .then(data => {
+      observer.next(data);
+      observer.complete();
+    })
+    .catch(err => {
+      if (err.name === 'AbortError') return; // Silence abort errors
+      observer.error(err);
+    });
+
+  // 2. TEARDOWN: This runs when switchMap cancels this inner observable
+  return () => controller.abort();
+});
+
+// 3. The Stream
+fromEvent(searchInput, 'input').pipe(
+  map(ev => (ev.target as HTMLInputElement).value),
+  debounceTime(300),
+  distinctUntilChanged(),
+  switchMap(term => term ? searchApi(term) : of([]))
+).subscribe(results => {
+  console.log('Results:', results);
+});
+```
+
+
+## Multicasting Operators
+
+### shareReplay
+
+Share source and replay specified number of emissions on subscription.
+
+Use when:
+- you have side-effects or computations that you do not wish to be executed amongst multiple subscribers.
+- there're late subscribers to a stream that need access to previously emitted values
+
+Example: Sharing "User Profile" data across multiple components but only fetch the user profile data once:
+
+```ts
+import { shareReplay } from 'rxjs/operators';
+
+// This observable will fetch the data ONCE
+const userProfile$ = http.get('/api/user/profile').pipe(
+  shareReplay(1) // 1 means "remember the last 1 value"
+);
+
+// Subscriber 1 (Header) triggers the HTTP call
+userProfile$.subscribe(user => console.log('Header got:', user));
+
+// Subscriber 2 (Sidebar) joins 5 seconds later
+// It does NOT trigger a new HTTP call. 
+// It gets the result immediately from the "Replay" buffer.
+userProfile$.subscribe(user => console.log('Sidebar got:', user));
+```
+
+
+## Join Creation Operators
+
+### concat
+
+Subscribe to observables in order as previous completes.
+
+```ts
+// RxJS v6+
+import { of, concat } from 'rxjs';
+
+concat(
+  of(1, 2, 3),
+  // subscribed after first completes
+  of(4, 5, 6),
+  // subscribed after second completes
+  of(7, 8, 9)
+)
+  // log: 1, 2, 3, 4, 5, 6, 7, 8, 9
+  .subscribe(console.log);
+```
+
+
+## Filtering Operators
+
+### distinctUntilChanged
+
+Only emit when the current value is different than the last.
+
+Use when you want to filter out consecutive duplicate emissions from your observables.
+
+Example: [Auto-Complete Search](#switchmap).
+
+
+### debounce
+
+Discard emitted values that take less than the specified time, based on selector function, between output.
+
+Use when the source emits values rapidly but you only care about the final value after a certain period of inactivity.
+
+Example: Search-as-you-type. Trigger search after user stops typing, duration is varied base on search term length (longer terms = shorter debounce time).
+
+```ts
+import { fromEvent, timer } from 'rxjs';
+import { debounce, map } from 'rxjs/operators';
+
+const searchInput = document.getElementById('search-box');
+
+// 1. Listen for input
+fromEvent(searchInput, 'input').pipe(
+  map(event => (event.target as HTMLInputElement).value),
+  
+  // 2. Dynamically determine the wait time
+  debounce(val => {
+    const waitTime = val.length < 3 ? 1000 : 400; 
+    console.log(`Waiting ${waitTime}ms for: "${val}"`);
+    return timer(waitTime);
+  })
+).subscribe(val => {
+  console.log(`Searching for: ${val}`);
+});
+```

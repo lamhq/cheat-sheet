@@ -20,6 +20,11 @@
     "collapsed": true
   },
   {
+    "name": "rxjs",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
     "name": "nodejs",
     "type": "dir",
     "collapsed": true

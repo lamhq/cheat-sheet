@@ -1,7 +1,7 @@
 ---
 agent: agent
 model: Grok Code Fast 1 (copilot)
-description: Describe code.
+description: Describe code
 ---
 Return a brief description (what the code does) for the provided code.
 

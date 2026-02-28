@@ -1,0 +1,159 @@
+# Error Handling
+
+## Using subscribe method
+
+Handing errors using the `subscribe` call is limited.
+
+We cannot, for example, recover from the error or emit an alternative fallback value.
+
+```ts
+import { of, throwError } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+// Example: Observable that throws an error when value is 2
+const source$ = of(1, 2, 3).pipe(
+  map(x => {
+    if (x === 2) {
+      throw new Error('Unexpected value: 2');
+    }
+    return x;
+  })
+);
+
+source$.subscribe({
+  next: value => console.log('Received:', value),
+  error: err => console.error('Error occurred:', err.message),
+  complete: () => console.log('Stream completed')
+});
+
+// Output:
+// Received: 1
+// Error occurred: Unexpected value: 2
+```
+
+
+## Catching Errors
+
+To catch errors from an observable, we can use the `catchError` operator. It allows us to handle errors gracefully and return a new observable or throw a different error.
+
+For example, catching an error and returning a fallback value:
+
+```ts
+import { of, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
+throwError(() => new Error('Something went wrong'))
+  .pipe(
+    catchError(err => {
+      console.error('Caught error:', err.message);
+      return of('Fallback value');
+    })
+  )
+  .subscribe(value => console.log(value));
+
+// Output:
+// Caught error: Something went wrong
+// Fallback value
+```
+
+> [!NOTE]
+> we can use `catchError` multiple times at different points in the Observable chain if needed, and adopt different error strategies at each point in the chain.
+
+
+## Returning Errors
+
+The `throwError` operator produces an Observable which immediately emits an error when subscribed to.
+
+It can be combined with `catchError` to rethrow or transform errors downstream.
+
+```ts
+import { throwError, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
+// Example: Observable that immediately errors
+const source$ = throwError(() => new Error('Something went wrong')).pipe(
+  catchError(err => {
+    console.error('Caught error in pipeline:', err.message);
+    // Rethrow the error as a new Observable
+    return throwError(() => new Error(`Rethrown: ${err.message}`));
+  })
+);
+
+source$.subscribe({
+  next: val => console.log('Received:', val),
+  error: err => console.error('Final error in subscribe:', err.message),
+  complete: () => console.log('Stream completed')
+});
+
+// Output:
+// Caught error in pipeline: Something went wrong
+// Final error in subscribe: Rethrown: Something went wrong
+```
+
+
+## Clean up tasks
+
+Use the `finalize` operator to run cleanup or side-effect logic when an Observable terminates, whether by completing, erroring, or even when the subscriber explicitly unsubscribes.
+
+Use cases:
+- **Cleanup resources**: Close sockets, stop timers, cancel subscriptions, or release handles when a stream ends.
+- **Logging**: Record when an Observable completes or errors for debugging or monitoring.
+- **UI state management**: Reset loading indicators or disable spinners when an async operation finishes, regardless of success or failure.
+
+```ts
+import { interval } from 'rxjs';
+import { take, finalize } from 'rxjs/operators';
+
+// Emit values every second, but only take 3
+const source$ = interval(1000).pipe(
+  take(3),
+  finalize(() => console.log('Stream terminated (complete or unsubscribe)'))
+);
+
+source$.subscribe({
+  next: val => console.log('Received:', val),
+  complete: () => console.log('Stream completed')
+});
+
+// Output:
+// Received: 0
+// Received: 1
+// Received: 2
+// Stream completed
+// Stream terminated (complete or unsubscribe)
+```
+
+> [!NOTE]
+> We can add multiple `finalize` calls at different places in the Observable chain if needed, in order to make sure that the multiple resources are correctly released:
+
+
+## Retrying
+
+When an Observable errors, we can retry it by subscribing again to create a new stream.
+
+The `retryWhen` operator can be used to retry an errored Observable. It takes a function that receives an Observable of errors and returns an Observable that controls the retry behavior.
+- If the returned Observable emits a value → the source is retried.
+- If the returned Observable completes → no more retries, the stream completes.
+- If the returned Observable errors → that error is propagated downstream.
+
+Example: Retry after 3 seconds on error:
+
+```ts
+import { throwError, timer } from 'rxjs';
+import { retryWhen, delayWhen } from 'rxjs/operators';
+
+// Simulate an Observable that errors immediately
+const source$ = throwError(() => new Error('Request failed')).pipe(
+  retryWhen(errors =>
+    errors.pipe(
+      // Wait 3 seconds before retrying each time
+      delayWhen(() => timer(3000))
+    )
+  )
+);
+
+source$.subscribe({
+  next: val => console.log('Received:', val),
+  error: err => console.error('Final error:', err.message),
+});
+```
