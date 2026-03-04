@@ -1,9 +1,22 @@
-# Codebase Architecture
+# Project Structure
 
-## Overview  
-The codebase is organized into modules, each containing layers to ensure separation of concerns, maintainability, and scalability.
+## Repository Layout
+- src/        → application source code
+- tests/      → unit and integration tests
+- .github/    → CI/CD workflows
+- docs/       → documentation
+- scripts/    → utility scripts
+
+## Codebase Architecture
+
+The application source code is organized into modules, each containing layers to ensure separation of concerns, maintainability, and scalability.
 
 Modules encapsulate domain-specific logic and each layer has a clear responsibility.
+
+- Presentation Layer → handles UI and API endpoints
+- Application Layer  → orchestrates workflows
+- Domain Layer       → business logic and models
+- Infrastructure     → persistence, external APIs
 
 ## Layers
 
