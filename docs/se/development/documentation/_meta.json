@@ -4,5 +4,10 @@
   "codebase-architecture",
   "coding-guidelines",
   "coding-standards",
-  "development-workflows"
+  "development-workflows",
+  {
+    "name": "modules",
+    "type": "dir",
+    "collapsed": true
+  }
 ]
