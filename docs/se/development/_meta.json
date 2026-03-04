@@ -12,5 +12,9 @@
     "type": "dir",
     "collapsed": true
   },
-  "documentation"
+  {
+    "name": "documentation",
+    "type": "dir",
+    "collapsed": true
+  }
 ]

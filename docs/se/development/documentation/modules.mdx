@@ -13,8 +13,18 @@ Communication between services is primarily via gRPC (synchronous) or message qu
 
 ## Main modules
 
-- `user`: Handles user management, authentication, and authorization.
-- `catalog`: Manages product catalog, inventory, and related operations.
-- `order`: Responsible for order processing, payment, and fulfillment.
-- `notification`: Manages sending notifications (email, SMS, push) to users.
-- `payment`: Handles payment processing and integration with external payment gateways.
+- `user`:
+  - Handles user management, authentication, and authorization.
+  - Keywords: role-based access control (RBAC), JWT authentication, OIDC, OAuth2.
+- `catalog`:
+  - Manages product catalog, category, inventory.
+  - Keywords: product listing, search, filtering, inventory management, stock levels.
+- `order`:
+  - Responsible for order processing, payment, and fulfillment.
+  - Keywords: order creation, order status, payment processing, order history, returns.
+- `notification`:
+  - Manages sending notifications (email, SMS, push) to users.
+  - Keywords: Firebase, SMS, push notifications.
+- `payment`:
+  - Handles payment processing and integration with external payment gateways.
+  - Keywords: 9Pay, MoMo, refund, disbursement, IPN, transaction history
