@@ -1,0 +1,39 @@
+# Coding Standards Example
+
+## Naming Conventions  
+- **Classes**: Use `PascalCase` (e.g., `UserService`, `OrderRepository`).  
+- **Variables & Functions**: Use `camelCase` (e.g., `userName`, `calculateTotal`).  
+- **Constants**: Use `UPPER_SNAKE_CASE` (e.g., `MAX_RETRY_COUNT`).  
+- **Files**: Match the main class or module name (e.g., `UserService.ts`).  
+
+## Formatting  
+- **Indentation**: Use 2 spaces (no tabs).  
+- **Line Length**: Maximum 100 characters per line.  
+- **Braces**: Always use braces for control structures, even if single-line.  
+- **Imports**: Group by external libraries, then internal modules; sort alphabetically.  
+
+## Comments  
+- **Class/Method Documentation**: Use JSDoc or equivalent for public methods.  
+- **Inline Comments**: Only when logic is non-obvious. Avoid redundant comments.  
+- **TODOs**: Must include owner and date (e.g., `// TODO: refactor by Alice, 2026-03-04`).  
+
+## Error Handling  
+- Always throw or propagate meaningful exceptions.  
+- Never swallow errors silently.  
+- Use standardized error objects with clear messages.  
+
+## Testing  
+- Every new feature must include unit tests.  
+- Test files must mirror source file names (e.g., `UserService.test.ts`).  
+- Maintain minimum coverage threshold (e.g., 80%).  
+
+## Code Style  
+- Avoid magic numbers; use named constants.  
+- Prefer `const` over `let` unless reassignment is required.  
+- No unused imports or variables.  
+- Functions should not exceed 50 lines; refactor if larger.  
+
+## Git Standards  
+- Commit messages must follow format: `type(scope): description` (e.g., `feat(user): add profile update`).  
+- No direct commits to `main`; use pull requests.  
+- Branch names must follow convention: `feat/xyz`, `fix/xyz`.  
