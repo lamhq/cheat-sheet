@@ -32,6 +32,15 @@ For example, a skill for testing web applications might include:
 - `test-template.js` - A template test file
 - `examples/` - Example test scenarios
 
+> [!TIPS]
+> Type `/skills` in the chat input to quickly open the Configure Skills menu.
+
+### Generate a skill with AI
+
+Type `/create-skill` in chat and describe the skill you want (for example, "a skill for running and debugging integration tests"). 
+
+The agent asks clarifying questions and generates a `SKILL.md` file with the directory structure, instructions, and frontmatter.
+
 
 ## Use shared skills
 
@@ -95,24 +104,32 @@ npx playwright test --debug
 ````
 
 
-### PDF Processing
+### GitHub Actions debugging skill
 
 ````md title=".github/skills/pdf-processing/SKILL.md"
 ---
-name: pdf-processing
-description: Extract text and tables from PDF files, fill forms, merge documents.
+name: github-actions-debugging
+description: Guide for debugging failing GitHub Actions workflows. Use this when asked to debug failing GitHub Actions workflows.
 ---
 
-# PDF Processing
+# GitHub Actions Debugging
 
-## When to use this skill
-Use this skill when the user needs to work with PDF files...
+This skill helps you debug failing GitHub Actions workflows in pull requests.
 
-## How to extract text
-1. Use pdfplumber for text extraction...
+## Process
 
-## How to fill forms
-...
+1. Use the `list_workflow_runs` tool to look up recent workflow runs for the pull request and their status
+2. Use the `summarize_job_log_failures` tool to get an AI summary of the logs for failed jobs
+3. If you need more information, use the `get_job_logs` or `get_workflow_run_logs` tool to get the full failure logs
+4. Try to reproduce the failure locally in your environment
+5. Fix the failing build and verify the fix before committing changes
+
+## Common issues
+
+- **Missing environment variables**: Check that all required secrets are configured
+- **Version mismatches**: Verify action versions and dependencies are compatible
+- **Permission issues**: Ensure the workflow has the necessary permissions
+- **Timeout issues**: Consider splitting long-running jobs or increasing timeout values
 ````
 
 

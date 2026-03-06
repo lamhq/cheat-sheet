@@ -18,25 +18,38 @@ You can manually attach custom instructions to a specific chat prompt.
 
 ## Types of instructions files
 
-If you have multiple types of instructions files in your project, VS Code combines and adds them to the chat context.
+VS Code supports two categories of custom instructions: Always-on instructions and File-based instructions.
 
-VS Code supports multiple types of Markdown-based instructions files:
+### Always-on instructions
 
-### `copilot-instructions.md`
+Automatically included in every chat request.
 
-A single Markdown file stored at `.github/copilot-instructions.md`.
+Avoid using them since they're automatically applied to all chat requests in a session, which can cause duplicated information and quickly fill up the context size.
 
-It is automatically applies to all chat requests in the workspace.
-
-Enabled by the setting: `github.copilot.chat.codeGeneration.useInstructionFiles`.
-
-Use cases:
-- Add context & guidelines for all chat requests in the workspace.
-
-Best practices:
+1. A single `copilot-instructions.md` file:
+   - Stored at `.github/copilot-instructions.md`
+   - Automatically applies to all chat requests in the workspace
+   - Enabled by the setting: `github.copilot.chat.codeGeneration.useInstructionFiles`
+2. One or more `AGENTS.md` files
+   - Useful if you work with multiple AI agents in your workspace
+   - Automatically applies to all chat requests in the workspace or to specific subfolders (experimental)
+   - Stored in the root of the workspace or in subfolders (experimental)
+3. Organization-level instructions
+   - Share instructions across multiple workspaces and repositories within a GitHub organization
+   - Defined at the GitHub organization level
+4. `CLAUDE.md` file
+   - For compatibility with Claude Code and other Claude-based tools
+   - Stored in the workspace root, .claude folder, or user home directory
+ 
+**Best practices**:
 - Keep it short and applicable to most kinds of operations (code generation, code review, commit message generation, etc).
 - Put links to references to other documents to keep it clean and focused.
 
+**Example use cases**:
+- Ask for user's input for uncertain scenarios
+- Run lint and formatter after making code changes
+
+**Example instruction file**:
 ```md title=".github/copilot-instructions.md"
 # Copilot Instructions
 
@@ -47,20 +60,20 @@ Best practices:
 ```
 
 
-### `*.instructions.md`
+### File-based instructions
 
-Scoped instructions for specific directories, files, or contexts.
+Applied when files that the agent is working on match a specified pattern.
+
+Use file-based instructions for:
+- language-specific conventions (`.ts`, `.tsx`, `.py`, etc.)
+- framework patterns (`.dto.ts`, `.controller.ts`, etc.) 
+- architecture style conventions (`ports/`, `services/`, etc.)
+- rules that only apply to certain parts of your codebase (docs, tests, frontend, backend, etc.)
 
 Stored in the workspace (`.github/instructions/*.instructions.md`) or user profile directory.
 
-Can be manually attached using **Add Context** > **Instructions** option in the Chat view.
-
-Use cases:
-- Add context & guidelines for specific files & directories.
-- Different coding styles for frontend vs backend.
-- Documentation guidelines for Markdown files.
-- Language-specific instructions: python, javascript, etc
-- Security rules for sensitive modules.
+> [!TIPS]
+> You can use Markdown links to reference specific context in instructions files
 
 ```md title=".github/instructions/playwright-tests.instructions.md"
 ---
@@ -83,18 +96,7 @@ When writing Playwright tests, please follow these guidelines to ensure consiste
 1. **Configure CI/CD integration** - Set up headless mode, screenshots on failure, and parallel execution
 ```
 
-### `AGENTS.md`
-
-If you work with multiple AI agents in your workspace, you can define custom instructions for all agents.
-
-VS Code automatically applies the file to all chat requests.
-
-Stored in the root of the workspace or in subfolders.
-
-Enabled by setting: `chat.useAgentsMdFile` and `chat.useNestedAgentsMdFiles` (use multiple `AGENTS.md` files).
-
-
-## Configuration
+## Specify custom instructions in settings
 
 You can configure custom instructions for specialized scenarios in VS Code settings.
 
@@ -119,7 +121,9 @@ You can configure custom instructions for specialized scenarios in VS Code setti
 
 VS Code can analyze and generate instruction files that match your coding practices and project structure.
 
-In the Chat view, select **Configure Chat** (gear icon) > **Generate Chat Instructions**.
+You can do this in two ways:
+1. In the Chat view, select **Configure Chat** (gear icon) > **Generate Chat Instructions**.
+2. Type the `/init` slash command in the chat input box.
 
 
 ## Instructions writing tips 

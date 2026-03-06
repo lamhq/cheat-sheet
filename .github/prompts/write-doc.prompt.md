@@ -1,7 +1,7 @@
 ---
 agent: agent
 model: Claude Haiku 4.5 (copilot)
-description: Write documentation for a tool.
+description: Write documentation for a tool
 ---
 
 Write a documentation about the tool (technology/library/framework/software) that user provides.
