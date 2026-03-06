@@ -56,6 +56,47 @@ async function bootstrap() {
 bootstrap();
 ```
 
+### Hybrid application
+
+A hybrid application can combine an HTTP server with one or more microservice listeners.
+
+Useful when you want to expose both REST and microservice APIs in the same application.
+
+To do this, use the `connectMicroservice()` method:
+
+```typescript title="main.ts"
+const app = await NestFactory.create(AppModule);
+// microservice #1
+const microserviceTcp = app.connectMicroservice<MicroserviceOptions>({
+  transport: Transport.TCP,
+  options: {
+    port: 3001,
+  },
+});
+// microservice #2
+const microserviceRedis = app.connectMicroservice<MicroserviceOptions>({
+  transport: Transport.REDIS,
+  options: {
+    host: 'localhost',
+    port: 6379,
+  },
+});
+
+await app.startAllMicroservices();
+await app.listen(3001);
+```
+
+To inherit global pipes, interceptors, guards and filters configured for the main application, set the `inheritAppConfig` option to `true`:
+
+```typescript title="main.ts"
+const microservice = app.connectMicroservice<MicroserviceOptions>(
+  {
+    transport: Transport.TCP,
+  },
+  { inheritAppConfig: true },
+);
+```
+
 
 ## Client setup
 
@@ -174,6 +215,21 @@ A message handler can return an `Observable`, the result values will be emitted 
 @MessagePattern({ cmd: 'sum' })
 accumulate(data: number[]): Observable<number> {
   return from([1, 2, 3]);
+}
+```
+
+For hybrid applications, to bind `@MessagePattern()` to only one transport strategy, you can use the second argument of type `Transport`:
+
+```typescript title="math.controller.ts"
+@MessagePattern('time.us.*', Transport.NATS)
+getDate(@Payload() data: number[], @Ctx() context: NatsContext) {
+  console.log(`Subject: ${context.getSubject()}`); // e.g. "time.us.east"
+  return new Date().toLocaleTimeString(...);
+}
+
+@MessagePattern({ cmd: 'time.us' }, Transport.TCP)
+getTCPDate(@Payload() data: number[]) {
+  return new Date().toLocaleTimeString(...);
 }
 ```
 

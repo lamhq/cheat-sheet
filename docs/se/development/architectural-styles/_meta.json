@@ -1,10 +1,4 @@
 [
-  "polyrepo",
-  {
-    "name": "monorepo",
-    "type": "dir",
-    "collapsed": true
-  },
   "layered",
   "modular",
   {

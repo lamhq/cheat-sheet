@@ -1,13 +1,4 @@
-import { PackageManagerTabs } from '@theme';
-
 # Getting Started
-
-## Installation
-
-Install turbo globally to quickly scaffold new project anywhere:
-
-<PackageManagerTabs command="install turbo --global" />
-
 
 ## Creating project
 
@@ -17,10 +8,17 @@ Create a full-stack NestJS + Next.js monorepo:
 npx create-turbo@latest -e with-nestjs
 ```
 
-Useful templates:
-- [Vite React Example](https://github.com/vercel/turborepo/tree/main/examples/with-vite-react)
-- [Next.js Examples](https://github.com/vercel/turborepo/tree/main/examples/with-nextjs)
-- [All Turborepo Examples](https://github.com/vercel/turborepo/tree/main/examples)
+Single-page React app with Vite:
+```sh
+npx create-turbo@latest -e with-vite-react
+```
+
+Next.js + Tailwind CSS:
+```sh
+npx create-turbo@latest -e with-tailwind
+```
+
+For a full list, visit [all Turborepo examples](https://github.com/vercel/turborepo/tree/main/examples).
 
 
 ## For existing project

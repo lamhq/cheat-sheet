@@ -9,21 +9,12 @@ It is designed for scaling monorepos.
 
 ## Key Features
 
-### Task Caching
-
-A single monorepo might have thousands of tasks to execute. They need to be fast so developers can deliver high-quality code quickly.
-
-[Remote Cache](https://turborepo.com/docs/core-concepts/remote-caching) stores the result of all your tasks, that speed up CI.
-
-### Task Scheduling
-
-Turborepo schedules your tasks, parallelizing work across all available cores.
-
-### Easy Adoption
-
-Turborepo can be adopted incrementally and you can add it to any repository in just a few minutes.
-
-The configuration is lightweight, it add a single turbo.json file and leverages existing `package.json` scripts, dependencies you've already declared.
+- **Content-aware caching** – stores build outputs keyed by file content, so unchanged code is instantly reused.  
+- **Parallel execution** – runs tasks across packages simultaneously, maximizing CPU usage and cutting build times.  
+- **Remote caching** – lets teams share cached results across machines, avoiding duplicate work in CI/CD pipelines.  
+- **Incremental builds** – rebuilds only the packages affected by recent changes, keeping feedback loops tight.  
+- **Monorepo scaling** – efficiently manages thousands of tasks across large multi-package repositories.  
+- **Custom pipelines** – supports declarative task pipelines for linting, testing, and building, tailored to project needs.  
 
 
 ## Useful Links

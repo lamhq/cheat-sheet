@@ -6,6 +6,11 @@
   },
   "branching-models",
   "semver",
+  {
+    "name": "repository",
+    "type": "dir",
+    "collapsed": true
+  },
   "codebase-setup",
   {
     "name": "architectural-styles",
