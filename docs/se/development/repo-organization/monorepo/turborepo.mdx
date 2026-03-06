@@ -6,18 +6,22 @@ Turborepo is a high-performance build system for JavaScript and TypeScript codeb
 
 It is designed for scaling monorepos.
 
-✅ It helps with:
+
+## Benefits
+
+- **Convenient Task Running**
+  - Provides a standardized way to structure and run tasks across packages.
+  - Works seamlessly with npm, Yarn, or pnpm workspaces.
 - **Performance optimization**
   - Speeds up tasks (builds, tests, linting, etc.) by caching results and reusing them across runs.
   - Executes tasks in parallel and only re-runs what has changed.
-- **Consistency**
-  - Provides a standardized way to structure and run tasks across packages.
-  - Works seamlessly with npm, Yarn, or pnpm workspaces.
 - **Developer productivity**
   - Shortens build times, improving CI/CD pipelines.
   - Makes local development faster by avoiding redundant work.
 
-🚫 It doesn't include:
+## Limitations
+
+🚫 Turborepo doesn't include:
 - **Package management**: doesn't install or resolve dependencies; it relies on npm, Yarn, or pnpm.
 - **Versioning & publishing**: doesn't handle semantic versioning, changelogs, or publishing packages to registries (tools like Changesets or Lerna are needed).
 - **CI/CD orchestration**: optimizes tasks but doesn't replace CI/CD platforms like GitHub Actions, GitLab CI, or Jenkins.

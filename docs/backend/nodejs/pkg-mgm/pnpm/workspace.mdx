@@ -6,18 +6,116 @@ PNPM Workspace is a feature that allows you to manage multiple interdependent pa
 
 It's ideal for projects that contain multiple apps, libraries, or services that share dependencies or tooling.
 
-Below is the sample structure of a PNPM Workspace:
 
+## Workspace protocol
+
+The workspace protocol (`workspace:`) is a special way to declare dependencies inside a pnpm monorepo.
+
+It ensures that dependencies resolve strictly to local workspace packages instead of falling back to the npm registry.
+
+How it works:
+1. PNPM uses a `pnpm-workspace.yaml` file at the root of your repo to define which folders contain packages.
+2. Each package has its own `package.json`, and dependencies between them can be linked using the `workspace:` protocol.
+3. When you publish, `workspace:` specs in `package.json` are automatically converted into semver ranges.
+
+Example:
+
+```json
+{
+  "dependencies": {
+    "foo": "workspace:*",        // Always link to local foo
+    "bar": "workspace:^1.0.0",   // Link only if compatible version exists locally
+    "baz": "workspace:../baz",   // Reference by relative path
+    "qar": "workspace:^"         // Convert to caret range on publish
+  }
+}
+```
+
+## Example
+
+Given the following monorepo structure:
+
+```
+my-monorepo/
+├── pnpm-workspace.yaml
+├── packages/
+│   └── shared-utils/
+│       └── package.json
+└── apps/
+    └── web-app/
+        └── package.json
+```
+
+```yaml title="pnpm-workspace.yaml"
+packages:
+  - "packages/*"
+  - "apps/*"
+```
+
+`package.json` of the `shared-utils` package:
+
+```json title="packages/shared-utils/package.json"
+{
+  "name": "shared-utils",
+  "version": "1.0.0",
+  "main": "index.js"
+}
+```
+
+`package.json` of the `web-app` application:
+
+```json title="apps/web-app/package.json"
+{
+  "name": "web-app",
+  "version": "1.0.0",
+  "dependencies": {
+    "shared-utils": "workspace:*"
+  }
+}
+```
+
+Here, the app declares `shared-utils` as a dependency using the **`workspace:*`** protocol.  
+- `workspace:*` means: always link to the local `shared-utils` package, regardless of version.  
+- If `shared-utils` didn't exist locally, installation would fail instead of fetching from npm.
+- On publish: pnpm converts `workspace:*` into the actual version (`"1.0.0"`) in the published `package.json`.
+
+
+## Configuring Workspace
+
+Create a `pnpm-workspace.yaml` file in the project root to define the packages in the workspace:
+
+```yaml title="pnpm-workspace.yaml"
+packages:
+  - "apps/*"
+  - "packages/*"
+```
+- `apps/`: contains the main applications of the project.
+- `packages/`: contains shared libraries or utilities used by the applications.
+
+
+## Adding applications
+
+To add a new application to the workspace, create a new folder under `apps/` with a `package.json` file.
+
+For example, to add a `web` application:
 ```
 .
 ├── apps
-│   ├── docs
-│   │   └── package.json
 │   └── web
 │       └── package.json
+├── package.json
+├── pnpm-lock.yaml
+└── pnpm-workspace.yaml
+```
+
+## Adding packages
+
+To add a new package to the workspace, create a new folder under `packages/` with a `package.json` file.
+
+For example, to add a `utils` package:
+```
+.
 ├── packages
-│   ├── ui
-│   │   └── package.json
 │   └── utils
 │       └── package.json
 ├── package.json
@@ -26,107 +124,51 @@ Below is the sample structure of a PNPM Workspace:
 ```
 
 
-## Why Use Workspace?
-
-- **Speed**: Faster installs than npm or Yarn due to content-addressable storage
-- **Disk Efficiency**: Shared dependencies reduce duplication across packages
-- **Local Linking**: Use `workspace:*` to link packages without publishing them
-- **Clean Structure**: Centralized configuration and tooling across packages
-- **Better Dev Experience**: Easier refactoring, testing, and CI/CD setup
-
-
-## Key Features
-
-- **Built-in Monorepo Support**: No need for extra tools like Lerna.
-- **Workspace Protocol (`workspace:`)**: Ensures local packages are linked directly.
-- **Efficient Dependency Management**: Shared dependencies are hoisted to the root, reducing duplication.
-- **Running Scripts**: Run commands across all packages.
-- **Strict Resolution**: Prevents phantom dependencies by enforcing exact matches.
-- **Publishing Support**: Automatically replaces `workspace:` references with actual versions during publish.
-
-
-## How It Work?
-
-PNPM uses a `pnpm-workspace.yaml` file at the root of your repo to define which folders contain packages.
-
-Each package has its own `package.json`, and dependencies between them can be linked using the `workspace:` protocol.
-
-PNPM installs dependencies for all workspace packages in a single `node_modules` folder at the root.
-
-If one package depends on another in the workspace, PNPM links them locally using symlinks. This allows changes in one package are instantly available to others, no need to publish to npm registry or reinstall.
-
-_For example, using below configuration, every directory with a `package.json` in the `apps` or `packages` directories will be considered a package:_
-
-```yaml title="pnpm-workspace.yaml"
-packages:
-  - "apps/*"
-  - "packages/*"
-```
-
-
-## Creating Workspace
-
-To quickly scaffold a workspace, use a monorepo solution like **Turborepo** or **Nx**. Configure them to use PNPM as the package manager.
-
-
-## Install dependencies
+## Installing dependencies
 
 Install a npm package to a repo in the workspace:
 
-```sh
-pnpm add jest -D -F @apps/web
+```bash
+pnpm -F <app-name> add <npm-package> -D
 ```
-- `--recursive` run command in every project of a workspace
 - `-F` (or `--filter`) run command in specific projects
+- `--recursive` run command in every project of a workspace
 
-Install an internal package to a repo in the same workspace:
+Install a shared package into an application:
 
-```sh
-pnpm add @libs/utils -F @apps/web --workspace
+```bash
+pnpm -F <app-name> add <package-name> --workspace
 ```
 
-This adds a reference to the consumer's `package.json`:
-
-```json title="apps/web/package.json"
-"dependencies": {
-  "@your-org/utils": "workspace:*"
-}
-```
-
-You can also specify the exact versions of the dependencies:
-```json
-"@your-org/utils": "workspace:^1.0.0"
+You can also specify the version range of the dependencies:
+```bash
+pnpm -F <app-name> add <package-name>@^1.0.0 --workspace
 ```
 
 > [!NOTE]
-> The version is defined using the `version` field in `package.json` file of the source package.
+> The version is defined using the `version` field in `package.json` of the package.
+
+> [!INFO]
+> `app-name` and `package-name` are defined using the `name` field in `package.json`
 
 
 ## Running scripts
 
-To run a script of a specific package:
+Run a script of a specific package:
 
 ```bash
 pnpm -F <package-name> run <script-name>
 ```
 
-> [!INFO]
-> Package name is defined using the `name` field in `package.json`
-
-This runs the `build` script defined in `apps/web-app/package.json`:
-```bash
-pnpm -F web-app run build
-```
-
-To run a script across **all packages** in the workspace:
+Run a script across **all packages** in the workspace:
 
 ```bash
 pnpm -r run <script-name>
 ```
 
-Run in all packages under `apps/`:
+Run in all packages whose name has prefix `@repo/`:
 ```bash
-pnpm -F 'apps/**' run dev
+pnpm -F '@repo/**' run dev
 ```
 
 Run in packages that depend on `utils`:
@@ -134,7 +176,8 @@ Run in packages that depend on `utils`:
 pnpm -F '...utils' run build
 ```
 
-Use `pnpm exec` to run binaries from dependencies:
+Run a local installed binary from a specific package:
+
 ```bash
-pnpm -F web-app exec jest
+pnpm -F <package-name> exec jest
 ```

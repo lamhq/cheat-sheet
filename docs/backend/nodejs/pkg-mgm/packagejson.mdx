@@ -6,7 +6,9 @@ The `package.json` file is a JSON file that contains important metadata about a 
 
 This file helps the package manager (npm, pnpm, yarn) know how to handle your project, from installing dependencies to running specific scripts.
 
-Key components:
+## Key Properties
+
+Key properties in `package.json` include:
 
 - **name**: The name of your project.
 - **version**: The current version of your project.
@@ -18,6 +20,8 @@ Key components:
 - **keywords**: An array of keywords related to your project to help people find it.
 - **author**: The author of the project.
 - **license**: The license under which your project is released.
+
+Example `package.json` file:
 
 ```json title="package.json"
 {
@@ -45,9 +49,7 @@ Key components:
 ```
 
 
-## `dependencies` vs `devDependencies`
-
-**dependencies** and **devDependencies** are sections that list the modules your project needs.
+## Dependency
 
 ```json
 {
@@ -62,7 +64,6 @@ Key components:
 }
 ```
 
-
 ### `dependencies`
 - Contain essential modules required for your project to run in production.
 - They are installed when you run `npm install`.
@@ -74,12 +75,11 @@ Key components:
 - Examples include testing frameworks like Mocha, ESLint for linting, or Webpack for bundling.
 
 
-## Compatible ranges
+### Compatible ranges
 
 You can use several operators provided by npm to define the constraints of compatible dependency versions in `package.json` file.
 
-
-### Caret (`^`)
+#### Caret (`^`)
 
 The caret allows compatibility with all future **MINOR** and **PATCH** versions within the same MAJOR version:
 ```json
@@ -91,7 +91,7 @@ The caret allows compatibility with all future **MINOR** and **PATCH** versions 
 - Does NOT include `2.0.0` or higher.
 
 
-### Tilde (`~`)
+#### Tilde (`~`)
 
 The tilde limits compatibility to PATCH versions within the same MINOR version:
 ```json
@@ -103,7 +103,7 @@ The tilde limits compatibility to PATCH versions within the same MINOR version:
 - Does NOT include `1.1.0` or higher.
 
 
-### Exact Version
+#### Exact Version
 
 To lock a dependency to an exact version:
 ```json
@@ -114,7 +114,7 @@ To lock a dependency to an exact version:
 - Only compatible with `1.0.0`.
 
 
-### Range Operators
+#### Range Operators
 
 To specify a range explicitly:
 ```json
@@ -125,7 +125,7 @@ To specify a range explicitly:
 - Allows all versions from `1.0.0` to `1.x.x`, but excludes `2.0.0`.
 
 
-### Wildcard (`*`)
+#### Wildcard (`*`)
 
 To match any version:
 ```json
@@ -134,3 +134,25 @@ To match any version:
 }
 ```
 - Allows any `1.x.x` version.
+
+
+## Specifying package manager
+
+Require your project to use PNPM as the package manager:
+
+```sh
+npm pkg set packageManager="pnpm@10.0.0"
+```
+
+## Specify Node.js versions
+
+Define the required versions of Node.js and pnpm to run the project correctly:
+
+```json title="package.json"
+{
+  "engines": {
+    "node": ">=22.12.0",
+    "pnpm": ">=10.0.0"
+  }
+}
+```
