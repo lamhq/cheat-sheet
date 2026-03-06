@@ -8,7 +8,12 @@
   "semver",
   "codebase-setup",
   {
-    "name": "codebase-arch",
+    "name": "architectural-styles",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "documentation",
     "type": "dir",
     "collapsed": true
   }

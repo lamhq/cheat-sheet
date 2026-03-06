@@ -32,18 +32,18 @@ Enabled by the setting: `github.copilot.chat.codeGeneration.useInstructionFiles`
 
 Use cases:
 - Add context & guidelines for all chat requests in the workspace.
-- Enforce consistent coding style (naming conventions, formatting)
-- Provide project‑wide guidelines (e.g., use TypeScript instead of JavaScript).
-- Share architectural principles (e.g., prefer functional components in React).
+
+Best practices:
+- Keep it short and applicable to most kinds of operations (code generation, code review, commit message generation, etc).
+- Put links to references to other documents to keep it clean and focused.
 
 ```md title=".github/copilot-instructions.md"
 # Copilot Instructions
 
-- Always use TypeScript instead of JavaScript.
-- Follow ESLint rules defined in `.eslintrc.json`.
-- Prefer functional React components over class components.
-- Use async/await instead of Promises.
-- Add JSDoc comments for all exported functions.
+- Do not auto-commit or auto-push any code changes.
+- Do not run unit tests after making code changes.
+- Always run lint after making code changes using the command: `npx nx lint <module> --fix`.
+- Ask for user confirmation about things you are not sure about, such as the logic, architecture style, code structure, or implementation details.
 ```
 
 

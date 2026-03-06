@@ -1,0 +1,38 @@
+# Documentation
+
+This section contains necessary documentation for the development process.
+
+## Structure
+
+This is a recommended structure for documentation of a software project:
+
+```
+project overview
+system architecture
+codebase architecture (with example code snippets)
+coding guidelines & best Practices (module boundaries, coupling, cohesion, etc.)
+coding standards
+development workflow (starting project, git workflow, run tests, submitting pull requests, code reviews)
+api documentation (swagger)
+database schema (dbml)
+modules (logical defined, can be a package or microservice)
+  {module-a}
+    description
+    scope: domain, boundary, keywords
+    responsibilities
+    entities (subset of database schema)
+    relationships (dependency graphs)
+    features
+      feature-a
+        description
+        scope
+        requirements (Functional and Non-Functional)
+        user stories
+        user flows (Sequence diagrams, state machines, or flowcharts)
+        test cases
+        ui screens (Wireframes, mockups, or UI sketches)
+        api endpoints (available at development phase)
+        tickets / epics (available at development phase)
+deployment: CI/CD pipelines, environment setup, release strategy, rollback plans
+operations: monitoring/logging.
+```
