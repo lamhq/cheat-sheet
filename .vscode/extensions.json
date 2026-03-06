@@ -5,7 +5,6 @@
 	// List of extensions which should be recommended for users of this workspace.
 	"recommendations": [
 		"hediet.vscode-drawio",
-		"bierner.markdown-preview-github-styles",
 		"yzhang.markdown-all-in-one"
 	],
 }

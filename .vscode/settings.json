@@ -21,9 +21,6 @@
   "[markdown]": {
     "files.trimTrailingWhitespace": false
   },
-  "markdown.styles": [
-    "assets/md-preview.css"
-  ],
   "github.copilot.chat.commitMessageGeneration.instructions": [
     {
       "file": ".github/instructions/commit-message.md"
