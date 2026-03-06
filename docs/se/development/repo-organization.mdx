@@ -1,0 +1,25 @@
+# Repository Organization
+
+## Introduction
+
+A repository (repo) is a central storage location for code, documentation, and related assets.  
+
+It enables version control, collaboration among developers, and tracking of changes over time, making it a cornerstone of modern software engineering.
+
+Repository organization is about how teams structure, manage, and collaborate on code. A well-organized repo improves productivity, reduces errors, and makes onboarding easier.
+
+
+## Repo Organization Models
+
+| Model        | Description | Advantages | Challenges |
+|--------------|-------------|------------|------------|
+| **Polyrepo** | Each project/service has its own repository. | Clear separation of concerns, smaller repos, easier access control. | Dependency management harder, cross-project changes require coordination. |
+| **Monorepo** | All projects and services live in a single repository. | Easier dependency management, unified tooling, consistent standards. | Can become very large, slower builds, complex permissions. |
+
+
+## Decision Considerations
+
+- **Team Size:** Small teams often prefer monorepos for simplicity; larger teams may need polyrepos for scalability.  
+- **Project Complexity:** Highly interdependent services benefit from monorepos; independent microservices fit polyrepos better.  
+- **Tooling:** Modern build tools (like Bazel or Nx) help mitigate monorepo scaling issues.  
+- **Governance:** Strong coding standards and review processes are essential regardless of repo model.  

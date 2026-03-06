@@ -21,7 +21,7 @@ npx create-turbo@latest -e with-tailwind
 For a full list, visit [all Turborepo examples](https://github.com/vercel/turborepo/tree/main/examples).
 
 
-## For existing project
+### For existing project
 
 1. Install `turbo` package to your project.
 2. Define tasks in `turbo.json`.
@@ -32,31 +32,6 @@ For a full list, visit [all Turborepo examples](https://github.com/vercel/turbor
 7. Enabling Remote Caching in [CI](https://turborepo.com/docs/crafting-your-repository/constructing-ci)
 
 View the detailed instructions [here](https://turborepo.com/docs/getting-started/add-to-existing-repository).
-
-
-## Adding applications
-
-### NestJS
-
-1. Create a new NestJS application using the Nest CLI:
-    ```bash
-    npx @nestjs/cli new nestjs-app --package-manager pnpm --language ts --strict
-    ```
-2. Move the generated NestJS app into the `apps` directory of your TurboRepo monorepo.
-3. Install the `typescript-config` package to the NestJS app:
-   ```bash
-   pnpm add @your-monorepo/typescript-config -D --filter=nestjs-app
-   ```
-4. Update the `tsconfig.json` of the NestJS app to extend the shared TypeScript configuration:
-    ```json
-    {
-      "extends": "@repo/typescript-config/nestjs.json",
-      "compilerOptions": {
-        "outDir": "./dist",
-      }
-    }
-    ```
-5. Update `package.json` script names of the NestJS app to match with the root `package.json` scripts to when running commands from the project root will cascade to all apps and packages.
 
 
 ## Exploring the workspace

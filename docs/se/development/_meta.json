@@ -7,7 +7,7 @@
   "branching-models",
   "semver",
   {
-    "name": "repository",
+    "name": "repo-organization",
     "type": "dir",
     "collapsed": true
   },
