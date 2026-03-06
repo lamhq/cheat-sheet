@@ -1,0 +1,91 @@
+# Test Cases
+
+## Overview
+This document lists detailed test cases for validating system functionality. Each test case includes an ID, description, preconditions, steps, expected results, and actual results (to be filled during execution).
+
+## Test Case Format
+| Field            | Description                                                                 |
+|------------------|-----------------------------------------------------------------------------|
+| **Test Case ID** | Unique identifier (e.g., `TC-001`)                                          |
+| **Title**        | Short description of the test case                                          |
+| **Preconditions**| Setup required before executing the test                                    |
+| **Steps**        | Ordered list of actions to perform                                          |
+| **Expected Result** | Outcome if the system behaves correctly                                  |
+| **Actual Result**   | Outcome observed during execution (filled by QA team)                   |
+| **Status**       | Pass / Fail / Blocked                                                      |
+
+## Functional Test Cases
+
+### TC-001: User Login with Valid Credentials
+- **Preconditions**: User account exists with valid email and password.  
+- **Steps**:  
+  1. Navigate to login page.  
+  2. Enter valid email and password.  
+  3. Click "Login".  
+- **Expected Result**: User is redirected to dashboard. Session token is generated.  
+- **Actual Result**: _(To be filled during execution)_  
+- **Status**: _(To be filled)_  
+
+### TC-002: User Login with Invalid Password
+- **Preconditions**: User account exists.  
+- **Steps**:  
+  1. Navigate to login page.  
+  2. Enter valid email and invalid password.  
+  3. Click "Login".  
+- **Expected Result**: Error message displayed: "Invalid credentials". User remains on login page.  
+- **Actual Result**: _(To be filled)_  
+- **Status**: _(To be filled)_  
+
+### TC-003: Add Product to Cart
+- **Preconditions**: User logged in, product exists in catalog.  
+- **Steps**:  
+  1. Navigate to product page.  
+  2. Click "Add to Cart".  
+- **Expected Result**: Product appears in cart with correct quantity and price.  
+- **Actual Result**: _(To be filled)_  
+- **Status**: _(To be filled)_  
+
+### TC-004: Checkout with Valid Payment
+- **Preconditions**: User logged in, cart contains at least one product, payment gateway available.  
+- **Steps**:  
+  1. Navigate to cart.  
+  2. Click "Checkout".  
+  3. Enter valid payment details.  
+  4. Confirm order.  
+- **Expected Result**: Order created successfully, confirmation message displayed, payment processed.  
+- **Actual Result**: _(To be filled)_  
+- **Status**: _(To be filled)_  
+
+### TC-005: Notification Sent After Order
+- **Preconditions**: User has placed an order. Notification service enabled.  
+- **Steps**:  
+  1. Place an order.  
+  2. Wait for notification trigger.  
+- **Expected Result**: User receives email/SMS/push notification with order details.  
+- **Actual Result**: _(To be filled)_  
+- **Status**: _(To be filled)_  
+
+## Non-Functional Test Cases
+
+### TC-006: Load Test for Checkout
+- **Preconditions**: System deployed in staging environment.  
+- **Steps**:  
+  1. Simulate 1000 concurrent checkout requests.  
+- **Expected Result**: System handles load without crashing. Response time < 2 seconds.  
+- **Actual Result**: _(To be filled)_  
+- **Status**: _(To be filled)_  
+
+### TC-007: Security Test – SQL Injection
+- **Preconditions**: User login form available.  
+- **Steps**:  
+  1. Enter `"' OR '1'='1"` in email field.  
+  2. Enter random password.  
+  3. Click "Login".  
+- **Expected Result**: Login fails. System prevents SQL injection.  
+- **Actual Result**: _(To be filled)_  
+- **Status**: _(To be filled)_  
+
+## Notes
+- All test cases must be executed in **staging environment** before production release.  
+- Actual results and status fields are updated during test execution.  
+- Critical workflows (login, checkout, notifications) must pass before release sign-off.  

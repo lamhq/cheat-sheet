@@ -1,0 +1,155 @@
+# Development Workflows
+
+This project uses **Trunk-Based Development**, which emphasizes small, frequent commits to the `main` branch. This approach promotes continuous integration and reduces merge conflicts.
+
+## Feature Implementation
+
+**Steps:**  
+1. Create new branch from `main` with format `feature/<name>`.  
+2. Implement the feature according to specifications.  
+3. Push branch to remote and draft a pull request with descriptive title and details.  
+4. Implement unit tests, end-to-end tests, and ensure all tests pass locally before pushing.  
+5. Update documentation as needed.  
+6. Ensure CI pipeline passes before requesting reviews.  
+7. Change PR status to "Ready for Review" and request reviews from team members.  
+8. Merge PR after approval.  
+9. Ensure CD pipeline passes.  
+10. Verify code is deployed to **dev** environment.  
+
+**Example commands:**  
+```bash
+# Create feature branch
+git checkout -b feature/<name>
+
+# Start local development server for testing
+npm run dev
+
+# Stage changes
+git add .
+
+# Commit changes
+git commit -m "feat: <description>"
+
+# Run tests
+npm test
+
+# Push branch to remote
+git push origin feature/<name>
+
+# Create pull request
+gh pr create --title "feat: <description>" --body "Feature implementation details"
+```
+
+## Bug Fix
+
+**Steps:**  
+1. Create new branch from `main` with format `bugfix/<name>`.  
+2. Apply fix and add regression test.  
+3. Push branch to remote and draft a pull request with descriptive title and details.  
+4. Ensure all tests pass locally before pushing.  
+5. Verify CI pipeline passes.  
+6. Request reviews and merge PR after approval.  
+7. Ensure CD pipeline passes.  
+8. Verify fix is deployed to **dev** environment.  
+
+**Example commands:**  
+```bash
+# Create bugfix branch
+git checkout -b bugfix/<name>
+
+# Start local development server for testing
+npm run dev
+
+# Stage changes
+git add .
+
+# Commit changes
+git commit -m "fix: <description>"
+
+# Run tests
+npm test
+
+# Push branch to remote
+git push origin bugfix/<name>
+
+# Create pull request
+gh pr create --title "fix: <description>" --body "Bug fix details"
+```
+
+## Release
+
+**Steps:**  
+1. Ensure `main` is stable and all CI/CD checks pass.  
+2. Tag release using semantic versioning (`vX.Y.Z`).  
+3. Push tag to remote.  
+4. CI/CD pipeline builds and deploys tagged release.  
+5. Verify deployment in staging and production environments.  
+
+**Example commands:**  
+```bash
+# Create release tag
+git tag vX.Y.Z
+
+# Push release tag to remote
+git push origin vX.Y.Z
+```
+
+## Hot Fix
+
+**Steps:**  
+1. Start from the bugged release tag (`vX.Y.Z`).  
+2. Create new branch with format `hotfix/<name>`.  
+3. Apply urgent fix and test thoroughly.  
+4. Push branch to remote and draft a pull request with descriptive title and details.  
+5. Ensure all tests pass locally before merging.  
+6. Merge PR quickly after approval.  
+7. Deploy immediately to production.  
+8. Verify fix is live.  
+
+**Example commands:**  
+```bash
+# Checkout bugged release tag
+git checkout vX.Y.Z
+
+# Create hotfix branch
+git checkout -b hotfix/<name>
+
+# Start local development server for testing
+npm run dev
+
+# Stage changes
+git add .
+
+# Commit changes
+git commit -m "hotfix: <description>"
+
+# Run tests
+npm test
+
+# Push branch to remote
+git push origin hotfix/<name>
+
+# Create pull request
+gh pr create --title "hotfix: <description>" --body "Urgent fix details"
+```
+
+## Rollback
+
+**Steps:**  
+1. Identify failed release or commit.  
+2. Roll back by reverting commit or redeploying previous tag.  
+3. Document reason for rollback.  
+4. Create follow-up issue to address root cause.  
+
+**Example commands:**  
+```bash
+# Revert commit
+git revert <commit-hash>
+
+# Push reverted commit to remote
+git push origin main
+
+# Or redeploy previous tag
+git checkout vX.Y.Z
+git push origin vX.Y.Z
+```

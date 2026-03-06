@@ -1,0 +1,13 @@
+[
+  "project-overview",
+  "system-architecture",
+  "codebase-architecture",
+  "coding-guidelines",
+  "coding-standards",
+  "development-workflows",
+  {
+    "name": "modules",
+    "type": "dir",
+    "collapsed": true
+  }
+]

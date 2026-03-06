@@ -1,0 +1,107 @@
+# Project Structure
+
+## Repository Layout
+- src/        → application source code
+- tests/      → unit and integration tests
+- .github/    → CI/CD workflows
+- docs/       → documentation
+- scripts/    → utility scripts
+
+## Codebase Architecture
+
+The application source code is organized into modules, each containing layers to ensure separation of concerns, maintainability, and scalability.
+
+Modules encapsulate domain-specific logic and each layer has a clear responsibility.
+
+- Presentation Layer → handles UI and API endpoints
+- Application Layer  → orchestrates workflows
+- Domain Layer       → business logic and models
+- Infrastructure     → persistence, external APIs
+
+## Layers
+
+- **Presentation Layer (UI)**  
+  - Role: Handles user interaction and displays data.  
+  - Example: React components, Angular views.  
+
+- **Application Layer**  
+  - Role: Coordinates workflows, enforces business rules, and orchestrates calls between modules.  
+  - Example: Service classes, use-case handlers.  
+
+- **Domain Layer**  
+  - Role: Contains core business logic and domain models.  
+  - Example: Entities, value objects, domain services.  
+
+- **Infrastructure Layer**  
+  - Role: Provides technical capabilities such as database access, messaging, and external API integration.  
+  - Example: Repository implementations, API clients, logging adapters.  
+
+
+## Module Structure  
+Each module represents a logical domain or feature area. Modules are self-contained and communicate via defined contracts (interfaces, APIs).  
+
+```
+/src
+  /modules
+    /user
+      /application
+        UserService.ts
+      /domain
+        User.ts
+        UserValidator.ts
+      /infrastructure
+        UserRepository.ts
+      /presentation
+        UserController.ts
+    /order
+      /application
+        OrderService.ts
+      /domain
+        Order.ts
+        OrderPolicy.ts
+      /infrastructure
+        OrderRepository.ts
+      /presentation
+        OrderController.ts
+  /shared
+    /infrastructure
+      Database.ts
+      Logger.ts
+    /domain
+      BaseEntity.ts
+```
+
+## Example Code Snippet  
+Illustrating separation of concerns:
+
+```typescript
+// Domain Layer
+class User {
+  constructor(public id: string, public name: string) {}
+}
+
+// Infrastructure Layer
+class UserRepository {
+  findById(id: string): User {
+    // query database
+    return new User(id, "Alice");
+  }
+}
+
+// Application Layer
+class UserService {
+  constructor(private repo: UserRepository) {}
+  getUserProfile(id: string): User {
+    return this.repo.findById(id);
+  }
+}
+
+// Presentation Layer
+class UserController {
+  constructor(private service: UserService) {}
+  getProfile(req, res) {
+    const user = this.service.getUserProfile(req.params.id);
+    res.json(user);
+  }
+}
+```
