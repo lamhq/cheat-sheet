@@ -1,0 +1,234 @@
+import { PackageManagerTabs } from '@theme';
+
+# Microservices
+
+## Installation
+
+<PackageManagerTabs command="install @nestjs/microservices" />
+
+
+## Creating application
+
+Instantiate a microservice using the `createMicroservice()` method of the `NestFactory` class:
+
+```typescript title="main.ts"
+import { NestFactory } from '@nestjs/core';
+import { Transport, MicroserviceOptions } from '@nestjs/microservices';
+import { AppModule } from './app.module';
+
+async function bootstrap() {
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+    AppModule,
+    {
+      transport: Transport.TCP,
+    },
+  );
+  await app.listen();
+}
+bootstrap();
+```
+
+The second argument of the `createMicroservice()` method is an options object. If you want values from the configuration service, you can use the `createMicroserviceAsync()` method instead:
+
+```typescript title="main.ts"
+
+import { ConfigService } from '@nestjs/config';
+import { AsyncMicroserviceOptions, Transport } from '@nestjs/microservices';
+import { AppModule } from './app.module';
+
+async function bootstrap() {
+  const app = await NestFactory.createMicroservice<AsyncMicroserviceOptions>(
+    AppModule,
+    {
+      useFactory: (configService: ConfigService) => ({
+        transport: Transport.TCP,
+        options: {
+          host: configService.get<string>('HOST'),
+          port: configService.get<number>('PORT'),
+        },
+      }),
+      inject: [ConfigService],
+    },
+  );
+
+  await app.listen();
+}
+bootstrap();
+```
+
+
+## Client setup
+
+To send messages or publish events, we need the `ClientProxy` class, obtained after registering `ClientsModule`:
+
+```typescript title="app.module.ts"
+import { Module } from '@nestjs/common';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+
+@Module({
+  imports: [
+    ClientsModule.registerAsync([
+      {
+        imports: [ConfigModule],
+        name: 'MATH_SERVICE',
+        useFactory: async (configService: ConfigService) => ({
+          transport: Transport.TCP,
+          options: {
+            url: configService.get('URL'),
+          },
+        }),
+        inject: [ConfigService],
+      },
+    ]),
+  ],
+})
+export class AppModule {}
+```
+
+Inject a `ClientProxy` instance using the `@Inject()` decorator:
+
+```typescript title="math.service.ts"
+import { Injectable, Inject } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+
+@Injectable()
+export class MathService {
+  constructor(
+    @Inject('MATH_SERVICE') private client: ClientProxy,
+  ) {}
+}
+```
+
+The `ClientProxy` doesn't initiate a connection immediately. Instead, it will be established before the first microservice call, and then reused across each subsequent call.
+
+If you want to delay the application bootstrapping process until a connection is established, you can manually initiate a connection using the `ClientProxy` object's `connect()` method inside the `OnApplicationBootstrap` lifecycle hook:
+
+```typescript title="math.service.ts"
+import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+
+@Injectable()
+export class MathService implements OnApplicationBootstrap {
+  constructor(private client: ClientProxy) {}
+
+  async onApplicationBootstrap() {
+    await this.client.connect();
+  }
+}
+```
+
+
+## Request-response
+
+The request-response message style allows services to send a message and wait for a reply, ensuring reliable communication between distributed components.
+
+Useful when you need confirmation or data back from another service.
+
+To enable the request-response message type, NestJS creates two logical channels: one for sending data, another for receiving responses.
+
+### Sending messages
+
+Use the `send()` method of `ClientProxy` to call the microservice and return an `Observable` with its response:
+
+```typescript title="math.service.ts"
+import { Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
+
+@Injectable()
+export class MathService {
+  constructor(private client: ClientProxy) {}
+
+  accumulate(): Observable<number> {
+    const pattern = { cmd: 'sum' };
+    const payload = [1, 2, 3];
+    return this.client.send<number>(pattern, payload);
+  }
+}
+```
+
+The `send()` method takes two arguments, `pattern` and `payload`. The `pattern` should match one defined in a `@MessagePattern()` decorator. The `payload` is a message that we want to transmit to the remote microservice. This method returns a cold `Observable`, which means that you have to explicitly subscribe to it before the message will be sent.
+
+
+### Message Handlers
+
+Create a message handler using the `@MessagePattern()` decorator:
+
+```typescript title="math.controller.ts"
+import { Controller } from '@nestjs/common';
+import { MessagePattern } from '@nestjs/microservices';
+
+@Controller()
+export class MathController {
+  @MessagePattern({ cmd: 'sum' })
+  async accumulate(data: number[]): Promise<number> {
+    return (data || []).reduce((a, b) => a + b);
+  }
+}
+```
+
+A message handler can return an `Observable`, the result values will be emitted until the stream completes:
+
+```typescript title="math.controller.ts"
+@MessagePattern({ cmd: 'sum' })
+accumulate(data: number[]): Observable<number> {
+  return from([1, 2, 3]);
+}
+```
+
+
+## Event-based
+
+The event-based pattern is used when you want to publish events without expecting a response.
+
+It’s ideal for notifications, broadcasts, or signaling that something happened.
+
+### Publishing events
+
+Use the `emit()` method of `ClientProxy` to publish an event to the message broker:
+
+```typescript title="user.service.ts"
+import { Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+
+@Injectable()
+export class UserService {
+  constructor(private client: ClientProxy) {}
+
+  async publish() {
+    this.client.emit<number>('user_created', new UserCreatedEvent());
+  }
+}
+```
+
+The `emit()` method takes two arguments: `pattern` and `payload`. The `pattern` should match one defined in an `@EventPattern()` decorator, while the `payload` represents the event data that you want to transmit to the remote microservice. This method returns a hot `Observable` (in contrast to the cold `Observable` returned by `send()`), meaning that regardless of whether you explicitly subscribe to the observable, the proxy will immediately attempt to deliver the event.
+
+
+### Event Handlers
+
+Create an event handler using the `@EventPattern()` decorator:
+
+```typescript title="user.controller.ts"
+import { Controller } from '@nestjs/common';
+import { EventPattern } from '@nestjs/microservices';
+
+@Controller()
+export class UserController {
+  @EventPattern('user_created')
+  async handleUserCreated(data: Record<string, unknown>) {
+    // business logic
+  }
+}
+```
+
+
+## Advanced Topics
+
+- [Additional request details](https://docs.nestjs.com/microservices/basics#additional-request-details): Access additional request details using `@Payload()` and `@Ctx()` decorators.
+- [Request-scoping](https://docs.nestjs.com/microservices/basics#request-scoping): Inject `RequestContext` for per-request lifetime in microservice handlers.
+- [Instance status updates](https://docs.nestjs.com/microservices/basics#instance-status-updates): Subscribe to `status` stream for real-time connection and driver state updates.
+- [Listening to internal events](https://docs.nestjs.com/microservices/basics#listening-to-internal-events): Listen to internal events like `error` using the `on()` method.
+- [Underlying driver access](https://docs.nestjs.com/microservices/basics#underlying-driver-access): Access underlying driver instances using the `unwrap()` method.
+- [Handling timeouts](https://docs.nestjs.com/microservices/basics#handling-timeouts): Apply timeouts to microservice calls using RxJS `timeout` operator.
+- [TLS support](https://docs.nestjs.com/microservices/basics#tls-support): Enable TLS encryption for TCP transport in microservices.

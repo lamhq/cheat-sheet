@@ -13,6 +13,11 @@
     "collapsed": true
   },
   {
+    "name": "microservices",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
     "name": "payment",
     "type": "dir",
     "collapsed": true
