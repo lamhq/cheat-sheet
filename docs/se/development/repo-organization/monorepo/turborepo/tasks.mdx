@@ -215,3 +215,41 @@ Run tasks in watch mode:
 ```bash title="Terminal"
 npx turbo watch dev lint
 ```
+
+
+### Watch Mode
+
+`turbo watch` adds a dependency-aware watcher to any tool.
+
+In below example, with the below tasks and scripts, when you run `turbo watch dev lint`, you'll see the `lint` scripts are re-run whenever you make source code changes, despite ESLint not having a built-in watcher:
+
+```json title="turbo.json"
+{
+  "tasks": {
+    "lint": {
+      "dependsOn": ["^lint"]
+    }
+  }
+}
+```
+
+```json title="packages/ui/package.json"
+{
+  "name": "@repo/ui",
+  "scripts": {
+    "lint": "eslint ."
+  }
+}
+```
+
+```json title="apps/web/package.json"
+{
+  "name": "web",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@repo/ui": "workspace:*"
+  }
+}
+```

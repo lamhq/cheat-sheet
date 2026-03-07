@@ -2,12 +2,27 @@ import { PackageManagerTabs } from '@theme';
 
 # Microservices
 
+## Overview
+
+In Nest, a microservice is fundamentally an application that uses a different transport layer than HTTP.
+
+A client Nest application can connect to a Nest microservice to exchange messages or publish events.
+
+Messages use **request-response** style, which allows clients to send a message and wait for a reply. Useful when you need confirmation or data back from the downstream service.
+
+To enable the request-response message type, NestJS creates two logical channels: one for sending data, another for receiving responses.
+
+The **event-based** pattern is used when you want to publish events without expecting a response. Ideal for notifications, broadcasts, or signaling that something happened.
+
+
 ## Installation
 
 <PackageManagerTabs command="install @nestjs/microservices" />
 
 
-## Creating application
+## Microservice (consumer)
+
+### Creating a microservice
 
 Instantiate a microservice using the `createMicroservice()` method of the `NestFactory` class:
 
@@ -56,34 +71,28 @@ async function bootstrap() {
 bootstrap();
 ```
 
-### Hybrid application
 
-A hybrid application can combine an HTTP server with one or more microservice listeners.
+### Creating Microservices from a NestJS app
 
-Useful when you want to expose both REST and microservice APIs in the same application.
+You can connect microservice listeners to an existing NestJS application, allowing you to create a server that handles both HTTP and microservice requests (hybrid application).
+
+It's useful when you want to expose both REST and microservice APIs in the same application.
 
 To do this, use the `connectMicroservice()` method:
 
 ```typescript title="main.ts"
 const app = await NestFactory.create(AppModule);
-// microservice #1
+
+// microservice listen on port 3001
 const microserviceTcp = app.connectMicroservice<MicroserviceOptions>({
   transport: Transport.TCP,
   options: {
     port: 3001,
   },
 });
-// microservice #2
-const microserviceRedis = app.connectMicroservice<MicroserviceOptions>({
-  transport: Transport.REDIS,
-  options: {
-    host: 'localhost',
-    port: 6379,
-  },
-});
 
 await app.startAllMicroservices();
-await app.listen(3001);
+await app.listen(3000);
 ```
 
 To inherit global pipes, interceptors, guards and filters configured for the main application, set the `inheritAppConfig` option to `true`:
@@ -98,7 +107,68 @@ const microservice = app.connectMicroservice<MicroserviceOptions>(
 ```
 
 
-## Client setup
+### Handling Messages
+
+Create a message handler using the `@MessagePattern()` decorator:
+
+```typescript title="math.controller.ts"
+import { Controller } from '@nestjs/common';
+import { MessagePattern } from '@nestjs/microservices';
+
+@Controller()
+export class MathController {
+  @MessagePattern({ cmd: 'sum' })
+  async accumulate(data: number[]): Promise<number> {
+    return (data || []).reduce((a, b) => a + b);
+  }
+}
+```
+
+A message handler can return an `Observable`, the result values will be emitted until the stream completes:
+
+```typescript title="math.controller.ts"
+@MessagePattern({ cmd: 'sum' })
+accumulate(data: number[]): Observable<number> {
+  return from([1, 2, 3]);
+}
+```
+
+For hybrid applications, to bind `@MessagePattern()` to only one transport strategy, you can use the second argument of type `Transport`:
+
+```typescript title="math.controller.ts"
+@MessagePattern('time.us.*', Transport.NATS)
+getDate(@Payload() data: number[], @Ctx() context: NatsContext) {
+  console.log(`Subject: ${context.getSubject()}`); // e.g. "time.us.east"
+  return new Date().toLocaleTimeString(...);
+}
+
+@MessagePattern({ cmd: 'time.us' }, Transport.TCP)
+getTCPDate(@Payload() data: number[]) {
+  return new Date().toLocaleTimeString(...);
+}
+```
+
+### Handling Events
+
+Create an event handler using the `@EventPattern()` decorator:
+
+```typescript title="user.controller.ts"
+import { Controller } from '@nestjs/common';
+import { EventPattern } from '@nestjs/microservices';
+
+@Controller()
+export class UserController {
+  @EventPattern('user_created')
+  async handleUserCreated(data: Record<string, unknown>) {
+    // business logic
+  }
+}
+```
+
+
+## Client (producer)
+
+### Connecting to a microservice
 
 To send messages or publish events, we need the `ClientProxy` class, obtained after registering `ClientsModule`:
 
@@ -160,14 +230,6 @@ export class MathService implements OnApplicationBootstrap {
 ```
 
 
-## Request-response
-
-The request-response message style allows services to send a message and wait for a reply, ensuring reliable communication between distributed components.
-
-Useful when you need confirmation or data back from another service.
-
-To enable the request-response message type, NestJS creates two logical channels: one for sending data, another for receiving responses.
-
 ### Sending messages
 
 Use the `send()` method of `ClientProxy` to call the microservice and return an `Observable` with its response:
@@ -192,54 +254,6 @@ export class MathService {
 The `send()` method takes two arguments, `pattern` and `payload`. The `pattern` should match one defined in a `@MessagePattern()` decorator. The `payload` is a message that we want to transmit to the remote microservice. This method returns a cold `Observable`, which means that you have to explicitly subscribe to it before the message will be sent.
 
 
-### Message Handlers
-
-Create a message handler using the `@MessagePattern()` decorator:
-
-```typescript title="math.controller.ts"
-import { Controller } from '@nestjs/common';
-import { MessagePattern } from '@nestjs/microservices';
-
-@Controller()
-export class MathController {
-  @MessagePattern({ cmd: 'sum' })
-  async accumulate(data: number[]): Promise<number> {
-    return (data || []).reduce((a, b) => a + b);
-  }
-}
-```
-
-A message handler can return an `Observable`, the result values will be emitted until the stream completes:
-
-```typescript title="math.controller.ts"
-@MessagePattern({ cmd: 'sum' })
-accumulate(data: number[]): Observable<number> {
-  return from([1, 2, 3]);
-}
-```
-
-For hybrid applications, to bind `@MessagePattern()` to only one transport strategy, you can use the second argument of type `Transport`:
-
-```typescript title="math.controller.ts"
-@MessagePattern('time.us.*', Transport.NATS)
-getDate(@Payload() data: number[], @Ctx() context: NatsContext) {
-  console.log(`Subject: ${context.getSubject()}`); // e.g. "time.us.east"
-  return new Date().toLocaleTimeString(...);
-}
-
-@MessagePattern({ cmd: 'time.us' }, Transport.TCP)
-getTCPDate(@Payload() data: number[]) {
-  return new Date().toLocaleTimeString(...);
-}
-```
-
-
-## Event-based
-
-The event-based pattern is used when you want to publish events without expecting a response.
-
-It’s ideal for notifications, broadcasts, or signaling that something happened.
-
 ### Publishing events
 
 Use the `emit()` method of `ClientProxy` to publish an event to the message broker:
@@ -261,22 +275,7 @@ export class UserService {
 The `emit()` method takes two arguments: `pattern` and `payload`. The `pattern` should match one defined in an `@EventPattern()` decorator, while the `payload` represents the event data that you want to transmit to the remote microservice. This method returns a hot `Observable` (in contrast to the cold `Observable` returned by `send()`), meaning that regardless of whether you explicitly subscribe to the observable, the proxy will immediately attempt to deliver the event.
 
 
-### Event Handlers
 
-Create an event handler using the `@EventPattern()` decorator:
-
-```typescript title="user.controller.ts"
-import { Controller } from '@nestjs/common';
-import { EventPattern } from '@nestjs/microservices';
-
-@Controller()
-export class UserController {
-  @EventPattern('user_created')
-  async handleUserCreated(data: Record<string, unknown>) {
-    // business logic
-  }
-}
-```
 
 
 ## Advanced Topics

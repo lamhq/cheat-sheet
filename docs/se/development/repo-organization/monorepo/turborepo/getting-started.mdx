@@ -36,10 +36,27 @@ View the detailed instructions [here](https://turborepo.com/docs/getting-started
 
 ## Managing packages
 
-You manually add or remove packages based on your package manager's [workspace structure](./workspace-structure.mdx).
+Turborepo's code generation can generate new package by copying from existing packages in your repo or fetching from GitHub URLs.
 
-Ensure that each package folder includes its own `package.json` file to be recognized as part of the workspace.
+It ensures packages follow the [workspace structure](./workspace-structure.mdx) defined in your package manager's workspace configuration. 
 
+Create a new package in your monorepo by copying from an existing package in your repo:
+
+```sh
+npx turbo gen workspace --copy
+```
+
+Create a new NestJS application from NestJS TypeScript starter template:
+
+```sh
+npx turbo gen workspace --copy https://github.com/nestjs/typescript-starter --name <app-name> --destination apps/<app-name> --type app
+```
+
+Create a TypeScript Vite React app from **React + TypeScript + Vite** template:
+
+```sh
+npx turbo gen workspace --copy https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts --name <app-name> --destination apps/<app-name> --type app
+```
 
 ## Installing dependencies
 
