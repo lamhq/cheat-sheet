@@ -4,61 +4,68 @@ import { PackageManagerTabs } from '@theme';
 
 ## Overview
 
-A task is a script that Turborepo runs. You can express relationships between tasks in your [`turbo.json`](https://turborepo.com/docs/reference/configuration) configuration and [Package Graph](https://turborepo.com/docs/core-concepts/package-and-task-graph#package-graph).
+A task is a script that Turborepo runs.
+
+You can express relationships between tasks in your [`turbo.json`](https://turborepo.com/docs/reference/configuration) configuration and [Package Graph](https://turborepo.com/docs/core-concepts/package-and-task-graph#package-graph).
 
 Turborepo will always parallelize any work that it can to ensure everything runs as fast as possible.
 
 
+## List tasks
+
+```bash
+npx turbo run
+```
+
+
 ## Defining tasks
 
-For tasks that you run frequently, you can write your `turbo` commands directly into your root `package.json`.
+The root `turbo.json` file is where you'll register the tasks that Turborepo will run.
 
-```jsonc title="./package.json"
+Each key in the `tasks` object is a task that can be executed by `turbo run`.
+
+```json title="turbo.json"
 {
-  "scripts": {
-    "dev": "turbo run dev",
-    "build": "turbo run build",
-    "test": "turbo run test",
-    "lint": "turbo run lint"
+  "tasks": {
+    "build": {}
   }
 }
 ```
 
-These scripts can then be run using your package manager:
-
-<PackageManagerTabs command="dev" />
+Turborepo will search in `scripts` in `package.json` that have the same name as the task.
 
 
-You only want to write `turbo` commands in your root `package.json`. Writing `turbo` commands into the `package.json` of packages can lead to recursively calling `turbo`.
+## Defining task's order
 
-> [!INFO]
-> `turbo` is an alias for `turbo run`.
+The `dependsOn` key is used to specify the tasks that must complete before a different task begins running.
 
-
-## Defining task order
 
 ### Run tasks in direct dependencies first
+
+For example, make the `build` script of libraries complete before application's `build` script runs:
 
 ```json title="turbo.json"
 {
   "tasks": {
     "build": {
-      "dependsOn": ["^build"] 
+      "dependsOn": ["^build"]
     }
   }
 }
 ```
 
-- The `^` means run the task in direct dependencies first. _If your application depends on a library named `ui` and the library has a `build` task, the `build` script in `ui` will run first._
+- The `^` means run the task in direct dependencies first.
 
 
 ### Depending on tasks in the same package
+
+For example, run a `build` task before running a `test` task in the same library:
 
 ```json title="turbo.json"
 {
   "tasks": {
     "test": {
-      "dependsOn": ["build"] 
+      "dependsOn": ["build"]
     }
   }
 }
@@ -67,28 +74,32 @@ You only want to write `turbo` commands in your root `package.json`. Writing `tu
 
 ### Depending on a specific task in a specific package
 
+For example, the `build` task in `utils` must run before any `lint` tasks:
+
 ```json title="turbo.json"
 {
   "tasks": {
     "lint": {
-      "dependsOn": ["utils#build"] 
+      "dependsOn": ["utils#build"]
     }
   }
 }
 ```
+
+For example, the `build` task in `utils` must run before any `lint` tasks in `web`:
 
 ```json title="turbo.json"
 {
   "tasks": {
     "web#lint": {
-      "dependsOn": ["utils#build"] 
+      "dependsOn": ["utils#build"]
     }
   }
 }
 ```
 
 
-### Long-running (dev) tasks
+### Long-running tasks
 
 You might have a long-running task that requires another task to always be running at the same time.
 
@@ -107,7 +118,7 @@ For example, a web app might require an API server to be running while it's in d
 ```
 
 
-### Specifying output
+## Specifying output
 
 The `outputs` key tells Turborepo files and directories it should cache when the task has successfully completed.
 
@@ -115,18 +126,19 @@ The `outputs` key tells Turborepo files and directories it should cache when the
 {
   "tasks": {
     "build": {
-      "outputs": [".next/**", "!.next/cache/**"] 
+      "outputs": [".next/**", "!.next/cache/**"]
     }
   }
 }
 ```
+- [Paths](https://turborepo.dev/docs/reference/globs) are relative to the package, so `dist/**` will handle the `dist` that is outputted for each package, respectively. 
 
 
-### Specifying inputs
+## Specifying inputs
 
-The `inputs` key is used to specify the files that you want to include in the task's hash for caching. 
+The `inputs` key is used to specify the files that you want to include in the task's hash for caching.
 
-By default all files in the package that are checked into source control are included in the hash.
+By default, Turborepo will include all files in the package that are tracked by Git. 
 
 In this example, Turborepo will use the default inputs behavior for the build task, but will ignore changes to the `README.md` file:
 
@@ -134,7 +146,7 @@ In this example, Turborepo will use the default inputs behavior for the build ta
 {
   "tasks": {
     "spell-check": {
-      "inputs": ["$TURBO_DEFAULT$", "!README.md"] 
+      "inputs": ["$TURBO_DEFAULT$", "!README.md"]
     }
   }
 }
@@ -165,48 +177,41 @@ You can add environment variables to task hashes:
 Running multiple tasks:
 
 ```bash title="Terminal"
-turbo run build test lint check-types
+npx turbo run build test lint
 ```
 
 Filtering by package:
 
 ```bash title="Terminal"
-turbo build --filter=@acme/web
+npx turbo -F @repo/api build
 ```
 
 Filtering by directory:
 
 ```bash title="Terminal"
-turbo lint --filter="./packages/utilities/*"
+npx turbo -F @repo/api lint
 ```
 
 Run task in a package and all packages that **depend on it**:
 
 ```bash title="Terminal"
-turbo build --filter=...ui
+npx turbo -F ...@repo/api lint
 ```
 
 Run task in a package and all of **its dependencies**:
 
 ```bash title="Terminal"
-turbo dev --filter=web...
+npx turbo -F web... lint
 ```
 
 Combining filters:
 
 ```bash title="Terminal"
-turbo build --filter=...ui --filter={./packages/*} --filter=[HEAD^1]
+npx turbo -F ...ui -F {./packages/*} -F [HEAD^1] build
 ```
 
 Run tasks in watch mode:
 
 ```bash title="Terminal"
-turbo watch dev lint
-```
-
-When running `turbo` in a package's directory, it will automatically scope commands to that package:
-
-```bash title="Terminal"
-cd apps/docs
-turbo build
+npx turbo watch dev lint
 ```
