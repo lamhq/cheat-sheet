@@ -11,18 +11,14 @@ In Turborepo, there're two types of packages: Application Packages and Library P
 
 Packages that will be deployed from your workspace. Examples: Next.js, Svelte, Vite, or CLI applications
 
-Commonly found in the `./apps` directory.
-
 Application Packages should not be installed into other packages of your repository.
 
 
 ## Library Packages
 
-Library Packages (aka. Internal packages) contain code that you intend to share around your workspace.
+Library Packages (aka. internal packages) are Node.js packages that contain code you intend to share across your workspace.
 
-They support the Application Packages to create the final deployables from your repository.
-
-You can also publish them to npm registry.
+They can be published to npm registry and used as other npm packages.
 
 There're three compilation strategies to use library packages:
 - Just-in-Time Packages
@@ -107,56 +103,82 @@ Cons:
 - **Complex dependency management**: Especially if multiple versions are used across apps.
 
 
-## Creating internal packages
+### Creating library packages
 
-Follow this [guide](https://turborepo.com/docs/crafting-your-repository/creating-an-internal-package).
+> [!NOTE]
+> This guide assumes your repository follows the [workspace structure](./workspace-structure.mdx) and library packages are in the `packages/` directory.
 
+To create a shared math utilities package in your repo, follow these steps:
 
-## Linking internal packages
+1. **Create package directory**: add an empty directory at `packages/math`.
+2. **Add `package.json`**: define how the package is consumed and what it exposes.
+3. **Add `tsconfig.json`**: specify how TypeScript files are transpiled to JavaScript.
+4. **Add source code**: create a `src` directory for your code.
+5. **Update `turbo.json`**: cache the package's build task.
+6. **Build the package**: run `turbo run build` to compile the package. 
 
-To reference and import internal packages:
-
-1. Define entrypoints in the `package.json` of the source package using the `exports` field.
-2. Use your package manager to add the source package as a dependency in the consumer package.
-3. Import the source modules in the consumer package’s source code.
-
-For example, suppose we have a `utils` package that exports `add` and `subtract` functions:
-
-```json title="packages/utils/package.json"
+```json title="packages/math/package.json"
 {
-  "name": "@your-org/utils",
+  "name": "@repo/math",
+  "type": "module",
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc"
+  },
   "exports": {
-    ".": "./src/constants.ts",
-    "./add": "./src/add.ts",
-    "./subtract": "./src/subtract.ts"
+    "./add": {
+      "types": "./src/add.ts",
+      "default": "./dist/add.js"
+    },
+    "./subtract": {
+      "types": "./src/subtract.ts",
+      "default": "./dist/subtract.js"
+    }
   }
 }
 ```
+- `name`: determines how your package can be imported throughout your workspace.
+- `exports`: defines multiple entrypoints for the package so it can be used in other packages (e.g., `import { add } from '@repo/math/add'`).
+- `type`: defines which module system to use when running JavaScript files with Node.js. `module` is for ES Modules, and `commonjs` is for CommonJS modules.
+- `scripts`: The `dev` and `build` script compile the package using the TypeScript compiler. The `dev` script will watch for changes to source code and automatically recompile the package.
 
-To link the `utils` package to the `web` app using PNPM, install it as a dependency via PNPM workspace protocol:
-
-```sh
-cd apps/web
-pnpm add @your-org/utils --workspace
-```
-
-This adds a dependency to the `web` app:
-
-```json title="apps/web/package.json"
+```json title="packages/math/tsconfig.json"
 {
-  "dependencies": {
-    "@your-org/utils": "workspace:*"
+  "extends": "@repo/typescript-config/base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src"
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+- The `@repo/typescript-config/base.json` configuration that lives in `packages/typescript-config` has all the configuration you need so you extend from it.
+- The `outDir` key in compilerOptions tells TypeScript where to put the compiled output. It matches the directory specified in your exports in package.json.
+- The `rootDir` key in compilerOptions ensures that the output in `outDir` uses the same structure as the src directory.
+- The `include` and `exclude` keys are not inherited from the base configuration, according to the TypeScript specification, so you've included them here.
+
+```json title="turbo.json"
+{
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+    }
   }
 }
 ```
 
-Now, the `web` app can import the `utils` package like this:
+## List packages
 
-```ts title="apps/web/src/index.ts"
-import { GRAVITATIONAL_CONSTANT, SPEED_OF_LIGHT } from '@your-org/utils';
-import { add } from '@your-org/utils/add';
-import { subtract } from '@your-org/utils/subtract';
+Show all packages in your repository and where they're located:
+
+```bash title="Terminal"
+npx turbo ls
 ```
 
-> [!CAUTION]
-> Never accessing files across package boundaries (do not directly import package code's files through its file path).
+Show all packages that depend on a specific package:
+
+```bash title="Terminal"
+npx turbo ls -F ...<package-name>
+```

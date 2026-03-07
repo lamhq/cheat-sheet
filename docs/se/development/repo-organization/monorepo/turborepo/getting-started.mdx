@@ -34,53 +34,28 @@ For a full list, visit [all Turborepo examples](https://github.com/vercel/turbor
 View the detailed instructions [here](https://turborepo.com/docs/getting-started/add-to-existing-repository).
 
 
-## Exploring the workspace
-
-Show the packages in your repository and where they're located:
-
-```bash title="Terminal"
-npx turbo ls
-```
-
-Show all packages that depend on a specific package:
-
-```bash title="Terminal"
-npx turbo ls -F ...<package-name>
-```
-
-Show all tasks:
-
-```bash title="Terminal"
-npx turbo run
-```
-
-
 ## Managing packages
 
-You can manually add or remove packages based on your package manager's [workspace structure](./workspace-structure.mdx).
+You manually add or remove packages based on your package manager's [workspace structure](./workspace-structure.mdx).
 
 Ensure that each package folder includes its own `package.json` file to be recognized as part of the workspace.
 
 
-## Installing Dependencies
+## Installing dependencies
 
 Turborepo does not manage dependencies. It's up to your package manager (PNPM, Yarn, or NPM).
 
+**Best practices** when managing dependencies in a monorepo:
+- **Each package owns its dependencies**: install dependencies directly in the package that uses it (not in the root `package.json`) to improve clarity, flexibility, caching efficiency, and ease of migration between polyrepos and monorepos.
+- **Few dependencies in the root**: Dependencies that belong in the workspace root are tools for managing the repository, such as `turbo`, `pnpm`, `prettier`, etc.
 
-## Using the terminal UI
 
-When running tasks with `turbo`, it use a dynamic view to shows which tasks are running, queued, or completed—organized by package and task name.
+## Editor integration
 
-You can quickly adjust the UI to your needs using keybinds:
+Add `$schema` key in `turbo.json` so editor is able to provide full documentation and linting for invalid configuration:
 
-| Keybind | Action                                                            |
-| ------- | ----------------------------------------------------------------- |
-| `m`     | Toggle popup listing keybinds                                     |
-| `↑`/`↓` | Select the next/previous task in the task list                    |
-| `j`/`k` | Select the next/previous task in the task list                    |
-| `p`     | Toggle selection pinning for selected task                        |
-| `h`     | Toggle visibility of the task list                                |
-| `c`     | When logs are highlighted, copy selection to the system clipboard |
-| `u`/`d` | Scroll logs `u`p and `d`own                                       |
-
-Some of your tasks may allow you to type input into them. You can interact with tasks using the `i` keybind, press `Ctrl+z` to stop interacting.
+```json title="turbo.json"
+{
+  "$schema": "node_modules/turbo/schema.json",
+}
+```

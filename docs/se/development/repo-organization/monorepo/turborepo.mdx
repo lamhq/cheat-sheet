@@ -9,28 +9,29 @@ It is designed for scaling monorepos.
 
 ## Benefits
 
+Turborepo helps running tasks efficiently with:
 - **Convenient Task Running**
   - Provides a standardized way to structure and run tasks across packages.
+  - Makes local development faster by avoiding manual task running.
   - Works seamlessly with npm, Yarn, or pnpm workspaces.
 - **Performance optimization**
   - Speeds up tasks (builds, tests, linting, etc.) by caching results and reusing them across runs.
   - Executes tasks in parallel and only re-runs what has changed.
-- **Developer productivity**
-  - Shortens build times, improving CI/CD pipelines.
-  - Makes local development faster by avoiding redundant work.
+
 
 ## Limitations
 
-🚫 Turborepo doesn't include:
-- **Package management**: doesn't install or resolve dependencies; it relies on npm, Yarn, or pnpm.
+🚫 Turborepo doesn't support:
+- **Dependency management**: doesn't install or resolve dependencies; it relies on package manager.
+- **Project management**: no code generation, scaffolding, or project setup features.
+- **Architecture & design**: doesn't dictate architecture, testing strategy, or deployment models.
 - **Versioning & publishing**: doesn't handle semantic versioning, changelogs, or publishing packages to registries (tools like Changesets or Lerna are needed).
-- **CI/CD orchestration**: optimizes tasks but doesn't replace CI/CD platforms like GitHub Actions, GitLab CI, or Jenkins.
-- **Team workflow management**: doesn't manage branching strategies, code reviews, or developer collaboration practices.
+- **Development workflow**: doesn't manage branching strategies, code reviews, or developer collaboration practices.
 - **Non-JS/TS ecosystems**: primarily built for JavaScript/TypeScript; while adaptable, it's not a universal build tool for all languages.
-- **Business logic or app design**: only optimizes builds; doesn't dictate architecture, testing strategy, or deployment models.
+- **CI/CD orchestration**: optimizes tasks but doesn't replace CI/CD platforms like GitHub Actions, GitLab CI, or Jenkins.
 
 
-## Useful Links
+## Advanced Topics
 
 - [Using environment variables](https://turborepo.com/docs/crafting-your-repository/using-environment-variables)
 - [Constructing CI](https://turborepo.com/docs/crafting-your-repository/constructing-ci)
@@ -46,3 +47,9 @@ It is designed for scaling monorepos.
 - [Storybook](https://turborepo.com/docs/guides/tools/storybook)
 - [Tailwind](https://turborepo.com/docs/guides/tools/tailwind)
 - [Docker](https://turborepo.com/docs/guides/tools/docker)
+
+
+## References
+
+- [Turborepo Documentation](https://turborepo.dev/docs)
+- [Turborepo Documentation (GitHub)](https://github.com/vercel/turborepo/tree/main/apps/docs/content/docs)
