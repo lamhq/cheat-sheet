@@ -1,3 +1,5 @@
+import { PackageManagerTabs } from '@theme';
+
 # Pipes
 
 Pipes have two typical use cases:
@@ -48,9 +50,7 @@ export class ValidationPipe implements PipeTransform {
 
 ### Object schema validation pipe
 
-```bash
-yarn add joi
-```
+<PackageManagerTabs command="install joi" />
 
 ```ts
 // validation.pipe.ts
@@ -101,9 +101,7 @@ bootstrap();
 
 Validate request data schemae based on class definition.
 
-```bash
-yarn add class-validator class-transformer
-```
+<PackageManagerTabs command="install class-validator class-transformer" />
 
 ### Defining validation rules using decorators
 
@@ -173,7 +171,7 @@ async create(
 you don't have to build a generic validation pipe on your own since the `ValidationPipe` is provided by Nest out-of-the-box.
 
 
-## Transformation Pipes
+## Transformation use case
 
 ### Parsing a string into an integer value
 
