@@ -1,7 +1,10 @@
 # Interceptors
 
-Interceptors have a set of useful capabilities which are inspired by the [Aspect Oriented Programming](https://en.wikipedia.org/wiki/Aspect-oriented_programming) (AOP) technique. They make it possible to:
+## Introduction
 
+Interceptors have a set of useful capabilities which are inspired by the [Aspect Oriented Programming](https://en.wikipedia.org/wiki/Aspect-oriented_programming) (AOP) technique.
+
+They can:
 - bind extra logic before / after method execution
 - transform the result returned from a function
 - transform the exception thrown from a function
@@ -13,8 +16,7 @@ Interceptors have a set of useful capabilities which are inspired by the [Aspect
 
 ## Defining Interceptors
 
-```ts
-// logging.interceptor.ts
+```ts title="logging.interceptor.ts"
 import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -39,23 +41,21 @@ export class LoggingInterceptor implements NestInterceptor {
 
 Like **pipes** and **guards**, interceptors can be controller-scoped, method-scoped, or global-scoped.
 
-```ts
-// cats.controller.ts
+```ts title="cats.controller.ts"
 @UseInterceptors(LoggingInterceptor)
 export class CatsController {}
 ```
 
 Setup global interceptor:
 
-```ts
+```ts title="main.ts"
 const app = await NestFactory.create(AppModule);
 app.useGlobalInterceptors(new LoggingInterceptor());
 ```
 
 Setup global interceptor directly from any module:
 
-```ts
-// app.module.ts
+```ts title="app.module.ts"
 import { Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 
@@ -71,10 +71,11 @@ export class AppModule {}
 ```
 
 
-## Response transform
+## Response mapping
 
-```ts
-// transform.interceptor.ts
+Transform the response to wrap it in an object with a `data` property:
+
+```ts title="transform.interceptor.ts"
 import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -99,8 +100,25 @@ When someone calls the `GET /cats` endpoint, the response would look like the fo
 }
 ```
 
+Transform `null` values to empty strings `''`:
 
-## Override exceptions
+```ts
+import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+@Injectable()
+export class ExcludeNullInterceptor implements NestInterceptor {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    return next
+      .handle()
+      .pipe(map(value => value === null ? '' : value ));
+  }
+}
+```
+
+
+## Exceptions mapping
 
 ```ts
 import {
@@ -119,17 +137,16 @@ export class ErrorsInterceptor implements NestInterceptor {
     return next
       .handle()
       .pipe(
-        catchError(err => throwError(new BadGatewayException())),
+        catchError(err => throwError(() => new BadGatewayException())),
       );
   }
 }
 ```
 
 
-## Prevent handler's execution
+## Skipping handler
 
-```ts
-// cache.interceptor.ts
+```ts title="cache.interceptor.ts"
 import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
 import { Observable, of } from 'rxjs';
 
@@ -148,8 +165,7 @@ export class CacheInterceptor implements NestInterceptor {
 
 ## Handling timeouts
 
-```ts
-// timeout.interceptor.ts
+```ts title="timeout.interceptor.ts"
 import { Injectable, NestInterceptor, ExecutionContext, CallHandler, RequestTimeoutException } from '@nestjs/common';
 import { Observable, throwError, TimeoutError } from 'rxjs';
 import { catchError, timeout } from 'rxjs/operators';
@@ -161,9 +177,9 @@ export class TimeoutInterceptor implements NestInterceptor {
       timeout(5000),
       catchError(err => {
         if (err instanceof TimeoutError) {
-          return throwError(new RequestTimeoutException());
+          return throwError(() => new RequestTimeoutException());
         }
-        return throwError(err);
+        return throwError(() => err);
       }),
     );
   };

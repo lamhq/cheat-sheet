@@ -1,7 +1,7 @@
 ---
 agent: agent
 model: GPT-4o (copilot)
-description: Shorten each section of the current document
+description: Shorten all sections of the current document
 ---
 
 Each section of the current document is marked with Markdown headers (e.g., `## Introduction`).
