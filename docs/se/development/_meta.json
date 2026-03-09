@@ -2,11 +2,7 @@
   "branching-models",
   "conv-commit",
   "semver",
-  {
-    "name": "repo-organization",
-    "type": "dir",
-    "collapsed": true
-  },
+  "repo-organization",
   "repo-setup",
   {
     "name": "tools",
