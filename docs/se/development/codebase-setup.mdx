@@ -2,37 +2,27 @@
 
 Steps to create a development-ready codebase.
 
-## For all projects
+## Node.js projects
 
-1. Create project from framework's guide ([NestJS](../../backend/nestjs.mdx), [Next.js](../../web/react/nextjs.mdx), [Vite](../../web/build-tools/vite.mdx), etc.)
-2. Specify package manager to use, migrate from the current package manager if needed ([PNPM](../../backend/nodejs/pkg-mgm/pnpm.mdx))
-3. Install & configure code formatter ([Prettier](../../backend/nodejs/linters/prettier.mdx))
-4. Install & configure linter for code standards ([ESLint](../../backend/nodejs/linters/eslint.mdx))
-5. Create IDE configuration file (`.vscode/settings.json`) and install recommended extensions for the project's tech stack (VS Code)
-6. Set up unit testing ([Jest](../../backend/nodejs/testing/jest.mdx), [Vitest](../../backend/nodejs/testing/vitest.mdx))
-7. Set up end-to-end testing ([Playwright](../../web/playwright.mdx))
-8. Set up environments config (dotenv)
-9. Configure CI/CD pipeline ([GitHub Actions](../../devops/github-actions.mdx)) for:
-  - Automated builds and tests
-  - Deployment automation
-  - Code quality checks
-10. Set up git hooks ([Husky](../../se/development/version-control/git/husky.mdx)) for:
-  - Commit message linting
-  - Pre-commit file linting
-11. Add [skills](../../tools/ai-agents/agent-skills.mdx) / [instructions](../../tools/ai-agents/github-copilot/customization/instructions.mdx) for AI agents to understand the codebase
-12. Create `README.md` with:
-  - Project overview
-  - Development prerequisites
-  - Local setup instructions
-  - Run and test instructions
-  - Architecture documentation
+1. Create an empty Node.js monorepo project with [Turborepo](./tools/turborepo/getting-started.mdx#creating-project)
+2. [Add applications and packages](./tools/turborepo/getting-started.mdx#managing-packages) to project
+3. Set up formatter: [Prettier](./tools/prettier.mdx)
+4. Set up code linter: [ESLint](./tools/eslint.mdx)
+5. Set up commit message linter: [commitlint](./tools/commitlint.mdx)
+6. Set up lint-staged to validate staged changes
+7. Set up commit hooks with [Husky](./tools/husky.mdx)
+8. Set up the CI pipeline to run tests, linting, and type checking
+9. Set up CD pipeline for automated release and deployment.
+10. Create `README.md` file
 
 
-## For API App
+## API projects
 
-- Enable automatic API documentation (Swagger)
+1. Set up testing framework [Jest](../../backend/nodejs/testing/jest.mdx)
 
 
-## For Web App
+## Web projects
 
-- Integrate UI documentation tool (Storybook)
+1. Set up testing framework [Vitest](../../backend/nodejs/testing/vitest.mdx) (if your project is using Vite)
+2. Set up end-to-end testing framework [Playwright](../../web/playwright.mdx)
+3. Integrate UI documentation tool [Storybook](../../web/storybook.mdx)

@@ -4,8 +4,5 @@
   "config",
   "history",
   "undo-changes",
-  "remote",
-  "conv-commit",
-  "commitlint",
-  "husky"
+  "remote"
 ]

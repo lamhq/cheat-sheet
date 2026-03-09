@@ -2,6 +2,11 @@
 
 ## Creating project
 
+Create a nearly empty monorepo:
+```sh
+npx create-turbo@latest -e with-shell-commands
+```
+
 Create a full-stack NestJS + Next.js monorepo:
 
 ```sh
@@ -46,17 +51,21 @@ Create a new package in your monorepo by copying from an existing package in you
 npx turbo gen workspace --copy
 ```
 
-Create a new NestJS application from NestJS TypeScript starter template:
+Create a NestJS application package:
 
 ```sh
 npx turbo gen workspace --copy https://github.com/nestjs/typescript-starter --name <app-name> --destination apps/<app-name> --type app
 ```
 
-Create a TypeScript Vite React app from **React + TypeScript + Vite** template:
+Create a TypeScript Vite React application package:
 
 ```sh
 npx turbo gen workspace --copy https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts --name <app-name> --destination apps/<app-name> --type app
 ```
+
+> [!NOTE]
+> Remember to remove the lock files (`package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`) from the generated package to avoid conflicts with your monorepo's lock file.
+
 
 ## Installing dependencies
 

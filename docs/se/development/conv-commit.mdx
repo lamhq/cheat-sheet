@@ -76,20 +76,11 @@ How does this relate to SemVer?
 - Commits with `BREAKING CHANGE` in the commits are translated to `MAJOR` releases.
 
 
-## How to use conventional commit?
-
-Your contributors/teammates aren't required to use the conventional commit specification. They only need to submit pull requests.
-
-When merging a pull request, Git lead maintainers should choose to automatically squash commits enter the proper git commit message for the merge.
-
-
 ## Tools
 
 ### Conventional Commits (VS Code)
 
-This [VS Code extension](https://marketplace.visualstudio.com/items?itemName=vivaxy.vscode-conventional-commits) helps you to fill in commit message in Conventional Commits format.
-
-Open VS Code and install the [extension]().
+Install [Conventional Commits](https://marketplace.visualstudio.com/items?itemName=vivaxy.vscode-conventional-commits) extension to help you to fill in commit message in Conventional Commits format.
 
 To write a commit message:
 - Open the Command Palette (Command + Shift + P), enter `Conventional Commits`
@@ -97,22 +88,11 @@ To write a commit message:
   ![](https://github.com/vivaxy/vscode-conventional-commits/raw/HEAD/assets/docs/icon-on-the-source-control-menu.png)
 
 
-### ChatGPT - Genie AI (VS Code)
-
-This [VS Code extension](https://marketplace.visualstudio.com/items?itemName=genieai.chatgpt-vscode) can generate commit message automatically base on your staged changes.
-
-To generate a commit message:
-- Open the Command Palette (Command + Shift + P), enter `Genie: Generate a commit message`
-- or Click the icon on the Source Control menu
-
-
 ### commitlint (NPM)
 
-[commitlint](./commitlint.mdx) is a npm package that checks your commit messages against a set of rules to ensure they follow a consistent format.
-
-You can configure it to use Conventional Commits format.
+Install [commitlint](./tools/commitlint.mdx) npm package to check commit messages against a set of rules to ensure they follow a consistent format, in this case is Conventional Commits format.
 
 
 ### action-semantic-pull-request (Github Action)
 
-A [GitHub Action](https://github.com/amannn/action-semantic-pull-request) that ensures that your Github pull request titles match the Conventional Commits spec.
+Use [action-semantic-pull-request](https://github.com/amannn/action-semantic-pull-request) in your GitHub Action workflow to ensure that your Github pull request titles match the Conventional Commits spec.
