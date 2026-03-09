@@ -1,0 +1,94 @@
+# Decorator
+
+Decorators can be defined for either a class, a method or a property.
+
+## Param decorators
+
+- `@Request()`, `@Req()`
+- `@Response()`, `@Res()`
+- `@Next()`
+- `@Session()`
+- `@Param(param?: string)`
+- `@Body(param?: string)`
+- `@Query(param?: string)`
+- `@Headers(param?: string)`
+- `@Ip()`
+- `@HostParam()`
+
+
+## Defining custom decorators
+
+Define a decorator factory function that extracts the user from the request object:
+
+```ts title="user.decorator.ts"
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+
+export const User = createParamDecorator(
+  (data: string, ctx: ExecutionContext) => {
+    const request = ctx.switchToHttp().getRequest();
+    const user = request.user;
+
+    return data ? user && user[data] : user;
+  },
+);
+```
+- `User` is a decorator factory that takes an optional `data` parameter
+
+To use a decorator, call the decorator factory and pass any required parameters:
+```ts title="users.controller.ts"
+@Get()
+async findOne(@User() user: UserEntity) {
+  console.log(user);
+}
+
+@Get()
+async findOne(@User('firstName') firstName: string) {
+  console.log(`Hello ${firstName}`);
+}
+```
+
+## Working with pipes
+
+We can use pipes to validate the data returned by the custom decorator:
+
+```ts
+@Get()
+async findOne(
+  @User(new ValidationPipe({ validateCustomDecorators: true }))
+  user: UserEntity,
+) {
+  console.log(user);
+}
+```
+
+> [!NOTE]
+> Note that `validateCustomDecorators` option must be set to `true`. `ValidationPipe` does not validate arguments annotated with the custom decorators by default.
+
+
+## Decorator compositions
+
+Instead of applying multiple decorators individually (which can be repetitive), we can compose them into a single decorator:
+
+```ts
+import { applyDecorators } from '@nestjs/common';
+
+export function Auth(...roles: Role[]) {
+  return applyDecorators(
+    SetMetadata('roles', roles),
+    UseGuards(AuthGuard, RolesGuard),
+    ApiBearerAuth(),
+    ApiUnauthorizedResponse({ description: 'Unauthorized"' }),
+  );
+}
+```
+
+You can then use this custom `@Auth()` decorator as follows:
+
+```ts
+@Get('users')
+@Auth('admin')
+findAllUsers() {}
+```
+
+> [!NOTE]
+> Some decorators, such as `@ApiHideProperty()`, are not composable and won't work properly with the applyDecorators function.

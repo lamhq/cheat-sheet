@@ -1,0 +1,28 @@
+# Repository Setup
+
+A quick checklist to set up a fresh codebase from scratch.
+
+## Node.js projects
+
+1. Create an empty Node.js monorepo project with [Turborepo](./tools/turborepo/getting-started.mdx#creating-project)
+2. [Add applications and packages](./tools/turborepo/getting-started.mdx#managing-packages) to project
+3. Set up formatter: [Prettier](./tools/prettier.mdx)
+4. Set up code linter: [ESLint](./tools/eslint.mdx)
+5. Set up commit message linter: [commitlint](./tools/commitlint.mdx)
+6. Set up lint-staged to validate staged changes
+7. Set up commit hooks with [Husky](./tools/husky.mdx)
+8. Set up the CI pipeline to run tests, linting, and type checking
+9. Set up CD pipeline for automated release and deployment.
+10. Create `README.md` file
+
+
+## API projects
+
+1. Set up testing framework [Jest](../../backend/nodejs/testing/jest.mdx)
+
+
+## Web projects
+
+1. Set up testing framework [Vitest](../../backend/nodejs/testing/vitest.mdx) (if your project is using Vite)
+2. Set up end-to-end testing framework [Playwright](../../web/playwright.mdx)
+3. Integrate UI documentation tool [Storybook](../../web/storybook.mdx)

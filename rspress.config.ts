@@ -19,7 +19,7 @@ const baseConfig: UserConfig = {
   plugins: [katex(), mermaid()],
 
   // add custom styles
-  globalStyles: path.join(projectRoot, 'assets', 'styles.css'),
+  globalStyles: path.join(projectRoot, 'assets', 'rspress-styles.css'),
 };
 
 // Used by Cheat Sheet Utils extension to create custom config for previewing

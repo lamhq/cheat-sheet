@@ -1,0 +1,87 @@
+# Getting Started
+
+## Creating project
+
+Create a nearly empty monorepo:
+```sh
+npx create-turbo@latest -e with-shell-commands
+```
+
+Create a full-stack NestJS + Next.js monorepo:
+
+```sh
+npx create-turbo@latest -e with-nestjs
+```
+
+Single-page React app with Vite:
+```sh
+npx create-turbo@latest -e with-vite-react
+```
+
+Next.js + Tailwind CSS:
+```sh
+npx create-turbo@latest -e with-tailwind
+```
+
+For a full list, visit [all Turborepo examples](https://github.com/vercel/turborepo/tree/main/examples).
+
+
+### For existing project
+
+1. Install `turbo` package to your project.
+2. Define tasks in `turbo.json`.
+3. Add `.turbo` to your `.gitignore`.
+4. Add a `packageManager` field to root `package.json`.
+5. Set up your workspace's structure and configure package manager workspaces (PNPM, NPM, Yarn).
+6. Run defined tasks with `turbo` command.
+7. Enabling Remote Caching in [CI](https://turborepo.com/docs/crafting-your-repository/constructing-ci)
+
+View the detailed instructions [here](https://turborepo.com/docs/getting-started/add-to-existing-repository).
+
+
+## Managing packages
+
+Turborepo's code generation can generate new package by copying from existing packages in your repo or fetching from GitHub URLs.
+
+It ensures packages follow the [workspace structure](./workspace-structure.mdx) defined in your package manager's workspace configuration. 
+
+Create a new package in your monorepo by copying from an existing package in your repo:
+
+```sh
+npx turbo gen workspace --copy
+```
+
+Create a NestJS application package:
+
+```sh
+npx turbo gen workspace --copy https://github.com/nestjs/typescript-starter --name <app-name> --destination apps/<app-name> --type app
+```
+
+Create a TypeScript Vite React application package:
+
+```sh
+npx turbo gen workspace --copy https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts --name <app-name> --destination apps/<app-name> --type app
+```
+
+> [!NOTE]
+> Remember to remove the lock files (`package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`) from the generated package to avoid conflicts with your monorepo's lock file.
+
+
+## Installing dependencies
+
+Turborepo does not manage dependencies. It's up to your package manager (PNPM, Yarn, or NPM).
+
+**Best practices** when managing dependencies in a monorepo:
+- **Each package owns its dependencies**: install dependencies directly in the package that uses it (not in the root `package.json`) to improve clarity, flexibility, caching efficiency, and ease of migration between polyrepos and monorepos.
+- **Few dependencies in the root**: Dependencies that belong in the workspace root are tools for managing the repository, such as `turbo`, `pnpm`, `prettier`, etc.
+
+
+## Editor integration
+
+Add `$schema` key in `turbo.json` so editor is able to provide full documentation and linting for invalid configuration:
+
+```json title="turbo.json"
+{
+  "$schema": "node_modules/turbo/schema.json",
+}
+```

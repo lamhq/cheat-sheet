@@ -1,0 +1,184 @@
+# Packages
+
+## Overview
+
+A package / project is a self-contained unit with its own `package.json`, tooling configuration, and source code. 
+
+In Turborepo, there're two types of packages: Application Packages and Library Packages.
+
+
+## Application Packages
+
+Packages that will be deployed from your workspace. Examples: Next.js, Svelte, Vite, or CLI applications
+
+Application Packages should not be installed into other packages of your repository.
+
+
+## Library Packages
+
+Library Packages (aka. internal packages) are Node.js packages that contain code you intend to share across your workspace.
+
+They can be published to npm registry and used as other npm packages.
+
+There're three compilation strategies to use library packages:
+- Just-in-Time Packages
+- Compiled Packages
+- Publishable Packages
+
+
+### Just-in-Time Packages
+
+- Export package's source code directly (TypeScript) in `exports` field of `package.json`.
+- The consumer's bundlers will compile the package in its build process.
+
+```json title="packages/ui/package.json"
+{
+  "name": "@repo/ui",
+  "exports": {
+    "./button": "./src/button.tsx",
+    "./card": "./src/card.tsx"
+  }
+}
+```
+
+Pros:
+- **Zero build step**: No need to compile libraries separately.
+- **Simple setup**: No need for build pipelines or output directories.
+
+Cons:
+- **Slower consumer builds**: Consumers spend time compiling dependencies during their own build.
+- **No TypeScript `paths` support**: A library that is being transpiled by its consumer cannot use the `compilerOptions.paths` configuration because TypeScript assumes that source code is being transpiled in the package where it is written.
+- **No caching for build task**: Because the package doesn't have its own `build` step. This tradeoff may make sense if you are okay with the build times of your applications.
+- **Errors in internal dependencies will be reported**: When developing consumer, you can get errors reported in internal library. This may confusing or problematic in some situations.
+
+
+### Compiled Packages
+
+- Export the compiled version of package in `exports` field of `package.json`.
+- The package handles its own compilation.
+- If using TypeScript, the package should only use `tsc` to compile the source code. Other works should be handled by consumer's bundler.
+- This requires a moderate amount of configuration.
+
+```json title="packages/ui/package.json"
+{
+  "name": "@repo/ui",
+  "exports": {
+    "./button": {
+      "types": "./src/button.tsx",
+      "default": "./dist/button.js"
+    },
+    "./card": {
+      "types": "./src/card.tsx",
+      "default": "./dist/card.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc"
+  }
+}
+```
+
+Pros:
+- **Better caching**: Tools like Turborepo can cache library builds.
+- **Improved compatibility**: Works well with tools that expect compiled code.
+
+Cons:
+- **Requires build step**: Require deeper knowledge and configuration to create build outputs.
+- **Out-of-sync risk**: If not watched or rebuilt properly, compiled code may lag behind source.
+
+
+### Publishable Packages
+
+- Compile and publish package to the npm registry.
+- This requires the most configuration.
+
+Pros:
+- **Production-ready**: Clean separation of concerns, versioning, and distribution.
+- **Reusable across repos**: Can be published and consumed externally.
+- **Robust tooling**: Works well with package managers and CI/CD pipelines.
+
+Cons:
+- **Heavyweight setup**: Requires build, versioning, and publishing workflows. ([changesets](https://github.com/changesets/changesets) is recommended for managing versioning, changelogs, and the publishing process).
+- **Slower iteration**: More overhead during development.
+- **Complex dependency management**: Especially if multiple versions are used across apps.
+
+
+### Creating library packages
+
+> [!NOTE]
+> This guide assumes your repository follows the [workspace structure](./workspace-structure.mdx) and library packages are in the `packages/` directory.
+
+To create a shared math utilities package in your repo, follow these steps:
+
+1. **Create package directory**: add an empty directory at `packages/math`.
+2. **Add `package.json`**: define how the package is consumed and what it exposes.
+3. **Add `tsconfig.json`**: specify how TypeScript files are transpiled to JavaScript.
+4. **Add source code**: create a `src` directory for your code.
+5. **Update `turbo.json`**: cache the package's build task.
+6. **Build the package**: run `turbo run build` to compile the package. 
+
+```json title="packages/math/package.json"
+{
+  "name": "@repo/math",
+  "type": "module",
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc"
+  },
+  "exports": {
+    "./add": {
+      "types": "./src/add.ts",
+      "default": "./dist/add.js"
+    },
+    "./subtract": {
+      "types": "./src/subtract.ts",
+      "default": "./dist/subtract.js"
+    }
+  }
+}
+```
+- `name`: determines how your package can be imported throughout your workspace.
+- `exports`: defines multiple entrypoints for the package so it can be used in other packages (e.g., `import { add } from '@repo/math/add'`).
+- `type`: defines which module system to use when running JavaScript files with Node.js. `module` is for ES Modules, and `commonjs` is for CommonJS modules.
+- `scripts`: The `dev` and `build` script compile the package using the TypeScript compiler. The `dev` script will watch for changes to source code and automatically recompile the package.
+
+```json title="packages/math/tsconfig.json"
+{
+  "extends": "@repo/typescript-config/base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src"
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+- The `@repo/typescript-config/base.json` configuration that lives in `packages/typescript-config` has all the configuration you need so you extend from it.
+- The `outDir` key in compilerOptions tells TypeScript where to put the compiled output. It matches the directory specified in your exports in package.json.
+- The `rootDir` key in compilerOptions ensures that the output in `outDir` uses the same structure as the src directory.
+- The `include` and `exclude` keys are not inherited from the base configuration, according to the TypeScript specification, so you've included them here.
+
+```json title="turbo.json"
+{
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+    }
+  }
+}
+```
+
+## List packages
+
+Show all packages in your repository and where they're located:
+
+```bash title="Terminal"
+npx turbo ls
+```
+
+Show all packages that depend on a specific package:
+
+```bash title="Terminal"
+npx turbo ls -F ...<package-name>
+```

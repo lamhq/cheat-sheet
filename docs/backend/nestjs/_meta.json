@@ -1,20 +1,44 @@
 [
-  "modules",
-  "configuration",
-  "validation",
-  "prisma",
-  "logger",
-  "openapi",
-  "authentication",
-  "websocket",
+  {
+    "name": "overview",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Overview"
+  },
+  {
+    "name": "fundamentals",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Fundamentals"
+  },
+  {
+    "name": "techniques",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Techniques"
+  },
+  {
+    "name": "security",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Security"
+  },
   {
     "name": "graphql",
     "type": "dir",
     "collapsed": true
   },
+  "websocket",
   {
-    "name": "payment",
+    "name": "microservices",
     "type": "dir",
     "collapsed": true
+  },
+  "openapi",
+  {
+    "name": "recipes",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Recipes"
   }
 ]

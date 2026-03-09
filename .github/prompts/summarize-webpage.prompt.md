@@ -2,9 +2,9 @@
 agent: agent
 model: Grok Code Fast 1 (copilot)
 tools: ['web']
-description: Fetch provided URL and extract brief descriptions for each section in the fetched content.
+description: List all sections in the webpage with a short description and link
 ---
-use the fetch_webpage tool to get the content of the provided URL
+use the `fetch_webpage` tool to get the content of the provided URL
 
 for each section (any heading level) in the fetched content, give a line:
 - with the following format: `- {section name}: {description}`

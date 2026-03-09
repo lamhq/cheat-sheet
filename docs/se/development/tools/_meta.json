@@ -1,0 +1,30 @@
+[
+  {
+    "name": "git",
+    "type": "dir",
+    "collapsed": true
+  },
+  "commitlint",
+  "prettier",
+  {
+    "name": "eslint",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "biome",
+    "type": "dir",
+    "collapsed": true
+  },
+  "husky",
+  {
+    "name": "turborepo",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "nx",
+    "type": "dir",
+    "collapsed": true
+  }
+]

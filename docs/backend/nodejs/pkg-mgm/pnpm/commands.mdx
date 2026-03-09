@@ -1,0 +1,127 @@
+# CLI commands
+
+## Install dependencies
+
+**Install project's dependencies**:
+
+```sh
+pnpm i
+```
+- when `NODE_ENV=development` (or not set), both `dependencies` and `devDependencies` are installed.
+- when `NODE_ENV=production`, only `dependencies` and `optionalDependencies` are installed (`devDependencies` won't be installed).
+
+**Install for production** (same when `NODE_ENV=production`):
+```sh
+pnpm i -P
+```
+
+**Install in CI environment**, `pnpm-lock.yaml` is not updated:
+```sh
+pnpm i --frozen-lockfile
+```
+- If `CI=true` is set, no need to specify `--frozen-lockfile`
+
+
+## List packages
+
+List globally installed packages:
+```sh
+pnpm list -g --depth=0
+```
+
+
+## Add package
+
+```sh
+pnpm add <pkg@version>
+
+# Save to devDependencies
+pnpm add -D <pkg>
+
+# Install package globally
+pnpm add -g <pkg>
+```
+
+## Remove packages
+
+Remove local package:
+```sh
+pnpm remove <pkg>
+```
+
+Remove global package:
+```sh
+pnpm remove -g <pkg>
+```
+
+Remove any packages inside `node_modules` that are not declared in `package.json` (and lockfile):
+```sh
+pnpm prune
+```
+
+## Find outdated packages
+
+```sh
+pnpm outdated
+```
+
+```sh
+pnpm outdated "*gulp-*" @babel/core
+```
+
+## Upgrade packages
+
+Update package versions in `package.json` to latest version (based on the specified range):
+```sh
+pnpm up
+```
+
+Update versions, ignoring ranges:
+```sh
+pnpm up --latest
+```
+
+## Run defined scripts
+
+Runs a script defined in `package.json`:
+```sh
+pnpm run <cmd>
+```
+
+Runs the `test` script defined in `package.json`:
+```sh
+pnpm test
+```
+
+
+## Executing package
+
+Runs a locally installed dependency from project’s `node_modules`:
+
+```sh
+pnpm exec jest
+```
+
+Executing a remote package (without install):
+```sh
+pnpm dlx create-react-app ./my-app
+```
+
+`pnpx` is an alias for `pnpm dlx`:
+```sh
+pnpx create-react-app ./my-app
+```
+
+
+## Migrate
+
+Generate a lockfile from another package manager's lockfile:
+
+```sh
+pnpm import
+```
+
+Supported source files:
+- `package-lock.json`
+- `npm-shrinkwrap.json`
+- `yarn.lock`

@@ -1,0 +1,22 @@
+# Resiliency
+
+## Overview
+
+Refer to [Resiliency Quality Attribute](../../../system-design/quality-attributes/resiliency.mdx).
+
+
+## Patterns
+
+Common resiliency patterns help systems stay responsive and stable even when parts of them fail:
+
+- **Retry**: Automatically reattempt failed requests due to transient issues
+- **Timeout**: Limit how long a service waits for a response to avoid hanging
+- **Circuit Breaker**: Stop sending requests to a failing service to prevent overload
+- **Bulkhead**: Isolate resources so one service’s failure doesn’t affect others
+- **Fallback**: Provide alternative logic or default response when a service fails
+- **Rate Limiter**: Control the number of requests to prevent overload
+- **Health Check**: Monitor service status and trigger recovery mechanisms if needed
+- **Fail Fast**: Immediately reject requests when a service is known to be down
+- **Load Shedding**: Drop excess requests when the system is under heavy load
+- **Dead Letter Queue**: Store failed messages for later inspection or reprocessing
+- **Service Mesh Resilience**: Use tools like Istio or Linkerd to manage retries, timeouts, and circuit breakers at the network level

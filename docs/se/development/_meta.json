@@ -1,20 +1,13 @@
 [
-  {
-    "name": "version-control",
-    "type": "dir",
-    "collapsed": true
-  },
   "branching-models",
+  "conv-commit",
   "semver",
-  "codebase-setup",
+  "repo-organization",
+  "repo-setup",
   {
-    "name": "architectural-styles",
+    "name": "tools",
     "type": "dir",
-    "collapsed": true
-  },
-  {
-    "name": "documentation",
-    "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "label": "Tools"
   }
 ]

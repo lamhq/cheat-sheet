@@ -1,0 +1,255 @@
+import { PackageManagerTabs } from '@theme';
+
+# Tasks
+
+## Overview
+
+A task is a script that Turborepo runs.
+
+You can express relationships between tasks in your [`turbo.json`](https://turborepo.com/docs/reference/configuration) configuration and [Package Graph](https://turborepo.com/docs/core-concepts/package-and-task-graph#package-graph).
+
+Turborepo will always parallelize any work that it can to ensure everything runs as fast as possible.
+
+
+## List tasks
+
+```bash
+npx turbo run
+```
+
+
+## Defining tasks
+
+The root `turbo.json` file is where you'll register the tasks that Turborepo will run.
+
+Each key in the `tasks` object is a task that can be executed by `turbo run`.
+
+```json title="turbo.json"
+{
+  "tasks": {
+    "build": {}
+  }
+}
+```
+
+Turborepo will search in `scripts` in `package.json` that have the same name as the task.
+
+
+## Defining task's order
+
+The `dependsOn` key is used to specify the tasks that must complete before a different task begins running.
+
+
+### Run tasks in direct dependencies first
+
+For example, make the `build` script of libraries complete before application's `build` script runs:
+
+```json title="turbo.json"
+{
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"]
+    }
+  }
+}
+```
+
+- The `^` means run the task in direct dependencies first.
+
+
+### Depending on tasks in the same package
+
+For example, run a `build` task before running a `test` task in the same library:
+
+```json title="turbo.json"
+{
+  "tasks": {
+    "test": {
+      "dependsOn": ["build"]
+    }
+  }
+}
+```
+
+
+### Depending on a specific task in a specific package
+
+For example, the `build` task in `utils` must run before any `lint` tasks:
+
+```json title="turbo.json"
+{
+  "tasks": {
+    "lint": {
+      "dependsOn": ["utils#build"]
+    }
+  }
+}
+```
+
+For example, the `build` task in `utils` must run before any `lint` tasks in `web`:
+
+```json title="turbo.json"
+{
+  "tasks": {
+    "web#lint": {
+      "dependsOn": ["utils#build"]
+    }
+  }
+}
+```
+
+
+### Long-running tasks
+
+You might have a long-running task that requires another task to always be running at the same time.
+
+For example, a web app might require an API server to be running while it's in development mode:
+
+```json title="apps/web/turbo.json"
+{
+  "tasks": {
+    "dev": {
+      "with": ["api#dev"],
+      "persistent": true,
+      "cache": false
+    }
+  }
+}
+```
+
+
+## Specifying output
+
+The `outputs` key tells Turborepo files and directories it should cache when the task has successfully completed.
+
+```json title="turbo.json"
+{
+  "tasks": {
+    "build": {
+      "outputs": [".next/**", "!.next/cache/**"]
+    }
+  }
+}
+```
+- [Paths](https://turborepo.dev/docs/reference/globs) are relative to the package, so `dist/**` will handle the `dist` that is outputted for each package, respectively. 
+
+
+## Specifying inputs
+
+The `inputs` key is used to specify the files that you want to include in the task's hash for caching.
+
+By default, Turborepo will include all files in the package that are tracked by Git. 
+
+In this example, Turborepo will use the default inputs behavior for the build task, but will ignore changes to the `README.md` file:
+
+```json title="turbo.json"
+{
+  "tasks": {
+    "spell-check": {
+      "inputs": ["$TURBO_DEFAULT$", "!README.md"]
+    }
+  }
+}
+```
+
+You can add environment variables to task hashes:
+
+```json title="turbo.json"
+{
+  "globalEnv": ["IMPORTANT_GLOBAL_VARIABLE"],
+  "tasks": {
+    "build": {
+      "env": ["MY_API_URL", "MY_API_KEY"]
+    }
+  }
+}
+```
+- **globalEnv**: Changes to the values of any environment variables in this list will change the hash for all tasks.
+- **env**: Includes changes to the values of environment variables that affect the task, allowing for better granularity. For example, a `lint` task probably doesn't need to miss cache when the value of `API_KEY` changes, but a `build` task likely should.
+
+
+## Running Tasks
+
+1. You can use package manager to run tasks defined in the root `package.json`.
+2. Additionally, installing `turbo` globally lets you run one-off commands directly from your terminal.
+3. You can run tasks in watch mode with `turbo watch [task]`. Tasks are re-run whenever you make changes to its dependencies.
+
+Running multiple tasks:
+
+```bash title="Terminal"
+npx turbo run build test lint
+```
+
+Filtering by package:
+
+```bash title="Terminal"
+npx turbo -F @repo/api build
+```
+
+Filtering by directory:
+
+```bash title="Terminal"
+npx turbo -F @repo/api lint
+```
+
+Run task in a package and all packages that **depend on it**:
+
+```bash title="Terminal"
+npx turbo -F ...@repo/api lint
+```
+
+Run task in a package and all of **its dependencies**:
+
+```bash title="Terminal"
+npx turbo -F web... lint
+```
+
+Combining filters:
+
+```bash title="Terminal"
+npx turbo -F ...ui -F {./packages/*} -F [HEAD^1] build
+```
+
+Run tasks in watch mode:
+
+```bash title="Terminal"
+npx turbo watch dev lint
+```
+
+
+### Watch Mode
+
+`turbo watch` adds a dependency-aware watcher to any tool.
+
+In below example, with the below tasks and scripts, when you run `turbo watch dev lint`, you'll see the `lint` scripts are re-run whenever you make source code changes, despite ESLint not having a built-in watcher:
+
+```json title="turbo.json"
+{
+  "tasks": {
+    "lint": {
+      "dependsOn": ["^lint"]
+    }
+  }
+}
+```
+
+```json title="packages/ui/package.json"
+{
+  "name": "@repo/ui",
+  "scripts": {
+    "lint": "eslint ."
+  }
+}
+```
+
+```json title="apps/web/package.json"
+{
+  "name": "web",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@repo/ui": "workspace:*"
+  }
+}
+```

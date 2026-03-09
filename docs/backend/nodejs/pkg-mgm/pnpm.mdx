@@ -6,9 +6,10 @@ pnpm (Performant Node Package Manager) is a package manager for JavaScript.
 
 It's particularly loved for its speed and reliability compared to npm and Yarn.
 
+
 ## Why pnpm
 
-- Saving disk space.
+- Saving disk space. It creates a single version of each package and hard-links them across projects.
 - Boosting installation speed. 2x faster than npm.
 - Avoids dependency conflicts by creating a non-flat `node_modules` structure.
 
@@ -33,38 +34,4 @@ curl -fsSL https://get.pnpm.io/install.sh | env PNPM_VERSION=<version> sh -
 For POSIX systems (like macOS), just put the following line to your `.bashrc`, `.zshrc`, or `config.fish`:
 ```sh
 alias pn=pnpm
-```
-
-
-## Set up project to use pnpm
-
-Enfoce PNPM as project's package:
-
-```sh title=".npmrc"
-package-manager=pnpm@10.0.0 
-```
-
-Declares which versions of Node.js and pnpm your project supports.
-
-```json title="package.json"
-{
-  "engines": {
-    "node": ">=22.12.0",
-    "pnpm": ">=10.0.0"
-  }
-}
-```
-
-
-## Migrate from other package managers
-
-Generate a `pnpm-lock.yaml` from another package manager's lockfile.
-
-Supported source files:
-- `package-lock.json`
-- `npm-shrinkwrap.json`
-- `yarn.lock`
-
-```sh
-pnpm import
 ```

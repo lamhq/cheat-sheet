@@ -1,0 +1,15 @@
+[
+  "configuration",
+  "mongo",
+  "validation",
+  "class-validator",
+  "caching",
+  "serialization",
+  "class-transformer",
+  "versioning",
+  "cookies",
+  "events",
+  "http",
+  "mailer",
+  "logger"
+]

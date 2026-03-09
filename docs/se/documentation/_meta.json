@@ -1,0 +1,14 @@
+[
+  "repository-readme",
+  "project-overview",
+  "system-architecture",
+  "architectural-pattern",
+  "coding-guidelines",
+  "coding-standards",
+  "development-workflows",
+  {
+    "name": "requirements",
+    "type": "dir",
+    "collapsed": true
+  }
+]
