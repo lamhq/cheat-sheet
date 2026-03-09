@@ -13,7 +13,7 @@
   },
   "codebase-setup",
   {
-    "name": "architectural-styles",
+    "name": "architectural-patterns",
     "type": "dir",
     "collapsed": true
   },
