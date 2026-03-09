@@ -9,14 +9,17 @@ This is a recommended structure for documentation of a software project:
 ```
 project overview
 system architecture
-codebase architecture (with example code snippets)
+project structure (Directory Tree Overview, Module/Package Guide, Dependency Map, Configuration Guide)
+architectural pattern (clean architecture, hexagonal architecture)
+coding standards 
 coding guidelines & best Practices (module boundaries, coupling, cohesion, etc.)
-coding standards
-development workflow (starting project, git workflow, run tests, submitting pull requests, code reviews)
 api documentation (swagger)
 database schema (dbml)
-modules (logical defined, can be a package or microservice)
-  {module-a}
+development workflow (starting project, git workflow, run tests, submitting pull requests, code reviews)
+deployment: CI/CD pipelines, environment setup, release strategy, rollback plans
+operations: monitoring/logging.
+requirements
+  {module-a}  (logical defined, can be a package or microservice)
     description
     scope: domain, boundary, keywords
     responsibilities
@@ -33,6 +36,4 @@ modules (logical defined, can be a package or microservice)
         ui screens (Wireframes, mockups, or UI sketches)
         api endpoints (available at development phase)
         tickets / epics (available at development phase)
-deployment: CI/CD pipelines, environment setup, release strategy, rollback plans
-operations: monitoring/logging.
 ```
