@@ -7,17 +7,7 @@
     "type": "dir",
     "collapsed": true
   },
-  {
-    "name": "architectural-patterns",
-    "type": "dir",
-    "collapsed": true
-  },
-  {
-    "name": "documentation",
-    "type": "dir",
-    "collapsed": true
-  },
-  "codebase-setup",
+  "repo-setup",
   {
     "name": "tools",
     "type": "dir",

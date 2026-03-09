@@ -14,6 +14,11 @@
     "collapsed": true
   },
   {
+    "name": "documentation",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
     "name": "development",
     "type": "dir",
     "collapsed": true,
