@@ -1,5 +1,7 @@
 # Decorator
 
+Decorators can be defined for either a class, a method or a property.
+
 ## Param decorators
 
 - `@Request()`, `@Req()`
@@ -16,8 +18,9 @@
 
 ## Defining custom decorators
 
-```ts
-// user.decorator.ts
+Define a decorator factory function that extracts the user from the request object:
+
+```ts title="user.decorator.ts"
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 export const User = createParamDecorator(
@@ -29,8 +32,10 @@ export const User = createParamDecorator(
   },
 );
 ```
+- `User` is a decorator factory that takes an optional `data` parameter
 
-```ts
+To use a decorator, call the decorator factory and pass any required parameters:
+```ts title="users.controller.ts"
 @Get()
 async findOne(@User() user: UserEntity) {
   console.log(user);
@@ -42,10 +47,9 @@ async findOne(@User('firstName') firstName: string) {
 }
 ```
 
-
 ## Working with pipes
 
-The same syntax with `@Body()`, `@Param()` and `@Query()`
+We can use pipes to validate the data returned by the custom decorator:
 
 ```ts
 @Get()
@@ -57,8 +61,13 @@ async findOne(
 }
 ```
 
+> [!NOTE]
+> Note that `validateCustomDecorators` option must be set to `true`. `ValidationPipe` does not validate arguments annotated with the custom decorators by default.
+
 
 ## Decorator compositions
+
+Instead of applying multiple decorators individually (which can be repetitive), we can compose them into a single decorator:
 
 ```ts
 import { applyDecorators } from '@nestjs/common';
@@ -73,8 +82,13 @@ export function Auth(...roles: Role[]) {
 }
 ```
 
+You can then use this custom `@Auth()` decorator as follows:
+
 ```ts
 @Get('users')
 @Auth('admin')
 findAllUsers() {}
 ```
+
+> [!NOTE]
+> Some decorators, such as `@ApiHideProperty()`, are not composable and won't work properly with the applyDecorators function.
