@@ -10,8 +10,11 @@
     "type": "dir",
     "collapsed": true
   },
-  "commitlint",
   "prettier",
+  "lint-staged",
+  "commitlint",
+  "git-branch-is",
+  "husky",
   {
     "name": "eslint",
     "type": "dir",
@@ -22,7 +25,6 @@
     "type": "dir",
     "collapsed": true
   },
-  "husky",
   {
     "name": "turborepo",
     "type": "dir",

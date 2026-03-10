@@ -4,65 +4,73 @@ import { PackageManagerTabs } from '@theme'
 
 ## Version
 
-This document is for version `3.6.2` (July 2025).
+This document is for version `3.8.1` (March 2026).
 
 
 ## Installation
 
-<PackageManagerTabs command="install --save-dev --save-exact prettier" />
+<PackageManagerTabs command="install -D prettier@^3.8.1" />
 
-Create a Prettier config `.prettierrc` file:
+Create a Prettier config file:
 
-```json title=".prettierrc"
-{
-  "useTabs": false,
-  "tabWidth": 2,
-  "printWidth": 85,
-  "semi": true,
-  "singleQuote": true,
-  "trailingComma": "all"
-}
+```ts title="prettier.config.mjs"
+/**
+ * @see https://prettier.io/docs/configuration
+ * @type {import("prettier").Config}
+ */
+const config = {
+  useTabs: false,
+  tabWidth: 2,
+  printWidth: 85,
+  semi: true,
+  singleQuote: true,
+  trailingComma: 'all'
+};
+
+export default config;
 ```
 
 > [!NOTE]
-> Prettier will follow rules specified in `.gitignore` if it exists the directory where Prettier is run.
+> Use a `.mjs` file instead of `.json` to allow reusing configuration across project. Also, Prettier run Node.js to load the config file, so it's better to use JavaScript over TyppeScript for compatibility.
 
 
 ## Using Prettier
 
-Add a `format` script in `package.json`:
-
-```json title="package.json"
-{
-  "scripts": {
-    "format": "prettier . --write",
-  }
-}
-```
-
 Run Prettier:
 ```sh
-npm run format
+npx prettier . --write
+```
+
+Check format without writing changes:
+```sh
+npx prettier . --check
 ```
 
 
 ## Enabling Organize Import
 
-<PackageManagerTabs command="install --save-dev prettier-plugin-organize-imports@^4.1.0" />
+<PackageManagerTabs command="install -D prettier-plugin-organize-imports@^4.1.0" />
 
-Update Prettier config `.prettierrc` file:
-```json title=".prettierrc"
-{
-  "plugins": ["prettier-plugin-organize-imports"]
-}
+Add `plugins` section to Prettier config file:
+```ts title="prettier.config.mjs"
+/**
+ * @see https://prettier.io/docs/configuration
+ * @type {import("prettier").Config}
+ */
+const config = {
+  // other options...
+  plugins: ["prettier-plugin-organize-imports"]
+};
+
+export default config;
 ```
 
 
-## Setting up VS Code
+## Integrating with IDE
 
 Install [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) extension (`esbenp.prettier-vscode`).
 
-Update workspace setting file:
+Update VS Code settings to set Prettier as the default formatter:
 ```json title=".vscode/settings.json"
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -70,51 +78,37 @@ Update workspace setting file:
 }
 ```
 
-
-## Auto Format Staged Files
-
-```sh
-npx mrm@2 lint-staged
+Add Prettier to VS Code Workspace Recommendations:
+```json title=".vscode/extensions.json"
+{
+  "recommendations": [
+    "esbenp.prettier-vscode"
+  ]
+}
 ```
 
-This will install `husky` and `lint-staged`, then add a configuration to the project’s `package.json` that will automatically format supported files in a pre-commit hook.
+## Integrating with Linters
+
+For integration with ESLint, see [ESLint documentation](./eslint.mdx).
 
 
-## Run Prettier on CI
+## Ignoring code
 
-To check format with Prettier from GitHub Actions:
-
-```yml title=".github/workflows/lint.yml"
-name: Lint
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-jobs:
-  format:
-    name: Run formatter
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: lts/*
-
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Check formatting
-        run: npx prettier . --check
+```js
+// prettier-ignore
+matrix(
+  1, 0, 0,
+  0, 1, 0,
+  0, 0, 1
+)
 ```
+
+Check [here](https://prettier.io/docs/ignore) for all available languages.
+
+> [!NOTE]
+> Prettier will follow rules specified in `.gitignore` if it exists the directory where Prettier is run.
 
 
 ## References
 
-- https://prettier.io
+https://prettier.io/docs

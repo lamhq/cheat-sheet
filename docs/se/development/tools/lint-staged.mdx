@@ -1,0 +1,54 @@
+import { PackageManagerTabs } from '@theme'
+
+# lint-staged
+
+## Version
+
+This document is for version `3.8.1` (March 2026).
+
+
+## Introduction
+
+A command-line tool that allows you to run custom commands on staged Git files.
+
+
+## Installation
+
+<PackageManagerTabs command="install --save-dev lint-staged" />
+
+
+## Configuring lint-staged
+
+Create a configuration file:
+
+```js title="lint-staged.config.mjs"
+/**
+ * @filename: lint-staged.config.js
+ * @type {import('lint-staged').Configuration}
+ */
+export default {
+  '*.js': 'prettier --write',
+  '*.ts?(x)': ['eslint --fix', 'prettier --write'],
+}
+```
+- For all staged `.js` files, run Prettier to format them.  
+- For staged `.ts` and `.tsx` files, run ESLint with auto-fix first then run Prettier to format them.  
+
+
+## Running
+
+Test lint-staged using command line:
+
+```sh
+npx lint-staged
+``` 
+
+
+## Lint staged files
+
+To run lint-staged before committing, see [Husky documentation](./husky.mdx#lint-staged-files).
+
+
+## References
+
+https://github.com/lint-staged/lint-staged

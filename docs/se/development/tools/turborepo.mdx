@@ -52,12 +52,12 @@ Turborepo does not manage dependencies. It's up to your package manager (PNPM, Y
 
 This section list common commands to manage dependencies with PNPM.
 
-Install a dependency to a repo in the workspace:
+Install a dependency to a project:
 ```bash
 pnpm -F <project> add <package>
 ```
 
-Install a local package into a project:
+Install a local package to a project:
 ```bash
 pnpm -F <project> add <package> --workspace
 ```
@@ -65,6 +65,11 @@ pnpm -F <project> add <package> --workspace
 Install a dependency with a specific version range:
 ```bash
 pnpm -F <project> add <package>@^1.0.0 --workspace
+```
+
+Install a dependency to the root of the monorepo:
+```bash
+pnpm add <package> -w
 ```
 
 ### Running npm scripts

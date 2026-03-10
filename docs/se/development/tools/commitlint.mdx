@@ -2,31 +2,75 @@ import { PackageManagerTabs } from '@theme'
 
 # commitlint
 
-## Install
+## Version
+
+This document is for version `20.4.3` (March 2026).
+
+
+## Introduction
+
+A command-line tool that validates commit messages.
+
+
+## Installation
 
 <PackageManagerTabs command="install --save-dev @commitlint/{cli,config-conventional}" />
 
-Create a configuration file to use Conventional Commits:
-```sh
-echo "export default { extends: ['@commitlint/config-conventional'] };" > commitlint.config.mjs
+
+## Configuring
+
+Create a configuration file:
+```js title="commitlint.config.mjs"
+export default {
+  extends: ['@commitlint/config-conventional'],
+  rules: {
+    'type-enum': [
+      2,
+      'always',
+      [
+        'feat',
+        'fix',
+        'docs',
+        'style',
+        'refactor',
+        'perf',
+        'test',
+        'build',
+        'ci',
+        'chore',
+        'revert',
+      ],
+    ],
+    'type-case': [2, 'always', 'lowerCase'],
+    'type-empty': [2, 'never'],
+    'subject-empty': [2, 'never'],
+    'subject-full-stop': [2, 'never', '.'],
+    'header-max-length': [2, 'always', 72],
+  },
+};
 ```
+- Only allowed commit types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
+- Commit types must always be lowercase (`feat` ✅, not `Feat` ❌)
+- Every commit must specify a type
+- Commit must include a subject line
+- Subject must not end with a period
+- Commit header must be ≤ 72 characters
 
 
-## Local setup
+## Running
 
-To lint commits before they are created, you can use Husky:
+Test commitlint without making an actual commit:
 
-1. Install Husky
-    ```sh
-    npm install --save-dev husky
-    ```
-2. Set up Husky and commit-msg hook
-    ```sh
-    npx husky init
-    echo "npx --no -- commitlint --edit \$1" > .husky/commit-msg
-    ```
-
-You can test by making a git commit:
 ```sh
-git commit -m "foo: this will fail"
-```
+echo "feat: add login feature" | npx commitlint
+``` 
+
+
+## Lint commit messages
+
+To lint commit messages before committing, see [Husky documentation](./husky.mdx#lint-commit-message).
+
+
+## References
+
+https://github.com/conventional-changelog/commitlint
