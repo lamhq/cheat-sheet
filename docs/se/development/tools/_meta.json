@@ -4,6 +4,12 @@
     "type": "dir",
     "collapsed": true
   },
+  "npm",
+  {
+    "name": "pnpm",
+    "type": "dir",
+    "collapsed": true
+  },
   "commitlint",
   "prettier",
   {
