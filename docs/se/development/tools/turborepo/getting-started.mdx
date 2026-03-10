@@ -2,7 +2,7 @@
 
 ## Creating project
 
-Create a nearly empty monorepo:
+Create an empty monorepo:
 ```sh
 npx create-turbo@latest -e with-shell-commands
 ```
@@ -45,19 +45,19 @@ Turborepo's code generation can generate new package by copying from existing pa
 
 It ensures packages follow the [workspace structure](./workspace-structure.mdx) defined in your package manager's workspace configuration. 
 
-Create a new package in your monorepo by copying from an existing package in your repo:
+Add a new package by copying from an existing package in your repo:
 
 ```sh
 npx turbo gen workspace --copy
 ```
 
-Create a NestJS application package:
+Add a NestJS application package:
 
 ```sh
 npx turbo gen workspace --copy https://github.com/nestjs/typescript-starter --name <app-name> --destination apps/<app-name> --type app
 ```
 
-Create a TypeScript Vite React application package:
+Add a TypeScript Vite React application package:
 
 ```sh
 npx turbo gen workspace --copy https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts --name <app-name> --destination apps/<app-name> --type app
@@ -76,7 +76,7 @@ Turborepo does not manage dependencies. It's up to your package manager (PNPM, Y
 - **Few dependencies in the root**: Dependencies that belong in the workspace root are tools for managing the repository, such as `turbo`, `pnpm`, `prettier`, etc.
 
 
-## Editor integration
+## Intgrating with Editor
 
 Add `$schema` key in `turbo.json` so editor is able to provide full documentation and linting for invalid configuration:
 
