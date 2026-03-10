@@ -29,11 +29,7 @@
     "collapsed": true
   },
   "websocket",
-  {
-    "name": "microservices",
-    "type": "dir",
-    "collapsed": true
-  },
+  "microservices",
   "openapi",
   {
     "name": "recipes",
