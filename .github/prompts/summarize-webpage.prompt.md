@@ -2,13 +2,14 @@
 agent: agent
 model: Grok Code Fast 1 (copilot)
 tools: ['web']
-description: List all sections in the webpage with a short description and link
+description: Summarize webpage sections with short description and links
 ---
-use the `fetch_webpage` tool to get the content of the provided URL
 
-for each section (any heading level) in the fetched content, give a line:
-- with the following format: `- {section name}: {description}`
-- where {section name} is the title of the section, linkable to the original section in the web page
-- {description} describes the section, starting with an action, without introduction, maximum 100 characters
+Use the `fetch_webpage` tool to retrieve content from the provided URL
 
-wrap symbols and code-related terms with backticks
+For each section (any heading level) in the fetched content, provide a summary line:
+- Format: `- {section name}: {description}`
+- `{section name}`: Title of the section, linkable to the original webpage section
+- `{description}`: Action-based summary, max 100 characters, starting without introduction
+
+Wrap symbols and code-related terms with backticks

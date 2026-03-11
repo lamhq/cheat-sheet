@@ -4,9 +4,14 @@ import { PackageManagerTabs } from '@theme'
 
 ## Version
 
-This document is for version `3.2.4` (2025).
+This document is for version `4.0.18` (2026).
 
-This assumes that you are already using Vite.
+This guide assumes that you are already using Vite.
+
+
+## Introduction
+
+Vitest is a next-generation testing framework powered by Vite. It provides a fast, unit test framework optimized for projects using Vite, with a focus on speed and developer experience.
 
 
 ## Why Vitest
@@ -19,11 +24,22 @@ This assumes that you are already using Vite.
 - 🧵 **Comprehensive Feature Set** – Mocking, Snapshot testing, Code coverage
 - 📦 **Lightweight and minimal config** – No bulky setups; plug and play.  
 - 🌍 **Cross-platform support** – Works consistently across environments.  
- 
+
 
 ## Installation
 
-<PackageManagerTabs command="install -D vitest" />
+<PackageManagerTabs command="install -D vitest@^4.0.18" />
+
+Update `tsconfig.json` includes the following:
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "lib": ["ES2021", "DOM"],
+    "types": ["vitest/globals"]
+  }
+}
+```
 
 Add a script to `package.json` to run test:
 
@@ -35,16 +51,18 @@ Add a script to `package.json` to run test:
 }
 ```
 
-1. Add `test` property in your Vite config.
-2. Add a reference to Vitest types using a triple slash directive at the top of your config file.
 
-```ts title="vite.config.ts"
+Add Vitest configuration to your `vite.config.ts`:
+
+```typescript title="vite.config.ts"
 /// <reference types="vitest/config" />
 import { defineConfig } from 'vite'
 
 export default defineConfig({
   test: {
-    // ... Specify options here.
+    globals: true,
+    environment: 'node',
+    // environment: 'jsdom',
   },
 })
 ```
@@ -52,7 +70,16 @@ export default defineConfig({
 
 ## IDE Integration
 
-Install [Visual Studio Code extension](https://marketplace.visualstudio.com/items?itemName=vitest.explorer) to enhance your testing experience with Vitest.
+Install [Vitest extension](https://marketplace.visualstudio.com/items?itemName=vitest.explorer) to enhance your testing experience with Vitest.
+
+Add Vitest to VS Code Workspace Recommendations:
+```json title=".vscode/extensions.json"
+{
+  "recommendations": [
+    "vitest.explorer"
+  ]
+}
+```
 
 
 ## Writing Tests
@@ -64,10 +91,35 @@ export function sum(a, b) {
 ```
 
 ```js title="sum.test.js"
-import { expect, test } from 'vitest'
-import { sum } from './sum.js'
+import { expect, test, describe } from 'vitest'
+import { sum } from './sum'
 
-test('adds 1 + 2 to equal 3', () => {
-  expect(sum(1, 2)).toBe(3)
+describe('sum function', () => {
+  test('adds 1 + 2 to equal 3', () => {
+    expect(sum(1, 2)).toBe(3)
+  })
+
+  test('adds negative numbers', () => {
+    expect(sum(-1, -2)).toBe(-3)
+  })
 })
 ```
+
+## Running Tests
+
+Run all tests (watch mode by default):
+
+```bash
+npm run test
+```
+
+Run tests once (CI mode):
+
+```bash
+npm run test:run
+```
+
+## References
+
+- [Vitest Official Guide](https://vitest.dev/guide/)
+- [Vitest Test Environment Documentation](https://vitest.dev/guide/environment.html)

@@ -9,7 +9,7 @@ This guide is for version `9.32.0` (2025), using [flat config format](https://es
 
 ## Installation
 
-<PackageManagerTabs command="install --save-dev eslint @eslint/js globals" />
+<PackageManagerTabs command="install --save-dev eslint@^10.0.3 @eslint/js@^10.0.1 globals@^17.4.0" />
 
 - `eslint`: The linter that analyzes your JavaScript code for problems.
 - `@eslint/js`: Official package that provides ESLint’s built-in rule presets as reusable flat config objects.
@@ -18,7 +18,7 @@ This guide is for version `9.32.0` (2025), using [flat config format](https://es
 For configuration of specific languages and tools (React, Jest, Storybook ...), refer to below sections.
 
 > [!NOTE]
-> In a monorepo, each package should have its own ESLint installation and config file so you can tailor rules per package (React, Next.js, Playwright tests, Node API, etc.). This also makes upgrades safer, since you can update packages individually instead of the whole repo at once.  
+> In a monorepo, each package should maintain its own ESLint configuration file, allowing teams to manage their settings independently.
 
 > [!TIPS]
 > To share common config, create a separate ESLint config package and import it into each package’s config file.  
@@ -49,7 +49,7 @@ npx eslint lib/** file.js
 
 Make ESLint and Prettier work together without conflicts.
 
-<PackageManagerTabs command="install --save-dev eslint-config-prettier" />
+<PackageManagerTabs command="install --save-dev eslint-config-prettier@^10.1.8" />
 
 Update ESLint config file:
 
@@ -119,7 +119,7 @@ export default defineConfig([
 
 ## TypeScript
 
-<PackageManagerTabs command="install --save-dev typescript-eslint" />
+<PackageManagerTabs command="install --save-dev typescript-eslint@^8.57.0" />
 
 Add the following configuration to your ESLint config file:
 
@@ -159,7 +159,7 @@ Reference: [typescript-eslint](https://typescript-eslint.io/getting-started/)
 
 ## React (TypeScript)
 
-<PackageManagerTabs command="install --save-dev eslint-plugin-react eslint-plugin-react-hooks" />
+<PackageManagerTabs command="install --save-dev eslint-plugin-react@^7.37.5 eslint-plugin-react-hooks@^7.0.1" />
 
 Add the following configuration to your ESLint config file:
 
@@ -196,7 +196,7 @@ References:
 
 Enforces that your components are structured in a way that integrations such as [react-refresh](https://www.npmjs.com/package/react-refresh) expect.
 
-<PackageManagerTabs command="install --save-dev eslint-plugin-react-refresh" />
+<PackageManagerTabs command="install --save-dev eslint-plugin-react-refresh@^0.5.2" />
 
 If you're using Vite, add the following configuration to your ESLint config file:
 
@@ -216,33 +216,9 @@ export default defineConfig([
 
 Reference: [eslint-plugin-react-refresh](https://www.npmjs.com/package/eslint-plugin-react-refresh)
 
-### Vitest
-
-<PackageManagerTabs command="install --save-dev @vitest/eslint-plugin" />
-
-Update ESLint config file:
-
-```js title="eslint.config.mjs" {2,8}
-import { defineConfig } from "eslint/config";
-import vitest from '@vitest/eslint-plugin'
-
-export default defineConfig([
-  {
-    name: 'Vitest tests',    
-    files: ['**/*.test.ts(x)?'],
-    extends: [
-      vitest.configs.recommended,
-    ],
-  },
-]);
-```
-
-Reference: [@vitest/eslint-plugin](https://github.com/vitest-dev/eslint-plugin-vitest)
-
-
 ### React Testing Library
 
-<PackageManagerTabs command="install --save-dev eslint-plugin-testing-library" />
+<PackageManagerTabs command="install --save-dev eslint-plugin-testing-library@^7.16.0" />
 
 ```js title="eslint.config.mjs" {2,9}
 import { defineConfig } from "eslint/config";
@@ -263,7 +239,7 @@ Reference: [eslint-plugin-testing-library](https://github.com/testing-library/es
 
 ### Storybook
 
-<PackageManagerTabs command="install --save-dev eslint-plugin-storybook" />
+<PackageManagerTabs command="install --save-dev eslint-plugin-storybook@^10.2.17" />
 
 ```js title="eslint.config.mjs" {2,5}
 import { defineConfig } from "eslint/config";
@@ -281,26 +257,55 @@ Reference: [eslint-plugin-storybook](https://www.npmjs.com/package/eslint-plugin
 
 Lint Jest test files.
 
-<PackageManagerTabs command="install --save-dev eslint-plugin-jest" />
+<PackageManagerTabs command="install --save-dev eslint-plugin-jest@^29.15.0" />
 
 Add below config object to ESLint config file:
 
 ```js title="eslint.config.mjs" {2,8}
 import { defineConfig } from "eslint/config";
-import jest from 'eslint-plugin-jest'
+import pluginJest from 'eslint-plugin-jest'
 
 export default defineConfig([
   {
-    name: 'Jest tests',
+    name: 'Jest test files',
     files: ['**/*.test.ts(x)?'],
-    extends: [
-      jest.configs['flat/recommended'],
-    ],
+    plugins: { jest: pluginJest },
+    languageOptions: {
+      globals: pluginJest.environments.globals.globals,
+    },    
+    rules: {
+      'jest/no-disabled-tests': 'warn',
+      'jest/no-focused-tests': 'error',
+      'jest/no-identical-title': 'error',
+      'jest/valid-expect': 'error',
+    },
   },
 ]);
 ```
 
 Reference: [eslint-plugin-jest](https://www.npmjs.com/package/eslint-plugin-jest)
+
+
+## Vitest
+
+<PackageManagerTabs command="install --save-dev @vitest/eslint-plugin" />
+
+Update ESLint config file:
+
+```js title="eslint.config.mjs" {2,8}
+import { defineConfig } from "eslint/config";
+import vitest from '@vitest/eslint-plugin'
+
+export default defineConfig([
+  {
+    name: 'Vitest tests',    
+    files: ['**/*.test.ts(x)?'],
+    ...vitest.configs.all,
+  },
+]);
+```
+
+Reference: [@vitest/eslint-plugin](https://github.com/vitest-dev/eslint-plugin-vitest?tab=readme-ov-file#all)
 
 
 ## Playwright

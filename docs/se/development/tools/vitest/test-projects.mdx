@@ -1,7 +1,50 @@
 # Test Projects
 
-Vitest provides a way to define multiple project configurations within a single Vitest process.
+## Overview
 
-This feature is particularly useful for monorepo setups.
+Test projects allow you to run different test configurations in a single Vitest process. This is useful for monorepos or testing the same code with different environments.
 
-https://vitest.dev/guide/projects.html
+
+## Defining Projects
+
+```typescript title="vitest.config.ts"
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  test: {
+    projects: [
+      // Glob pattern to include all packages
+      'packages/*',
+      // Specific config files
+      'tests/*/vitest.config.{e2e,unit}.ts',
+    ],
+  },
+})
+```
+
+For each project folder, create a dedicated config:
+
+```typescript title="packages/api/vitest.config.ts"
+import { defineProject, mergeConfig } from 'vitest/config'
+import configShared from '../../vitest.shared.ts'
+
+export default mergeConfig(
+  configShared,
+  defineProject({
+    test: {
+      name: 'api',
+      environment: 'node',
+    },
+  })
+)
+```
+
+## Running tests
+
+```bash
+# Run only the 'unit' project
+pnpm test --project unit
+
+# Run multiple projects
+pnpm test --project unit --project browser
+```
