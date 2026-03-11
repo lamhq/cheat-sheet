@@ -163,7 +163,7 @@ Reference: [typescript-eslint](https://typescript-eslint.io/getting-started/)
 
 Add the following configuration to your ESLint config file:
 
-```js title="eslint.config.js" {10,13}
+```js title="eslint.config.mjs" {10,13}
 import { defineConfig } from "eslint/config";
 import reactPlugin from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
@@ -200,7 +200,7 @@ Enforces that your components are structured in a way that integrations such as 
 
 If you're using Vite, add the following configuration to your ESLint config file:
 
-```js title="eslint.config.js" {2,8}
+```js title="eslint.config.mjs" {2,8}
 import { defineConfig } from "eslint/config";
 import reactRefresh from "eslint-plugin-react-refresh";
 
@@ -222,7 +222,7 @@ Reference: [eslint-plugin-react-refresh](https://www.npmjs.com/package/eslint-pl
 
 Update ESLint config file:
 
-```js title="eslint.config.js" {2,8}
+```js title="eslint.config.mjs" {2,8}
 import { defineConfig } from "eslint/config";
 import vitest from '@vitest/eslint-plugin'
 
@@ -244,7 +244,7 @@ Reference: [@vitest/eslint-plugin](https://github.com/vitest-dev/eslint-plugin-v
 
 <PackageManagerTabs command="install --save-dev eslint-plugin-testing-library" />
 
-```js title="eslint.config.js" {2,9}
+```js title="eslint.config.mjs" {2,9}
 import { defineConfig } from "eslint/config";
 import testingLibrary from "eslint-plugin-testing-library";
 
@@ -265,7 +265,7 @@ Reference: [eslint-plugin-testing-library](https://github.com/testing-library/es
 
 <PackageManagerTabs command="install --save-dev eslint-plugin-storybook" />
 
-```js title="eslint.config.js" {2,5}
+```js title="eslint.config.mjs" {2,5}
 import { defineConfig } from "eslint/config";
 import storybook from 'eslint-plugin-storybook';
 
@@ -285,7 +285,7 @@ Lint Jest test files.
 
 Add below config object to ESLint config file:
 
-```js title="eslint.config.js" {2,8}
+```js title="eslint.config.mjs" {2,8}
 import { defineConfig } from "eslint/config";
 import jest from 'eslint-plugin-jest'
 
@@ -311,7 +311,7 @@ Lint Playwright test files.
 
 Add below config object to ESLint config file:
 
-```js title="eslint.config.js" {2,9}
+```js title="eslint.config.mjs" {2,9}
 import { defineConfig } from "eslint/config";
 import playwright from 'eslint-plugin-playwright'
 
