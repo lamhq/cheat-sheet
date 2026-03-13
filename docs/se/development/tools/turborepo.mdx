@@ -17,16 +17,28 @@ npx create-turbo@latest -e with-shell-commands
 
 ### Adding packages
 
-Add a NestJS application package inside `apps/`:
+Add a **NestJS** application package inside `apps/`:
 
 ```sh
 npx turbo gen workspace --copy https://github.com/nestjs/typescript-starter --name <app-name> --destination apps/<app-name> --type app
 ```
 
-Add a TypeScript Vite React application package:
+Add a TypeScript Vite **React** application package:
 
 ```sh
 npx turbo gen workspace --copy https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts --name <app-name> --destination apps/<app-name> --type app
+```
+
+Add an end-to-end testing package with Playwright:
+
+```sh
+pnpm create playwright ./apps/web-e2e
+```
+
+Add a Next.js application package:
+
+```sh
+# TBD
 ```
 
 > [!NOTE]
@@ -119,31 +131,31 @@ npx turbo run build test lint
 Filtering by package:
 
 ```bash title="Terminal"
-npx turbo -F @repo/api build
+npx turbo build -F @repo/api
 ```
 
 Filtering by directory:
 
 ```bash title="Terminal"
-npx turbo -F @repo/api lint
+npx turbo lint -F @repo/api
 ```
 
 Run task in a package and all packages that **depend on it**:
 
 ```bash title="Terminal"
-npx turbo -F ...@repo/api lint
+npx turbo lint -F ...@repo/api
 ```
 
 Run task in a package and all of **its dependencies**:
 
 ```bash title="Terminal"
-npx turbo -F web... lint
+npx turbo lint -F web...
 ```
 
 Combining filters:
 
 ```bash title="Terminal"
-npx turbo -F ...ui -F {./packages/*} -F [HEAD^1] build
+npx turbo build -F ...ui -F {./packages/*} -F [HEAD^1] build
 ```
 
 Run tasks in watch mode:
@@ -151,6 +163,24 @@ Run tasks in watch mode:
 ```bash title="Terminal"
 npx turbo watch dev lint
 ```
+
+## Set up npm scripts
+
+For frequently used commands, you can add them as npm scripts in `package.json`:
+
+```json title="package.json"
+{
+  "scripts": {
+    "dev": "turbo watch dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "test": "turbo run test"
+  }
+}
+```
+
+Then you can run them with `npm run dev`, `npm run build`, etc.
+
 
 ## Intgrating with Editor
 

@@ -4,25 +4,39 @@ A quick checklist to set up a fresh codebase from scratch.
 
 ## Node.js projects
 
-1. Create an empty Node.js monorepo project with [Turborepo](./tools/turborepo/getting-started.mdx#creating-project)
-2. [Add applications and packages](./tools/turborepo/getting-started.mdx#managing-packages) to project
+1. Create an empty Node.js monorepo project with [Turborepo](./tools/turborepo.mdx#creating-project)
+2. [Add applications and packages](./tools/turborepo.mdx#managing-packages) to project
 3. Set up formatter: [Prettier](./tools/prettier.mdx)
 4. Set up code linter: [ESLint](./tools/eslint.mdx)
-5. Set up commit message linter: [commitlint](./tools/commitlint.mdx)
-6. Set up lint-staged to validate staged changes
-7. Set up commit hooks with [Husky](./tools/husky.mdx)
-8. Set up CI pipeline to run tests, linting, and type checking
-9. Set up CD pipeline for automated release and deployment.
-10. Create `README.md` file
+5. Set up [lint-staged](./tools/lint-staged.mdx) to validate git staged files
+6. Set up commit message linter: [commitlint](./tools/commitlint.mdx)
+7. Set up [git-branch-is](./tools/git-branch-is.mdx) to check branch name format
+8. Set up git hooks with [Husky](./tools/husky.mdx)
+9. Set up CI pipeline to run tests, linting, and type checking
+10. Set up CD pipeline for automated release and deployment.
+11. Create `README.md` file
 
 
 ## API projects
 
-1. Set up testing framework [Jest](../../backend/nodejs/testing/jest.mdx)
+1. Set up testing framework [Jest](./tools/jest.mdx)
+2. Configure ESLint to lint:
+   1. TypeScript files
+   2. Jest test files
 
 
 ## Web projects
 
-1. Set up testing framework [Vitest](../../backend/nodejs/testing/vitest.mdx) (if your project is using Vite)
+1. Set up testing framework [Vitest](./tools/vitest.mdx) (if your project is using Vite)
+2. Integrate UI documentation tool [Storybook](../../web/storybook.mdx)
+3. Configure ESLint to lint:
+   1. TypeScript React files
+   2. Vitest test files
+   3. Playwright test files
+   4. Storybook files
+
+## End-to-end testing projects
+
+1. Configure ESLint to lint:
+   3. Playwright test files
 2. Set up end-to-end testing framework [Playwright](../../web/playwright.mdx)
-3. Integrate UI documentation tool [Storybook](../../web/storybook.mdx)
