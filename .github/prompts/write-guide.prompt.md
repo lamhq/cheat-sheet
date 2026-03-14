@@ -9,7 +9,7 @@ Use the `fetch_webpage` tool to read URLs provided by the user.
 
 From the content of those URLs, write a guide with step‑by‑step instructions on how to install, configure, and use the referenced software or tools.
 
-Limit the guide’s scope to **TypeScript, Node.js, PNPM, GitHub Actions, ESLint (flat config format), and VS Code**.
+Limit the guide’s scope to TypeScript, Node.js, NestJS, Postgres, MongoDB, React, Next.js, PNPM, PNPM Workspace, GitHub Actions, ESLint (flat config format), VS Code.
 
 If the guide use npm commands to install packages:
 - add this line to the top of the guide: `import { PackageManagerTabs } from '@theme'`
