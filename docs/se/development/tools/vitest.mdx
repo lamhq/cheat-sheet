@@ -26,27 +26,23 @@ Vitest is a next-generation testing framework powered by Vite. It provides a fas
 - 🌍 **Cross-platform support** – Works consistently across environments.  
 
 
+## Prerequisites
+
+- Vite >=v6.0.0
+- Node >=v20.0.0
+
+
 ## Installation
 
 <PackageManagerTabs command="install -D vitest@^4.0.18" />
-
-Update `tsconfig.json` includes the following:
-
-```json title="tsconfig.json"
-{
-  "compilerOptions": {
-    "lib": ["ES2021", "DOM"],
-    "types": ["vitest/globals"]
-  }
-}
-```
 
 Add a script to `package.json` to run test:
 
 ```json title="package.json"
 {
   "scripts": {
-    "test": "vitest"
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage"
   }
 }
 ```
@@ -67,8 +63,10 @@ export default defineConfig({
 })
 ```
 
+Configure Vitest for [monorepos](./vitest/test-projects.mdx).
 
-## IDE Integration
+
+## IDE Integrations
 
 Install [Vitest extension](https://marketplace.visualstudio.com/items?itemName=vitest.explorer) to enhance your testing experience with Vitest.
 
