@@ -29,20 +29,21 @@ Add a TypeScript Vite **React** application package:
 npx turbo gen workspace --copy https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts --name <app-name> --destination apps/<app-name> --type app
 ```
 
-Add an end-to-end testing package with Playwright:
-
-```sh
-pnpm create playwright ./apps/web-e2e
-```
-
 Add a Next.js application package:
 
 ```sh
 # TBD
 ```
 
-> [!NOTE]
-> Remember to remove the lock files (`package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`) from the generated package to avoid conflicts with your monorepo's lock file.
+**After creation**:
+- Delete any lock files (`package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`) in the generated package to prevent conflicts with the monorepo's lock file.  
+- Update the `name` field in `package.json` to follow the convention:
+  - Libraries → `@libs/{package-name}`  
+  - Applications → `{app-name}`  
+- If using [ESLint](./eslint.mdx#monorepo-setup):
+  - Move ESLint dependencies to the root `package.json`.  
+  - Merge the package's ESLint configuration into the root configuration.  
+
 
 ### Listing packages
 
