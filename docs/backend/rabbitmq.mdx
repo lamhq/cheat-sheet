@@ -1,0 +1,57 @@
+# RabbitMQ
+
+This document is for version 4.2.2.
+
+## Introduction
+
+RabbitMQ is a message broker that allows applications to communicate asynchronously by sending and receiving messages via queues.  
+
+
+## ErLang
+
+RabbitMQ is written in Erlang, a language designed for concurrency, fault tolerance, and distributed systems.
+
+RabbitMQ uses Erlang's lightweight processes to manage queues, exchanges, and connections.
+
+Each client connection or queue can be mapped to an Erlang process, allowing isolation and parallelism. Enable handling thousands of simultaneous connections reliably.
+
+
+## AMQP
+
+AMQP is an open standard protocol that defines how messages are formatted, stored, routed, and delivered between systems.
+
+RabbitMQ supports multiple versions of AMQP natively, as well as other protocols (MQTT, STOMP, ...).
+
+Every AMQP message consists of three parts:
+- **Headers**: Key-value pairs defined by AMQP specification
+- **Properties**: Key-value pairs containing arbitrary application-specific information
+- **Body/Payload**: Actual message content as a sequence of bytes
+
+Maximum message size is **2GB**. Messages sent per **frames**, default frame size is **151 Kb**.
+
+
+## Comparison
+
+| Aspect | RabbitMQ | Kafka | Kinesis |
+|--------|----------|-------|---------|
+| **Open Source** | Yes | Yes | No (AWS proprietary) |
+| **Message Removal** | Removed after consumption | Stored (not removed) | Stored (not removed) |
+| **Consumer Pattern** | Push (RabbitMQ sends) | Pull (consumers fetch) | Both push and pull |
+| **Storage Retention** | Unlimited | Unlimited | Limited to 7 days |
+| **Throughput** | Slightly lower | Higher | Higher |
+| **Maintenance** | Moderate effort | Most complex (improving) | Very low (AWS managed) |
+| **Cost** | Low (self-managed) | Low (self-managed) | Most expensive (AWS service) |
+| **Use Cases** | Task queues, real-time messaging, complex routing | Event sourcing, log aggregation, stream processing | Real-time analytics, data ingestion into AWS services |
+
+Other notes:
+- RabbitMQ uses **push model** (pushes messages to consumers), while Kafka uses **pull model** (consumers pull messages and track offset).
+- Once a message is consumed, it is no longer available. Kafka retains messages.
+
+
+## Running RabbitMQ
+
+You can run RabbitMQ using Docker for local development:
+
+```sh
+docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:4-management
+```
