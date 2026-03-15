@@ -1,0 +1,211 @@
+import { PackageManagerTabs } from '@theme'
+
+# MongoDB
+
+MongoDB is a popular NoSQL document database that offers flexibility and scalability. This guide covers how to set up Prisma ORM with MongoDB in a new or existing TypeScript project.
+
+
+## Prerequisites
+
+- Node.js v22.11.0 or later
+- MongoDB 4.2+ server with a replica set deployment
+- TypeScript v5.1.0 or later
+
+
+## Install Prisma
+
+<PackageManagerTabs command="install --save-dev prisma@^6.19" />
+
+<PackageManagerTabs command="install @prisma/client@^6.19 dotenv@^16.4" />
+
+- **`prisma`** - The Prisma CLI for running commands like `prisma init`, `prisma db push`, and `prisma generate`
+- **`@prisma/client`** - The Prisma Client library for querying your database
+- **`dotenv`** - Loads environment variables from your `.env` file
+
+> [!NOTE]
+> Prisma v6.19 is the latest stable version of Prisma ORM v6 that fully supports MongoDB.
+
+Initialize Prisma with MongoDB as the datasource:
+
+```bash
+npx prisma init --datasource-provider mongodb --output ../generated/prisma
+```
+
+This command creates:
+- `prisma/schema.prisma` - Your database connection configuration
+- `.env` - Environment variables file
+- `prisma.config.ts` - Prisma configuration file
+
+Update `prisma.config.ts` to load environment variables:
+
+```typescript title="prisma.config.ts"
+import "dotenv/config";
+import { defineConfig, env } from "prisma/config";
+
+export default defineConfig({
+  schema: "prisma/schema.prisma",
+  migrations: {
+    path: "prisma/migrations",
+  },
+  engine: "classic",
+  datasource: {
+    url: env("DATABASE_URL"),
+  },
+});
+```
+
+Add your MongoDB connection URL to `.env`:
+
+```env title=".env"
+DATABASE_URL="mongodb+srv://username:password@cluster.mongodb.net/mydb"
+```
+
+
+## Define data models (new database)
+
+If your database is new and doesn't have existing collections, you can define your data models in `schema.prisma`:
+
+```prisma title="prisma/schema.prisma"
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    String  @id @default(auto()) @map("_id") @db.ObjectId
+  email String  @unique
+  name  String?
+  posts Post[]
+}
+
+model Post {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  content   String?
+  published Boolean @default(false)
+  author    User    @relation(fields: [authorId], references: [id])
+  authorId  String  @db.ObjectId
+}
+```
+
+- The `id` field is mapped to `_id` and uses `@db.ObjectId` type
+- Relations use `String` type with `@db.ObjectId` annotation
+- MongoDB uses `@default(auto())` to generate unique ObjectIds
+
+Push schema to MongoDB using `db push` (since MongoDB doesn't support migrations like relational databases):
+
+```bash
+npx prisma db push
+```
+
+This command:
+- Creates collections in MongoDB based on your schema
+- Automatically generates Prisma Client
+
+
+## Introspecting database (existing database)
+
+If you're adding Prisma to an existing MongoDB database:
+
+```bash
+npx prisma db pull
+```
+
+This command:
+- Reads the `DATABASE_URL` from your `.env` file
+- Connects to your MongoDB database
+- Samples documents to infer the schema
+- Generates Prisma models in `schema.prisma`
+
+Prisma introspects MongoDB by sampling documents. You may need to manually:
+- Add relation fields using the `@relation` attribute
+- Adjust field types if sampling didn't capture all variations
+- Add indexes and constraints not detected during introspection
+
+After modifying `prisma/schema.prisma`, push your changes to database:
+
+```bash
+npx prisma db push
+```
+
+> **Why `db push` instead of migrations?**
+> 
+> MongoDB uses a flexible schema model. Prisma Migrate (which creates migration files) is not supported for MongoDB. Always use `prisma db push` to sync your schema changes.
+
+
+## Instantiate Prisma Client
+
+Generate Prisma ORM types:
+
+```bash
+npx prisma generate
+```
+
+This creates a type-safe Prisma Client tailored to your database schema in the `generated/prisma` directory. If any changes are made to your schema, you will need to rerun the `generate` command to keep those types in sync.
+
+Instantiate Prisma Client by creating a utility file:
+
+```typescript title="lib/prisma.ts"
+import "dotenv/config";
+import { PrismaClient } from "../generated/prisma/client";
+
+const prisma = new PrismaClient();
+export { prisma };
+```
+
+
+## Query database
+
+```typescript title="script.ts"
+import { prisma } from "./lib/prisma";
+
+async function main() {
+  // Create a new user with a post
+  const user = await prisma.user.create({
+    data: {
+      name: "Alice",
+      email: "alice@prisma.io",
+      posts: {
+        create: {
+          title: "Hello World",
+          content: "This is my first post!",
+          published: true,
+        },
+      },
+    },
+    include: {
+      posts: true,
+    },
+  });
+  console.log("Created user:", user);
+
+  // Fetch all users with their posts
+  const allUsers = await prisma.user.findMany({
+    include: {
+      posts: true,
+    },
+  });
+  console.log("All users:", JSON.stringify(allUsers, null, 2));
+}
+
+main()
+  .then(async () => {
+    await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });
+```
+
+
+## References
+
+- https://www.prisma.io/docs/prisma-orm/quickstart/mongodb
+- https://www.prisma.io/docs/prisma-orm/add-to-existing-project/mongodb

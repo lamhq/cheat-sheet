@@ -21,16 +21,7 @@ This command creates a new `prisma` directory with the following contents:
 - `prisma.config.ts`: A configuration file for your projects
 - `.env`: A dotenv file, typically used to store your database credentials in a group of environment variables
 
-Specify the output path for the generated `Prisma` client in your Prisma schema:
-
-```prisma title="schema.prisma"
-generator client {
-  provider        = "prisma-client"
-  output          = "../src/generated/prisma"
-}
-```
-
-Set `moduleFormat` in the generator to `cjs` because Prisma v7 uses ES module by default, which does not work with NestJS's CommonJS setup:
+Update `schema.prisma` file:
 
 ```prisma title="schema.prisma"
 generator client {
@@ -39,6 +30,10 @@ generator client {
   moduleFormat    = "cjs"
 }
 ```
+
+- Specify the output path for the generated `Prisma` client in your Prisma schema:
+- Set `moduleFormat` in the generator to `cjs` because Prisma v7 uses ES module by default, which does not work with NestJS's CommonJS setup:
+
 
 ## Set the database connection
 
@@ -92,7 +87,7 @@ npx prisma migrate dev --name init
 ```
 
 
-## Install and generate Prisma Client
+## Generate Prisma Client
 
 Install Prisma Client in your project:
 
@@ -111,7 +106,7 @@ npx prisma generate
 If any changes are made to your schema, you will need to rerun the `generate` command to keep those types in sync.
 
 
-## Use Prisma Client in NestJS services
+## Instantiate Prisma Client
 
 Create a new `PrismaService` that takes care of instantiating `PrismaClient` and connecting to database:
 
