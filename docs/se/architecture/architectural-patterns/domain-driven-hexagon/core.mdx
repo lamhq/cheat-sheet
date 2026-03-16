@@ -6,12 +6,716 @@ The center of the architecture, independent of frameworks, databases, or externa
 
 Ensures the system’s business logic remains pure and technology-agnostic.
 
-Divided into [Application Layer](./core/application.mdx) and [Domain Layer](./core/domain.mdx).
+Divided into [Application Layer](#application) and [Domain Layer](#domain).
+
+
+## Application
+
+Defines the **use cases** (how business rules are applied to achieve goals).
+
+The Interface layer converts external input into Command/Query objects and delegates them to Application Services, which execute the use case using the Domain layer.
+
+> [!INFO]
+> A use case is a list of actions/steps defining the interactions between an actor (UML) and a system to achieve a goal.
+
+
+### Commands
+
+A `Command` is a data object containing the necessary information to perform an action (e.g., create user).
+
+Command handlers may specify return types (such as an ID, redirect URL, confirmation, status, or other metadata).
+
+Commands are executed via **Command Bus** instead of directly calling Application Services.
+
+Define a command:
+```ts title="create-user.command.ts"
+export class CreateUserCommand extends Command {
+  readonly email: string;
+
+  readonly country: string;
+
+  readonly postalCode: string;
+
+  readonly street: string;
+
+  constructor(props: CommandProps<CreateUserCommand>) {
+    super(props);
+    this.email = props.email;
+    this.country = props.country;
+    this.postalCode = props.postalCode;
+    this.street = props.street;
+  }
+}
+```
+
+Execute a command:
+```ts title="create-user.message.controller.ts"
+export class CreateUserMessageController {
+  constructor(private readonly commandBus: CommandBus) {}
+
+  @MessagePattern('user.create') // <- Subscribe to a microservice message
+  async create(message: CreateUserRequestDto): Promise<IdResponse> {
+    const command = new CreateUserCommand(message);
+
+    const id = await this.commandBus.execute(command);
+
+    return new IdResponse(id.unwrap());
+  }
+}
+```
+
+Handle a command:
+```ts title="create-user.service.ts"
+@CommandHandler(CreateUserCommand)
+export class CreateUserService implements ICommandHandler {
+  constructor(
+    @Inject(USER_REPOSITORY)
+    protected readonly userRepo: UserRepositoryPort,
+  ) {}
+
+  async execute(
+    command: CreateUserCommand,
+  ): Promise<Result<AggregateID, UserAlreadyExistsError>> {
+    const user = UserEntity.create({
+      email: command.email,
+      address: new Address({
+        country: command.country,
+        postalCode: command.postalCode,
+        street: command.street,
+      }),
+    });
+
+    try {
+      /* Wrapping operation in a transaction to make sure
+         that all domain events are processed atomically */
+      await this.userRepo.transaction(async () => this.userRepo.insert(user));
+      return Ok(user.id);
+    } catch (error: any) {
+      if (error instanceof ConflictException) {
+        return Err(new UserAlreadyExistsError(error));
+      }
+      throw error;
+    }
+  }
+}
+```
+
+
+### Queries
+
+A `Query` is a data object expressing intent to retrieve data (e.g., `FindUsersQuery`).
+
+Queries must not change state (no writes to the database, files, or external APIs).
+
+Queries are executed via **Query Bus** instead of directly calling Application Services.
+
+Define a query:
+```ts title="find-users.query-handler.ts"
+export class FindUsersQuery extends PaginatedQueryBase {
+  readonly country?: string;
+
+  readonly postalCode?: string;
+
+  readonly street?: string;
+
+  constructor(props: PaginatedParams<FindUsersQuery>) {
+    super(props);
+    this.country = props.country;
+    this.postalCode = props.postalCode;
+    this.street = props.street;
+  }
+}
+```
+
+Handle a query:
+```ts title="find-users.query-handler.ts"
+@QueryHandler(FindUsersQuery)
+export class FindUsersQueryHandler implements IQueryHandler {
+  constructor(
+    @InjectPool()
+    private readonly pool: DatabasePool,
+  ) {}
+
+  /**
+   * In read model we don't need to execute
+   * any business logic, so we can bypass
+   * domain and repository layers completely
+   * and execute query directly
+   */
+  async execute(
+    query: FindUsersQuery,
+  ): Promise<Result<Paginated<UserModel>, Error>> {
+    /**
+     * Constructing a query with Slonik.
+     * More info: https://contra.com/p/AqZWWoUB-writing-composable-sql-using-jav
+   a-script                                                                             */
+    const statement = sql.type(userSchema)`
+         SELECT *
+         FROM users
+         WHERE
+           ${query.country ? sql`country = ${query.country}` : true} AND
+           ${query.street ? sql`street = ${query.street}` : true} AND
+           ${query.postalCode ? sql`"postalCode" = ${query.postalCode}` : true}
+         LIMIT ${query.limit}
+         OFFSET ${query.offset}`;
+
+    const records = await this.pool.query(statement);
+
+    return Ok(
+      new Paginated({
+        data: records.rows,
+        count: records.rowCount,
+        limit: query.limit,
+        page: query.page,
+      }),
+    );
+  }
+}
+```
+
+> [!NOTE]
+> Command and Query objects should only contain primitive types and types that don't belong to the Domain layer.
+
+> [!INFO]
+> This guide uses [NestJS CQRS](https://docs.nestjs.com/recipes/cqrs) package that provides a command/query bus.
+
+### Application Services
+
+Application Services are used to orchestrate the steps required to fulfill use cases imposed by client.
+
+They connect the Interface Layer (controllers, DTOs) with the Domain Layer (entities, value objects).
+
+Don't contain business rules but delegate to domain **entities**, **aggregates**, and **domain services** to enforce them.
+
+Can call **Ports** to perform tasks required by use cases but don't depend on Infrastructure layer (Interface Adapters will be injected to Application Services via [DI](https://en.wikipedia.org/wiki/Dependency_injection)).
+
+It often wraps domain actions in a unit of work (e.g., a database transaction) to ensure consistency across operations.
+
+**Best practices**:
+- Application services must not depend on other services, as doing so can introduce cyclic dependencies.
+- Have one Application Service per use case.
+- Avoid placing business logic in Application Services unless necessary, consider using Domain Services instead. This prevents [Anemic Domain Model](https://martinfowler.com/bliki/AnemicDomainModel.html).
+
+For example, in an e-commerce system, an **OrderApplicationService** might:
+1. Accept a `PlaceOrderCommand` from the controller.
+2. Validate input and call the `Order` aggregate to create a new order.
+3. Use a repository (via a port) to persist the order.
+4. Publish a domain event like `OrderPlaced`.
+
+Define an application service:
+```ts title="create-user.service.ts"
+@CommandHandler(CreateUserCommand)
+export class CreateUserService implements ICommandHandler {
+  constructor(
+    @Inject(USER_REPOSITORY)
+    protected readonly userRepo: UserRepositoryPort,
+  ) {}
+
+  async execute(
+    command: CreateUserCommand,
+  ): Promise<Result<AggregateID, UserAlreadyExistsError>> {
+    const user = UserEntity.create({
+      email: command.email,
+      address: new Address({
+        country: command.country,
+        postalCode: command.postalCode,
+        street: command.street,
+      }),
+    });
+
+    try {
+      /* Wrapping operation in a transaction to make sure
+         that all domain events are processed atomically */
+      await this.userRepo.transaction(async () => this.userRepo.insert(user));
+      return Ok(user.id);
+    } catch (error: any) {
+      if (error instanceof ConflictException) {
+        return Err(new UserAlreadyExistsError(error));
+      }
+      throw error;
+    }
+  }
+}
+```
+
+
+### Ports
+
+Ports are interfaces that define contracts that Infrastructure Adapters must implement.
+
+Ports need to be designed to match Domain needs — do not merely mirror tool APIs.
+
+Implementations of Ports live in Infrastructure layer and are injected into the Application via [DI](https://en.wikipedia.org/wiki/Dependency_injection). This keeps business logic technology-independent and testable.
+
+**Benefits**:
+- Testability: You can easily test application logic in isolation by using mock implementations.
+- Flexibility: different implementations can be swapped without requiring changes to domain code.
+- Isolation: the Domain layer can be designed and implemented before choosing technologies.
+
+**Best practices**:
+- Split large ports when sensible, but avoid excessive fragmentation ([Interface segregation principle](https://en.wikipedia.org/wiki/Interface_segregation_principle)).
+- Only add ports for things likely to change (databases, external services, frameworks) to avoid needless abstraction ([unnecessary abstractions](https://mortoray.com/2014/08/01/the-false-abstraction-antipattern/)).
+
+Define a repository port for user:
+
+```ts title="user.repository.port.ts"
+export interface FindUsersParams extends PaginatedQueryParams {
+  readonly country?: string;
+  readonly postalCode?: string;
+  readonly street?: string;
+}
+
+export interface UserRepositoryPort extends RepositoryPort<UserEntity> {
+  findOneByEmail(email: string): Promise<UserEntity | null>;
+}
+```
+
+Application logger port:
+
+```ts title="logger.port.ts"
+export interface LoggerPort {
+  log(message: string, ...meta: unknown[]): void;
+  error(message: string, trace?: unknown, ...meta: unknown[]): void;
+  warn(message: string, ...meta: unknown[]): void;
+  debug(message: string, ...meta: unknown[]): void;
+}
+```
+
+
+## Domain
+
+This layer contains the application's business rules.
+
+Operate using domain objects described by [ubiquitous language](https://martinfowler.com/bliki/UbiquitousLanguage.html).
+
+Most important domain building blocks are:
+- **Entities**: domain objects with identity (ID) and behavior.
+- **Aggregates**: similar to entities, but encapsulate a cluster of domain objects.
+- **Value Objects**: wrap one or multiple attributes and the logic associated with those attributes; has no identity.
+- **Domain Services**: coordinate logic across multiple Entities..
+- **Domain Events**: capture and broadcast significant changes in the domain.
+- **Domain Errors**: explicit error handling using result objects instead of exceptions.
+
+**Best practices**:
+- Minimize dependencies used in this layer to reduce potential issues, balancing simplicity and functionality.
+
+
+### Entities
+
+Entities represent business rules and attributes. They can be objects with properties and methods or data structures with functions.
+
+Entities define:
+- Properties a model has.
+- Actions it can perform.
+- Conditions for those actions.
+
+Examples: *User*, *Product*, *Booking*, *Ticket*, *Wallet*.
+
+Equality between entities is based on their identifiers (e.g., `id`).
+
+Entities can include other entities or value objects. Always validate entities during creation and enforce invariants. For example, an order item must have:
+- A positive quantity.
+- An article name.
+- A price.
+
+Avoid empty constructors in Entity class. Validate required properties in constructors or [factory methods](https://en.wikipedia.org/wiki/Factory_method_pattern).
+
+Make entities partially immutable. Properties like `id` or `createdAt` should be readonly.
+
+Wallet Entity:
+
+```ts title="wallet.entity.ts"
+import { WalletCreatedDomainEvent } from './events/wallet-created.domain-event';
+import { WalletNotEnoughBalanceError } from './wallet.errors';
+
+export interface CreateWalletProps {
+  userId: AggregateID;
+}
+
+export interface WalletProps extends CreateWalletProps {
+  balance: number;
+}
+
+export class WalletEntity extends AggregateRoot<WalletProps> {
+  protected readonly _id: AggregateID;
+
+  static create(create: CreateWalletProps): WalletEntity {
+    const id = randomUUID();
+    /* Lines 70-77 omitted */
+    return wallet;
+  }
+
+  deposit(amount: number): void {
+    this.props.balance += amount;
+  }
+
+  withdraw(amount: number): Result<null, WalletNotEnoughBalanceError> {
+    if (this.props.balance - amount < 0) {
+      /* Lines 86-89 omitted */
+    return Ok(null);
+  }
+
+  public validate(): void {
+    // protect invariants
+    /* Lines 94-96 omitted */
+    }
+  }
+}
+```
+
+
+### Aggregates
+
+An **Aggregate** is a cluster of related domain objects (entities or value objects) that are treated as a single unit for consistency. It defines clear boundaries around which rules and invariants must hold true.
+
+The **Aggregate Root** is the main entity within that cluster:
+- It's the **entry point** to the aggregate.
+- All external interactions go through it, ensuring rules are enforced consistently.
+- It controls access to other entities inside the aggregate, protecting invariants.
+
+For example: *In an e-commerce system, an **Order** is an aggregate root. It manages order items (entities) and ensures rules like "an order must have at least one item" are always respected*.
+
+**Best practices**:
+- Aggregates's design should not be influenced by the data model. Associations between domain objects are not the same as database relationships.
+- Only reference the Aggregate Root from outside the aggregate.
+- Avoid direct object references between aggregates; use unique identifiers instead.
+- All changes to an aggregate must be saved, updated, or deleted together.
+- Protect aggregate's invariants across the entire aggregate lifecycle (creation, update).
+
+Base class for Aggregate Roots:
+
+```ts title="aggregate-root.base.ts"
+import { DomainEvent } from './domain-event.base';
+import { Entity } from './entity.base';
+import { RequestContextService } from '../application/context/AppRequestContext';
+
+export abstract class AggregateRoot<EntityProps> extends Entity<EntityProps> {
+  private _domainEvents: DomainEvent[] = [];
+
+  get domainEvents(): DomainEvent[] {
+    return this._domainEvents;
+  }
+
+  protected addEvent(domainEvent: DomainEvent): void {
+    this._domainEvents.push(domainEvent);
+  }
+
+  public clearEvents(): void {
+    this._domainEvents = [];
+  }
+
+  public async publishEvents(
+    logger: LoggerPort,
+    eventEmitter: EventEmitter2,
+  ): Promise<void> {
+    await Promise.all(
+      /* Lines 151-158 omitted */
+    this.clearEvents();
+  }
+}
+```
+
+User Entity:
+
+```ts title="user.entity.ts"
+import { UserCreatedDomainEvent } from './events/user-created.domain-event';
+import { Address, AddressProps } from './value-objects/address.value-object';
+import {
+  CreateUserProps,
+  UpdateUserAddressProps,
+  UserProps,
+  UserRoles,
+} from './user.types';
+import { UserDeletedDomainEvent } from './events/user-deleted.domain-event';
+import { UserRoleChangedDomainEvent } from './events/user-role-changed.domain-event';
+import { UserAddressUpdatedDomainEvent } from './events/user-address-updated.domain-event';
+
+export class UserEntity extends AggregateRoot<UserProps> {
+  protected readonly _id: AggregateID;
+
+  static create(create: CreateUserProps): UserEntity {
+    const id = randomUUID();
+    /* Lines 183-193 omitted */
+    return user;
+  }
+
+  get role(): UserRoles {
+    return this.props.role;
+  }
+
+  private changeRole(newRole: UserRoles): void {
+    this.addEvent(
+      /* Lines 202-209 omitted */
+    this.props.role = newRole;
+  }
+
+  makeAdmin(): void {
+    this.changeRole(UserRoles.admin);
+  }
+
+  makeModerator(): void {
+    this.changeRole(UserRoles.moderator);
+  }
+
+  delete(): void {
+    this.addEvent(
+      /* Lines 222-225 omitted */
+    );
+  }
+
+  validate(): void {
+    // entity business rules validation to protect it's invariant before saving entity to a database
+  }
+}
+```
+
+
+### Value objects
+
+**Value Objects** are domain concepts that are defined by their **attributes**, not by identity.
+
+Unlike entities, they don't have a unique identifier and are considered equal if all their properties match.
+
+Value object should form a well-defined concept in the domain model, even if it contains only one attribute.
+
+**Key Characteristics**:
+- **No identity**: Two value objects with the same values are indistinguishable.
+- **Immutable**: Once created, they cannot be changed; instead, a new instance is created if values differ.
+- **Behavior-focused**: They can contain logic relevant to their values (e.g., validation, formatting).
+- **Lightweight**: Often used to model concepts like money, dates, addresses, or email addresses.
+
+**Examples**:
+- **EmailAddress** value object ensures the string is valid. If two email addresses have the same value, they are equal.
+- **Address** of a user is composed of multiple other values, like country, street, postalCode etc., so it can be modeled and treated as a **Value Object** with its own business logic.
+
+Example code:
+- [address.value-object.ts](https://github.com/Sairyss/domain-driven-hexagon/blob/master/src/modules/user/domain/value-objects/address.value-object.ts)
+
+```ts title="address.value-object.ts"
+export interface AddressProps {
+  country: string;
+  postalCode: string;
+  street: string;
+}
+
+export class Address extends ValueObject<AddressProps> {
+  get country(): string {
+    return this.props.country;
+  }
+
+  get postalCode(): string {
+    return this.props.postalCode;
+  }
+
+  get street(): string {
+    return this.props.street;
+  }
+
+  protected validate(props: AddressProps): void {
+    if (!Guard.lengthIsBetween(props.country, 2, 50)) {/* Lines 278-285 omitted */}
+  }
+}
+```
+
+
+### Domain Services
+
+Domain Services execute logic involving two or more **Entities**.
+
+They are used when placing logic in an **Entity** would break encapsulation or require the **Entity** to handle unrelated concerns. They hold operations that don't fit well into **Value Objects** or **Entities**.
+
+Domain services operate only on types belonging to the Domain. They contain meaningful concepts that can be found within the Ubiquitous Language.
+
+
+### Domain Invariants
+
+Domain [invariants](https://en.wikipedia.org/wiki/Invariant_(mathematics)#Invariants_in_computer_science) are rules that must always hold true in a specific context. They define what is allowed or prohibited.
+
+Examples:
+- Money transfers require a positive amount and a valid receiver card number.
+- Products out of stock cannot be purchased.
+- Wallet balances cannot drop below zero.
+
+Invariants are enforced by domain objects (entities, aggregate roots, value objects) to ensure business rules are followed.
+
+Protect invariants by avoiding public setters. Use methods to update state and validate changes.
+
+
+#### Enforcing invariants using Value Objects
+
+Primitive types like `strings` and `numbers` are often too basic for Domain Models. Significant business concepts could use **Value Objects** to encapsulate logic and validation.
+
+For example, for an email with type string, we can define it as a class to ensures email will be validated on creation and a wrong value won't get into **Entities**:
+
+```typescript
+const email: string = 'john@gmail.com';
+```
+can become:
+```typescript
+export class Email extends ValueObject<string> {
+  constructor(value: string) {
+    super({ value });
+  }
+
+  get value(): string {
+    return this.props.value;
+  }
+}
+```
+
+**Benefits:**
+- Using **Value Objects** for primitive types encapsulates business logic and validation, reducing bugs caused by lack of domain knowledge.
+- Ensures property invariants and improves security.
+- Simplifies code with ubiquitous language.
+
+> [!CAUTION]
+> Serialize **Value Objects** to primitives before sending them to other processes (e.g., DTOs, events).
+
+> [!INFO]
+> Libraries like [Runtypes](https://www.npmjs.com/package/runtypes) simplify creating **Value Objects** in Node.js.
+
+If creating classes for all primitives feels excessive:
+1. Use classes only for primitives that have specific rules or behavior.
+2. Validate them outside the domain using libraries or frameworks.
+
+
+#### Validation at compile time
+
+Use **types** to catch errors early during development.
+
+For example, enforce business rules like requiring contact info to include either an email, phone, or both:
+
+```typescript
+type ContactInfo = Email | Phone | [Email, Phone];
+```
+
+Now only either Email, or Phone, or both must be provided. If nothing is provided, the IDE will show a type error right away. Now business rule validation is moved from runtime to compile time, which makes the application more secure and gives a faster feedback when something is not used as intended.
+
+This is called a *typestate* pattern.
+
+
+#### Validation at runtime
+
+Runtime validation is required to ensure data integrity because invalid data can enter a domain at runtime (from APIs, databases, or programming errors).
+
+It can be done by:
+- **Validation**: Filters bad input at application boundaries (e.g., DTOs). Returns errors for invalid data.
+- **Guarding**: Enforces invariants within the domain. Throw exceptions on violations (since it indicates a bug).
+
+Guarding follows the [Fail Fast principle](https://enterprisecraftsmanship.com/posts/fail-fast-principle) by immediately throwing runtime exceptions, which helps revealing bugs early.
+
+
+### Domain Events
+
+A **Domain Event** signals that something significant occurred within the domain, notifying other parts of the same domain (**in the same process**).
+
+Domain Events are messages sent to an in-memory dispatcher.
+
+For example, when a user makes a purchase, you might:
+- Update their shopping cart.
+- Deduct money from their wallet.
+- Create a shipping order.
+- Trigger other domain-specific operations unrelated to the "buy" command.
+
+If a command affects multiple aggregates, you can design and implement those side effects to be triggered by Domain Events. Handlers can subscribe to these events to propagate state changes across aggregates.
+
+Domain Events are also useful for creating audit logs by saving events to the database. Changes triggered by Domain Events can be saved in a single database transaction.
+
+Define a domain event:
+
+```ts title="user-created.domain-event.ts"
+export class UserCreatedDomainEvent extends DomainEvent {
+  readonly email: string;
+  readonly country: string;
+  readonly postalCode: string;
+  readonly street: string;
+
+  constructor(props: DomainEventProps<UserCreatedDomainEvent>) {
+    super(props);
+    /* Lines 414-417 omitted */
+    this.street = props.street;
+  }
+}
+```
+
+Handle a domain event:
+
+```ts title="create-wallet-when-user-is-created.domain-event-handler.ts"
+import { WalletEntity } from '../../domain/wallet.entity';
+import { WALLET_REPOSITORY } from '../../wallet.di-tokens';
+
+@Injectable()
+export class CreateWalletWhenUserIsCreatedDomainEventHandler {
+  constructor(
+    @Inject(WALLET_REPOSITORY)
+    private readonly walletRepo: WalletRepositoryPort,
+  ) {}
+
+  /* Lines 435-441 omitted */
+  }
+}
+```
+
+
+### Integration Events
+
+Integration Events are events sent to external processes (e.g., microservices, APIs).
+
+Integration Events should only be published after all **Domain Events** are processed and changes are saved.
+
+To handle these events, use external tools like RabbitMQ or Kafka, along with patterns such as:
+- Transactional Outbox
+- Change Data Capture
+- Sagas
+- Process Manager
+
+
+### Domain Errors
+
+The Core and Domain layers shouldn't throw HTTP exceptions since they are context-agnostic and may be used in various environments (e.g., HTTP controllers, CLI tools).
+
+Instead, use custom error classes with appropriate error codes. This approach:
+- Makes error handling and tracing easier.
+- Explicitly shows the types of errors a method can return.
+- Avoids invisible runtime exceptions.
+
+When an error happen:
+- Throw exceptions for errors that are unrecoverable (e.g., out of memory, connection failures).
+- Return explicit error types using [Algebraic Data Types (ADT)](https://en.wikipedia.org/wiki/Algebraic_data_type) or a Result object with Success/Failure conditions for recoverable errors.
+
+**Benefits of returning errors:**
+- Explicitly documents error types.
+- Allows different handling errors strategies (e.g., retrying, transforming, or propagating).
+- Improves robustness and security.
+
+Define a domain error:
+
+```ts title="user.errors.ts"
+export class UserAlreadyExistsError extends ExceptionBase {
+  static readonly message = 'User already exists';
+  /* Lines 483-487 omitted */
+  }
+}
+```
+
+Return a domain error:
+```ts title="create-user.service.ts"
+import { Err, Ok, Result } from 'oxide.ts';
+import { CreateUserCommand } from './create-user.command';
+import { USER_REPOSITORY } from '../../user.di-tokens';
+
+@CommandHandler(CreateUserCommand)
+export class CreateUserService implements ICommandHandler {
+  constructor(
+    /* Lines 500-525 omitted */
+  }
+}
+```
 
 
 ## Using libraries
 
-Libraries in the core layer should be single responsibility libraries that help to implement domain logic (e.g., working with numbers).
+Libraries in the Core layer should be single responsibility libraries that help to implement domain logic (e.g., working with numbers).
 
 Avoid libraries that:
 - Access out-of-process resources (e.g., HTTP calls, database access).
