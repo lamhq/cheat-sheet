@@ -2,7 +2,7 @@
 agent: agent
 model: Claude Haiku 4.5 (copilot)
 tools: ['web']
-description: Write Tool Guide from provided URLs. For example, install and configure Jest, ESLint, Prettier, etc.
+description: Write Tool guide from provided URLs. For example, install and configure Jest, ESLint, Prettier, etc.
 ---
 
 Use the `fetch_webpage` tool to read URLs provided by the user.
