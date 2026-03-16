@@ -9,7 +9,7 @@ import { PackageManagerTabs } from '@theme';
 
 ## Server
 
-### Creating microservice app
+### Creating microservice
 
 When creating a microservice app by calling `createMicroservice()`, set the `transport` property in the options object to `gRPC`:
 
@@ -112,6 +112,22 @@ imports: [
 ];
 ```
 
+Define required interfaces for the gRPC service:
+```typescript title="app.service.ts"
+interface Hero {
+  id: number;
+  name: string;
+}
+
+interface HeroById {
+  id: number;
+}
+
+interface HeroesService {
+  findOne(data: HeroById): Observable<Hero>;
+}
+```
+
 Inject and use `ClientGrpc` to retrieve the service instance:
 ```typescript title="app.service.ts"
 import type { ClientGrpc } from '@nestjs/microservices';
@@ -126,7 +142,7 @@ export class AppService implements OnModuleInit {
     this.heroesService = this.client.getService<HeroesService>('HeroesService');
   }
 
-  getHero(): Observable<string> {
+  getHero(): Observable<Hero> {
     return this.heroesService.findOne({ id: 1 });
   }
 }
@@ -154,7 +170,7 @@ export class AppService implements OnModuleInit {
     this.heroesService = this.client.getService<HeroesService>('HeroesService');
   }
 
-  getHero(): Observable<string> {
+  getHero(): Observable<Hero> {
     return this.heroesService.findOne({ id: 1 });
   }
 }
@@ -226,7 +242,7 @@ Metadata may include authentication tokens, request identifiers and tags for mon
 
 ### Server
 
-To read the metadata in `@GrpcMethod()` handler, use the second argument (metadata), which is of type `Metadata` (imported from the `@grpc/grpc-js` package).
+To read the metadata in `@GrpcMethod()` handler, use the second argument (metadata), which is of type `Metadata`.
 
 To send back metadata from the handler, use the `ServerUnaryCall#sendMetadata()` method (third handler argument).
 
@@ -264,7 +280,10 @@ getHero(): Observable<string> {
 }
 ```
 
+Make sure to update interface of the service method to accept metadata as a second argument:
 
-## Example
-
-- https://github.com/nestjs/nest/tree/master/sample/04-grpc
+```ts title="app.service.ts" {4}
+interface HeroesService {
+  findOne(data: HeroById, metadata: Metadata): Observable<Hero>;
+}
+```
