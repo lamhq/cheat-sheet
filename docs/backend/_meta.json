@@ -66,6 +66,7 @@
     "type": "dir",
     "collapsed": true
   },
+  "grpc",
   {
     "name": "markdown",
     "type": "dir",
