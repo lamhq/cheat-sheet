@@ -1,5 +1,3 @@
-import { PackageManagerTabs } from '@theme';
-
 # Tasks
 
 ## Overview
@@ -11,7 +9,7 @@ You can express relationships between tasks in your [`turbo.json`](https://turbo
 Turborepo will always parallelize any work that it can to ensure everything runs as fast as possible.
 
 
-## List tasks
+## Listing tasks
 
 ```bash
 npx turbo run
@@ -183,31 +181,31 @@ npx turbo run build test lint
 Filtering by package:
 
 ```bash title="Terminal"
-npx turbo -F @repo/api build
+npx turbo build -F @repo/api
 ```
 
 Filtering by directory:
 
 ```bash title="Terminal"
-npx turbo -F @repo/api lint
+npx turbo lint -F @repo/api
 ```
 
 Run task in a package and all packages that **depend on it**:
 
 ```bash title="Terminal"
-npx turbo -F ...@repo/api lint
+npx turbo lint -F ...@repo/api
 ```
 
 Run task in a package and all of **its dependencies**:
 
 ```bash title="Terminal"
-npx turbo -F web... lint
+npx turbo lint -F web...
 ```
 
 Combining filters:
 
 ```bash title="Terminal"
-npx turbo -F ...ui -F {./packages/*} -F [HEAD^1] build
+npx turbo build -F ...ui -F {./packages/*} -F [HEAD^1] build
 ```
 
 Run tasks in watch mode:

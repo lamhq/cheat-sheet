@@ -2,27 +2,20 @@
 
 ## Introduction
 
-This architecture combines several architectural styles and principles:
-- [Domain-Driven Design (DDD)](https://en.wikipedia.org/wiki/Domain-driven_design)
-- [Hexagonal Architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)) (Ports and Adapters)
-- [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
-- [SOLID Principles](https://en.wikipedia.org/wiki/SOLID)
-- [Secure by Design](https://www.manning.com/books/secure-by-design)
+Domain-Driven Hexagon is an architectural pattern that combines Domain-Driven Design (DDD) with Hexagonal Architecture (Ports and Adapters), Clean Architecture, and related principles to create software that is technology-agnostic (independent of frameworks, databases, etc.), modular, testable, and scalable while keeping business logic at the center.
 
-The goal is to build applications that are technology-agnostic, modular, testable, and scalable while keeping business logic at the center.
-
-
-## Pros & Cons
-
-**Pros**:
+**Advantages**:
 - Framework-agnostic: external frameworks, databases, and services can be swapped with minimal changes.
 - Secure: security principles are integrated into the design.
 - Clear separation of concerns: teams can work independently.
 - Testable and scalable: adding features is easier and remains manageable.
 
-**Cons**:
+**Disadvantages**:
 - Sophisticated architecture: requires strong expertise in DDD, Clean/Hexagonal architecture, and SOLID.
 - Added up-front complexity: extra layers, abstractions, and boilerplate.
+
+> [!INFO]
+> Code examples are written using NodeJS, TypeScript, NestJS framework.
 
 
 ## When to Use?
@@ -32,16 +25,39 @@ Suitable for applications with complex business logic.
 > [!CAUTION]
 > Not recommended for simple CRUD apps that mainly map the database to a client; consider [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) instead.
 
+
 ## Architecture Overview
 
 The codebase is organized into small, independent [modules](#modules) that reflect domain concepts.
 
 Each module consists of layers:
+- [Interface Adapters](./domain-driven-hexagon/interface.mdx): provides entry points (controllers, DTOs) for users or external systems, translating requests into commands/queries and returning responses.
 - [Core](./domain-driven-hexagon/core.mdx): encapsulates business logic with entities, aggregates, value objects, domain services, and events. It’s framework-independent and represents the heart of the system.
-- [Interface](./domain-driven-hexagon/interface.mdx): provides entry points (controllers, DTOs) for users or external systems, translating requests into commands/queries and returning responses.
 - [Infrastructure](./domain-driven-hexagon/infrastructure.mdx): implements technical details like repositories, persistence models, messaging, and external API integrations, fulfilling contracts defined by ports while staying outside core business logic.
 
 ![](https://github.com/Sairyss/domain-driven-hexagon/blob/master/assets/images/DomainDrivenHexagon.png?raw=true)
+
+Each module and layer contains an **index file** that exports all its public API (e.g., framework module class, commands, queries, ports, types, constants). It is the only file that can be imported from outside.
+
+> [!TIP]
+> To enforce boundaries between different parts of your codebase (modules, layers), consider using [eslint-plugin-boundaries](https://www.npmjs.com/package/eslint-plugin-boundaries).
+
+
+## Modules
+
+Each module lives in its own folder and represents a bounded context or business capability.
+
+**Benefits**:
+- Internal details of a module are hidden, preventing coupling between modules.
+- Refactor internals without affecting other modules.
+- Easier to split into a microservice when bounded contexts are well-defined.
+
+**Best practices**:
+- Keep module interactions minimal; prefer small, explicit interfaces.
+- Move shared logic to common utilities rather than creating cross-module dependencies.
+- Avoid importing another module's internals; use a [mediator](https://en.wikipedia.org/wiki/Mediator_pattern#:~:text=In%20software%20engineering%2C%20the%20mediator,often%20consist%20of%20many%20classes.) or a public [facade](https://en.wikipedia.org/wiki/Facade_pattern).
+- Prefer message-based communication when modules need to coordinate (send commands using a command bus or subscribe to events that other modules emit).
+- When designing module, avoid creating one module per entity. Group related entities with shared business logic in a module.
 
 
 ## Data Flow
@@ -59,65 +75,66 @@ Data flow:
 6. **Controller** returns data to the user or to a presenter/view.
 
 
-## Code Structuring
+## Project structure
 
-Here's an example structure of user module:
+Here's an example structure of the **user** module:
 ```
 src/
-├── user/
-│   ├── core/
-│   │   ├── commands/
-│   │   │   └── create-user.command.ts
-│   │   ├── queries/
-│   │   │   └── find-users.query.ts
-│   │   ├── services/
-│   │   │   ├── find-users.service.ts
-│   │   │   └── create-user.service.ts
-│   │   ├── ports/
-│   │   │   └── user.repository.port.ts
-│   │   ├── entities/
-│   │   │   └── user.entity.ts
-│   │   ├── aggregates/
-│   │   ├── value-objects/
-│   │   │   └── address.value-object.ts
-│   │   ├── domain-services/
-│   │   ├── events/
-│   │   │   ├── user-address-updated.domain-event.ts
-│   │   │   ├── user-created.domain-event.ts
-│   │   │   ├── user-deleted.domain-event.ts
-│   │   │   └── user-role-changed.domain-event.ts
-│   │   ├── errors/
-│   │   │   └── user.errors.ts
-│   │   └── types/
-│   │       └── user.types.ts
-│   ├── infrastructure/
-│   │   ├── repositories/
-│   │   │   └── user.repository.ts
-│   │   ├── models/
-│   │   │   └── user.model.ts
-│   │   └── mappers/
-│   │       └── user.mapper.ts
-│   ├── interface/
-│   │   ├── dtos/
-│   │   │   ├── create-user.gql-request.dto.ts
-│   │   │   ├── id.gql-response.dto.ts
-│   │   │   ├── user.graphql-response.dto.ts
-│   │   │   ├── user.paginated-gql-response.dto.ts
-│   │   │   ├── create-user.request.dto.ts
-│   │   │   ├── find-users.request.dto.ts
-│   │   │   ├── find-users.response.dto.ts
-│   │   │   ├── user.paginated.response.dto.ts
-│   │   │   └── user.response.dto.ts
-│   │   ├── controllers/
-│   │   │   ├── create-user.cli.controller.ts
-│   │   │   ├── create-user.http.controller.ts
-│   │   │   ├── create-user.message.controller.ts
-│   │   │   └── find-users.http.controller.ts
-│   │   ├── resolvers/
-│   │   │   ├── create-user.graphql-resolver.ts
-│   │   │   └── find-users.graphql-resolver.ts
-│   │   └── event-handlers/
-│   └── user.module.ts
+└── user/
+    ├── index.ts
+    ├── core/
+    │   ├── commands/
+    │   │   └── create-user.command.ts
+    │   ├── queries/
+    │   │   └── find-users.query.ts
+    │   ├── services/
+    │   │   ├── find-users.service.ts
+    │   │   └── create-user.service.ts
+    │   ├── ports/
+    │   │   └── user.repository.port.ts
+    │   ├── entities/
+    │   │   └── user.entity.ts
+    │   ├── aggregates/
+    │   ├── value-objects/
+    │   │   └── address.value-object.ts
+    │   ├── domain-services/
+    │   ├── events/
+    │   │   ├── user-address-updated.domain-event.ts
+    │   │   ├── user-created.domain-event.ts
+    │   │   ├── user-deleted.domain-event.ts
+    │   │   └── user-role-changed.domain-event.ts
+    │   ├── errors/
+    │   │   └── user.errors.ts
+    │   └── types/
+    │       └── user.types.ts
+    ├── infrastructure/
+    │   ├── repositories/
+    │   │   └── user.repository.ts
+    │   ├── models/
+    │   │   └── user.model.ts
+    │   ├── mappers/
+    │   │   └── user.mapper.ts
+    │   └── user.module.ts
+    └── interface/
+        ├── dtos/
+        │   ├── create-user.gql-request.dto.ts
+        │   ├── id.gql-response.dto.ts
+        │   ├── user.graphql-response.dto.ts
+        │   ├── user.paginated-gql-response.dto.ts
+        │   ├── create-user.request.dto.ts
+        │   ├── find-users.request.dto.ts
+        │   ├── find-users.response.dto.ts
+        │   ├── user.paginated.response.dto.ts
+        │   └── user.response.dto.ts
+        ├── controllers/
+        │   ├── create-user.cli.controller.ts
+        │   ├── create-user.http.controller.ts
+        │   ├── create-user.message.controller.ts
+        │   └── find-users.http.controller.ts
+        ├── resolvers/
+        │   ├── create-user.graphql-resolver.ts
+        │   └── find-users.graphql-resolver.ts
+        └── event-handlers/
 ```
 
 **Best practices**:
@@ -130,33 +147,6 @@ src/
   - **Core** layer should not depend on any other layer.
   - Nested modules cannot import parent module.
 - Avoid a lot of nested folders
-
-
-## Modules
-
-Each module lives in its own folder and represents a bounded context or business capability.
-
-**Benefits**:
-- Refactor internals without affecting other modules.
-- Easier to split into a microservice when bounded contexts are well-defined.
-
-**Best practices to reduce coupling**:
-- Keep module interactions minimal; prefer small, explicit interfaces.
-- Move shared logic to common utilities rather than creating cross-module dependencies.
-- Avoid importing another module's internals; use a [mediator](https://en.wikipedia.org/wiki/Mediator_pattern#:~:text=In%20software%20engineering%2C%20the%20mediator,often%20consist%20of%20many%20classes.) or a public [facade](https://en.wikipedia.org/wiki/Facade_pattern).
-- Prefer message-based communication when modules need to coordinate (send commands using a command bus or subscribe to events that other modules emit).
-
-> [!TIP]
-> Keep modules small. You should be able to rewrite a module in a relatively short period of time.
-
-
-## Best Practices
-
-Architectural Best Practices:
-
-- Choose patterns that fit your project's needs; avoid overengineering.
-- Follow the [YAGNI](https://en.wikipedia.org/wiki/You_aren%27t_gonna_need_it) and [KISS](https://en.wikipedia.org/wiki/KISS_principle) principles: don't add features or patterns before they are needed.
-- Evaluate the cost vs. benefit before introducing a pattern or abstraction.
 
 
 ## References

@@ -4,17 +4,51 @@ import { PackageManagerTabs } from '@theme'
 
 ## Version
 
-This document is applied for version: `16.3.0` (2025)
+This document is applied for version: `16.3.2` (2026)
+
+## Introduction
+
+React Testing Library builds on top of DOM Testing Library by adding APIs for working with React components.
 
 
 ## Installation
 
-<PackageManagerTabs command="install --save-dev @testing-library/react @testing-library/dom @types/react @types/react-dom" />
+<PackageManagerTabs command="install --save-dev @testing-library/react@^16.3.2 @testing-library/dom@^10.4.1" />
+
+
+## Setting up Jest
+
+<PackageManagerTabs command="install --save-dev jest-environment-jsdom@^30.3.0 @testing-library/jest-dom@^6.9.1 identity-obj-proxy@^3.0.0" />
+
+- `jest-environment-jsdom` simulates a browser so you can test DOM-related code (like document or window)
+- `@testing-library/jest-dom` adds custom matchers to Jest, like `toBeInTheDocument()` or `toHaveTextContent()`
+- `identity-obj-proxy` allow mocking non-js file imports
+
+Add a **Jest setupFile** to import `@testing-library/jest-dom` before running each test file:
+```ts title="src/setupTests.ts"
+import '@testing-library/jest-dom';
+```
+
+Update Jest config file:
+```js title="jest.config.mjs"
+const config = {
+  // The test environment that will be used for testing
+  testEnvironment: 'jsdom',
+
+  // A list of paths to modules that run some code to configure or set up the testing framework before each test
+  setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
+
+  // Module name mapping for handling non-JS files
+  moduleNameMapper: {
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+  },
+}
+```
 
 
 ## Setting up Vitest
 
-<PackageManagerTabs command="install --save-dev @testing-library/jest-dom" />
+<PackageManagerTabs command="install --save-dev @testing-library/jest-dom@^6.9.1" />
 
 - `@testing-library/jest-dom` adds custom matchers to Jest, like `toBeInTheDocument()` or `toHaveTextContent()`
 
@@ -58,42 +92,6 @@ Update TypeScript config to add type support for custom matchers:
   },
 }
 ```
-
-Reference: [Testing React Applications with Vitest: A Comprehensive Guide](https://dev.to/samuel_kinuthia/testing-react-applications-with-vitest-a-comprehensive-guide-2jm8).
-
-
-## Setting up Jest
-
-<PackageManagerTabs command="install --save-dev jest-environment-jsdom @testing-library/jest-dom identity-obj-proxy" />
-
-- `jest-environment-jsdom` simulates a browser so you can test DOM-related code (like document or window)
-- `@testing-library/jest-dom` adds custom matchers to Jest, like `toBeInTheDocument()` or `toHaveTextContent()`
-- `identity-obj-proxy` allow mocking non-js file imports
-
-Add a **Jest setupFile** to import `@testing-library/jest-dom` before running each test file:
-```ts title="src/setupTests.ts"
-import '@testing-library/jest-dom';
-```
-
-Update Jest config file:
-```js title="jest.config.mjs"
-const config = {
-  // The test environment that will be used for testing
-  testEnvironment: 'jsdom',
-
-  // A list of paths to modules that run some code to configure or set up the testing framework before each test
-  setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
-
-  // Module name mapping for handling non-JS files
-  moduleNameMapper: {
-    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
-  },
-}
-```
-
-References:
-- [DOM Manipulation](https://jestjs.io/docs/next/tutorial-jquery).
-- [React Testing Library](https://testing-library.com/docs/react-testing-library/intro)
 
 
 ## Custom Render
@@ -404,3 +402,10 @@ screen.debug(screen.getAllByText('multi-test'))
 ## Cheat sheet
 
 Refer to https://testing-library.com/docs/react-testing-library/cheatsheet
+
+
+## References
+
+- [React Testing Library](https://testing-library.com/docs/react-testing-library/intro)
+- [Testing React Applications with Vitest: A Comprehensive Guide](https://dev.to/samuel_kinuthia/testing-react-applications-with-vitest-a-comprehensive-guide-2jm8)
+- [DOM Manipulation](https://jestjs.io/docs/next/tutorial-jquery).

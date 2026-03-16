@@ -2,28 +2,31 @@
 
 ## Introduction
 
-Prompt files (or slash commands) are pre-defined prompts (in Markdown files) that you can invoke directly in chat.
+Prompt files (aka slash commands) are pre-defined prompts that you create for repetitive tasks. Each prompt file includes task-specific context and guidelines about how the task should be performed.
 
-Each prompt file includes task-specific context and guidelines about how the task should be performed.
+Prompt files are invoked manually in chat and stored in the `.github/prompts` folder or VS Code User profile.
 
 
 ## Use cases
 
-You can define prompts for:
-- **Coding tasks**: scaffolding a new component, API route, or generating tests
-- **Code reviews**: checking for code quality, security vulnerabilities, or performance issues
-- **Writing tests**: creating unit, integration, or end-to-end tests
-- **Submitting pull requests**: generating pull request titles and descriptions and submit it automatically
-- **Debugging**: run test and analyzing error messages, logs, or unexpected behavior and provide suggestions on how to fix them
-- **Writing documentation**: implementation plans, architectural designs, or migration strategies
-- **Communication**: explain issue to non-technical stakeholders, generate status update messages, or draft emails
-- **Step-by-step guides** for complex processes or project-specific patterns
+Use prompt files when you want to:
+- Create reusable prompts for common tasks in your project
+- Add context for a specific chat request instead of all chats in a session (like custom instructions)
+- Override default behavior of a custom agent
 
+Example use cases:
+- **Technical design**: design APIs, database schema, sequence diagrams, implementation plan base on requirements
+- **Implement**: write code base on technical design, implementation plan
+- **Writing tests**: design test cases base on requirements + technical design, implement unit/integration/end-to-end/API/UI tests
+- **Code reviews**: check code follow standards, guidelines, patterns. detect security vulnerabilities or performance issues
+- **Submitting PRs**: generate pull request titles, descriptions and submit them automatically
+- **Debug test failures**: run test, capture and analyze test's output, provide suggestions on how to fix them
+- **Troubleshooting production issues**: query production's log, investigate issues by analyzing the logs, provide suggestions on how to fix them
+- **Writing documentation**: generate documentation from code, update documentation based on code changes
+- **Communication**: explaining issues to non-technical stakeholders, generating status update messages, or drafting emails
 
-## Prompt file locations
-
-- **In Workspace**: stored in the `.github/prompts` folder.
-- **In User profile**: stored in the prompts folder of the current [VS Code profile](https://code.visualstudio.com/docs/configure/profiles).
+> [!TIPS]
+> You can provide additional instruction when invoking prompt files in chat.
 
 
 ## Prompt File Format
@@ -70,23 +73,25 @@ You can reference:
   - `${input:variableName}`, `${input:variableName:placeholder}` (pass values to the prompt from the chat input field)
 
 
-## Creating prompt file
+## Create a prompt file
 
-Type `/prompts` in the chat input to open the** Configure Prompt Files** menu.
-
-Or select Configure Chat (gear icon) > **Prompt Files**, and then select **New prompt** file:
+Ways to create a prompt file:
+1. Type `/prompts` in the chat input to open the **Configure Prompt Files** menu.
+2. Type `/create-prompt` in chat to generate a prompt file with AI.
+3. Create a prompt from an ongoing conversation by asking `turn this into a reusable prompt` or `save this workflow as a prompt` after a multi-turn chat session.
+4. Select Configure Chat (gear icon) > **Prompt Files**, and then select **New prompt** file:
 
 ![](https://code.visualstudio.com/assets/docs/copilot/customization/configure-chat-instructions.png)
 
 
-### Generate a prompt file with AI
+## Manage prompt files
 
-Type `/create-prompt` in chat and describe the task you want to automate.
+You can view and manage available prompt files by selecting `Chat: Configure Prompt Files` from the **Command Palette**.
 
-You can also extract a reusable prompt from an ongoing conversation. By asking `turn this into a reusable prompt` or `save this workflow as a prompt` after a multi-turn chat session.
+To know where a prompt file comes from, hover over the prompt file in the list. The source location is displayed in a tooltip.
 
 
-## Using prompt files
+## Use a prompt file in chat
 
 You have multiple options to run a prompt file:
 
@@ -102,62 +107,10 @@ You have multiple options to run a prompt file:
 > Use the `chat.promptFilesRecommendations` setting to show prompts as recommended actions when starting a new chat session.
 
 
-## Prompt files Tips
+## Advanced Topics
 
-- Clearly describe what the prompt should accomplish and what output format is expected.
-- Provide examples of the expected input and output to guide the AI's responses.
-- Use Markdown links to reference custom instructions rather than duplicating guidelines in each prompt.
-- Take advantage of built-in variables like `${selection}` and input variables to make prompts more flexible.
-- Use the editor play button to test your prompts and refine them based on the results.
-
-
-## Examples
-
-### Generate a React form component
-
-```md
----
-agent: 'agent'
-model: GPT-4o
-tools: ['githubRepo', 'search/codebase']
-description: 'Generate a new React form component'
----
-Your goal is to generate a new React form component based on the templates in #tool:githubRepo contoso/react-templates.
-
-Ask for the form name and fields if not provided.
-
-Requirements for the form:
-* Use form design system components: [design-system/Form.md](./prompt-files.mdx)
-* Use `react-hook-form` for form state management:
-* Always define TypeScript types for your form data
-* Prefer *uncontrolled* components using register
-* Use `defaultValues` to prevent unnecessary rerenders
-* Use `yup` for validation:
-* Create reusable validation schemas in separate files
-* Use TypeScript types to ensure type safety
-* Customize UX-friendly validation rules
-```
-
-
-### Security review for a REST API
-
-```md
----
-agent: 'ask'
-model: Claude Sonnet 4
-description: 'Perform a REST API security review'
----
-Perform a REST API security review and provide a TODO list of security issues to address.
-
-* Ensure all endpoints are protected by authentication and authorization
-* Validate all user inputs and sanitize data
-* Implement rate limiting and throttling
-* Implement logging and monitoring for security events
-
-Return the TODO list in a Markdown format, grouped by priority and issue type.
-```
-
-
-## Reference
-
-- [Prompt files in VS Code documentation](https://code.visualstudio.com/docs/copilot/customization/prompt-files)
+- [Tool list priority](https://code.visualstudio.com/docs/copilot/customization/prompt-files#tool-list-priority): Determine available tools by prompt file, custom agent, or default agent settings.
+- [Sync user prompt files across devices](https://code.visualstudio.com/docs/copilot/customization/prompt-files#sync-user-prompt-files-across-devices): Enable Settings Sync to share user-level prompt files across installations.
+- [Tips for writing effective prompts](https://code.visualstudio.com/docs/copilot/customization/prompt-files#tips-for-writing-effective-prompts): Craft clear descriptions, examples, and variables for flexible, testable prompts.
+- [Frequently asked questions](https://code.visualstudio.com/docs/copilot/customization/prompt-files#frequently-asked-questions): Troubleshoot prompt file sources and diagnostics for loaded files.
+- [Related resources](https://code.visualstudio.com/docs/copilot/customization/prompt-files#related-resources): Explore custom instructions, agent tools, and community contributions.

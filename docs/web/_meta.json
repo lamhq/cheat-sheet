@@ -33,14 +33,12 @@
   {
     "name": "storybook",
     "type": "dir",
-    "label": "UI Docs",
     "collapsed": true
   },
   {
     "name": "playwright",
     "type": "dir",
-    "collapsed": true,
-    "label": "End-to-end Test"
+    "collapsed": true
   },
   {
     "name": "security",

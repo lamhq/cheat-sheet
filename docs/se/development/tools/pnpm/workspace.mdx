@@ -127,57 +127,56 @@ For example, to add a `utils` package:
 ## Installing dependencies
 
 Install a npm package to a repo in the workspace:
-
 ```bash
-pnpm -F <app-name> add <npm-package> -D
+pnpm -F <project> add <package>
 ```
-- `-F` (or `--filter`) run command in specific projects
-- `--recursive` run command in every project of a workspace
+- `-F <project>`: run the command only for the specific workspace project named `<project>`
+- `<package>`: installs the given npm package as a dependency for that project.
 
-Install a shared package into an application:
-
+Install a local package into a project:
 ```bash
-pnpm -F <app-name> add <package-name> --workspace
+pnpm -F <project> add <package> --workspace
 ```
+- `--workspace`: Ensures that if the package already exists in another workspace project, pnpm will link it using the workspace protocol instead of fetching it from the registry
 
-You can also specify the version range of the dependencies:
+Install a dependency with a specific version range:
 ```bash
-pnpm -F <app-name> add <package-name>@^1.0.0 --workspace
+pnpm -F <project> add <package>@^1.0.0 --workspace
 ```
 
 > [!NOTE]
 > The version is defined using the `version` field in `package.json` of the package.
 
 > [!INFO]
-> `app-name` and `package-name` are defined using the `name` field in `package.json`
+> `project` and `package` are defined using the `name` field in `package.json`
 
 
 ## Running scripts
 
-Run a script of a specific package:
+Run a script of a specific project:
 
 ```bash
-pnpm -F <package-name> run <script-name>
+pnpm -F <project> run <script-name>
 ```
 
-Run a script across **all packages** in the workspace:
+Run a script across **all projects** in the workspace:
 
 ```bash
 pnpm -r run <script-name>
 ```
 
-Run in all packages whose name has prefix `@repo/`:
+Run script in all projects whose name has prefix `@repo/`:
 ```bash
-pnpm -F '@repo/**' run dev
+pnpm -F '@repo/**' run <script-name>
 ```
 
-Run in packages that depend on `utils`:
+Run in projects that depend on `utils`:
 ```bash
-pnpm -F '...utils' run build
+pnpm -F '...utils' run <script-name>
 ```
 
-Run a local installed binary from a specific package:
+Run a local installed binary from a specific project:
 
 ```bash
-pnpm -F <package-name> exec jest
+pnpm -F <project> exec <package>
 ```

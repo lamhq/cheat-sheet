@@ -13,38 +13,61 @@ Conclusion: the cost for mocking modules like this is not acceptable. So i choos
 
 ## Network requests
 
-For components that make network requests, you can mock those requests using a tool like [Mock Service Worker (MSW)](https://storybook.js.org/docs/writing-stories/mocking-data-and-modules/mocking-network-requests). 
+Mock Rest and GraphQL requests right inside your story.
 
-Here's an example of mocking REST requests per story:
+Install MSW and the MSW addon:
 
-```tsx
+<PackageManagerTabs command="install -D msw msw-storybook-addon" />
+
+Generate the service worker file necessary for MSW to work:
+
+```sh
+npx msw init public/
+```
+
+Include the generated service worker file in your Storybook configuration:
+
+```ts title=".storybook/main.ts"
 // Replace your-framework with the framework you are using, e.g. react-vite, nextjs, vue3-vite, etc.
-import type { Meta, StoryObj } from '@storybook/your-framework';
- 
+import type { StorybookConfig } from '@storybook/react-vite';
+
+const config: StorybookConfig = {
+  framework: '@storybook/react-vite',
+  stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  staticDirs: ['../public', '../static'],
+};
+
+export default config;
+```
+
+Initialize the addon and apply it to all stories with a project-level loader:
+
+```ts title=".storybook/preview.ts"
+// Replace your-framework with the framework you are using, e.g. react-vite, nextjs, vue3-vite, etc.
+import type { Preview } from '@storybook/your-framework';
+
+import { initialize, mswLoader } from 'msw-storybook-addon';
+
+/*
+ * Initializes MSW
+ * See https://github.com/mswjs/msw-storybook-addon#configuring-msw
+ * to learn how to customize it
+ */
+initialize();
+
+const preview: Preview = {
+  loaders: [mswLoader], // 👈 Add the MSW loader to all stories
+};
+
+export default preview;
+```
+
+To mock REST requests in stories:
+
+```ts
 import { http, HttpResponse, delay } from 'msw';
- 
-import { DocumentScreen } from './YourPage';
- 
-const meta = {
-  component: DocumentScreen,
-} satisfies Meta<typeof DocumentScreen>;
- 
-export default meta;
-type Story = StoryObj<typeof meta>;
 
 export const MockedSuccess: Story = {
-  parameters: {
-    msw: {
-      handlers: [
-        http.get('https://your-restful-endpoint/', () => {
-          return HttpResponse.json([]);
-        }),
-      ],
-    },
-  },
-};
- 
-export const MockedError: Story = {
   parameters: {
     msw: {
       handlers: [
@@ -59,6 +82,8 @@ export const MockedError: Story = {
   },
 };
 ```
+
+Instead of defining `parameters.msw` in each story, it can also be configured at the `component` or even `project` level, allowing you to share the same mock server configuration across multiple stories.
 
 
 ## Providers

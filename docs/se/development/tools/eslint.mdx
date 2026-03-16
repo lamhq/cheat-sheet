@@ -1,20 +1,376 @@
+import { PackageManagerTabs } from '@theme'
+
 # ESLint
 
 ## Version
 
-This document is for version `9.32.0` (2025), using [flat configuration file](https://eslint.org/docs/latest/use/configure/configuration-files).
+This guide is for version `9.32.0` (2025), using [flat config format](https://eslint.org/docs/latest/use/configure/configuration-files).
 
 
-## Overview
+## Installation
 
-ESLint is a tool for identifying and reporting on patterns found in ECMAScript/JavaScript code, with the goal of making code more consistent and avoiding bugs.
+<PackageManagerTabs command="install --save-dev eslint@^10.0.3 @eslint/js@^10.0.1 globals@^17.4.0" />
+
+- `eslint`: The linter that analyzes your JavaScript code for problems.
+- `@eslint/js`: Official package that provides ESLint’s built-in rule presets as reusable flat config objects.
+- `globals`: A utility that defines sets of global variables for environments like `browser`, `node`, or `jest`.
+
+For configuration of specific languages and tools (React, Jest, Storybook ...), refer to below sections.
+
+> [!TIPS]
+> To share common config, create a separate ESLint config package and import it into each package’s config file.  
 
 
-## Prerequisites
+## Usage
 
-Node.js `^18.18.0`, `^20.9.0`, or `>=21.1.0`.
+Run ESLint for current directory (no need to specify `.`):
+
+```sh
+npx eslint
+```
+
+Run ESLint for a file:
+
+```sh
+npx eslint file.js 
+```
+
+Run ESLint for multiple targets:
+
+```sh
+npx eslint lib/** file.js 
+```
 
 
-## Reference
+## Prettier
+
+Make ESLint and Prettier work together without conflicts.
+
+<PackageManagerTabs command="install --save-dev eslint-config-prettier@^10.1.8" />
+
+Update ESLint config file:
+
+```js title="eslint.config.mjs" {2,6}
+import { defineConfig } from "eslint/config";
+import eslintConfigPrettier from "eslint-config-prettier/flat";
+
+export default defineConfig([
+  // other configs ...
+  {
+    ...eslintConfigPrettier,
+    name: 'Prettier',
+  },
+]);
+```
+
+- [`eslint-config-prettier`](https://github.com/prettier/eslint-config-prettier) export an ESLint config that turn off rules that conflict or are unnecessary with Prettier, makes sure to put it after other configs.
+
+> [!NOTE]
+> `eslint-plugin-prettier` wasn't installed due to separation of concerns between linters and formatters
+
+Reference: https://prettier.io/docs/integrating-with-linters
+
+
+## JavaScript
+
+Set up basic lint rules for JavaScript and TypeScript files.
+
+Add the following configuration to your ESLint config file:
+
+```js title="eslint.config.mjs" {2,8}
+import { defineConfig } from 'eslint/config';
+import js from '@eslint/js';
+
+export default defineConfig([
+  {
+    name: 'JavaScript files',
+    files: ['**/*.{js,ts,jsx,tsx}'],
+    extends: [js.configs.recommended],
+  },
+]);
+```
+- `js.configs.recommended`: ESLint’s recommended rule set for JavaScript
+- `defineConfig()`: a helper utility that wraps your ESLint flat config array to provide type safety, editor autocompletion, and better tooling support
+
+
+### Lint config files
+
+Lint configuration files (`*.config.js`) of tools (ESLint, Jest, Vitest, etc.).
+
+Add the following configuration to your ESLint config file, 
+set the `globals` option to `globals.node` (since they run in a Node.js environment):
+
+```js title="eslint.config.mjs" {2,9}
+import { defineConfig } from 'eslint/config';
+import globals from 'globals';
+
+export default defineConfig([
+  {
+    name: 'Config files',
+    files: ['*.config.js'],
+    languageOptions: {
+      globals: globals.node,
+    },
+  },
+]);
+```
+- `languageOptions.globals: globals.node`: Declares Node.js-specific global variables (e.g. `require`, `__dirname`, `process`) so ESLint doesn't mistakenly flag them as undefined.
+
+
+## TypeScript
+
+<PackageManagerTabs command="install --save-dev typescript-eslint@^8.57.0" />
+
+Add the following configuration to your ESLint config file:
+
+```js title="eslint.config.mjs" {10,14,15}
+import { defineConfig } from 'eslint/config';
+import tseslint from 'typescript-eslint';
+
+export default defineConfig(
+  {
+    name: 'TypeScript files',
+    files: ['**/*.{ts,tsx}'],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+    extends: [
+      tseslint.configs.strictTypeChecked,
+      tseslint.configs.stylisticTypeChecked,
+    ],
+  },
+);
+```
+- `strictTypeChecked`: a superset of `recommended` config, includes more opinionated rules, with typed linting enable, which may also catch bugs.
+- `stylisticTypeChecked`: includes additional rules that enforce consistent styling, with typed linting enable
+- `projectService: true`: ask TypeScript's type checking service for each source file's type information
+
+> [!NOTE]
+> `typescript-eslint` does not check **type errors**, because doing so would slow down the lint run, and duplicate the errors that TypeScript already outputs for you.
+
+Reference: [typescript-eslint](https://typescript-eslint.io/getting-started/)
+
+
+## React (TypeScript)
+
+<PackageManagerTabs command="install --save-dev eslint-plugin-react@^7.37.5 eslint-plugin-react-hooks@^7.0.1" />
+
+Add the following configuration to your ESLint config file:
+
+```js title="eslint.config.mjs" {10,13}
+import { defineConfig } from "eslint/config";
+import react from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
+
+export default defineConfig([
+  {
+    name: 'React (TypeScript) files',
+    files: ['**/*.tsx'],
+    languageOptions: {
+      globals: globals.browser,
+    },
+    settings: {
+      react: { version: 'detect' },
+    },
+    extends: [
+      react.configs.flat.all,
+      reactHooks.configs.flat.recommended,
+    ],
+  },
+]);
+```
+- The shared configs do not preconfigure `languageOptions.globals`. For most of the cases, you probably want to configure some properties by yourself.
+- `react: { version: 'detect' }`: automatically detect the React version from your dependencies
+
+References:
+- [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react?tab=readme-ov-file#configuration-new-eslintconfigjs)
+- [eslint-plugin-react-hooks](https://www.npmjs.com/package/eslint-plugin-react-hooks)
+
+### Fast Refresh (Vite)
+
+Enforces that your components are structured in a way that integrations such as [react-refresh](https://www.npmjs.com/package/react-refresh) expect.
+
+<PackageManagerTabs command="install --save-dev eslint-plugin-react-refresh@^0.5.2" />
+
+If you're using Vite, add the following configuration to your ESLint config file:
+
+```js title="eslint.config.mjs" {2,8}
+import { defineConfig } from "eslint/config";
+import reactRefresh from "eslint-plugin-react-refresh";
+
+export default defineConfig([
+  {
+    files: ['**/*.tsx'],
+    extends: [
+      reactRefresh.configs.vite,
+    ],
+  },
+]);
+```
+
+Reference: [eslint-plugin-react-refresh](https://www.npmjs.com/package/eslint-plugin-react-refresh)
+
+### React Testing Library
+
+<PackageManagerTabs command="install --save-dev eslint-plugin-testing-library@^7.16.0" />
+
+```js title="eslint.config.mjs" {2,9}
+import { defineConfig } from "eslint/config";
+import testingLibrary from "eslint-plugin-testing-library";
+
+export default defineConfig([
+  {
+    name: 'React Testing Library',    
+    files: ['**/*.test.tsx'],
+    extends: [
+      testingLibrary.configs['flat/react'],
+    ],
+  },
+]);
+```
+
+Reference: [eslint-plugin-testing-library](https://github.com/testing-library/eslint-plugin-testing-library?tab=readme-ov-file#react)
+
+### Storybook
+
+<PackageManagerTabs command="install --save-dev eslint-plugin-storybook@^10.2.17" />
+
+```js title="eslint.config.mjs" {2,5}
+import { defineConfig } from "eslint/config";
+import storybook from 'eslint-plugin-storybook';
+
+export default defineConfig([
+  ...storybook.configs['flat/recommended'],
+]);
+```
+
+Reference: [eslint-plugin-storybook](https://www.npmjs.com/package/eslint-plugin-storybook)
+
+
+## Jest
+
+Lint Jest test files.
+
+<PackageManagerTabs command="install --save-dev eslint-plugin-jest@^29.15.0" />
+
+Add below config object to ESLint config file:
+
+```js title="eslint.config.mjs" {2,8}
+import { defineConfig } from "eslint/config";
+import pluginJest from 'eslint-plugin-jest'
+
+export default defineConfig([
+  {
+    name: 'Jest test files',
+    files: ['**/*.test.ts(x)?'],
+    plugins: { jest: pluginJest },
+    languageOptions: {
+      globals: pluginJest.environments.globals.globals,
+    },    
+    rules: {
+      'jest/no-disabled-tests': 'warn',
+      'jest/no-focused-tests': 'error',
+      'jest/no-identical-title': 'error',
+      'jest/valid-expect': 'error',
+    },
+  },
+]);
+```
+
+Reference: [eslint-plugin-jest](https://www.npmjs.com/package/eslint-plugin-jest)
+
+
+## Vitest
+
+<PackageManagerTabs command="install --save-dev @vitest/eslint-plugin" />
+
+Update ESLint config file:
+
+```js title="eslint.config.mjs" {2,8}
+import { defineConfig } from "eslint/config";
+import vitest from '@vitest/eslint-plugin'
+
+export default defineConfig([
+  {
+    ...vitest.configs.all,
+    name: 'Vitest tests',    
+    files: ['**/*.test.ts(x)?'],
+  },
+]);
+```
+
+Reference: [@vitest/eslint-plugin](https://github.com/vitest-dev/eslint-plugin-vitest?tab=readme-ov-file#all)
+
+
+## Playwright
+
+Lint Playwright test files.
+
+<PackageManagerTabs command="install --save-dev eslint-plugin-playwright" />
+
+Add below config object to ESLint config file:
+
+```js title="eslint.config.mjs" {2,9}
+import { defineConfig } from "eslint/config";
+import playwright from 'eslint-plugin-playwright'
+
+export default defineConfig([
+  {
+    name: 'Playwright tests',
+    files: ['tests/**/*.spec.ts'],
+    extends: [
+      playwright.configs['flat/recommended']
+    ],
+  },
+]);
+```
+
+Reference: [eslint-plugin-playwright](https://www.npmjs.com/package/eslint-plugin-playwright)
+
+
+## IDE Integration
+
+Install [ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) for VS Code.
+
+Add the extension to VS Code Workspace Recommendations:
+```json title=".vscode/extensions.json"
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint"
+  ]
+}
+```
+
+Update your VS Code setting to auto fix ESLint errors on save:
+```json title=".vscode/settings.json"
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always"
+  }
+}
+```
+
+
+## Monorepo Setup
+
+**Steps:**
+- Install ESLint at the root of the monorepo. Move all ESLint-related dependencies from individual packages into the root `package.json`.
+- Maintain a single ESLint configuration file at the root and run ESLint from there to lint all packages.
+- For packages with unique linting requirements, use the `files` property in ESLint configuration object to target specific files within that package.
+
+**Advantages:**
+- Streamlined setup and maintenance: only one ESLint version and config file to manage.
+- Works seamlessly with IDEs and tools like lint-staged without extra configuration.
+- Guarantees consistent code style across all packages.
+
+**Drawbacks:**
+- All packages must share the same ESLint version and dependencies, which can be problematic for legacy packages (e.g., those not yet using ESLint v9 flat config).
+- A single shared config may lead to conflicts if multiple teams edit it simultaneously.
+
+
+## References
 
 - [Official doc](https://eslint.org/docs/latest/use/getting-started)

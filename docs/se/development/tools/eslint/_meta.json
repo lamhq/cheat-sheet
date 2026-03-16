@@ -1,9 +1,4 @@
 [
-  {
-    "name": "installation",
-    "type": "dir",
-    "collapsed": true
-  },
   "configuration",
   "plugin"
 ]

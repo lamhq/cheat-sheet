@@ -2,29 +2,26 @@
 
 ## Introduction
 
-Also known as **Driving/Primary Adapters**.
-
 This layer serves as the app's entry point.
 
 It provides user-facing interfaces like:
 - Input/Output (request/response) DTOs
 - CLI Controllers
-- Event Handlers
+- Event Handlers (of queue, message broker, etc.)
 
-It wraps the application core, adapting its input/output to delivery mechanisms (e.g., HTML, JSON, CLI, gRPC).
+It depends on the **Core** layer, communicating with it via **Commands**/**Queries**, which are handled by **Application Services**. 
 
-It depends on the **Core** layer, communicating with it via **Commands**/**Queries** handled by **Application Services**. 
+Transforms client input into a form that is convenient for **use cases**(services/command handlers) and **entities**.
 
-Interface adapters:
-- Transform client input in a form that is convenient for **use cases** and **entities**.
-- Transform output from use cases and entities for client to display.
+Transforms output from use cases and entities to a form that is convenient for client (person, external system, etc.). 
 
 
-## Controllers / Resolvers / Message Handlers
+## Controllers
 
-Controllers are user-facing APIs that parse requests, trigger business logic, and present results to clients.
+Controllers are user-facing APIs that parse requests, trigger business logic, and present results to clients (REST controllers, GraphQL resolvers, message handlers, etc.).
 
-Best Practices:
+### Best Practices
+
 - Use one controller per **use case** for clarity.
 - Separate controllers by trigger type (http, CLI, microservice message, GraphQL).
 
@@ -263,20 +260,6 @@ export class UserResponseDto extends ResponseBase {
 }
 ```
 
-### Benefits
-- Protect clients from internal data structure changes.
-- Maintain compatibility by mapping internal changes to DTOs.
-
-> [!NOTE]
-> Command objects may have similar structure to Request DTOs but serve internal domain communication, not client contracts.
-
-**Best Practices**:
-- DTOs's properties should be mostly primitives, flat structures.
-- When returning responses, prefer whitelisting (only allow predefined properties) over blacklisting (excluding certain properties) for security.
-- Place DTOs in a shared package if used across apps (e.g., frontend, backend) via .
-- Use validation/sanitization decorators like [class-validator](https://www.npmjs.com/package/class-validator) and [class-sanitizer](https://www.npmjs.com/package/class-sanitizer) for DTOs.
-- Transform data to DTOs using separated mappers or perform transformation in DTO constructors.
-
 ### Local DTOs
 
 Local DTOs are used as contracts between the domain and other layers when you don't want to expose your domain objects (entities, .etc) outside of the domain layer.
@@ -286,3 +269,19 @@ Local DTOs can be used to:
 - Decouple modules by avoiding leaking entities between them.
 
 Downsides of Local DTOs: adds complexity and requires extra boilerplate (e.g., defining interfaces, data mapping).
+
+### Benefits
+
+- Protect clients from internal data structure changes.
+- Maintain compatibility by mapping internal changes to DTOs.
+
+> [!NOTE]
+> Command objects may have similar structure to Request DTOs but serve internal domain communication, not client contracts.
+
+### Best Practices
+
+- DTOs's properties should be mostly primitives, flat structures.
+- When returning responses, prefer whitelisting (only allow predefined properties) over blacklisting (excluding certain properties) for security.
+- Place DTOs in a shared package if used across apps (e.g., frontend, backend) via .
+- Use validation/sanitization decorators like [class-validator](https://www.npmjs.com/package/class-validator) and [class-sanitizer](https://www.npmjs.com/package/class-sanitizer) for DTOs.
+- Transform data to DTOs using separated mappers or perform transformation in DTO constructors.

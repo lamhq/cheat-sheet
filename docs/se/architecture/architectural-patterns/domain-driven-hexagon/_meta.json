@@ -1,9 +1,5 @@
 [
   "interface",
-  {
-    "name": "core",
-    "type": "dir",
-    "collapsed": true
-  },
+  "core",
   "infrastructure"
 ]

@@ -2,142 +2,122 @@
 
 ## Introduction
 
-Custom instructions enable you to define common guidelines and rules (in Markdown files) that influence how AI generates code and performs tasks.
+Custom instructions are applied automatically to all chat requests or to specific files only. 
 
-You can configure custom instructions to apply automatically to all chat requests or to specific files only.
-
-You can manually attach custom instructions to a specific chat prompt.
-
-
-## Use cases
-
-- **Define coding standards**: make generated code follows your standards, coding practices, preferred technologies, or project requirements
-- **Provide guidelines**: for generating commit message, pull request title and description
-- **Set rules for code reviews**: checking for security vulnerabilities, performance issues, or adherence to coding standards
+It eliminates the need for manually including context in every chat prompt.
 
 
 ## Types of instructions files
 
-VS Code supports two categories of custom instructions: Always-on instructions and File-based instructions.
+### A single `copilot-instructions.md` file
 
-### Always-on instructions
+Automatically applies to all chat requests (in all chat sessions) in the workspace.
 
-Automatically included in every chat request.
+Stored at `.github/copilot-instructions.md`.
 
-Avoid using them since they're automatically applied to all chat requests in a session, which can cause duplicated information and quickly fill up the context size.
+To generate workspace instruction file, type `/init` in chat.
 
-1. A single `copilot-instructions.md` file:
-   - Stored at `.github/copilot-instructions.md`
-   - Automatically applies to all chat requests in the workspace
-   - Enabled by the setting: `github.copilot.chat.codeGeneration.useInstructionFiles`
-2. One or more `AGENTS.md` files
-   - Useful if you work with multiple AI agents in your workspace
-   - Automatically applies to all chat requests in the workspace or to specific subfolders (experimental)
-   - Stored in the root of the workspace or in subfolders (experimental)
-3. Organization-level instructions
-   - Share instructions across multiple workspaces and repositories within a GitHub organization
-   - Defined at the GitHub organization level
-4. `CLAUDE.md` file
-   - For compatibility with Claude Code and other Claude-based tools
-   - Stored in the workspace root, .claude folder, or user home directory
- 
-**Best practices**:
-- Keep it short and applicable to most kinds of operations (code generation, code review, commit message generation, etc).
-- Put links to references to other documents to keep it clean and focused.
+Use `.github/copilot-instructions.md` when you want a consistent behavior across all different kinds of operations (code generation, code review, run tests, etc.).
 
-**Example use cases**:
-- Ask for user's input for uncertain scenarios
+Example use cases:
+- Ask for user confirmation on uncertain scenarios
 - Run lint and formatter after making code changes
-
-**Example instruction file**:
-```md title=".github/copilot-instructions.md"
-# Copilot Instructions
-
-- Do not auto-commit or auto-push any code changes.
-- Do not run unit tests after making code changes.
-- Always run lint after making code changes using the command: `npx nx lint <module> --fix`.
-- Ask for user confirmation about things you are not sure about, such as the logic, architecture style, code structure, or implementation details.
-```
+- Do not auto-commit or auto-push
 
 
-### File-based instructions
+### `.instructions.md` files
 
 Applied when files that the agent is working on match a specified pattern.
 
-Use file-based instructions for:
-- language-specific conventions (`.ts`, `.tsx`, `.py`, etc.)
-- framework patterns (`.dto.ts`, `.controller.ts`, etc.) 
-- architecture style conventions (`ports/`, `services/`, etc.)
-- rules that only apply to certain parts of your codebase (docs, tests, frontend, backend, etc.)
-
 Stored in the workspace (`.github/instructions/*.instructions.md`) or user profile directory.
+
+To generate an instructions file, type `/create-instruction` in chat.
+
+Use when you need different rules for different file types or frameworks.
+
+Example use cases:
+- Different conventions for frontend vs. backend code
+- Language-specific guidelines in a monorepo (`.ts`, `.tsx`, `.py`, etc.)
+- Framework-specific patterns for specific modules (`.dto.ts`, `.controller.ts`, etc.) 
+- Architecture style conventions (`ports/`, `services/`, etc.)
+- Specialized rules for test files or documentation
+
+Example structure:
+
+```text
+.github/instructions/
+  frontend/
+    react.instructions.md
+    accessibility.instructions.md
+  backend/
+    python.instructions.md
+  testing/
+    unit-tests.instructions.md
+```
+
+Example instruction file:
+
+```md title=".github/instructions/backend/python.instructions.md"
+---
+name: 'Python Standards'
+description: 'Coding conventions for Python files'
+applyTo: '**/*.py'
+---
+# Python coding standards
+- Follow the PEP 8 style guide.
+- Use type hints for all function signatures.
+- Write docstrings for public functions.
+- Use 4 spaces for indentation.
+```
 
 > [!TIPS]
 > You can use Markdown links to reference specific context in instructions files
 
-```md title=".github/instructions/playwright-tests.instructions.md"
----
-applyTo: "**/tests/*.spec.ts"
----
 
-## Playwright test requirements
+### `AGENTS.md` files
 
-When writing Playwright tests, please follow these guidelines to ensure consistency and maintainability:
+Automatically applies to all chat requests in the workspace or to specific subfolders (experimental).
 
-1. **Use stable locators** - Prefer `getByRole()`, `getByText()`, and `getByTestId()` over CSS selectors or XPath
-1. **Write isolated tests** - Each test should be independent and not rely on other tests' state
-1. **Follow naming conventions** - Use descriptive test names and `*.spec.ts` file naming
-1. **Implement proper assertions** - Use Playwright's `expect()` with specific matchers like `toHaveText()`, `toBeVisible()`
-1. **Leverage auto-wait** - Avoid manual `setTimeout()` and rely on Playwright's built-in waiting mechanisms
-1. **Configure cross-browser testing** - Test across Chromium, Firefox, and WebKit browsers
-1. **Use Page Object Model** - Organize selectors and actions into reusable page classes for maintainability
-1. **Handle dynamic content** - Properly wait for elements to load and handle loading states
-1. **Set up proper test data** - Use beforeEach/afterEach hooks for test setup and cleanup
-1. **Configure CI/CD integration** - Set up headless mode, screenshots on failure, and parallel execution
-```
+Stored in the root of the workspace or in subfolders (experimental).
 
-## Specify custom instructions in settings
+Use `AGENTS.md` when:
+- You work with multiple AI agents in your workspace and want to apply some instructions to all of them
+- You want subfolder-level instructions that apply to specific parts of a monorepo
 
-You can configure custom instructions for specialized scenarios in VS Code settings.
-
-- Code review: `github.copilot.chat.reviewSelection.instructions`
-- Commit message generation: `github.copilot.chat.commitMessageGeneration.instructions`
-- Pull request title and description generation: `github.copilot.chat.pullRequestDescriptionGeneration.instructions`
-
-```json title=".vscode/settings.json"
-{
-  "github.copilot.chat.pullRequestDescriptionGeneration.instructions": [
-    { "text": "Always include a list of key changes." }
-  ],
-  "github.copilot.chat.reviewSelection.instructions": [
-    { "file": "guidance/backend-review-guidelines.md" },
-    { "file": "guidance/frontend-review-guidelines.md" }
-  ]
-}
-```
+> [!TIPS]
+> For folder-specific instructions, you can also use multiple `.instructions.md` files with different `applyTo` patterns that match the folder structure.
 
 
-## Generate instructions files
+### `CLAUDE.md` file
 
-VS Code can analyze and generate instruction files that match your coding practices and project structure.
+Automatically applies to all chat requests in the workspace.
 
-You can do this in two ways:
-1. In the Chat view, select **Configure Chat** (gear icon) > **Generate Chat Instructions**.
-2. Type the `/init` slash command in the chat input box.
+Stored in the workspace root, `.claude` folder, or user home directory.
 
-
-## Instructions writing tips 
-
-Tips for defining custom instructions:
-
-- Keep them short and self-contained. Each instruction should be a single, simple statement.
-- Store project-specific instructions in your workspace to share them with other team members and include them in your version control.
-- Reuse and reference instructions files in your prompt files and custom agents to keep them clean and focused, and to avoid duplicating instructions.
+Use when you want a single set of instructions recognized by Claude Code or other Claude-based tools.
 
 
-## Sync user instructions
+### Organization-level instructions
 
-VS Code can sync your user instructions files across multiple devices by using [Settings Sync](https://code.visualstudio.com/docs/copilot/customization/custom-instructions#_sync-user-instructions-files-across-devices).
+Share instructions across multiple workspaces and repositories within a GitHub organization.
+
+Defined at the GitHub organization level.
+
+
+## Manage instructions
+
+To list/create/modify instructions, use the **Chat: Configure Instructions** command from the **Command Palette** (⇧⌘P) and select the instructions file from the Quick Pick.
+
+
+## Advanced Topics
+
+- [Share custom instructions across teams](https://code.visualstudio.com/docs/copilot/customization/custom-instructions#share-custom-instructions-across-teams): Define organization-level rules for multiple repositories.
+- [Sync user instructions files across devices](https://code.visualstudio.com/docs/copilot/customization/custom-instructions#sync-user-instructions-files-across-devices): Enable Settings Sync for cross-device instruction availability.
+- [Specify custom instructions in settings](https://code.visualstudio.com/docs/copilot/customization/custom-instructions#specify-custom-instructions-in-settings): Configure instructions for code review, commit messages, and pull request descriptions.
+- [Instruction priority](https://code.visualstudio.com/docs/copilot/customization/custom-instructions#instruction-priority): Prioritize personal, repository, and organization instructions.
+- [Tips for writing effective instructions](https://code.visualstudio.com/docs/copilot/customization/custom-instructions#tips-for-writing-effective-instructions): Craft concise, reasoned rules with examples for better AI adherence.
+- [Frequently asked questions](https://code.visualstudio.com/docs/copilot/customization/custom-instructions#frequently-asked-questions): Address common issues with instruction application and sources.
+- [Related resources](https://code.visualstudio.com/docs/copilot/customization/custom-instructions#related-resources): Explore agent skills, custom agents, and community contributions.
 
 
 ## References

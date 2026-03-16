@@ -5,35 +5,54 @@
 This document is for version `1.54.1` (2025).
 
 
-## Overview
+## Installation
 
-Playwright is an open-source framework developed by Microsoft for **automating web browsers**.
+Initialize a new project or adds Playwright to an existing one:
 
-Use cases:
-- end-to-end testing of web applications
-- web scraping
-- UI automation
+```sh
+pnpm create playwright
+```
 
-
-## Why Playwright?
-
-- ✅ Supports multiple browsers: Chrome, Firefox, Safari  
-- 🌍 Cross-platform (OS, browsers, CI) and multi-language support  
-- ⚡ Fast execution and auto-waiting for elements  
-- 🧪 Built-in test runner with rich debugging tools  
-- 🔥 Actively maintained with a vibrant community and regular updates  
-- 🏁 Backed by Microsoft’s roadmap, not a short-lived side project
+The command will:
+- Prompt to choose a language (JavaScript, TypeScript)
+- Add a GitHub Actions workflow (for CI)
+- Download & install Playwright browsers
+- Create a Playwright config file with sample tests
 
 
-## Features
+## IDE Integration
 
-- Auto-waiting for elements to be ready
-- Parallel test execution
-- Mobile emulation and geolocation testing
-- Support advanced selectors (text, role, CSS, XPath)
-- Works in headless and headed modes  
-- Screenshots, video recording, and trace viewer
-- Codegen for recording user actions into scripts
-- Network interception and mocking
-- Locale, timezone, and permission manipulation
-- CI/CD integration with GitHub Actions, Jenkins, etc,
+Install [Playwright Test for VSCode](https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright) extension allowing you to run, debug, and generate tests using VS Code UI.
+
+![](https://playwright.dev/assets/images/vscode-extension-ce873e1c0d856b8c255e9de0781eb8d9.png)
+
+
+## Run tests
+
+### Using command line
+
+```sh
+npx playwright test
+
+# To run tests with UI Mode
+npx playwright test --ui
+```
+
+### Using Test Explorer view
+
+Click the Testing icon in the VS Code Activity Bar to open the Test Explorer. It displays:
+- All detected tests in your project
+- Playwright sidebar for managing projects, tools, and settings
+
+![](https://playwright.dev/assets/images/testing-sidebar-25b968f725bc3c175a12a4aa8b662c81.png)
+
+Here you can:
+- Run a Single Test
+- Run All Tests
+- Run tests on Multiple Browsers by selecting the projects (browsers) you want to test against
+- Show the browser while running tests
+
+
+## References
+
+https://playwright.dev/docs/getting-started-vscode

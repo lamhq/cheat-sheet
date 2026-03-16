@@ -1,0 +1,123 @@
+import { PackageManagerTabs } from '@theme'
+
+# Vitest
+
+## Version
+
+This document is for version `4.1.0` (2026).
+
+This guide assumes that you are already using Vite.
+
+
+## Introduction
+
+Vitest is a next-generation testing framework powered by Vite. It provides a fast, unit test framework optimized for projects using Vite, with a focus on speed and developer experience.
+
+
+## Why Vitest
+
+- ⚡ **Fast execution** – Built on Vite, it’s optimized for speed and lightning-fast test runs.  
+- 🧪 **Native ESM support** – Fully embraces modern JavaScript with ES Modules.  
+- 🔁 **Hot module replacement (HMR)** – Live test updates without restarting.  
+- 🧠 **Smart watch mode** – Reruns only relevant tests based on code changes.  
+- 🧰 **Vite plugin integration** – Seamlessly fits into existing Vite projects.  
+- 🧵 **Comprehensive Feature Set** – Mocking, Snapshot testing, Code coverage
+- 📦 **Lightweight and minimal config** – No bulky setups; plug and play.  
+- 🌍 **Cross-platform support** – Works consistently across environments.  
+
+
+## Prerequisites
+
+- Vite >=v6.0.0
+- Node >=v20.0.0
+
+
+## Installation
+
+<PackageManagerTabs command="install -D vitest@^4.1.0" />
+
+Add a script to `package.json` to run test:
+
+```json title="package.json"
+{
+  "scripts": {
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage"
+  }
+}
+```
+
+
+Add Vitest configuration to your `vite.config.ts`:
+
+```typescript title="vite.config.ts"
+/// <reference types="vitest/config" />
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  test: {
+    globals: true,
+    environment: 'node',
+    // environment: 'jsdom',
+  },
+})
+```
+
+Configure Vitest for [monorepos](./vitest/test-projects.mdx).
+
+
+## IDE Integrations
+
+Install [Vitest extension](https://marketplace.visualstudio.com/items?itemName=vitest.explorer) to enhance your testing experience with Vitest.
+
+Add Vitest to VS Code Workspace Recommendations:
+```json title=".vscode/extensions.json"
+{
+  "recommendations": [
+    "vitest.explorer"
+  ]
+}
+```
+
+
+## Writing Tests
+
+```js title="sum.js"
+export function sum(a, b) {
+  return a + b
+}
+```
+
+```js title="sum.test.js"
+import { expect, test, describe } from 'vitest'
+import { sum } from './sum'
+
+describe('sum function', () => {
+  test('adds 1 + 2 to equal 3', () => {
+    expect(sum(1, 2)).toBe(3)
+  })
+
+  test('adds negative numbers', () => {
+    expect(sum(-1, -2)).toBe(-3)
+  })
+})
+```
+
+## Running Tests
+
+Run all tests (watch mode by default):
+
+```bash
+npm run test
+```
+
+Run tests once (CI mode):
+
+```bash
+npm run test:run
+```
+
+## References
+
+- [Vitest Official Guide](https://vitest.dev/guide/)
+- [Vitest Test Environment Documentation](https://vitest.dev/guide/environment.html)
