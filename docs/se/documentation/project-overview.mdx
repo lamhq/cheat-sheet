@@ -1,29 +1,29 @@
 # Project Overview
 
-Template for a Project Overview document.
+Guideline for a Project Overview document.
 
-## Description
+## Description section
 
 Include the official name of the project and a short description.
 
-## Objectives & Goals
+## Objectives & Goals section
 
 Brief statement of why the project exists.
 
 List the main objectives of the project (e.g., improve customer experience, streamline workflows).
 
-## Target Audience
+## Target Audience section
 
 Describe who will use the application — roles, demographics, or customer segments.
 
 Include main use cases or scenarios.
 
-## Scope
+## Scope section
 
 - **In-Scope**: Features, modules, or deliverables included.
 - **Out-of-Scope**: Explicit exclusions to avoid misunderstandings.
 
-## Supported Platforms
+## Supported Platforms section
 
 List all client-facing supported platforms:
 - **Desktop Applications**: List supported operating systems if the software has a GUI (e.g., Windows 11, macOS Sonoma, Ubuntu 24.04).  
@@ -38,17 +38,16 @@ List all client-facing supported platforms:
   - Supported operating systems (e.g., Linux, macOS, Windows).  
   - Minimum runtime requirements (e.g., Python 3.12, Node.js 20).  
 
-
-## Deliverables
+## Deliverables section
 
 - Tangible outputs (software modules, documentation, training materials).
 - Expected delivery dates or milestones.
 
-## High-Level Features
+## Core Features section
 
 Provide a bullet list of the major features with short descriptions.
 
-## Tech Stack
+## Tech Stack section
 
 Outlines the technologies, frameworks, and tools used to build and run the system.
 
@@ -67,28 +66,22 @@ Outlines the technologies, frameworks, and tools used to build and run the syste
 
 Project Overview document of a Note-Taking App called **NodeMaster**:
 
-```md
+```md title="docs/project-overview.md"
 # NodeMaster
 
 ## Description
 
 NodeMaster is a cross-platform note-taking app that seamlessly syncs notes across web, desktop, and mobile with offline support and end-to-end encryption.
 
----
-
 ## Objectives & Goals
 - Help users capture, organize, and access notes anywhere (web/desktop/mobile).
 - Provide reliable syncing and offline access.
 - Keep notes private with strong encryption and secure sync.
 
----
-
 ## Target Audience
 - Knowledge workers who switch between devices (e.g., developers, students, project managers).
 - Users who need quick capture (ideas, meeting notes, to‑dos) and consistent access across platforms.
 - Scenarios: jotting down a task on mobile, editing on desktop, reviewing on web.
-
----
 
 ## Scope
 
@@ -104,15 +97,11 @@ NodeMaster is a cross-platform note-taking app that seamlessly syncs notes acros
 - Built-in voice recording or OCR.
 - Enterprise SSO integrations.
 
----
-
 ## Supported Platforms
 
 - **Web Applications**: Chrome 120+, Safari 17+, Firefox 115+, Edge 120+
 - **Desktop Applications**: Windows 11+, macOS Sonoma+, Ubuntu 24.04+
 - **Mobile Applications**: iOS 17+ (iPhone/iPad), Android 14+, Offline-first, background sync on connectivity
-
----
 
 ## Deliverables
 - Web app deployed to CDN (production/staging)
@@ -121,17 +110,13 @@ NodeMaster is a cross-platform note-taking app that seamlessly syncs notes acros
 - API documentation + sync protocol spec
 - User docs (how to import/export, security guide)
 
----
-
-## High-Level Features
+## Core Features
 - Note editor (markdown + plain text)
 - Tagging/folders + search
 - Automatic background sync (conflict resolution UI)
 - Offline editing + local persistence
 - End-to-end encrypted storage (user-managed key)
 - Multi-device account login + recovery phrase
-
----
 
 ## Tech Stack
 - **Frontend (Web):** React, TypeScript, Vite

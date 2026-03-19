@@ -1,27 +1,22 @@
 # Todos
 
-A directory contains a collection of development tasks, from oldest to newest, including:
-- Feature requests (`feat`)
-- Change requests (`crq`)
-- Bug reports (`bug`)
+The `todos/` directory contains a list of approved development tasks ready for implementation, ordered from oldest to newest.
 
-Imported from task management tools (e.g., Jira, Trello) or manually maintained.
+Tasks can be imported from external tools (Jira, Trello, etc.) or manually maintained.
 
-Contains tasks to implement or implemented. Not a product backlog or sprint backlog
+Each task is documented in a separate markdown file.
 
-Task will be linked directly to issues, pull requests, and code commits.
+## Task Types
 
-Bug report will be linked to relevant test cases.
-
-- **Change requests** → stored in backlog + knowledge base for approvals.  
-- **Bug reports** → stored in bug tracking system.  
-- **Feature requests** → stored in product backlog as user stories.  
-
-| **Type** | **Format** | **Example** |
+| **Type** | **File name format** | **Example** |
 |----------|------------|-------------|
-| Change Request | Change log entry + approval workflow | *Request to add multi-language support; approved by Product Owner.* |
-| Bug Report | Bug ID, steps to reproduce, expected vs actual result | *Bug #123: Login fails when password contains special characters.* |
-| Feature Request | User story + acceptance criteria | *As a user, I want dark mode so I can reduce eye strain.* |
+| New Feature Request | `{task-id}-feat-<feature-name>.mdx` | `001-feat-login.mdx` |
+| Change Request | `{task-id}-crq-<change-name>.mdx` | `002-crq-disable-email-login.mdx` |
+| Bug Report | `{task-id}-bug-<bug-name>.mdx` | `003-bug-login-special-characters.mdx` |
 
-- Link them to **sprints, releases, and test cases** for traceability.  
-- Use **tags or categories** (e.g., “Bug,” “Feature,” “Change Request”) to distinguish them.  
+
+## Task Status
+
+- **Pending** — Approved, ready to implement
+- **In Progress** — Being worked on
+- **Done** — Completed with links to issues, PRs, and commits

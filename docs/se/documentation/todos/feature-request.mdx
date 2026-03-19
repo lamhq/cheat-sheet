@@ -1,0 +1,147 @@
+# Feature Request
+
+## Introduction
+
+The feature request document describes a new feature to be implemented in the system.
+
+The document is a one-time task, typically managed in a task tracking system, not a living document that evolves during the development process.
+
+
+## General Guidelines
+
+General Guidelines for Feature Request Documentation:
+- File name follows the format: `{task-id}-feat-<task-name>.md`. (e.g., `NT001-feat-login-with-email.md`)
+- Keep the document concise and atomic, aim for one development task per file (e.g., implement user login screen in the web app). It should not cover multiple sub-tasks or features.
+- Use clear, non‑technical language for stakeholders, technical detail will be added in technical design documents.
+- Only the task status should be updated after implementation is done.
+- If the task cannot be implemented or skipped, it will be removed like it never existed.
+
+
+## Document title
+
+Formatted as `Feature: <Task name>` (e.g., `Feature: Add Tag API`).
+
+
+## Task attributes
+
+Below the title, include key attributes in a structured format (e.g., table or list):
+- ID: Unique identifier (e.g., `NT001`)
+- Status: `Pending` / `In Progress` / `Done`
+- Created: YYYY-MM-DD
+- Updated: YYYY-MM-DD
+
+
+## Description section
+
+Put a brief Description in one that summarizing the task and it purpose.
+
+
+## Constraints section
+
+Technical, business, or resource constraints.
+
+- Constraint 1
+- Constraint 2
+
+
+## Acceptance Criteria section
+
+Specific, measurable conditions for the task to be considered complete.
+
+- [ ] Given [context], when [action], then [result]
+- [ ] Acceptance criteria 2
+- [ ] Acceptance criteria 3
+
+
+## Scope section
+
+**Included**:
+- What is included in this feature
+
+**Excluded**:
+- What is explicitly NOT included (for future consideration)
+
+
+## Risks & Assumptions section
+
+Identify potential challenges and assumptions made during design (e.g., “Assumes users will not exceed 10,000 notes”).
+
+
+## Related Documents section
+
+- Link to task in Task Management System (e.g., Jira, Trello card)
+- Link to related features in the `feature-specs/` directory
+- Link to design documents in the `design/` directory (UI/UX, API, Database design, etc.)
+
+
+## Example
+
+```md
+# Feature: Implement Login Screen in Web App
+
+**ID:** WEB001  
+**Status:** Pending  
+**Created:** 2026-03-01  
+**Updated:** 2026-03-01
+
+## Description
+
+Implement a user login screen UI component with email and password input fields and basic client-side validation to have an intuitive login interface with clear visual feedback to improve user experience.
+
+## Constraints
+
+- Login form must be responsive and work on mobile devices (320px and above)
+- Must display validation errors in real-time as users type
+- Form styling must follow the established design system
+- Support for keyboard navigation and accessibility standards
+
+## Acceptance Criteria
+
+- [ ] Given a user on the login page, when the page loads, then the login form is displayed with email and password fields
+- [ ] Given a user on the login page, when they enter an invalid email format, then an email validation error message is displayed
+- [ ] Given a user on the login page, when they enter a password with less than 8 characters, then a password validation error message is displayed
+- [ ] Given a user entering their password, when they focus on the password field, then a toggle button to show/hide password is available
+- [ ] Given a user on the login page, when both fields are empty, then the submit button is disabled
+- [ ] Given a user on the login page, when they enter valid email and password formats, then the submit button is enabled
+- [ ] Given any user, when they access the login page on mobile, then the form is fully responsive and all fields are accessible
+
+## Scope
+
+**Included:**
+- Email and password input fields with placeholder text
+- Client-side email format validation
+- Client-side password length validation (minimum 8 characters)
+- Error message display for invalid inputs
+- Show/hide password toggle button
+- Submit button with enabled/disabled states
+- Form styling and layout
+- Responsive design for desktop and mobile
+- Keyboard navigation support
+- Accessibility attributes (ARIA labels, semantic HTML)
+
+**Excluded:**
+- Backend API integration or form submission
+- Session management or authentication logic
+- Password reset functionality
+- "Remember me" functionality
+- Social login or third-party authentication
+- Two-factor authentication
+
+## Risks & Assumptions
+
+**Risks:**
+- Users may be confused by validation messages if not clearly worded
+- Mobile users may have difficulty with small input fields without proper touch spacing
+
+**Assumptions:**
+- Password requirements follow standard practices (minimum 8 characters)
+- Email validation uses standard email format patterns
+- Design system and component library are already established
+- Browser support includes modern browsers (Chrome, Firefox, Safari, Edge)
+
+## Related Documents
+
+- [Task in Jira: WEB-001](https://jira.example.com/browse/WEB-001)
+- [Feature Spec: User Authentication](https://example.com/feature-specs/user-authentication.md)
+- [UI/UX Design: Login Screen Mockup](https://example.com/design/login-ui-design.md)
+```
