@@ -1,0 +1,52 @@
+# Requirements
+
+Each feature documents:
+- Description and scope
+- Functional and non-functional requirements
+- User stories and acceptance criteria
+- User flows (sequence diagrams, state machines, flowcharts)
+- UI screens (wireframes, mockups)
+- Test cases (linked to a test case document in `testing/`)
+
+---
+
+## Design principles
+
+The system is organized into several logical modules.
+
+Each module is responsible for a specific domain or functionality.
+
+Each module is designed to be loosely coupled and independently deployable.  
+
+Communication between services is primarily via gRPC (synchronous) or message queues (asynchronous).
+
+
+## Main modules
+
+- `user`:
+  - Handles user management, authentication, and authorization.
+  - Keywords: role-based access control (RBAC), JWT authentication, OIDC, OAuth2.
+- `catalog`:
+  - Manages product catalog, category, inventory.
+  - Keywords: product listing, search, filtering, inventory management, stock levels.
+- `order`:
+  - Responsible for order processing, payment, and fulfillment.
+  - Keywords: order creation, order status, payment processing, order history, returns.
+- `notification`:
+  - Manages sending notifications (email, SMS, push) to users.
+  - Keywords: Firebase, SMS, push notifications.
+- `payment`:
+  - Handles payment processing and integration with external payment gateways.
+  - Keywords: 9Pay, MoMo, refund, disbursement, IPN, transaction history
+
+---
+
+- **Centralized feature specs** (sometimes called a *living specification*) are valuable because they provide a **single source of truth**.  
+- Every **change request** that modifies a feature should be reflected there, so the spec always matches the current state of the product.  
+- The centralized spec should be **iterative**: updated sprint by sprint, linked to user stories, acceptance criteria, and test cases.  
+- Think of it as a **knowledge hub** rather than a rigid contract.  
+- When a change request is approved, update the feature spec immediately.  
+- Add a **change log section** to track what was modified, when, and why.  
+- Link change requests → updated feature spec → related test cases → release notes.  
+- Keep it **lightweight**.  
+- Treat it as a **living document** that evolves with the product.  
