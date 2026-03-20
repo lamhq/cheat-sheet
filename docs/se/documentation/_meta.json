@@ -1,10 +1,6 @@
 [
   "project-overview",
-  {
-    "type": "dir",
-    "name": "tasks",
-    "collapsed": true
-  },
+  "tasks",
   {
     "type": "dir",
     "name": "feature-specs",
