@@ -2,83 +2,19 @@
 
 ## Introduction
 
-This document provides guidelines for creating and maintaining documentation throughout the Software Development Life Cycle (SDLC).
-
-## Software Development Life Cycle
-
-The Software Development Life Cycle (SDLC) is a structured process that describes all the steps involved in creating software, from the initial idea to long-term maintenance.
-
-Standard steps in the SDLC include:
-
-### Requirement Analysis
-
-- Gather and document user needs and business goals.
-- **Input**: Business needs, stakeholder interviews, user feedback, bug reports, change requests
-- **Output**:
-  - **Project Overview**: Purpose, goals, scope, and high-level summary
-  - **Software Requirements Specification (SRS)**: Functional & non-functional requirements, constraints, acceptance criteria, use cases, user stories
-
-### Feasibility Study / Planning
-
-- Assess technical, financial, and operational feasibility.
-- **Input**: SRS document, technical constraints
-- **Output**:
-  - **Project Plan**: Schedule, resources, milestones
-  - **Feasibility Report**: Technical feasibility, cost-benefit analysis, risk assessment
-
-### System Design
-
-- Define architecture, components, interfaces, and data flow.
-- **Input**: Approved SRS, feasibility report
-- **Output**: Design documents:
-  - **High-Level Design (HLD)**: System architecture, modules, data flow diagrams, technology stack
-  - **Detailed Design Document (DDD)**: UI/UX mockups, interface specifications, API documentation, database schema, class diagrams, algorithms
-
-### Implementation (Coding / Construction)
-
-- Developers write code according to design specifications.
-- **Input**: SRS document, design documents, coding standards, coding guidelines, architectural patterns
-- **Output**:
-  - **Source Code**: Organized in a repository with version control
-  - **Code Documentation**: Inline comments, API docs, developer guides
-  - **Build/Configuration Docs**: Build instructions, environment setup, configuration files (repo's `README.md`)
-
-### Testing
-
-- Verify correctness, performance, and reliability. Includes unit testing, integration testing, system testing, and user acceptance testing (UAT).
-- **Input**: Source code, requirements docs, design docs
-- **Output**:
-  - **Test Plan**: Scope, objectives, strategy, resources, schedule
-  - **Test Cases**: Input data, expected results, execution steps
-  - **Automated Test Scripts**: For regression testing and continuous integration
-  - **Defect Logs / Test Reports**: Issues found, severity, resolution status
-
-### Deployment
-
-- Release the software to production or deliver it to users.
-- **Input**: Tested software, release plan
-- **Output**:
-  - **Deployment Guide**: Installation steps, environment requirements, rollback plan
-  - **Release Notes**: New features, bug fixes, known issues
-  - **User Manual**: Instructions for end-users, FAQs, troubleshooting
-
-> [!NOTE]
-> When using an iterative process (such as Agile), every change to the requirements and design should be documented in a Change Log section.
+This document provides guidelines for creating project documentation throughout the development process.
 
 ## Folder Structure
 
-Here's the recommended structure for storing documentation throughout the SDLC:
+Folder structure for storing all project documentation:
 
 ```
 docs/
 ├── project-overview.md
-├── todos/
-│   ├── 001-feat-a.md
-│   ├── 002-crq-b.md
-│   └── 003-bug-c.md
-├── planning/
-│   ├── sprint-01.md
-│   └── sprint-02.md
+├── tasks/
+│   ├── {task-id}-feat-a.md
+│   ├── {task-id}-crq-b.md
+│   └── {task-id}-bug-c.md
 ├── feature-specs/
 │   ├── domain-a/
 │   │   ├── feature-a.md
@@ -115,9 +51,7 @@ docs/
 
 - [`project-overview/`](./documentation/project-overview.mdx): High-level summary document that outlines the project's purpose, goals, scope, and key objectives.
 
-- [`todos/`](./documentation/todos.mdx): A centralized collection of development tasks, from oldest to newest.
-
-- [`planning/`](./documentation/planning/sprint-01.mdx): Stores sprint planning documents, from oldest to newest.
+- [`tasks/`](./documentation/tasks.mdx): A centralized collection of development tasks, from oldest to newest.
 
 - [`feature-specs/`](./documentation/feature-specs.mdx): Contains feature specification documents, grouped by domain.
 
@@ -128,3 +62,60 @@ docs/
 - [`testing/`](./documentation/testing.mdx): Contains all testing-related documentation.
 
 - [`deployment/`](./documentation/deployment.mdx): Stores release and deployment documentation.
+
+
+## Development Process
+
+Documentation is produced and used at every stage of the software development process:
+
+### Requirement Analysis
+
+- Collect requirements and actionable tasks from various sources.
+- **Input**:
+  - Business requirements (stakeholder interviews, client meetings, user feedback) → feature specifications
+  - Error Tracking System (e.g., Sentry, Rollbar) → runtime issues
+  - Bug Reports from internal QA or external users → defects and areas for improvement
+  - Monitoring & Analytics (e.g., New Relic, Datadog) → highlights performance bottlenecks or anomalies
+- **Output**:
+  - **Project Overview**: Purpose, goals, scope, and high-level summary
+  - **Software Requirements Specification (SRS)**: Functional & non-functional requirements, constraints, acceptance criteria, use cases, user stories
+  - **Task List**: A prioritized list of approved development tasks, categorized by type (feature, change request, bug)
+
+### System Design
+
+- Define architecture, components, interfaces, and data flow.
+- **Input**: Approved SRS, task list
+- **Output**:
+  - **High-Level Design (HLD)**: System architecture, modules, data flow diagrams, technology stack
+  - **Detailed Design Document (DDD)**: UI/UX mockups, interface specifications, API documentation, database schema, class diagrams, algorithms
+
+### Implementation (Coding / Construction)
+
+- Developers write code according to design specifications.
+- **Input**: SRS document, design documents, coding standards, coding guidelines, architectural patterns
+- **Output**:
+  - **Source Code**: Organized in a repository with version control
+  - **Code Documentation**: Inline comments, API docs, developer guides
+  - **Build/Configuration Docs**: Build instructions, environment setup, configuration files (repo's `README.md`)
+
+### Testing
+
+- Verify correctness, performance, and reliability. Includes unit testing, integration testing, system testing, and user acceptance testing (UAT).
+- **Input**: Source code, requirements docs, design docs
+- **Output**:
+  - **Test Plan**: Scope, objectives, strategy, resources, schedule
+  - **Test Cases**: Input data, expected results, execution steps
+  - **Automated Test Scripts**: For regression testing and continuous integration
+  - **Defect Logs / Test Reports**: Issues found, severity, resolution status
+
+### Deployment
+
+- Release the software to production or deliver it to users.
+- **Input**: Tested software, release plan
+- **Output**:
+  - **Deployment Guide**: Installation steps, environment requirements, rollback plan
+  - **Release Notes**: New features, bug fixes, known issues
+  - **User Manual**: Instructions for end-users, FAQs, troubleshooting
+
+> [!NOTE]
+> When using an iterative process (such as Agile), every change to the requirements and design should be documented in a Change Log section.

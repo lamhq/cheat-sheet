@@ -2,13 +2,7 @@
   "project-overview",
   {
     "type": "dir",
-    "name": "todos",
-    "collapsed": true
-  },
-  {
-    "type": "dir",
-    "name": "planning",
-    "label": "Planning",
+    "name": "tasks",
     "collapsed": true
   },
   {
