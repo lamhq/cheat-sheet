@@ -1,14 +1,33 @@
 [
-  "repository-readme",
   "project-overview",
-  "system-architecture",
-  "architectural-pattern",
-  "coding-guidelines",
-  "coding-standards",
-  "development-workflows",
+  "tasks",
   {
-    "name": "requirements",
     "type": "dir",
+    "name": "feature-specs",
+    "collapsed": true
+  },
+  {
+    "type": "dir",
+    "name": "design",
+    "label": "Design",
+    "collapsed": true
+  },
+  {
+    "type": "dir",
+    "name": "implementation",
+    "label": "Implementation",
+    "collapsed": true
+  },
+  {
+    "type": "dir",
+    "name": "testing",
+    "label": "Testing",
+    "collapsed": true
+  },
+  {
+    "type": "dir",
+    "name": "deployment",
+    "label": "Deployment",
     "collapsed": true
   }
 ]

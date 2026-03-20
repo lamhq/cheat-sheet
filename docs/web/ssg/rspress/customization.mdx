@@ -38,9 +38,14 @@ https://rspress.dev/guide/default-theme/navbar
 
 ## Sidebar
 
-To customize the Sidebar (on the left side of the page), modify the `_meta.json` in the subdirectory of the document root directory
+To customize the Sidebar (on the left side of the page), modify the `_meta.json` in the subdirectory of the document root directory.
 
-Basic items with label extracted from the h1 title in the document:
+Content in the `_meta.json` file is an array of navigation items, each can be of the following types:
+
+### File
+
+The navigation item will be the file name without extension. The label will be extracted from the heading level one in the document.
+
 ```json title="_meta.json"
 [
   "page1",
@@ -49,67 +54,18 @@ Basic items with label extracted from the h1 title in the document:
 ]
 ```
 
-File navigation item:
+The navigation item can also be an object with more options:
 
-```ts
+```json
 {
-  type: 'file';
-  name: string; // file name
-  label?: string;
-  tag?: string;
-  overviewHeaders?: number[];
-  context?: string;
+  "type": "file",
+  "name": "string", // file name without suffix
+  "label": "string" // display name of the file in the sidebar
 }
 ```
 
-Directory navigation item:
-
-```ts
-{
-  type: 'dir';
-  name: string;
-  label?: string;
-  collapsible?: boolean;
-  collapsed?: boolean;
-  tag?: string;
-  overviewHeaders?: number[];
-  context?: string;
-}
-```
-
-Divider:
-
-```ts
-{
-  type: 'divider';
-  dashed?: boolean;
-}
-```
-
-Section header:
-
-```ts
-{
-  type: 'section-header';
-  label: string;
-  tag?: string;
-}
-```
-
-Custom link:
-
-```ts
-{
-  type: 'custom-link';
-  label: string;
-  link: string;
-  context?: string;
-};
-```
-
-
-Add icon before title:
-```json title="_meta.json"
+To add an icon before the label:
+```json
 {
   "type": "file",
   "name": "introduction",
@@ -118,7 +74,56 @@ Add icon before title:
 }
 ```
 
+### Directory
+
+To add a directory as a navigation item:
+
+```json
+{
+  "type": "dir",
+  "name": "string",
+  "label": "string",
+  "collapsible": true,
+  "collapsed": true // collapsed by default
+}
+```
+
+### Divider
+
+To add a divider in the sidebar:
+
+```json
+{
+  "type": "divider",
+  "dashed": true
+}
+```
+
+### Section header
+
+To add a section header in the sidebar:
+
+```json
+{
+  "type": "section-header",
+  "label": "string",
+  "tag": "string"
+}
+```
+
+### Custom link
+
+```json
+{
+  "type": "custom-link",
+  "label": "string",
+  "link": "string",
+  "context": "string"
+}
+```
+
 You can also customize sidebar through [`themeConfig.sidebar`](https://rspress.dev/api/config/config-theme#sidebar) property in the config file.
+
 
 
 ## Outline

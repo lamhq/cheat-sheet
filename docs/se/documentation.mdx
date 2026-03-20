@@ -1,37 +1,115 @@
-# Project Documentation
+# Documentation
 
-This section contains necessary documentation for a software project.
+## Introduction
 
-## Structure
+This document provides guidelines for creating project documentation throughout the development process.
 
-This is a recommended structure for documentation of a software project:
+## Folder Structure
 
-- Project Overview
-- System Architecture
-- Project Structure (Directory Tree Overview, Module/Package Guide, Dependency Map, Configuration Guide)
-- Architectural Pattern (Clean Architecture, Hexagonal Architecture)
-- Coding Standards (File/Folder Naming Conventions, Code Formatting, Commenting/Documentation Standards)
-- Coding Guidelines & Best Practices (solution for common coding tasks)
-- API Documentation (Swagger)
-- Database Schema (DBML)
-- Development Workflow (planning, coding, testing, reviewing, releasing, deploying, monitoring, and maintaining)
-- Deployment: CI/CD Pipelines, Environment Setup, Release Strategy, Rollback Plans
-- Operations: Monitoring/Logging
-- Requirements
-  - Module-A (Logically Defined, Can Be A Package Or Microservice)
-    - Description
-    - Scope: Domain, Boundary, Keywords
-    - Responsibilities
-    - Entities (Subset Of Database Schema)
-    - Relationships (Dependency Graphs)
-    - Features
-      - Feature-A
-        - Description
-        - Scope
-        - Requirements (Functional And Non-Functional)
-        - User Stories
-        - User Flows (Sequence Diagrams, State Machines, Or Flowcharts)
-        - Test Cases
-        - UI Screens (Wireframes, Mockups, Or UI Sketches)
-        - API Endpoints (Available At Development Phase)
-        - Tickets / Epics (Available At Development Phase)
+Folder structure for storing all project documentation:
+
+```
+docs/
+├── project-overview.md
+├── tasks/
+│   ├── {task-id}-feat-a.md
+│   ├── {task-id}-crq-b.md
+│   └── {task-id}-bug-c.md
+├── feature-specs/
+│   ├── domain-a/
+│   │   ├── feature-a.md
+│   │   └── feature-b.md
+│   └── domain-b/
+│       └── feature-x.md
+├── design/
+│   ├── system-architecture.md
+│   ├── domain-a/
+│   │   ├── data-flows.md
+│   │   ├── ui-design.md
+│   │   ├── api-design.md
+│   │   └── database-design.md
+│   └── domain-b/
+│       └── ...
+├── implementation/
+│   ├── coding-standards.md
+│   ├── coding-guidelines.md
+│   ├── architectural-pattern.md
+│   ├── development-workflows.md
+│   └── README.md (project)
+├── testing/
+│   ├── domain-a/
+│   │   └── test-case-feature-a.md
+│   ├── domain-b/
+│   │   └── test-case-feature-x.md
+│   ├── test-plan-sprint-01.md
+│   └── test-plan-sprint-02.md
+└── deployment/
+    ├── deployment-guide.md
+    ├── monitoring-guide.md
+    └── CHANGELOG.md (link to `CHANGELOG.md` in repo root)
+```
+
+- [`project-overview/`](./documentation/project-overview.mdx): High-level summary document that outlines the project's purpose, goals, scope, and key objectives.
+- [`tasks/`](./documentation/tasks.mdx): A centralized collection of development tasks, from oldest to newest.
+- [`feature-specs/`](./documentation/feature-specs.mdx): Contains feature specification documents, grouped by domain.
+- [`design/`](./documentation/design.mdx): Contains all technical design documentation, organized by domain.
+- [`implementation/`](./documentation/implementation.mdx): Documents coding practices and development guidelines.
+- [`testing/`](./documentation/testing.mdx): Contains all testing-related documentation.
+- [`deployment/`](./documentation/deployment.mdx): Stores release and deployment documentation.
+
+
+## Using Documentation
+
+Documentation is produced and used at every stage of the software development process:
+
+### Requirement Analysis
+
+- Collect requirements and actionable tasks from various sources.
+- **Input**:
+  - Business requirements (stakeholder interviews, client meetings, user feedback) → feature specifications
+  - Error Tracking System (e.g., Sentry, Rollbar) → runtime issues
+  - Bug Reports from internal QA or external users → defects and areas for improvement
+  - Monitoring & Analytics (e.g., New Relic, Datadog) → highlights performance bottlenecks or anomalies
+- **Output**:
+  - **Project Overview**: Purpose, goals, scope, and high-level summary
+  - **Software Requirements Specification (SRS)**: Functional & non-functional requirements, constraints, acceptance criteria, use cases, user stories
+  - **Task List**: A prioritized list of approved development tasks, categorized by type (feature, change request, bug)
+
+### System Design
+
+- Define architecture, components, interfaces, and data flow.
+- **Input**: Approved SRS, task list
+- **Output**:
+  - **High-Level Design (HLD)**: System architecture, modules, data flow diagrams, technology stack
+  - **Detailed Design Document (DDD)**: UI/UX mockups, interface specifications, API documentation, database schema, class diagrams, algorithms
+
+### Implementation (Coding / Construction)
+
+- Developers write code according to design specifications.
+- **Input**: SRS document, design documents, coding standards, coding guidelines, architectural patterns
+- **Output**:
+  - **Source Code**: Organized in a repository with version control
+  - **Code Documentation**: Inline comments, API docs, developer guides
+  - **Build/Configuration Docs**: Build instructions, environment setup, configuration files (repo's `README.md`)
+
+### Testing
+
+- Verify correctness, performance, and reliability. Includes unit testing, integration testing, system testing, and user acceptance testing (UAT).
+- **Input**: Source code, requirements docs, design docs
+- **Output**:
+  - **Test Plan**: Scope, objectives, strategy, resources, schedule
+  - **Test Cases**: Input data, expected results, execution steps
+  - **Automated Test Scripts**: For regression testing and continuous integration
+  - **Defect Logs / Test Reports**: Issues found, severity, resolution status
+
+### Deployment
+
+- Release the software to production or deliver it to users.
+- **Input**: Tested software, release plan
+- **Output**:
+  - **Deployment Guide**: Installation steps, environment requirements, rollback plan
+  - **Release Notes**: New features, bug fixes, known issues
+  - **User Manual**: Instructions for end-users, FAQs, troubleshooting
+
+> [!NOTE]
+> When using an iterative process (such as Agile), every change to the requirements and design should be documented in a Change Log section.
