@@ -1,4 +1,4 @@
-# Tasks
+# Task Document
 
 ## Overview
 
@@ -22,9 +22,9 @@ All tasks contain the following information:
 - **Estimate:** Provide estimated complexity in story points.
 - **Status Tracking:** Track lifecycle (Pending, In Progress, Completed, Verified).
 - **Priority:** Mark importance (High/Medium/Low) and urgency (Immediate/Next Release/Future).
+- **Source:** Indicate where the task came from (User Requirements, Error Tracking Tool, Support Ticket by End User, Analysis Result).
 - **Description:** Provide a clear overview of what needs to be done. Keep concise but specific enough for developers and reviewers.
 - **Purpose:** Explain why this task exists and what outcome it delivers (business value, user need, technical improvement).
-- **Source:** Indicate where the task came from (User Requirements, Error Tracking Tool, Support Ticket by End User, Analysis Result).
 - **Scope:** Define what is included and excluded. Helps avoid scope creep.
 - **Acceptance Criteria:** Specific, measurable conditions for the task to be considered complete.
 - **Dependencies:** Note related blocking tasks, external systems or API need to be integrated.
@@ -71,6 +71,7 @@ For change requests, include:
 **Estimate:** 5 story points
 **Priority:** High
 **Urgency:** Next Release
+**Source:** User Requirements
 
 ## Description
 
@@ -79,10 +80,6 @@ Implement a login screen UI component with email and password input fields, clie
 ## Purpose
 
 Enable user authentication with a responsive, accessible form that validates input in real-time, improving user experience and reducing support requests.
-
-## Source
-
-User Requirements - Authentication feature specification for web application v2.0 release.
 
 ## Scope
 
@@ -152,6 +149,7 @@ User Requirements - Authentication feature specification for web application v2.
 **Estimate:** 3 story points
 **Priority:** High
 **Urgency:** Immediate
+**Source:** Error Tracking Tool, Support Ticket by End User
 
 ## Description
 
@@ -160,11 +158,6 @@ Users lose unsaved form data when the session expires after 30 minutes of inacti
 ## Purpose
 
 Prevent data loss by alerting users before session expiration and providing recovery options, reducing frustration and support requests.
-
-## Source
-
-- **Error Tracking Tool:** 47 error reports in the last week
-- **Support Ticket by End User:** multiple complaints about lost form data during longer sessions.
 
 ## Scope
 
@@ -296,6 +289,7 @@ Prevent data loss by alerting users before session expiration and providing reco
 **Estimate:** 8 story points
 **Priority:** High
 **Urgency:** Next Release
+**Source:** Vendor End-of-Life Notice, Analysis Result
 
 ## Description
 
@@ -304,10 +298,6 @@ Upgrade production MySQL from version 5.7 (end-of-life) to version 8.0 for impro
 ## Purpose
 
 MySQL 5.7 reaches end-of-life and no longer receives security updates. Upgrading ensures critical security patches, performance improvements, and vendor support, reducing vulnerabilities and improving system reliability.
-
-## Source
-
-Vendor End-of-Life Notice - MySQL 5.7 support ends December 2023. Security audit recommendation from infrastructure team.
 
 ## Scope
 

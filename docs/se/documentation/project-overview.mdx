@@ -1,144 +1,100 @@
 # Project Overview
 
+Project Overview Document Guidelines.
+
 ## Overview
 
-A Project Overview document provides a high-level summary of a project.
+The **Project Overview document** provides a high-level summary of the project (include vision, context, and boundaries), serving as an executive summary for stakeholders.
 
-It serves as a single reference point for stakeholders to understand what the project is, who it serves, and how it will be delivered.
+It is concise, strategic, and non-technical.
+
+It answers: *Why are we doing this project? What are we trying to achieve? Who is involved?*
 
 
 ## Document Structure
 
-A Project Overview document contains the following sections:
+A good Project Overview should include the following sections:
 
-### Description
+### Introduction
 
-Include the official name of the project and provide a short, clear description of what the project is and its primary purpose.
+- Why the project exists (business drivers, market needs, problems to solve).  
+- Historical context or prior initiatives.  
 
 ### Objectives & Goals
 
-Provide a brief statement of why the project exists and the problems it solves.
-
-List the main objectives and goals of the project (e.g., improve customer experience, streamline workflows, reduce operational costs).
-
-### Target Audience
-
-Describe who will use the application — include roles, demographics, or customer segments.
-
-Include main use cases or typical scenarios showing how the audience will interact with the project.
+- Clear statement of project objectives.  
+- Success criteria (measurable outcomes).  
 
 ### Scope
 
-Define what is included and excluded from the project.
+- What is included (in-scope).  
+- What is excluded (out-of-scope).  
 
-- **In-Scope**: Features, modules, or deliverables included.
-- **Out-of-Scope**: Explicit exclusions to avoid misunderstandings and scope creep.
+### Stakeholders & Roles
 
-### Supported Platforms
+- Key stakeholders (business sponsors, product owners, technical leads).  
+- Roles and responsibilities.  
 
-List all client-facing supported platforms with specific version requirements or compatibility details:
+### Milestones
 
-- **Desktop Applications**: List supported operating systems if the software has a GUI (e.g., Windows 11, macOS Sonoma, Ubuntu 24.04).
-- **Mobile Applications**: Specify Android/iOS versions if the software is a mobile app. If relevant, note hardware requirements for end users (e.g., minimum RAM, screen resolution).
-- **Web Applications**: List supported browsers and versions (e.g., Chrome 120+, Safari 17+, Firefox 115+).
-- **Web API**: If the software is a web API, specify protocols supported (REST, GraphQL, gRPC), authentication methods (OAuth2, API keys), and data formats (JSON, XML).
-- **CLI Tools**: If the software is a command-line tool, specify supported shells (Bash, PowerShell, Zsh), supported operating systems (Linux, macOS, Windows), and minimum runtime requirements (e.g., Python 3.12, Node.js 20).
+- Major phases (requirements, design, implementation, testing, release).  
+- Key delivery dates or milestones.  
 
-### Deliverables
+### Constraints & Assumptions
 
-List tangible outputs that will be delivered, such as software modules, documentation, training materials, or deployed applications.
-
-Include expected delivery dates or key milestones.
-
-### Core Features
-
-Provide a bullet list of the major features with brief descriptions explaining what each feature does and its value to users.
-
-### Tech Stack
-
-Outline the technologies, frameworks, and tools used to build and run the system. Organize by category:
-
-- **Frontend (Web)**: UI framework, language, build tools
-- **Backend**: Runtime, framework, API standards
-- **Database**: Relational, NoSQL, caching solutions
-- **DevOps**: Containerization, orchestration, cloud platform, CI/CD
-- **Testing**: Testing frameworks and tools
-- **Security**: Authentication, encryption, and other security technologies
+- Budget, resources, technology limitations.  
+- Assumptions about environment, dependencies, or external systems.  
 
 
 ## Best Practices
 
-- Keep the document concise and at a high level — provide enough detail for stakeholders to understand the project, but avoid deep technical implementation details (those belong in separate Technical Design Documents).
-- Use clear, non-technical language for non-technical stakeholders. Technical details can be included when appropriate for technical audiences.
-- Maintain accuracy and update the document if project scope, goals, platforms, or tech stack change.
-- Ensure the document is accessible to all stakeholders — share it openly and update it as the project evolves.
-- Keep the Project Overview as a living document that aligns with current project status.
+- **Concise and clear:** Keep it short (2–3 pages max).  
+- **Business-focused:** Avoid technical details; focus on vision and goals.  
+- **Accessible language:** Write for executives and non-technical stakeholders.  
+- **Visuals help:** Use timelines, diagrams, or bullet points for clarity.  
+- **Consistency:** Align with BRD and SRS, but don’t duplicate their detail.  
+- **Living document:** Update when project scope or objectives change.  
 
 
 ## Example
 
-Project Overview document of a Note-Taking App called **NodeMaster**:
+Project Overview Document for an Online Retail project:
 
-```md title="docs/project-overview.md"
-# NodeMaster
+```md title="project-overview.md"
+# Online Retail
 
-## Description
-
-NodeMaster is a cross-platform note-taking app that seamlessly syncs notes across web, desktop, and mobile with offline support and end-to-end encryption.
+## Introduction
+Our company is expanding into online retail. Current sales channels are limited to physical stores, which restricts growth. Competitors already offer robust e-commerce platforms, creating a competitive disadvantage.
 
 ## Objectives & Goals
-- Help users capture, organize, and access notes anywhere (web/desktop/mobile).
-- Provide reliable syncing and offline access.
-- Keep notes private with strong encryption and secure sync.
-
-## Target Audience
-- Knowledge workers who switch between devices (e.g., developers, students, project managers).
-- Users who need quick capture (ideas, meeting notes, to‑dos) and consistent access across platforms.
-- Scenarios: jotting down a task on mobile, editing on desktop, reviewing on web.
+- Launch an e-commerce platform to enable online sales.  
+- Provide customers with a seamless shopping experience across web and mobile.  
+- Achieve 20% of total sales through online channels within the first year.  
 
 ## Scope
+**In-scope:**  
+- Web and mobile applications.  
+- Product catalog, shopping cart, checkout, order tracking.  
+- Integration with existing inventory and payment systems.  
 
-**In-Scope**:
-- Create/read/update/delete notes + folders/tags.
-- Sync across devices via cloud backend.
-- Offline mode with local cache + background sync.
-- End-to-end encryption (E2EE) on note content.
-- Desktop app (Windows/macOS/Linux), web app, iOS/Android apps.
+**Out-of-scope:**  
+- In-store POS system upgrades.  
+- Logistics and warehouse automation.  
 
-**Out-of-Scope**:
-- Rich text collaboration (real-time multi-user editing).
-- Built-in voice recording or OCR.
-- Enterprise SSO integrations.
+## Stakeholders & Roles
+- **Business Sponsor:** VP of Sales  
+- **Product Owner:** E-commerce Manager  
+- **Technical Lead:** Head of Software Engineering  
+- **QA Lead:** Test Manager  
 
-## Supported Platforms
+## Milestones
+- **Q1:** Requirements gathering and design.  
+- **Q2:** Development of core modules (User Management, Product Catalog).  
+- **Q3:** Payment integration and testing.  
+- **Q4:** Launch and customer onboarding.  
 
-- **Web Applications**: Chrome 120+, Safari 17+, Firefox 115+, Edge 120+
-- **Desktop Applications**: Windows 11+, macOS Sonoma+, Ubuntu 24.04+
-- **Mobile Applications**: iOS 17+ (iPhone/iPad), Android 14+, Offline-first, background sync on connectivity
-
-## Deliverables
-- Web app deployed to CDN (production/staging)
-- Desktop installers for Windows/macOS/Linux
-- Mobile apps released to App Store / Google Play
-- API documentation + sync protocol spec
-- User docs (how to import/export, security guide)
-
-## Core Features
-- Note editor (markdown + plain text)
-- Tagging/folders + search
-- Automatic background sync (conflict resolution UI)
-- Offline editing + local persistence
-- End-to-end encrypted storage (user-managed key)
-- Multi-device account login + recovery phrase
-
-## Tech Stack
-- **Frontend (Web):** React, TypeScript, Vite
-- **Desktop:** Electron (shared React codebase)
-- **Mobile:** React Native (iOS & Android)
-- **Backend:** Node.js, Express, GraphQL
-- **Database:** PostgreSQL (server), SQLite (local cache)
-- **Sync:** WebSockets + REST, JSON
-- **Auth/Security:** OAuth2 + JWT, E2EE with AES-GCM
-- **DevOps:** Docker, Kubernetes, GitHub Actions
-- **Testing:** Jest, Playwright, Detox, Cypress
+## Constraints & Assumptions
+- Budget capped at $1.5M.  
+- Must comply with PCI DSS and GDPR.  
+- Assumes stable integration with existing ERP system.  
 ```
