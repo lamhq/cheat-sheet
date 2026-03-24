@@ -1,0 +1,108 @@
+# Software Requirement Specification
+
+Guidelines for writing a Software Requirement Specification document.
+
+## Overview
+
+A Software Requirement Specification (SRS) is a formal document that defines the intended functionality, constraints, and performance of a software system.  
+
+It acts as a contract between stakeholders and developers, ensuring everyone has a clear understanding of what the system should achieve before development begins.
+
+
+## Document Structure
+
+An SRS typically includes the following sections:
+
+### Introduction
+- Purpose of the system.  
+- Intended audience.  
+- Definitions, acronyms, and references.  
+
+### Overall Description
+- Product perspective (how it fits into existing systems).  
+- Product functions (high-level features).  
+- User characteristics (who will use it).  
+- Constraints (technical, regulatory, or business).  
+- Assumptions and dependencies.  
+
+### System Features
+- Detailed functional requirements.  
+- Each feature described with inputs, outputs, and behavior.  
+
+### External Interface Requirements
+- User interfaces (UI/UX guidelines).  
+- Hardware interfaces.  
+- Software interfaces (APIs, integrations).  
+- Communication interfaces (protocols, data formats).  
+
+### Non-Functional Requirements
+- Performance requirements (speed, scalability).  
+- Security requirements.  
+- Reliability and availability.  
+- Usability and accessibility.  
+- Maintainability and portability.  
+
+### Other Requirements
+- Legal or compliance requirements.  
+- Standards to follow.  
+
+### Appendices
+- Supporting information, diagrams, glossary.  
+
+## Best Practices
+
+- **Clarity and precision:** Avoid ambiguity; use clear, measurable statements.  
+- **Consistency:** Use standardized terminology and formatting.  
+- **Traceability:** Link requirements to design and test cases.  
+- **Prioritization:** Identify critical vs. optional requirements.  
+- **Stakeholder involvement:** Validate requirements with end-users and sponsors.  
+- **Modularity:** Break down requirements into manageable sections.  
+- **Version control:** Keep track of revisions and updates.  
+
+## Example
+
+```md title="srs.md"
+# Software Requirement Specification (SRS)
+
+## Introduction
+- Purpose: Define requirements for an online bookstore that allows users to browse, purchase, and review books.  
+- Audience: Developers, testers, project managers, and stakeholders.  
+- References: IEEE SRS standard, company design guidelines.  
+
+## Overall Description
+
+- Product Perspective: Web-based system integrated with existing payment gateways.  
+- Product Functions: User registration, book search, shopping cart, payment processing, order tracking.  
+- User Characteristics: General public with basic internet skills.  
+- Constraints: Must comply with PCI-DSS for payment security.  
+- Assumptions: Internet access available; users have modern browsers.  
+
+## System Features
+
+### Feature 1: User Registration
+- Input: Name, email, password.  
+- Output: Account created confirmation.  
+- Behavior: Validate email format, enforce password rules.  
+
+### Feature 2: Book Search
+- Input: Keywords, filters (author, genre).  
+- Output: List of matching books.  
+- Behavior: Search across database with relevance ranking.  
+
+## External Interface Requirements
+- User Interface: Responsive design, accessible navigation.  
+- Software Interfaces: Integration with PayPal and Stripe APIs.  
+- Communication Interfaces: HTTPS protocol for secure transactions.  
+
+## Non-Functional Requirements
+- Performance: System must handle 500 concurrent users.  
+- Security: Encrypt all sensitive data; implement two-factor authentication.  
+- Reliability: 99.9% uptime required.  
+- Usability: Support screen readers; intuitive navigation.  
+
+## Other Requirements
+- Must comply with GDPR for user data privacy.  
+
+## Appendices
+- Glossary: PCI-DSS (Payment Card Industry Data Security Standard), GDPR (General Data Protection Regulation).  
+```

@@ -1,7 +1,9 @@
 [
   "documentation-structure",
-  "project-overview",
-  "tasks",
+  "project-charter",
+  "srs",
+  "fsd",
+  "task",
   {
     "type": "dir",
     "name": "feature-specs",

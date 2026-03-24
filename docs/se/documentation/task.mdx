@@ -1,18 +1,15 @@
 # Task Document
 
+Guidelines for writing a Task document.
+
 ## Overview
 
-The `tasks/` directory contains a list of approved development tasks ready for implementation.
+A Task Document describes a specific piece of work that needs to be completed, such as a new feature, bug fix, or improvement.  
 
-Tasks can be imported from external tools (Jira, Trello, etc.) or manually maintained.
-
-
-## Task file name format
-
-File name follows the format: `{task-id}-{task-type}-{task-name}.md` (e.g., `NT001-feat-login-with-email.md`).
+It provides a clear description, scope, and acceptance criteria so that developers, testers, and stakeholders understand exactly what needs to be done and when it is considered complete.
 
 
-## Task document structure
+## Document Structure
 
 Each task is documented in a markdown file.
 
@@ -51,9 +48,8 @@ For change requests, include:
 
 ## Best Practices
 
-- Keep the document concise and atomic, aim for one development task per file (e.g., implement user login screen in the web app). It should not cover multiple sub-tasks or features.
-- Use clear, non‑technical language for stakeholders, technical detail will be added in technical design documents.
-- Only the task status should be updated after implementation is done.
+- Keep the document concise and atomic, it should not cover multiple sub-tasks or features.
+- Update task status after implementation is done.
 - If the task cannot be implemented or skipped, it will be removed like it never existed.
 
 
@@ -61,8 +57,8 @@ For change requests, include:
 
 ### Feature Implementation
 
-```md title="docs/tasks/WEB-001-feat-login-screen.md"
-# WEB-001: Implement Login Screen in Web App
+```md title="docs/tasks/001-implement-login-screen.md"
+# Implement Login Screen in Web App
 
 **Type:** Feature Implementation
 **Status:** Pending

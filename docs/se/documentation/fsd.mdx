@@ -1,0 +1,108 @@
+# Feature Specification
+
+Guidelines for writing a Feature Specification document.
+
+## Overview
+
+A Feature Specification document describes the details of a single feature within a software system.  
+
+It outlines functionality, user stories, use cases, and constraints, ensuring developers, testers, and stakeholders share a common understanding of how the feature should behave.
+
+## Document Structure
+
+A Feature Specification typically includes the following sections:
+
+### Feature Overview
+- Brief description of the feature.  
+- Business value and purpose.  
+- Dependencies or related features.  
+
+### Functionality
+- Detailed explanation of what the feature does.  
+- Inputs, outputs, and expected behavior.  
+- Edge cases and error handling.  
+
+### User Stories
+- Short, user-focused statements describing desired outcomes.  
+- Example format: *As a [user], I want [action] so that [benefit].*  
+
+### Use Cases
+- Step-by-step scenarios showing how users interact with the feature.  
+- Include preconditions, triggers, and postconditions.  
+
+### UI/UX Requirements
+- Wireframes, mockups, or design guidelines.  
+- Accessibility considerations.  
+
+### Technical Requirements
+- APIs, data models, or integrations involved.  
+- Performance or security constraints.  
+
+### Acceptance Criteria
+- Clear, testable conditions for feature completion.  
+- Define success metrics.  
+
+## Best Practices
+
+- **User-centered:** Write from the perspective of end-users.  
+- **Clarity:** Avoid ambiguity; define terms and behaviors precisely.  
+- **Traceability:** Link user stories to acceptance criteria and test cases.  
+- **Consistency:** Use standard formats for user stories and use cases.  
+- **Conciseness:** Keep the document focused on one feature only.  
+- **Collaboration:** Validate with stakeholders before finalizing.  
+
+## Example
+
+```md title="feature-spec.md"
+# Feature Specification: Password Reset
+
+## Feature Overview
+- Description: Allow users to reset their password securely via email.  
+- Business Value: Improves user experience and reduces support requests.  
+- Dependencies: Email service integration, user authentication system.  
+
+## Functionality
+- Users request a password reset by entering their email.  
+- System generates a secure, time-limited reset link.  
+- User sets a new password that meets security rules.  
+- Edge Cases: Invalid email, expired link, weak password.  
+
+## User Stories
+- As a user, I want to reset my password if I forget it so that I can regain access to my account.  
+- As a user, I want confirmation that my password has been updated so that I feel secure.  
+
+## Use Cases
+
+### Use Case 1: Request Reset Link
+- Preconditions: User has an existing account.  
+- Trigger: User clicks "Forgot Password."  
+- Steps:  
+  1. User enters email.  
+  2. System validates email.  
+  3. System sends reset link.  
+- Postconditions: User receives reset email.  
+
+### Use Case 2: Reset Password
+- Preconditions: User has a valid reset link.  
+- Trigger: User clicks link.  
+- Steps:  
+  1. User enters new password.  
+  2. System validates password strength.  
+  3. System updates password.  
+- Postconditions: User can log in with new password.  
+
+## UI/UX Requirements
+- Simple form with email input.  
+- Password reset page with clear instructions.  
+- Accessible design for screen readers.  
+
+## Technical Requirements
+- Integration with SMTP email service.  
+- Secure token generation (expires in 30 minutes).  
+- Password hashing with industry-standard algorithms.  
+
+## Acceptance Criteria
+- Reset link expires after 30 minutes.  
+- Password must be at least 8 characters, include uppercase, lowercase, number, and symbol.  
+- User receives confirmation email after successful reset.  
+```
