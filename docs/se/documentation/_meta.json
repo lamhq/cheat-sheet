@@ -4,6 +4,7 @@
   "srs",
   "fsd",
   "task",
+  "architecture-overview",
   {
     "type": "dir",
     "name": "feature-specs",
