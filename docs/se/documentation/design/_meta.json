@@ -1,0 +1,8 @@
+[
+  "system-architecture",
+  {
+    "type": "dir",
+    "name": "domain-a",
+    "label": "Domain A"
+  }
+]
