@@ -4,34 +4,11 @@
   "srs",
   "fsd",
   "task",
-  "architecture-overview",
-  {
-    "type": "dir",
-    "name": "feature-specs",
-    "collapsed": true
-  },
-  {
-    "type": "dir",
-    "name": "design",
-    "label": "Design",
-    "collapsed": true
-  },
+  "architecture",
   {
     "type": "dir",
     "name": "implementation",
     "label": "Implementation",
-    "collapsed": true
-  },
-  {
-    "type": "dir",
-    "name": "testing",
-    "label": "Testing",
-    "collapsed": true
-  },
-  {
-    "type": "dir",
-    "name": "deployment",
-    "label": "Deployment",
     "collapsed": true
   }
 ]

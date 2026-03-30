@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This document provides guidelines for creating project documentation throughout the development process.
+This document provides guidelines for creating documentation throughout the Software Development Life Cycle (SDLC).
 
 
 ## Required Documents
@@ -16,31 +16,33 @@ This document provides guidelines for creating project documentation throughout 
 
 ## Usage
 
-Documentation is produced and used at every stage of the software development process:
+Documentation is used at every phases of the Software Development Life Cycle (SDLC):
+
+### Planning
+
+Define project scope, objectives, resources, budget, and timeline.
+
+**Deliverables**:
+- Project plan
+- Feasibility study
+
 
 ### Requirement Analysis
 
-- Collect requirements and actionable tasks from various sources.
-- **Input**:
-  - Users (stakeholder interviews, client meetings, user feedback) → feature specifications
-  - Error Tracking System (e.g., Sentry, Rollbar) → runtime issues
-  - Bug Reports from internal QA or external users → defects and areas for improvement
-  - Monitoring & Analytics (e.g., New Relic, Datadog) → highlights performance bottlenecks or anomalies
-- **Output**:
-  - Documentation Structure
+- Gather and document functional & non-functional requirements from stakeholders.
+- **Deliverables**:
   - Project Charter
-  - SRS
-  - FSD
-  - Task document
+  - Software Requirement Specification (SRS)
+  - Feature Specification Document (FSD)
+  - Task list
 
 ### Design
 
-- Define architecture, components, interfaces, and workflows.
+- Create system architecture, database schema, UI/UX designs, and technical specs.
 - **Input**: Task, SRS, FSD
 - **Output**:
   - Task document
   - Architecture Overview
-  - Workflows
   - Architecture Design
   - UI Design
   - API Design
@@ -48,11 +50,11 @@ Documentation is produced and used at every stage of the software development pr
 
 ### Implementation
 
-- Developers write code according to design specifications.
+- Developers write code based on design documents.
 - **Input**:
   - Task (with Design section added)
   - FSD
-  - Architecture Overview, Workflows, Architecture Design, UI Design, API Design, Database Design
+  - Architecture Overview, Architecture Design, UI Design, API Design, Database Design
   - Coding standards
   - Coding guidelines
   - Architectural patterns

@@ -1,0 +1,67 @@
+# Software Architecture Document
+
+Guidelines for writing a Software Architecture Document (SAD).
+
+## Overview
+
+A Software Architecture Document (SAD) is a formal description of how a software system is structured and how its components interact.
+
+It serves as a **blueprint** for developers, architects, and stakeholders, ensuring everyone has a shared understanding of the system's design.
+
+## Document Structure
+
+A SAD typically includes the following sections:
+
+### Introduction
+- Purpose of the system.
+- Business and technical objectives.
+- Key constraints or assumptions.
+
+### System Overview
+- High-level description of the system.
+- Context diagram showing external systems and interactions.
+- Major features and responsibilities.
+
+### Component Descriptions
+- List of main components/modules.
+- For each component, include:
+  - **Responsibility** – what the component does.
+  - **Language & Framework** – e.g., Java + Spring Boot, Node.js + Express.
+  - **APIs/Interfaces** – REST, gRPC, GraphQL, etc.
+  - **Database/Storage** – e.g., PostgreSQL, MongoDB, Redis.
+  - **Dependencies** – other services or external providers it integrates with.
+  - **Keywords** – most important terms without reading component implementation.
+
+### Interactions
+- How components communicate (REST, messaging, events).
+- Sequence diagrams or activity diagrams for critical flows.
+- Data flow between components.
+
+### Quality Attributes
+- Performance requirements (response times, throughput).
+- Scalability strategies (load balancing, caching).
+- Security measures (authentication, encryption).
+- Reliability and availability targets.
+
+### Design Decisions
+- Key architectural choices.
+- Trade-offs considered.
+- Rationale for chosen approach.
+
+### Risks & Mitigations
+- Potential technical or business risks.
+- Strategies to reduce or manage risks.
+
+## Best Practices
+- **Clarity:** Use diagrams and precise language to avoid ambiguity.
+- **Consistency:** Follow standard notation (UML, C4 model).
+- **Traceability:** Link design decisions to requirements.
+- **Detail:** Provide enough technical depth for developers to implement.
+- **Living Document:** Update regularly as architecture evolves.
+- **Balance:** Include both high-level views and critical technical details.
+
+## Example
+
+````md title="software-architecture.md"
+
+````
