@@ -1,10 +1,18 @@
 [
   "documentation-structure",
-  "project-charter",
-  "srs",
-  "fsd",
-  "task",
-  "architecture",
+  "project-overview",
+  {
+    "type": "dir",
+    "name": "requirement-analysis",
+    "label": "Requirement Analysis",
+    "collapsed": true
+  },
+  {
+    "type": "dir",
+    "name": "design",
+    "label": "Design",
+    "collapsed": true
+  },
   {
     "type": "dir",
     "name": "implementation",

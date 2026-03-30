@@ -1,17 +1,16 @@
 # Documentation Structure
 
-Guidelines for writing a Documentation Structure document.
+Guidelines for writing Documentation Structure documents.
 
-## Overview
+## Introduction
 
-The Documentation Structure document explains the organization of the project’s documentation directory.
-
+The Documentation Structure document describes the structure of the project's documentation directory.
 
 ## Document Structure
 
 A Documentation Structure document should include:
 
-### Overview
+### Purpose
 
 - Purpose of the documentation directory.
 - How it supports the project lifecycle.
@@ -20,14 +19,6 @@ A Documentation Structure document should include:
 
 - Present the directory tree.
 - Describe the role of each directory and its main files.
-- Example: `requirements/` contains BRD, SRS, and feature specifications.
-
-### Available Modules
-
-- List all modules used in `requirements/`, `design/`, and `testing/`.
-- Briefly describe responsibilities of each module.
-- Provide related keywords for easy navigation.
-
 
 ### Best Practices
 
@@ -38,87 +29,69 @@ A Documentation Structure document should include:
 ````md title="documentation-structure.md"
 # Documentation Structure
 
-## Overview
+## Purpose
 
-This document describes the structure of the `docs/` directory.
-
-It explains the purpose of each folder and lists all available modules.
+This document describes the structure the `docs/` folder which stores all the project documentation.
 
 ## Folder Structure
 
 ```
 docs/
 ├── documentation-structure.md
-├── project-charter.md
+├── project-overview.md
 ├── tasks/
 │   └── {task-id}-{task-name}.md
 ├── requirements/
 │   ├── srs.md
-│   └── {module}/
-│       └── {feature-name}.md
+│   └── {feature-name}.md
 ├── design/
-│   ├── architecture-overview.md
-│   └── {module}/
-│       ├── architecture-design.md
-│       ├── ui-design.md
+│   ├── system-architecture.md
+│   └── {component}/
+│       ├── component-design.md
 │       ├── api-design.md
-│       └── database-design.md
+│       ├── database-design.md
+│       └── ui-design.md
 ├── implementation/
-│   ├── architectural-pattern.md
-│   ├── coding-standards.md
-│   ├── coding-guidelines.md
 │   ├── development-workflows.md
-│   └── README.md
-├── testing/
-│   └── {module}/
-│       └── test-{feature-name}.md
+│   └── {component}/
+│       ├── architectural-pattern.md
+│       ├── coding-standards.md
+│       ├── coding-guidelines.md
+│       └── repository-guide.md
+├── tests/
+│   └── {feature-name}-test-suite.md
 └── maintenance/
     ├── deployment-guide.md
     ├── monitoring-guide.md
     ├── backup-recovery.md
-    └── CHANGELOG.md
+    └── release-notes.md
 ```
 
-- `documentation-structure.md`: Explains the structure of the documentation folder
-- `project-charter.md`: High‑level summary of the project → **Vision**.
-- `tasks/`: Contains task documentation, ready for development.
+- `documentation-structure.md`: describes the structure of the project's documentation directory.
+- `project-overview.md`: Provides a high-level summary of the project → **Vision**.
+- `tasks/`: describes works need to be done (new feature, bug fix, or improvement) with clear description, scope, and acceptance criteria.
 - `requirements/`:
-  - `srs.md`: System-wide functional and non-functional requirements → **System Requirements**.
-  - `{module}/{feature-name}.md`: Feature specification document for a feature within the module → **Feature Details**.
+  - `srs.md`: Software Requirements Specification document. Contains system-wide functional and non-functional requirements → **System Requirements**.
+  - `{feature-name}.md`: Feature Specification Document. Defines detailed functionality, behavior, and requirements of software features to guide development, testing, and ensure alignment with user needs. → **Feature Details**.
 - `design/`: Contains all technical design documentation.
-  - `architecture-overview.md`: High-level architecture of the system, including components, interactions, and technology stack.
-  - `{module}/`: Contains module‑specific design documentation:
-    - `architecture-design.md`: Technical design for the module.
-    - `ui-design.md`: Screens, wireframes, or UI guidelines.
+  - `system-architecture.md`: High-level architecture of the system. Includes system architecture diagrams, component descriptions, technology stack, data flow, and integration points.
+  - `{component}/`: Contains documentation for each component.
+    - `component-design.md`: Breaks down each module/component into detailed specifications.
     - `api-design.md`: API endpoints, request/response formats.
     - `database-design.md`: Schema, ER diagrams, data relationships.
+    - `ui-design.md`: UI/UX mockups, wireframes, or prototypes.
 - `implementation/`: Contains required documentation for implementation phase.
+  - `development-workflows.md`: Git branching, CI/CD, code review process.
   - `architectural-pattern.md`: Clean architecture, hexagonal architecture, layered architecture, etc.
   - `coding-standards.md`: Rules for code style (naming, formatting, conventions).
   - `coding-guidelines.md`: Best practices, code patterns, recipes.
-  - `development-workflows.md`: Git branching, CI/CD, code review process.
-  - `README.md`: Links back to the repo root README for developer onboarding.
-- `testing/`: Contains test cases for each feature, organized by module.
+  - `repository-guide.md`: Instructions on how to work with the project repository.
+- `tests/{feature-name}-test-suite.md`: Contains all test cases for a feature.
 - `maintenance/`: Contains maintenance and operational documentation.
   - `deployment-guide.md`: Instructions for deploying the system.
   - `monitoring-guide.md`: How to monitor system health, logs, alerts.
   - `backup-recovery.md`: Disaster recovery and backup strategy.
-  - `CHANGELOG.md`: Linked to repo root changelog, tracking version history.
-
-
-## Available Modules
-
-Here are all modules used in `requirements/`, `design/`, and `testing/` folders:
-
-| Module         | Responsibilities                                             | Keywords                                |
-|----------------|--------------------------------------------------------------|---------------------------------------------|
-| authentication | User login, registration, password reset, session management | login, signup, credentials, OAuth, JWT      |
-| payment        | Checkout, payment processing, refunds, subscriptions         | credit card, PayPal, billing, transaction, invoice |
-| user management| Profile management, roles, permissions                       | user profile, account settings, roles, access control |
-| product catalog| Product listing, categories, search, filters                 | product, catalog, SKU, search, filter       |
-| shopping cart  | Add/remove items, calculate totals, apply discounts          | cart, checkout, discount, tax, order summary |
-| reporting      | Sales reports, analytics dashboards, exports                 | reports, analytics, dashboard, CSV, metrics |
-
+  - `release-notes.md`: What changed in each release
 
 ## Best Practices
 
