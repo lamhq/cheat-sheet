@@ -5,6 +5,7 @@
 	// List of extensions which should be recommended for users of this workspace.
 	"recommendations": [
 		"hediet.vscode-drawio",
-		"yzhang.markdown-all-in-one"
+		"yzhang.markdown-all-in-one",
+		"bierner.markdown-mermaid"
 	],
 }
