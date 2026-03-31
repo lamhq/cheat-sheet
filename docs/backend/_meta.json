@@ -59,6 +59,11 @@
     "type": "dir",
     "collapsed": true
   },
+  {
+    "name": "rabbitmq",
+    "type": "dir",
+    "collapsed": true
+  },
   "api-design",
   "rest",
   {
