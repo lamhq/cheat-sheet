@@ -4,6 +4,12 @@
     "label": "Backend Development"
   },
   {
+    "name": "markdown",
+    "type": "dir",
+    "collapsed": true
+  },
+  "yaml",
+  {
     "name": "javascript",
     "type": "dir",
     "collapsed": true,
@@ -11,6 +17,11 @@
   },
   {
     "name": "typescript",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "nodejs",
     "type": "dir",
     "collapsed": true
   },
@@ -25,7 +36,7 @@
     "collapsed": true
   },
   {
-    "name": "nodejs",
+    "name": "prisma",
     "type": "dir",
     "collapsed": true
   },
@@ -39,11 +50,14 @@
     "type": "dir",
     "collapsed": true
   },
+  "api-design",
+  "rest",
   {
-    "name": "prisma",
+    "name": "graphql",
     "type": "dir",
     "collapsed": true
   },
+  "grpc",
   {
     "name": "postgresql",
     "type": "dir",
@@ -59,17 +73,5 @@
     "type": "dir",
     "collapsed": true
   },
-  "api-design",
-  "rest",
-  {
-    "name": "graphql",
-    "type": "dir",
-    "collapsed": true
-  },
-  {
-    "name": "markdown",
-    "type": "dir",
-    "collapsed": true
-  },
-  "yaml"
+  "keycloak"
 ]

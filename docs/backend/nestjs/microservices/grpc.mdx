@@ -1,0 +1,289 @@
+import { PackageManagerTabs } from '@theme';
+
+# gRPC
+
+## Installation
+
+<PackageManagerTabs command="install @grpc/grpc-js @grpc/proto-loader" />
+
+
+## Server
+
+### Creating microservice
+
+When creating a microservice app by calling `createMicroservice()`, set the `transport` property in the options object to `gRPC`:
+
+Configure microservice with gRPC transport:
+```typescript title="main.ts"
+const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
+  transport: Transport.GRPC,
+  options: {
+    package: 'hero',
+    protoPath: join(__dirname, 'hero/hero.proto'),
+  },
+});
+```
+
+The `options` property includes:
+- the package name
+- path to the `.proto` file
+
+Configure `nest-cli.json` to copy `.proto` files to `dist` folder automatically:
+```json title="nest-cli.json"
+{
+  "compilerOptions": {
+    "assets": ["**/*.proto"],
+    "watchAssets": true
+  }
+}
+```
+
+### Defining gRPC service
+
+Define `hero.proto` file:
+
+```typescript title="hero/hero.proto"
+syntax = "proto3";
+
+package hero;
+
+service HeroesService {
+  rpc FindOne (HeroById) returns (Hero) {}
+}
+
+message HeroById {
+  int32 id = 1;
+}
+
+message Hero {
+  int32 id = 1;
+  string name = 2;
+}
+```
+
+Our `HeroesService` exposes a `FindOne()` method. This method expects an input argument of type `HeroById` and returns a `Hero` message (protocol buffers use `message` elements to define both parameter types and return types).
+
+
+### Implement Service 
+
+```typescript title="heroes.controller"
+import { GrpcMethod } from '@nestjs/microservices';
+import type { Metadata, ServerUnaryCall } from '@grpc/grpc-js';
+
+@Controller()
+export class HeroesController {
+  @GrpcMethod('HeroesService', 'FindOne')
+  findOne(data: HeroById, metadata: Metadata, call: ServerUnaryCall<any, any>): Hero {
+    const items = [
+      { id: 1, name: 'John' },
+      { id: 2, name: 'Doe' },
+    ];
+    return items.find(({ id }) => id === data.id);
+  }
+}
+```
+- `data`: data passed from the caller
+- `metadata`: stores gRPC request metadata
+- `call`: provides access to the `GrpcCall` object properties such as `sendMetadata` for sending metadata to the client
+
+The `@GrpcMethod` decorator takes service name and method name as arguments. If omitted, Service name is inferred from the controller class name (`HeroesController` → `Heroes`), 
+Method name is inferred from the function name (`findOne`).
+
+
+## Client
+
+You access remote services through a `ClientGrpc` object. You can obtain a `ClientGrpc` object in two ways:
+- Import `ClientsModule` and register the package with transport and options.
+- Use `@Client` decorator as an alternative.
+
+Register ClientsModule for gRPC client:
+```typescript title="app.module.ts"
+imports: [
+  ClientsModule.register([
+    {
+      name: 'HERO_PACKAGE',
+      transport: Transport.GRPC,
+      options: {
+        package: 'hero',
+        protoPath: join(__dirname, 'hero/hero.proto'),
+      },
+    },
+  ]),
+];
+```
+
+Define required interfaces for the gRPC service:
+```typescript title="app.service.ts"
+interface Hero {
+  id: number;
+  name: string;
+}
+
+interface HeroById {
+  id: number;
+}
+
+interface HeroesService {
+  findOne(data: HeroById): Observable<Hero>;
+}
+```
+
+Inject and use `ClientGrpc` to retrieve the service instance:
+```typescript title="app.service.ts"
+import type { ClientGrpc } from '@nestjs/microservices';
+
+@Injectable()
+export class AppService implements OnModuleInit {
+  private heroesService: HeroesService;
+
+  constructor(@Inject('HERO_PACKAGE') private client: ClientGrpc) {}
+
+  onModuleInit() {
+    this.heroesService = this.client.getService<HeroesService>('HeroesService');
+  }
+
+  getHero(): Observable<Hero> {
+    return this.heroesService.findOne({ id: 1 });
+  }
+}
+```
+
+Alternatively, you can use the `@Client()` decorator to instantiate a `ClientGrpc` object, as follows:
+
+```typescript title="app.service.ts"
+import type { ClientGrpc } from '@nestjs/microservices';
+
+@Injectable()
+export class AppService implements OnModuleInit {
+  @Client({
+    transport: Transport.GRPC,
+    options: {
+      package: 'hero',
+      protoPath: join(__dirname, 'hero/hero.proto'),
+    },
+  })
+  client: ClientGrpc;
+
+  private heroesService: HeroesService;
+
+  onModuleInit() {
+    this.heroesService = this.client.getService<HeroesService>('HeroesService');
+  }
+
+  getHero(): Observable<Hero> {
+    return this.heroesService.findOne({ id: 1 });
+  }
+}
+```
+
+
+## gRPC Reflection
+
+The gRPC Server Reflection Specification is a standard which allows gRPC clients to request details about the API that the server exposes.
+
+To add gRPC reflection support to your server, install reflection package:
+
+<PackageManagerTabs command="install @grpc/reflection" />
+
+Then register it via `onLoadPackageDefinition` hook in your gRPC server options:
+
+```typescript title="main.ts"
+import { ReflectionService } from '@grpc/reflection';
+
+const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
+  options: {
+    onLoadPackageDefinition: (pkg, server) => {
+      new ReflectionService(pkg).addToServer(server);
+    },
+  },
+});
+```
+
+
+## Health checks
+
+The gRPC Health Check specification is a standard that allow gRPC clients to expose their health status.
+
+To add gRPC health check support, install grpc-health-check package.
+
+Install health check package:
+
+<PackageManagerTabs command="install grpc-health-check" />
+
+Then register it via `onLoadPackageDefinition` hook in your gRPC server options:
+
+```typescript title="main.ts"
+
+import { HealthImplementation, protoPath as healthCheckProtoPath } from 'grpc-health-check';
+
+const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
+  options: {
+    protoPath: [
+      healthCheckProtoPath,
+      protoPath: join(__dirname, 'hero/hero.proto'),
+    ],
+    onLoadPackageDefinition: (pkg, server) => {
+      const healthImpl = new HealthImplementation({
+        '': 'UNKNOWN',
+      });
+
+      healthImpl.addToServer(server);
+      healthImpl.setStatus('', 'SERVING');
+    },
+  },
+});
+```
+
+## gRPC Metadata
+
+Metadata is information about a particular RPC call in the form of a list of key-value pairs, where the keys are strings and the values are typically strings but can be binary data.
+
+Metadata may include authentication tokens, request identifiers and tags for monitoring purposes, and data information such as the number of records in a data set.
+
+### Server
+
+To read the metadata in `@GrpcMethod()` handler, use the second argument (metadata), which is of type `Metadata`.
+
+To send back metadata from the handler, use the `ServerUnaryCall#sendMetadata()` method (third handler argument).
+
+```ts title="heroes.controller.ts" {4,12}
+import { Metadata } from '@grpc/grpc-js';
+
+@Controller()
+export class HeroesService {
+  @GrpcMethod()
+  findOne(data: HeroById, metadata: Metadata, call: ServerUnaryCall<any, any>): Hero {
+    const serverMetadata = new Metadata();
+    const items = [
+      { id: 1, name: 'John' },
+      { id: 2, name: 'Doe' },
+    ];
+
+    serverMetadata.add('Set-Cookie', 'yummy_cookie=choco');
+    call.sendMetadata(serverMetadata);
+
+    return items.find(({ id }) => id === data.id);
+  }
+}
+```
+
+
+### Client
+
+To send gRPC metadata (along with the request), you can pass a second argument, as follows:
+
+```typescript title="app.service.ts" {4}
+getHero(): Observable<string> {
+  const metadata = new Metadata();
+  metadata.add('Set-Cookie', 'yummy_cookie=choco');
+  return this.heroesService.findOne({ id: 1 }, metadata);
+}
+```
+
+Make sure to update interface of the service method to accept metadata as a second argument:
+
+```ts title="app.service.ts" {4}
+interface HeroesService {
+  findOne(data: HeroById, metadata: Metadata): Observable<Hero>;
+}
+```

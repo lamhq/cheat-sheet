@@ -1,0 +1,226 @@
+# Keycloak
+
+## Introduction
+
+Keycloak is an open-source identity and access management solution that provides features such as single sign-on (SSO), user federation, and social login.
+
+It allows you to secure your applications and services with ease, providing a centralized authentication and authorization system.
+
+
+## Key Features
+
+- **Single Sign-On (SSO)**: Users log in once to access multiple applications seamlessly.
+- **Role-Based Access Control (RBAC)**: Fine-grained authorization using roles and permissions.
+- **OAuth 2.0 Support**: Provides secure authorization for APIs and applications.
+- **OpenID Connect Support**: Implements modern identity protocols for authentication.
+- **Social Login**: Allows authentication via Google, Facebook, GitHub, and more.
+- **User Federation**: Syncs users from LDAP or Active Directory.
+- **Admin Console**: Centralized management of users, roles, and configurations.
+- **Account Management Console**: Lets users manage their own accounts.
+- **Password Recovery & Updates**: Built-in flows for resetting and updating credentials.
+- **Two-Factor Authentication (2FA)**: Adds extra security with TOTP/HOTP apps.
+- **Custom Login Flows**: Flexible authentication steps tailored to business needs.
+- **Session Management**: Handles session expiration and logout propagation.
+- **SAML 2.0 Support**: Enables integration with enterprise and legacy systems.
+- **Identity Brokering**: Connects with external identity providers (OIDC or SAML).
+- **User Self-Registration**: Enables new users to sign up directly.
+- **Theme Support**: Customizable login and account pages to match branding.
+- **Extensible Architecture**: Supports custom providers, authenticators, and integrations.
+- **Audit Logging**: Tracks authentication events for compliance and monitoring.
+- **Admin Events**: Records configuration changes for accountability.
+- **Kerberos Bridge**: Provides seamless authentication for Kerberos users.
+- **Cluster Support**: Works in distributed environments for high availability.
+- **Container-Friendly**: Integrates well with Kubernetes and cloud-native setups.
+
+
+## Benefits
+
+- **Improved Security**: Reduces risk by centralizing authentication and enforcing strong security standards.
+- **Reduced Development Effort**: Saves time by offloading identity and access management to a proven solution.
+- **Better User Experience**: Provides seamless login across applications with single sign-on.
+- **Operational Efficiency**: Simplifies administration with centralized user and role management.
+- **Scalability**: Handles large-scale deployments, supporting growth without major rework.
+- **Cost Savings**: Eliminates licensing fees as an open-source solution.
+- **Flexibility**: Adapts to diverse environments and integrates with existing systems.
+- **Compliance Support**: Helps meet regulatory requirements with audit logging and secure protocols.
+- **Future-Proofing**: Keeps pace with evolving standards like OAuth2 and OpenID Connect.
+
+## Concepts
+
+### Realm
+
+A **realm** is an isolated identity and security space that contains:
+
+- **Users** - Application user accounts
+- **Clients** - Applications that connect to Keycloak for authentication
+- **Roles** - Access control definitions
+- **Groups** - User organization structures
+- **Configuration** - Security policies, themes, federation settings
+
+The realm file is a JSON configuration that defines all these elements, allowing you to:
+
+- Version control your authentication setup
+- Reproduce environments consistently
+- Automate environment provisioning
+
+
+## Getting Started
+
+For local development, create a `docker-compose.yml` file:
+
+```yaml title="docker-compose.yml"
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.5.6
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    command: start-dev
+```
+
+Start Keycloak container:
+```bash
+docker-compose up -d
+```
+
+Access the Admin Console:
+- Open your browser and navigate to [http://127.0.0.1:8080](http://127.0.0.1:8080)
+- Click on "Administration Console"
+- Login with credentials: Username: `admin`, Password: `admin`
+
+Stop the container:
+```bash
+docker-compose down
+```
+
+## Importing Realms
+
+You can import realms when the server is starting by using the `--import-realm` option.
+
+This can be done in the `docker-compose.yml` file:
+
+```yaml title="docker-compose.yml"
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.5.6
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    command: start-dev --import-realm
+  volumes:
+    - ./realms:/opt/keycloak/data/import
+```
+
+Create a `realms/my-realm.json` file with below content:
+
+```json title="realms/my-realm.json"
+{
+  "realm": "my-realm",
+  "enabled": true,
+  "users": [
+    {
+      "username": "testuser",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Test",
+      "lastName": "User",
+      "email": "user@example.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password123",
+          "temporary": false
+        }
+      ]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "my-realm-web",
+      "secret": "my-realm-local-secret-dev",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "redirectUris": ["http://localhost:5173/*", "http://localhost:3000/*"],
+      "webOrigins": ["http://localhost:5173", "http://localhost:3000"],
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "implicitFlowEnabled": false,
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      }
+    }
+  ]
+}
+```
+
+- `start-dev --import-realm`: Starts Keycloak in dev mode and imports realm files on startup
+- `./realms:/opt/keycloak/data/import`: Mounts your local directory to Keycloak's import directory
+
+Your `my-realm.json` defines:
+
+**Realm:** `my-realm`
+
+- **Test User:**
+  - Username: `testuser`
+  - Email: `user@example.com`
+  - Password: `password123`
+
+- **Web Client:** `my-realm-web` (use OIDC protocol with Authorization Code Flow with PKCE)
+  - Type: OpenID Connect (OIDC)
+  - Redirect URIs: `http://localhost:5173/*`, `http://localhost:3000/*`
+  - PKCE: Enabled (security feature for web applications)
+  - Public client: Yes (no client secret required for frontend)
+  
+
+## Logout
+
+### How Logout Works
+
+When a user initiates logout:
+
+1. The user is redirected to the Keycloak logout endpoint
+2. Keycloak invalidates the user's SSO session
+3. Keycloak sends logout requests to all connected clients
+4. The user is redirected to the specified `post_logout_redirect_uri`
+
+### Configuring Logout Redirect URIs
+
+Before you can redirect users after logout, you must specify the allowed redirect URIs in the client configuration:
+
+1. Go to **Clients** in the Keycloak Admin Console
+2. Select your client application
+3. Click on the **Settings** tab
+4. Scroll down to **Logout settings**
+5. Find **Valid Post Logout Redirect URIs**
+6. Add your redirect URI (e.g., `http://localhost:3000`, `https://myapp.com/goodbye`)
+7. Click **Save**
+
+### Logging Out
+
+To log out, redirect the user to the logout endpoint (`/realms/{realm-name}/protocol/openid-connect/logout`) and include the required query parameters:
+
+- `client_id` OR `id_token_hint` - Identifies the client (at least one is required if using `post_logout_redirect_uri`)
+- `post_logout_redirect_uri` - (Optional) The URL to redirect the user to after logout. Must match one of the **Valid Post Logout Redirect URIs** configured in the client
+
+**Example logout request:**
+
+```javascript
+const logoutUrl = `https://keycloak.example.com/realms/my-realm/protocol/openid-connect/logout?client_id=my-client&post_logout_redirect_uri=https://myapp.com/goodbye`;
+
+// Redirect to logout
+window.location.href = logoutUrl;
+```
+
+> [!INFO]
+> The logout endpoint is listed in the well-known configuration endpoint (`/realms/{realm-name}/.well-known/openid-configuration`)
+
+
+## References
+
+- [Getting started - Docker](https://www.keycloak.org/getting-started/getting-started-docker)
+- [RP-Initiated Logout - Keycloak Docs](https://www.keycloak.org/docs/latest/server_admin/#rp-initiated-logout)
