@@ -1,0 +1,465 @@
+# Task
+
+Guidelines for writing a Task document.
+
+## Introduction
+
+A Task Document describes a specific piece of work that needs to be completed, such as a new feature, bug fix, or improvement.  
+
+It provides a clear description, scope, and acceptance criteria so that developers, testers, and stakeholders understand exactly what needs to be done and when it is considered complete.
+
+
+## Document Structure
+
+Each task is documented in a markdown file.
+
+All tasks contain the following information:
+- **Task ID & Title**: Unique identifier and short descriptive name (e.g., *TS-045: Fix Sync Bug*).
+- **Task Type**: Feature Implementation, Bug Fix, Change Request, Improvement.
+- **Estimate:** Provide estimated complexity in story points.
+- **Status Tracking:** Track lifecycle (Pending, In Progress, Completed, Verified).
+- **Priority:** Mark importance (High/Medium/Low) and urgency (Immediate/Next Release/Future).
+- **Source:** Indicate where the task came from (User Requirements, Error Tracking Tool, Support Ticket by End User, Analysis Result).
+- **Description:** Provide a clear overview of what needs to be done. Keep concise but specific enough for developers and reviewers.
+- **Purpose:** Explain why this task exists and what outcome it delivers (business value, user need, technical improvement).
+- **Scope:** Define what is included and excluded. Helps avoid scope creep.
+- **Acceptance Criteria:** Specific, measurable conditions for the task to be considered complete.
+- **Dependencies:** Note related blocking tasks, external systems or API need to be integrated.
+- **Risks & Assumptions:** Identify potential challenges and assumptions made (e.g., “Assumes API v2 is deployed).
+- **References:** Link to related documents (Feature Specs, Design Docs, Jira Issues, PRs).
+
+For bug fixes, include:
+- **Steps to Reproduce:** Detailed instructions to replicate the bug (environment, inputs, actions).
+- **Observed Behavior:** What actually happens when the bug occurs.
+- **Expected Behavior:** What should happen instead.
+- **Environment Details:** OS, browser, app version, device, or configuration where the bug was found.
+- **Evidence:** Screenshots, error logs, stack traces, or monitoring data that confirm the issue.
+- **Regression Risk:** Areas of the system that could be impacted by the fix.
+- **Verification Method:** How QA or developers will confirm the bug is resolved (manual test, automated test, monitoring check).
+
+For change requests, include:
+- **Impact Analysis**: Assessment of how the change affects existing features, workflows, or systems.
+- **Affected Areas**: List of code areas, services, or processes impacted.
+- **Backward Compatibility**: Whether existing users/processes/services will be disrupted.
+- **Deployment Plan**: Steps or strategy for applying the change safely.
+- **Rollback Plan**: How to revert if the change causes issues.
+- **Testing Requirements**: Specific tests needed to validate the change (regression, integration, performance).
+
+
+## Best Practices
+
+- Keep the document concise and atomic, it should not cover multiple sub-tasks or features.
+- Update task status after implementation is done.
+- If the task cannot be implemented or skipped, it will be removed like it never existed.
+
+
+## Examples
+
+### Feature Implementation
+
+```md title="docs/tasks/001-implement-login-screen.md"
+# Implement Login Screen in Web App
+
+**Type:** Feature Implementation
+**Status:** Pending
+**Created:** 2026-03-01
+**Updated:** 2026-03-01
+**Estimate:** 5 story points
+**Priority:** High
+**Urgency:** Next Release
+**Source:** User Requirements
+
+## Description
+
+Implement a login screen UI component with email and password input fields, client-side validation, and accessibility features.
+
+## Purpose
+
+Enable user authentication with a responsive, accessible form that validates input in real-time, improving user experience and reducing support requests.
+
+## Scope
+
+**Included:**
+- Email and password input fields with placeholder text
+- Client-side email format validation
+- Client-side password length validation (minimum 8 characters)
+- Error message display for invalid inputs
+- Show/hide password toggle button
+- Submit button with enabled/disabled states
+- Form styling and layout
+- Responsive design for desktop and mobile (320px and above)
+- Keyboard navigation support
+- Accessibility attributes (ARIA labels, semantic HTML)
+
+**Excluded:**
+- Backend API integration or form submission
+- Session management or authentication logic
+- Password reset functionality
+- "Remember me" functionality
+- Social login or third-party authentication
+- Two-factor authentication
+
+## Acceptance Criteria
+
+- [ ] Given a user on the login page, when the page loads, then the login form is displayed with email and password fields
+- [ ] Given a user on the login page, when they enter an invalid email format, then an email validation error message is displayed
+- [ ] Given a user on the login page, when they enter a password with less than 8 characters, then a password validation error message is displayed
+- [ ] Given a user entering their password, when they focus on the password field, then a toggle button to show/hide password is available
+- [ ] Given a user on the login page, when both fields are empty, then the submit button is disabled
+- [ ] Given a user on the login page, when they enter valid email and password formats, then the submit button is enabled
+- [ ] Given any user, when they access the login page on mobile, then the form is fully responsive and all fields are accessible
+
+## Dependencies
+
+- Design system and component library must be finalized
+- API authentication endpoint specification (for future backend integration)
+
+## Risks & Assumptions
+
+**Risks:**
+- Users may be confused by validation messages if not clearly worded
+- Mobile users may have difficulty with small input fields without proper touch spacing
+
+**Assumptions:**
+- Password requirements follow standard practices (minimum 8 characters)
+- Email validation uses standard email format patterns
+- Design system and component library are already established
+- Browser support includes modern browsers (Chrome, Firefox, Safari, Edge)
+
+## References
+
+- [Jira Issue: WEB-001](https://jira.example.com/browse/WEB-001)
+- [Feature Specification: User Authentication](https://example.com/feature-specs/user-authentication.md)
+- [Design Document: Login Screen Mockup](https://example.com/design/login-ui-design.md)
+```
+
+### Bug Fix
+
+```md title="docs/tasks/API-156-bug-session-timeout.md"
+# API-156: Fix User Data Loss on Session Timeout
+
+**Type:** Bug Fix
+**Status:** Pending
+**Created:** 2026-03-18
+**Updated:** 2026-03-18
+**Estimate:** 3 story points
+**Priority:** High
+**Urgency:** Immediate
+**Source:** Error Tracking Tool, Support Ticket by End User
+
+## Description
+
+Users lose unsaved form data when the session expires after 30 minutes of inactivity without any warning or save prompt.
+
+## Purpose
+
+Prevent data loss by alerting users before session expiration and providing recovery options, reducing frustration and support requests.
+
+## Scope
+
+**Included:**
+- Session timeout warning modal displayed 5 minutes before expiration
+- Session extension capability via modal
+- Local storage caching of unsaved form data
+- Graceful logout with confirmation message
+- Mobile-friendly responsive design for warning modal
+- Cross-browser compatibility (Chrome, Firefox, Safari, Edge)
+- Warning modal that persists across all tabs/windows
+
+**Excluded:**
+- Password reset or recovery functionality
+- Session persistence across browser restarts
+- Automatic form submission before logout
+- Multi-factor authentication changes
+- Changes to overall authentication system architecture
+- Mobile-specific app implementation (web only)
+
+## Steps to Reproduce
+
+1. Log in to the application with valid credentials
+2. Navigate to the user profile edit form
+3. Fill in multiple form fields (name, email, bio, preferences)
+4. Leave the browser idle without any user interaction for more than 30 minutes
+5. Attempt to submit the form or perform any action
+
+## Observed Behavior
+
+- After 30 minutes of inactivity, the user is automatically logged out without warning
+- All unsaved form data is lost
+- User is redirected to the login page
+- No notification or message indicates what happened to their data
+
+## Expected Behavior
+
+- A session timeout warning modal should appear 5 minutes before session expiration
+- The warning should provide options to extend the session or save and logout
+- If the user chooses to extend, their session should be renewed and unsaved form data preserved
+- If the user lets the session expire, form data should be temporarily cached in local storage for potential recovery
+
+## Environment Details
+
+- **OS:** Windows 10, macOS 12, Ubuntu 20.04
+- **Browsers:** Chrome 119+, Firefox 121+, Safari 17+, Edge 119+
+- **App Version:** v2.3.1
+- **Affected Pages:** User profile, Settings, Content editor
+- **Tested Devices:** Desktop only (issue not yet verified on mobile)
+
+## Evidence
+
+- **Error Logs:** Session manager throwing "SESSION_EXPIRED" error without user notification
+- **Stack Trace:** Timeout occurring in `SessionManager.checkSessionValidity()` at line 342
+- **Screenshots:** [Screenshot showing redirect to login page](https://example.com/evidence/session-timeout-redirect.png)
+- **Monitoring Data:** 47 instances of unexpected logouts in last 7 days; average data loss impact: 8-15 minutes of user work
+
+## Acceptance Criteria
+
+- [ ] Given a user with an active session, when they remain idle for 25 minutes, then a session timeout warning modal is displayed
+- [ ] Given a user viewing the warning modal, when they click "Extend Session", then their session is renewed for another 30 minutes
+- [ ] Given a user viewing the warning modal, when they click "Logout", then they are logged out gracefully with a confirmation message
+- [ ] Given a user whose session expires, when they are redirected to login, then their form data is saved in local storage for potential recovery
+- [ ] Given a user who recovers their session, when they navigate back to the form, then their previously entered data is restored
+- [ ] Given a user on mobile, when their session is about to expire, then the warning modal is displayed in a mobile-friendly format
+- [ ] Given the warning modal, when it is displayed, then it remains visible even if the user has other browser tabs or windows focused
+
+## Dependencies
+
+- Session management API must support session renewal capability
+- Local storage caching mechanism must be implemented
+- Modal component library must be available
+
+## Regression Risk
+
+**Medium Risk Areas:**
+- Session management system (potential impact on all authenticated pages)
+- Authentication flow (extended session might affect login/logout logic)
+- Local storage usage (could conflict with other features using localStorage)
+- Performance (frequent session checks might impact page responsiveness)
+
+## Verification Method
+
+**Manual Testing:**
+- Developer manually reproduces steps on staging environment with session timeout set to 2 minutes
+- Verify warning modal appears 1 minute before timeout
+- Test session extension and local storage recovery on multiple browsers
+
+**Automated Testing:**
+- Unit tests for SessionManager timeout logic
+- Integration tests for session extension API calls
+- E2E tests using Selenium/Cypress to simulate idle time and verify modal behavior
+
+**QA Sign-off:**
+- QA team tests on Windows, macOS, and Linux across supported browsers
+- Verify no data loss occurs during normal usage and session transitions
+
+## Risks & Assumptions
+
+**Risks:**
+- Users may ignore the warning modal if it's not prominently displayed
+- Local storage limitations (5-10MB per domain) could prevent storing large form data
+- Browser privacy modes may prevent local storage from working reliably
+- Clearing browser cache could result in data recovery not being possible
+
+**Assumptions:**
+- Session validation checks run at least every minute
+- Backend supports session renewal without requiring re-authentication
+- Modern browsers with localStorage support are being used
+- Users have cookies enabled for session management to function
+
+## References
+
+- [Jira Issue: API-156](https://jira.example.com/browse/API-156)
+- [Error Report: Session Timeout](https://sentry.example.com/issues/12847/)
+- [Design Document: Session Timeout UX](https://example.com/design/session-timeout-modal.md)
+- [Related PR: Session Manager Refactor](https://github.com/example/repo/pull/2341)
+```
+
+### Change Request
+
+```md title="docs/tasks/DB-042-crq-mysql-upgrade.md"
+# DB-042: Upgrade MySQL from v5.7 to v8.0
+
+**Type:** Change Request
+**Status:** Pending
+**Created:** 2026-03-10
+**Updated:** 2026-03-10
+**Estimate:** 8 story points
+**Priority:** High
+**Urgency:** Next Release
+**Source:** Vendor End-of-Life Notice, Analysis Result
+
+## Description
+
+Upgrade production MySQL from version 5.7 (end-of-life) to version 8.0 for improved performance, security patches, and continued vendor support.
+
+## Purpose
+
+MySQL 5.7 reaches end-of-life and no longer receives security updates. Upgrading ensures critical security patches, performance improvements, and vendor support, reducing vulnerabilities and improving system reliability.
+
+## Scope
+
+**Included:**
+- Upgrade primary production database cluster to MySQL 8.0
+- Upgrade read replicas to MySQL 8.0
+- Upgrade staging and development databases to MySQL 8.0
+- Schema migration and compatibility updates
+- Connection pool configuration updates
+- Monitoring and alerting reconfiguration
+- Documentation updates for new deployment procedures
+- Performance baseline testing and optimization
+
+**Excluded:**
+- Application code refactoring (no code changes required)
+- Changes to database access patterns or queries
+- Migration to a different database system
+- Zero-downtime migration (planned maintenance window acceptable)
+- Backup system changes (existing strategy continues)
+
+## Impact Analysis
+
+**System-wide Impact:**
+- All services connecting to MySQL will be affected during upgrade
+- Query execution may improve due to better optimizer
+- Some deprecated syntax may need updates
+- Connection parameters may change
+- Monitoring and alerting thresholds may require adjustment
+
+**Service Dependencies:**
+All backend services depend on MySQL:
+- User service
+- Orders service
+- Analytics service
+- Reporting service
+- Payment service
+
+## Affected Areas
+
+- MySQL database cluster configuration
+- Database connection strings and driver versions
+- ORM/query builder compatibility (all services)
+- Monitoring and alerting systems
+- Backup and recovery procedures
+- Database administration tools and scripts
+- Automated deployment pipelines
+
+## Backward Compatibility
+
+**Breaking Changes:**
+- MySQL 5.7 drivers are not compatible with 8.0; driver updates required in all services
+- Some SQL syntax deprecated in 8.0 may cause errors
+- Reserved keywords added in 8.0 may conflict with identifiers
+
+**Mitigation:**
+- Update all database drivers and connection libraries before upgrade
+- Run schema compatibility scanner to identify problematic SQL
+- Execute comprehensive testing on staging environment
+- Coordinate with all dependent services to update drivers simultaneously
+
+## Deployment Plan
+
+**Pre-deployment (Week 1):**
+- Audit all database queries for MySQL 8.0 compatibility
+- Update database drivers in all services to compatible versions
+- Deploy driver updates to staging and verify functionality
+- Create full backup of production database
+- Prepare rollback procedures and backup recovery documentation
+
+**Deployment Window (Week 2 - Sunday 2:00 AM UTC):**
+1. Announce scheduled maintenance to users (24 hours prior)
+2. Enable read-only mode to prevent new transactions
+3. Perform final backup of production database
+4. Stop all application services
+5. Export data from MySQL 5.7 using mysqldump
+6. Provision new MySQL 8.0 cluster
+7. Import data into MySQL 8.0
+8. Run ANALYZE TABLE on all tables
+9. Verify data integrity
+10. Update connection strings in all services
+11. Restart application services incrementally
+12. Verify application functionality
+13. Post-deployment monitoring for 24 hours
+
+**Rollback Plan:**
+- If critical issues occur, restore from backup to MySQL 5.7 cluster (estimated 30 minutes)
+- Update connection strings back to original database
+- Verify application connectivity and data
+- Post-incident analysis to identify root cause
+
+**Estimated Downtime:** 45 minutes to 2 hours
+
+## Testing Requirements
+
+**Regression Testing:**
+- Execute full integration test suite on staging MySQL 8.0 cluster
+- Performance testing comparing 5.7 vs 8.0 query execution times
+- Load testing to verify cluster can handle production traffic
+- Connection pool stress testing
+
+**Integration Testing:**
+- Verify all backend services connect successfully
+- Test all critical user workflows end-to-end
+- Verify reporting and analytics functionality
+- Test data export/import functionality
+
+**Performance Testing:**
+- Execute benchmark queries and compare performance
+- Monitor CPU, memory, and disk I/O during testing
+- Verify query optimization improvements
+- Test with production-equivalent data volume
+
+**Pre-deployment Verification:**
+- Dry-run migration on staging environment
+- Database integrity checks post-migration
+- Schema validation against all services
+- Backup and recovery testing
+
+## Acceptance Criteria
+
+- [ ] Given the production environment, when MySQL 8.0 is deployed, then all application services connect and function normally
+- [ ] Given active users during monitoring period, when they perform standard workflows, then all operations complete successfully without errors
+- [ ] Given performance monitoring, when comparing 8.0 to 5.7 benchmarks, then query performance is equal or improved
+- [ ] Given the application, when under production load, then database CPU and memory utilization remains within acceptable ranges
+- [ ] Given all services, when querying the database, then response times meet SLA requirements
+- [ ] Given a rollback scenario, when triggered, then production is restored to functional state within SLA
+- [ ] Given post-deployment monitoring, when running for 24 hours, then no memory leaks, connection pools, or degraded performance observed
+
+## Dependencies
+
+- Database team availability for 24+ hours during deployment window
+- All service teams on standby for troubleshooting
+- Vendor MySQL 8.0 support contract active
+- Staging environment with equivalent data and traffic capacity
+- Automated testing framework working and test suite passing
+
+## Risks & Assumptions
+
+**Risks:**
+- Data incompatibilities may be discovered during migration
+- Performance may degrade if query optimizer makes different choices
+- Driver incompatibilities could cause connection failures
+- Increased memory usage in MySQL 8.0 could exceed cluster capacity
+- Unknown application dependencies on MySQL 5.7-specific behavior
+- Third-party integrations may not support MySQL 8.0
+
+**Mitigation:**
+- Comprehensive testing in staging environment before production
+- Full backup and tested rollback procedure
+- Staging environment with equivalent specs and data volume
+- Driver compatibility testing completed before deployment
+- Performance testing identifies and optimizes problematic queries
+
+**Assumptions:**
+- All services have been updated to support MySQL 8.0 drivers
+- Network connectivity can be maintained during migration
+- Data volume fits within available storage during import
+- No services require MySQL 5.7-specific features
+- Production database does not exceed staging environment capacity
+- 2-hour maintenance window is acceptable to business
+
+## References
+
+- [Jira Issue: DB-042](https://jira.example.com/browse/DB-042)
+- [MySQL 8.0 Release Notes](https://dev.mysql.com/doc/relnotes/mysql/8.0/en/)
+- [MySQL 5.7 End-of-Life Notice](https://www.mysql.com/support/eol-notice.html)
+- [Deployment Runbook: MySQL Upgrade](https://example.com/runbooks/mysql-upgrade.md)
+- [Database Migration Guide](https://example.com/guides/database-migration.md)
+```

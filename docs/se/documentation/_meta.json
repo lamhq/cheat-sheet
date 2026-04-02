@@ -1,14 +1,22 @@
 [
-  "repository-readme",
+  "documentation-structure",
   "project-overview",
-  "system-architecture",
-  "architectural-pattern",
-  "coding-guidelines",
-  "coding-standards",
-  "development-workflows",
   {
-    "name": "requirements",
     "type": "dir",
+    "name": "requirement-analysis",
+    "label": "Requirement Analysis",
+    "collapsed": true
+  },
+  {
+    "type": "dir",
+    "name": "design",
+    "label": "Design",
+    "collapsed": true
+  },
+  {
+    "type": "dir",
+    "name": "implementation",
+    "label": "Implementation",
     "collapsed": true
   }
 ]
