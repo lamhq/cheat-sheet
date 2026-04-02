@@ -176,7 +176,7 @@ export default defineConfig([
       react: { version: 'detect' },
     },
     extends: [
-      react.configs.flat.all,
+      react.configs.flat['jsx-runtime'], // For React 17+
       reactHooks.configs.flat.recommended,
     ],
   },
