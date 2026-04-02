@@ -115,6 +115,7 @@ Run a local installed binary from a specific project:
 pnpm -F <project> exec <package>
 ```
 
+
 ### Executing package
 
 Runs a locally installed dependency from project's `node_modules`:
@@ -201,7 +202,6 @@ Then you can run them with `npm run dev`, `npm run build`, etc.
 ## Intgrating with Editor
 
 Add `$schema` key in `turbo.json` so editor is able to provide full documentation and linting for invalid configuration:
-
 ```json title="turbo.json"
 {
   "$schema": "node_modules/turbo/schema.json",
