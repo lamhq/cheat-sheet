@@ -1,0 +1,120 @@
+
+# Repository Guide
+
+Guidelines for writing a Repository Guide document.
+
+## Introduction
+
+A Repository Guide is a reference document that helps developers and contributors quickly understand, set up, and work with a code repository.
+
+It provides essential context about the project's purpose, structure, and usage so that anyone joining the project can get up to speed with minimal friction.
+
+## Document Structure
+
+A Repository Guide typically includes the following sections:
+
+### Introduction
+- One-line summary of what the repository is for.
+
+### Installation / Setup
+- Instructions to clone and set up the repository:
+
+### Usage
+
+Instructions to:
+- Run the application.
+- Run tests.
+- Lint the code.
+- Build the project.
+- Manage dependencies.
+
+### Repository Structure
+
+Provide a **tree view** with comments explaining each item.
+
+
+## Best Practices
+
+- **Clarity first**: Make it easy for new developers to understand the repo quickly.
+- **Keep it concise**: Avoid overwhelming detail; link to external docs if needed.
+- **Use Markdown formatting**: Headings, lists, code blocks, and tables for readability.
+- **Provide actionable instructions**: Include commands for setup, running, testing, linting, and building.
+- **Update regularly**: Keep it in sync with repo changes.
+- **Audience-focused**: Write for developers who will use or contribute to the repo.
+- **Highlight essentials upfront**: Title, purpose, and usage should be visible without scrolling.
+- **Use comments in repo structure**: Helps readers understand the purpose of each file/folder.
+- **Avoid clutter**: Remove unnecessary badges or verbose explanations.
+
+
+## Examples
+
+### Backend API Repository
+
+````md title="README.md"
+# FoodOrder API
+
+## Introduction
+
+API for FoodOrder application, providing endpoints for managing orders, customers, and menu items.
+
+## Installation
+
+```bash
+git clone https://github.com/username/repo-name.git
+cd repo-name
+npm install
+```
+
+## Usage
+
+To run the application:
+```bash
+npm start
+```
+
+To execute test suites:
+```bash
+npm test
+```
+
+To check code style:
+```bash
+npm run lint
+```
+To build the project:
+```bash
+npm run build
+```
+
+### Managing Dependencies
+
+Install dependencies:
+```bash
+npm install
+```
+
+Add new dependency:
+```bash
+npm install {package-name}
+```
+
+Remove a dependency:
+```bash
+npm uninstall {package-name}
+```
+
+## Repository Structure
+
+```
+repo-name/
+├── src/            # Main source code
+│   ├── index.js    # Entry point of the application
+│   └── utils/      # Helper functions and utilities
+├── tests/          # Unit and integration tests
+├── docs/           # Documentation files
+├── package.json    # Project metadata and dependencies
+├── .eslintrc.js    # Linting configuration
+├── .gitignore      # Files ignored by Git
+└── README.md       # Repository overview
+```
+````
