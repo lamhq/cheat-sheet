@@ -20,6 +20,11 @@
     "collapsed": true
   },
   {
+    "name": "rxjs",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
     "name": "nodejs",
     "type": "dir",
     "collapsed": true
@@ -35,11 +40,10 @@
     "collapsed": true
   },
   {
-    "name": "markdown",
+    "name": "prisma",
     "type": "dir",
     "collapsed": true
   },
-  "yaml",
   {
     "name": "postgresql",
     "type": "dir",
@@ -61,5 +65,11 @@
     "name": "graphql",
     "type": "dir",
     "collapsed": true
-  }
+  },
+  {
+    "name": "markdown",
+    "type": "dir",
+    "collapsed": true
+  },
+  "yaml"
 ]

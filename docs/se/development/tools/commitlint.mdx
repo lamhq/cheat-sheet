@@ -1,0 +1,76 @@
+import { PackageManagerTabs } from '@theme'
+
+# commitlint
+
+## Version
+
+This document is for version `20.4.3` (March 2026).
+
+
+## Introduction
+
+A command-line tool that validates commit messages.
+
+
+## Installation
+
+<PackageManagerTabs command="install --save-dev @commitlint/cli@^20.4.3 @commitlint/config-conventional@^20.4.3" />
+
+
+## Configuring
+
+Create a configuration file:
+```js title="commitlint.config.mjs"
+export default {
+  extends: ['@commitlint/config-conventional'],
+  rules: {
+    'type-enum': [
+      2,
+      'always',
+      [
+        'feat',
+        'fix',
+        'docs',
+        'style',
+        'refactor',
+        'perf',
+        'test',
+        'build',
+        'ci',
+        'chore',
+        'revert',
+      ],
+    ],
+    'type-case': [2, 'always', 'lowerCase'],
+    'type-empty': [2, 'never'],
+    'subject-empty': [2, 'never'],
+    'subject-full-stop': [2, 'never', '.'],
+    'header-max-length': [2, 'always', 72],
+  },
+};
+```
+- Only allowed commit types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
+- Commit types must always be lowercase (`feat` ✅, not `Feat` ❌)
+- Every commit must specify a type
+- Commit must include a subject line
+- Subject must not end with a period
+- Commit header must be ≤ 72 characters
+
+
+## Running
+
+Test commitlint without making an actual commit:
+
+```sh
+echo "feat: add login feature" | npx commitlint
+``` 
+
+
+## Lint commit messages
+
+To lint commit messages before committing, see [Husky documentation](./husky.mdx#lint-commit-message).
+
+
+## References
+
+https://github.com/conventional-changelog/commitlint

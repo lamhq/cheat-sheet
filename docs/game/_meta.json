@@ -1,0 +1,11 @@
+[
+  {
+    "name": "index",
+    "label": "Game Development"
+  },
+  {
+    "name": "boardgameio",
+    "collapsed": true,
+    "type": "dir"
+  }
+]

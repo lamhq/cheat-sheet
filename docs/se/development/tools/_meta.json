@@ -1,0 +1,48 @@
+[
+  {
+    "name": "git",
+    "type": "dir",
+    "collapsed": true
+  },
+  "npm",
+  {
+    "name": "pnpm",
+    "type": "dir",
+    "collapsed": true
+  },
+  "prettier",
+  "lint-staged",
+  "commitlint",
+  "git-branch-is",
+  "husky",
+  {
+    "name": "eslint",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "biome",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "jest",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "vitest",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "turborepo",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "nx",
+    "type": "dir",
+    "collapsed": true
+  }
+]

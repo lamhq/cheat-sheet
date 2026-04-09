@@ -1,0 +1,72 @@
+# Recipes
+
+## Install Node.js
+
+You can use pnpm to install Node.js, similar to [nvm](https://github.com/nvm-sh/nvm).
+
+Install the LTS version of Node.js:
+```sh
+pnpm env use --global lts
+```
+
+Install Node.js 22.15.1:
+```sh
+pnpm env use --global 22.15.1
+```
+
+Removes the specified version of Node.JS:
+```sh
+pnpm env remove --global 22.15.1
+```
+
+
+## Continuous Integration
+
+A sample GitHub Actions workflow for installing and caching dependencies with pnpm:
+
+```yml
+name: pnpm Example Workflow
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        node-version: [20]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.29.1
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+        shell: bash
+```
+
+
+## Working with Git
+
+You should always commit the lockfile (`pnpm-lock.yaml`)
+
+pnpm can automatically resolve merge conflicts in `pnpm-lock.yaml`. If you have conflicts, just run `pnpm install` and commit the changes.
+
+
+## VS Code Dev Containers
+
+To avoid permission errors when running `pnpm install` inside a Dev Container, change pnpm's store directory to an accessible location for the remote user (often is `root`):
+
+```sh
+pnpm config set store-dir /root/.pnpm-store
+```

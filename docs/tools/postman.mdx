@@ -1,0 +1,40 @@
+# Postman
+
+## Add request headers
+
+To add custom headers, use pre-request scripts in:
+- **Request level**:  
+  Open a request → go to the **Pre-request Script** tab → add your JavaScript code there.  
+- **Folder level**:  
+  In a collection, select a folder → click the **Edit** icon → go to the **Pre-request Script** tab.  
+- **Collection level**:  
+  Select the collection → click the **Edit** icon → go to the **Pre-request Script** tab.  
+
+This example add a header from an environment variable:
+
+```javascript
+pm.request.headers.add({
+    key: "Authorization",
+    value: `Bearer ${pm.environment.get("ADMIN_ACCESS_TOKEN")}`
+});
+
+pm.request.headers.add({
+    key: "x-admin-api-key",
+    value: pm.environment.get("ADMIN_API_KEY")
+});
+```
+
+
+## Set environment variables from responses
+
+Similarly, you can use test scripts to set environment variables based on response data:
+
+```javascript
+// Tests tab script
+let jsonData = pm.response.json();
+
+// Check if accessToken exists in response
+if (jsonData.accessToken) {
+  pm.environment.set("ADMIN_ACCESS_TOKEN", jsonData.accessToken);
+}
+```

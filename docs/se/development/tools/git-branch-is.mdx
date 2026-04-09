@@ -1,0 +1,31 @@
+import { PackageManagerTabs } from '@theme'
+
+# git-branch-is
+
+## Version
+
+This document is for version `4.0.0` (March 2026).
+
+
+## Introduction
+
+A command-line tool that checks if the current Git branch matches a specified pattern. It can be used in Git hooks to enforce branch naming conventions.
+
+
+## Installation
+
+<PackageManagerTabs command="install -D git-branch-is@^4.0.0 " />
+
+
+## Running
+
+Run `git-branch-is` with a regular expression to check if the current branch name starts with `feature/` or `fix/`, followed by lowercase letters, digits, hyphens, or dots:
+
+```sh
+npx git-branch-is -r '^(feature|fix)/[a-z\-\d\.]+$'
+```
+
+
+## Checking branch name on push
+
+To check branch name format before pushing, see [Husky documentation](./husky.mdx#check-branch-name).

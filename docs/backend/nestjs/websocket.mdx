@@ -1,0 +1,220 @@
+import { PackageManagerTabs } from '@theme'
+
+# WebSockets
+
+Implement real-time two-way communication between your NestJS backend and client application using WebSockets via **Socket.io**.
+
+## Installation
+
+<PackageManagerTabs command="install @nestjs/websockets @nestjs/platform-socket.io socket.io" />
+
+## Creating a Gateway
+
+A **Gateway** is NestJS's abstraction for handling WebSocket connections. It's the server-side component that receives and broadcasts messages to connected clients.
+
+```typescript title="products.gateway.ts"
+import { WebSocketGateway } from '@nestjs/websockets';
+import { Server, Socket } from 'socket.io';
+
+@WebSocketGateway({
+  cors: {
+    origin: '*', // Allow connections from any origin
+  },
+})
+export class ProductsGateway {
+  handleConnection(client: Socket) {
+    console.log('Client connected:', client.id);
+  }
+
+  handleDisconnect(client: Socket) {
+    console.log('Client disconnected:', client.id);
+  }
+}
+```
+
+Register the Gateway as a provider:
+
+```typescript title="products.module.ts"
+import { Module } from '@nestjs/common';
+import { ProductsGateway } from './products.gateway';
+
+@Module({
+  providers: [ProductsGateway],
+  exports: [ProductsGateway], // Export to use in other modules
+})
+export class ProductsModule {}
+```
+
+
+## Emitting Events
+
+You can use the `server` instance to emit events to connected clients.
+
+```typescript title="products.gateway.ts"
+import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { Server } from 'socket.io';
+
+@WebSocketGateway()
+export class ProductsGateway {
+  @WebSocketServer()
+  private readonly server: Server;
+
+  handleProductCreated(product: any) {
+    // Emit event to all connected clients
+    this.server.emit('productCreated', product);
+  }
+}
+```
+
+```typescript title="products.service.ts"
+import { Injectable } from '@nestjs/common';
+import { ProductsGateway } from './products.gateway';
+
+@Injectable()
+export class ProductsService {
+  constructor(private readonly productsGateway: ProductsGateway) {}
+
+  async createProduct(data: CreateProductRequest) {
+    // Create product in database
+    const product = await this.prisma.product.create({
+      data,
+    });
+
+    // Notify all connected clients about the new product
+    this.productsGateway.handleProductCreated(product);
+
+    return product;
+  }
+}
+```
+
+## Authentication
+
+Secure your WebSocket connections by requiring authentication from clients.
+
+```typescript title="products.gateway.ts"
+import {
+  WebSocketGateway,
+  WsException,
+} from '@nestjs/websockets';
+import { Server, Socket } from 'socket.io';
+import { AuthService } from 'src/auth/auth.service';
+
+@WebSocketGateway()
+export class ProductsGateway {
+
+  constructor(private readonly authService: AuthService) {}
+
+  handleConnection(client: Socket) {
+    try {
+      this.authService.verifyToken(client.handshake.auth.Authentication.value);
+    } catch (err) {
+      throw new WsException('Unauthorized.');
+    }
+  }
+}
+```
+
+
+## Client-Side Integration
+
+> [!NOTE]
+> Instructions in this section are applied to the web app (built with Next.js).
+
+### Installation
+
+<PackageManagerTabs command="install socket.io-client" />
+
+### Connect to server
+
+```ts title="products.tsx"
+"use client";
+
+import { useEffect } from "react";
+import { Socket, io } from "socket.io-client";
+import { API_URL } from "../common/constants/api";
+import revalidateProducts from "./actions/revalidate-products";
+
+interface ProductGridProps {
+  products: IProduct[];
+}
+
+export default function ProductsGrid({ products }: ProductGridProps) {
+  useEffect(() => {
+    let socket: Socket;
+
+    const createSocket = async () => {
+      socket = io(API_URL);
+
+      socket.on("productUpdated", () => {
+        // revalidate cache and trigger products fetching
+        revalidateProducts();
+      });
+    };
+
+    createSocket();
+
+    return () => {
+      socket?.disconnect();
+    };
+  }, []);
+
+  return (
+    <div>
+      {/* Your UI here */}
+    </div>
+  );
+}
+```
+
+The `revalidateProducts` function is a Server Action that revalidates the product listing page:
+
+```ts
+"use server";
+
+import { revalidateTag } from "next/cache";
+
+export default async function revalidateProducts() {
+  revalidateTag("products");
+}
+```
+
+### Add Authentication
+
+
+```ts title="products.tsx"
+"use client";
+
+import { useEffect } from "react";
+import { Socket, io } from "socket.io-client";
+import { API_URL } from "../common/constants/api";
+import revalidateProducts from "./actions/revalidate-products";
+import getAuthentication from "../auth/actions/get-authentication";
+
+export default function ProductsGrid() {
+  useEffect(() => {
+    let socket: Socket;
+    const auth: { name: string; value: string } = await getAuthentication();
+
+    const createSocket = async () => {
+      socket = io(API_URL, {
+        auth: {
+          Authentication: auth,
+        },
+      });
+    };
+
+    createSocket();
+
+    return () => {
+      socket?.disconnect();
+    };
+  }, []);
+
+  return (
+    <div>
+      {/* Your UI here */}
+    </div>
+  );
+}
+```

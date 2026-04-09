@@ -1,0 +1,16 @@
+[
+  "prompt",
+  "agent-skills",
+  {
+    "name": "mcp",
+    "type": "dir",
+    "collapsed": true,
+    "label": "MCP"
+  },
+  {
+    "name": "github-copilot",
+    "type": "dir",
+    "collapsed": true,
+    "label": "GitHub Copilot"
+  }
+]

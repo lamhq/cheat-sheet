@@ -1,0 +1,143 @@
+# Turborepo
+
+## Version
+
+This guide is for Turborepo v2.8.14 (March 2026).
+
+
+## Command Snippets
+
+### Creating project
+
+Create an empty monorepo:
+
+```sh
+npx create-turbo@latest -e with-shell-commands
+```
+
+### Adding packages
+
+Add a **NestJS** application package inside `apps/`:
+
+```sh
+npx turbo gen workspace --copy https://github.com/nestjs/typescript-starter --name <app-name> --destination apps/<app-name> --type app
+```
+
+Add a TypeScript Vite **React** application package:
+
+```sh
+npx turbo gen workspace --copy https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts --name <app-name> --destination apps/<app-name> --type app
+```
+
+Add a Next.js application package:
+
+```sh
+# TBD
+```
+
+**After creation**:
+- Delete any lock files (`package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`) in the generated package to prevent conflicts with the monorepo's lock file.  
+- Update the `name` field in `package.json` to follow the convention:
+  - Libraries → `@libs/{package-name}`  
+  - Applications → `{app-name}`  
+- If using [ESLint](./eslint.mdx#monorepo-setup):
+  - Move ESLint dependencies to the root `package.json`.  
+  - Merge the package's ESLint configuration into the root configuration.  
+
+
+### Listing packages
+
+Show all packages in your repository and where they're located:
+
+```bash title="Terminal"
+npx turbo ls
+```
+
+Show all packages that depend on a specific package:
+
+```bash title="Terminal"
+npx turbo ls -F ...<package-name>
+```
+
+### Listing tasks
+
+```bash
+npx turbo run
+```
+
+### Running tasks
+
+Running multiple tasks:
+
+```bash title="Terminal"
+npx turbo run build test lint
+```
+
+Run task with terminal UI, good for viewing task's output individually:
+
+```bash
+npx turbo run dev --ui tui
+```
+
+Filtering by package:
+
+```bash title="Terminal"
+npx turbo build -F @repo/api
+```
+
+Filtering by directory:
+
+```bash title="Terminal"
+npx turbo lint -F @repo/api
+```
+
+Run task in a package and all packages that **depend on it**:
+
+```bash title="Terminal"
+npx turbo lint -F ...@repo/api
+```
+
+Run task in a package and all of **its dependencies**:
+
+```bash title="Terminal"
+npx turbo lint -F web...
+```
+
+Combining filters:
+
+```bash title="Terminal"
+npx turbo build -F ...ui -F {./packages/*} -F [HEAD^1] build
+```
+
+Run tasks in watch mode:
+
+```bash title="Terminal"
+npx turbo watch dev lint
+```
+
+## Set up npm scripts
+
+For frequently used commands, you can add them as npm scripts in `package.json`:
+
+```json title="package.json"
+{
+  "scripts": {
+    "dev": "turbo watch dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "test": "turbo run test"
+  }
+}
+```
+
+Then you can run them with `npm run dev`, `npm run build`, etc.
+
+
+## Intgrating with Editor
+
+Add `$schema` key in `turbo.json` so editor is able to provide full documentation and linting for invalid configuration:
+```json title="turbo.json"
+{
+  "$schema": "node_modules/turbo/schema.json",
+}
+```

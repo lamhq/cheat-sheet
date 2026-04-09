@@ -8,5 +8,11 @@
   },
   "style-guide",
   "module-resolution",
-  "configuration"
+  "configuration",
+  "compile",
+  {
+    "name": "compilers",
+    "type": "dir",
+    "label": "Compilers"
+  }
 ]

@@ -16,64 +16,7 @@ This document is for version `9.0.14` (2025).
 
 <PackageManagerTabs command="run storybook" />
 
-
-## Enable mocking
-
-Mock Rest and GraphQL requests right inside your story.
-
-<PackageManagerTabs command="install -D msw-storybook-addon msw" />
-
-Generate service worker for MSW:
-
-```sh
-npx msw init public/
-```
-
-Add MSW handler:
-```ts title=".storybook/msw.ts"
-import { http, HttpResponse } from 'msw';
-
-export const handlers = [
-
-  http.post('api/auth/access-tokens', () => {
-    return HttpResponse.json({
-      user: {
-        id: '123',
-        email: 'test@test.com',
-      },
-    });
-  }),
-
-];
-```
-
-Enable MSW in Storybook:
-
-```ts title=".storybook/preview.ts"
-import { initialize, mswLoader } from 'msw-storybook-addon'
-import { handlers } from './msw';
-
-// Initialize MSW
-initialize()
-
-const preview = {
-  parameters: {
-    msw: {
-      handlers,
-    },
-  },
-  // Provide the MSW addon loader globally
-  loaders: [mswLoader],
-}
-
-export default preview
-```
-
-
-## References
-
-- [Install Storybook](https://storybook.js.org/docs/get-started/install)
-- [Mock Service Worker](https://storybook.js.org/addons/msw-storybook-addon)
+Then, enable [network request mocking](./storybook/mocking.mdx#network-requests).
 
 
 ## Opt out of telemetry
@@ -94,3 +37,7 @@ const config: StorybookConfig = {
 
 export default config;
 ```
+
+## References
+
+- [Install Storybook](https://storybook.js.org/docs/get-started/install)

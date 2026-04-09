@@ -1,14 +1,13 @@
 [
-  {
-    "name": "version-control",
-    "type": "dir",
-    "collapsed": true
-  },
   "branching-models",
+  "conv-commit",
   "semver",
+  "repo-organization",
+  "repo-setup",
   {
-    "name": "codebase-arch",
+    "name": "tools",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "label": "Tools"
   }
 ]
