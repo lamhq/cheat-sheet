@@ -6,6 +6,13 @@
   {
     "name": "communication",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "label": "Communication"
+  },
+  {
+    "name": "vocabulary",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Vocabulary"
   }
 ]
