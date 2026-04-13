@@ -1,0 +1,46 @@
+# gRPC
+
+gRPC is a high-performance, open-source RPC framework developed by Google.
+
+gRPC uses Protocol Buffers (protobufs) for defining service interfaces and encoding/decoding messages.
+
+gRPC uses HTTP2 for transport, improving performance and lowering latency.
+
+
+## Advantages
+
+1. Better performance compared to REST APIs (by using protobufs and HTTP2)
+2. Pluggable support for load balancing, tracing, health checking and authentication (TLS and token-based).
+
+
+## When to use?
+
+gRPC is a good choice when:  
+- **You have control over both client and server implementations**: Since gRPC requires client-side code to be compiled against the server’s schema, it works best in environments where you manage both sides.  
+- **You need efficient, high-performance communication**: gRPC is optimized for low-latency and high-throughput scenarios, making it ideal for service-to-service communication in microservices architectures.  
+- **Using synchronous request-response model**: While gRPC can work with reactive extensions, it’s primarily designed for structured request-response interactions.  
+
+
+## How it works?
+
+gRPC is based on the concept of defining a service in terms of functions (methods) that can be called remotely.
+
+For each method, you define the parameters and return types.
+
+Services, parameters, and return types are defined in `.proto` files using Google's open source language-neutral protocol buffers mechanism.
+
+
+## Protobufs
+
+Protobufs is a mechanism for serializing structured data into binary format.
+
+Protobufs is language-neutral and platform-neutral.
+
+Messages are much smaller than JSON or XML.
+
+Protocol Buffers ensures that the API contracts are strongly typed, reducing the likelihood of errors due to mismatched data types.
+
+How it works:
+1. You define API interface in a `.proto` file
+2. Use the `protoc` compiler to generate client and server code in your chosen language
+3. The generated code can be used to serialize and deserialize data.
