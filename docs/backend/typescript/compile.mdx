@@ -1,0 +1,185 @@
+# Compile
+
+Compiling TypeScript to JavaScript.
+
+## Customizing output code
+
+### `target`
+
+Specify which JavaScript features are supported in the emitted code.
+
+**Recommended values:**
+- `esnext`: the latest ECMAScript version supported by the current TypeScript compiler
+- `es6`: supported by all modern browsers
+
+Note: Changing target also changes the default value of [lib](https://www.typescriptlang.org/tsconfig/#lib).
+
+
+### `module`
+
+Specify what module code is generated in the compiled JavaScript (ESM or CommonJS).
+
+**Recommended values:**
+- `commonjs`:
+  - traditional Node.js module system.
+  - use `require()` and `module.exports`
+  - for legacy Node.js projects
+- `esnext`:
+  - latest ECMAScript standard (ESM).
+  - use `import`/`export`
+  - for browser-based projects, bundler workflows (Webpack, Rollup, Vite)
+- `node16/node18/node20/nodenext`:
+  - emit either `commonjs` or `es2020` output depending on the file extension and the `type` field in nearest `package.json`
+  - `nodenext` targets the latest stable versions of Node.js module system
+  - for modern Node.js projects using ESM
+
+| File | package.json `"type"` | Output Style | Notes |
+|------|------------------------|--------------|-------|
+| `index.ts` | `"type": "module"` | ES2020 (ESM) | Uses `import/export` |
+| `index.ts` | `"type": "commonjs"` | CommonJS | Uses `require()` |
+| `index.mts` | Any | ES2020 (ESM) | Explicitly ESM |
+| `index.cts` | Any | CommonJS | Explicitly CommonJS |
+
+Note: changing module affects [moduleResolution](https://www.typescriptlang.org/tsconfig/#moduleResolution).
+
+
+### `moduleResolution`
+
+Controls how TypeScript finds modules when compiling (ESM or CommonJS module resolution).
+
+**Recommended values:**
+- `node16/nodenext`:
+  - supports both ESM (`import`) and CommonJS (`require`)
+  - resolves modules base on value of `module` field in `tsconfig.json`
+  - supports `imports` and `exports` fields in `package.json`
+- `bundler`:
+  - the same as `node16` and `nodenext` but doesn't requires file extensions on relative paths in `import` statements
+- `node10` / `node`:
+  - only support CommonJS require.
+  - doesn't support `imports` and `exports` fields in `package.json`
+
+Other values should not be used.
+
+
+### Best Practices
+
+If using **ES Modules**, specify below options in `tsconfig.json`:
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "bundler"
+  }
+}
+```
+
+> [!CAUTION]
+> When using ES Modules, a file extension must be provided when using the `import` keyword to resolve relative or absolute specifiers. Directory indexes (e.g. `./startup/index.js`) must also be fully specified.
+
+> [!INFO]
+> If your TypeScript code doesn't include file extensions, you may get `ERR_MODULE_NOT_FOUND` error when running the compiled JavaScript with Node. In that case, you need to bundle your code to make it run.
+
+If using **CommonJS**, specify below options in `tsconfig.json`:
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node"
+  }
+}
+```
+
+
+## Writing code
+
+This is an example of a AWS Lambda function written in TypeScript that demonstrates various modern TypeScript features:
+
+```ts title="src/index.ts"
+import fs from "fs";
+import { greet, PI } from "./utils.js"; // relative import (compiled to .js)
+
+// Define a Lambda-like event type
+interface LambdaEvent {
+  [key: string]: unknown;
+}
+
+interface LambdaResponse {
+  statusCode: number;
+  body: string;
+}
+
+export const handler = async (event: LambdaEvent | undefined): Promise<LambdaResponse> => {
+  // Importing relative module
+  console.log(greet("Lac"));
+  console.log("Value of PI:", PI);
+
+  // Class with private fields and methods
+  class Counter {
+    #count: number = 0;
+
+    increment(): void {
+      this.#count ||= 1; // Logical assignment operator
+      this.#count++;
+    }
+
+    #secret(): string {
+      return "hidden";
+    }
+
+    get value(): number {
+      return this.#count;
+    }
+  }
+
+  const apiResponse = await fetch("https://jsonplaceholder.typicode.com/todos/1");
+  const todo: unknown = await apiResponse.json();
+  console.log("Fetched Todo:", todo);
+
+  // Array findLast / findLastIndex
+  const nums: number[] = [1, 2, 3, 4, 5];
+  console.log("Last odd:", nums.findLast((n: number) => n % 2 === 1));
+
+  // RegExp match indices
+  const re: RegExp = /foo/d;
+  const match = re.exec("foofoo");
+  console.log("Match indices:", match?.indices);
+
+  // Promise.any
+  const result: string = await Promise.any([
+    Promise.reject("fail"),
+    Promise.resolve("success"),
+  ]);
+  console.log("Promise.any result:", result);
+
+  // WeakRef & FinalizationRegistry
+  type TempObj = { data: string };
+  let obj: TempObj | null = { data: "temporary" };
+  const weak = new WeakRef(obj);
+  const registry = new FinalizationRegistry<string>((msg) =>
+    console.log("Finalized:", msg),
+  );
+  if (obj) registry.register(obj, "obj cleaned");
+  obj = null; // eligible for GC
+
+  // Write to file using modern fs promises
+  await fs.promises.writeFile("output.txt", "Modern TS features demo complete!");
+  console.log("File written: output.txt");
+
+  const response: LambdaResponse = {
+    statusCode: 200,
+    body: JSON.stringify("Hello from Lambda!"),
+  };
+  return response;
+};
+```
+
+```ts title="src/utils.ts"
+export function greet(name: string) {
+  return `Hello, ${name}!`;
+}
+
+export const PI = Math.PI;
+```

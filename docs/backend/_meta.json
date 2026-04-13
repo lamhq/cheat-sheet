@@ -4,6 +4,12 @@
     "label": "Backend Development"
   },
   {
+    "name": "markdown",
+    "type": "dir",
+    "collapsed": true
+  },
+  "yaml",
+  {
     "name": "javascript",
     "type": "dir",
     "collapsed": true,
@@ -15,12 +21,22 @@
     "collapsed": true
   },
   {
+    "name": "nodejs",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
     "name": "nestjs",
     "type": "dir",
     "collapsed": true
   },
   {
-    "name": "nodejs",
+    "name": "rxjs",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "prisma",
     "type": "dir",
     "collapsed": true
   },
@@ -34,12 +50,14 @@
     "type": "dir",
     "collapsed": true
   },
+  "api-design",
+  "rest",
   {
-    "name": "markdown",
+    "name": "graphql",
     "type": "dir",
     "collapsed": true
   },
-  "yaml",
+  "grpc",
   {
     "name": "postgresql",
     "type": "dir",
@@ -60,11 +78,6 @@
     "type": "dir",
     "collapsed": true
   },
-  "api-design",
-  "rest",
-  {
-    "name": "graphql",
-    "type": "dir",
-    "collapsed": true
-  }
+  "keycloak",
+  "testcontainers"
 ]

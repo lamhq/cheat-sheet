@@ -1,16 +1,12 @@
 [
-  "monolith",
   {
-    "name": "multi-tier",
-    "label": "Multi-Tier"
-  },
-  {
-    "name": "microservices",
+    "name": "architectural-styles",
     "type": "dir",
     "collapsed": true
   },
   {
-    "name": "eda",
-    "label": "Event-Driven"
+    "name": "architectural-patterns",
+    "type": "dir",
+    "collapsed": true
   }
 ]

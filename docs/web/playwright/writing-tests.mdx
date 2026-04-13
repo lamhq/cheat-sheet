@@ -169,6 +169,22 @@ test('API returns OK response', async ({ request }) => {
 });
 ```
 
+### Others
+
+- `toMatchObject`: checks if an object matches a subset of properties. Allows extra properties to be present in the value
+
+```ts
+const value = {
+  a: 1,
+  b: 2,
+  c: true,
+};
+expect(value).toMatchObject({ a: 1, c: true });
+expect(value).toMatchObject({ b: 2, c: true });
+
+expect([{ a: 1, b: 2 }]).toMatchObject([{ a: 1 }]);
+```
+
 
 ## Structuring tests
 

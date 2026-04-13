@@ -1,0 +1,80 @@
+# Repository Organization
+
+## Introduction
+
+A repository (repo) is a central storage location for code, documentation, and related assets.
+
+It enables version control, collaboration among developers, and tracking of changes over time, making it a cornerstone of modern software engineering.
+
+Repository organization is about how teams structure, manage, and collaborate on code. A well-organized repo improves productivity, reduces errors, and makes onboarding easier.
+
+There are two primary models for organizing repositories: **monorepo** and **polyrepo**.
+
+
+## Monorepo
+
+A monorepo is a single repository containing multiple distinct projects, with well-defined relationships. Monorepos are used by tech giants like Google, Meta, Microsoft, and Uber.
+
+### Use Cases
+
+- **Tightly Coupled Projects**: A monorepo allows for atomic commits, keeping related projects like a frontend and backend in sync with a single update.
+- **Significant Code Sharing**: It simplifies code sharing, as all projects can easily access common libraries and components from a single location.
+- **Sharing Tooling and Conventions**: When consistent coding standards, build tools, and CI/CD pipelines across all projects are required.
+
+### Benefits
+
+- **Atomic Commits & Refactoring**: Developers can make sweeping changes across multiple projects in a single commit, which simplifies large-scale refactoring.
+- **No overhead to create new projects**: New projects can be created with minimal setup, using the existing CI setup. No need to publish versioned packages if all consumers are in the same repo.
+- **One version of everything**: No need to worry about incompatibilities. Easier to coordinate releases and dependencies.
+- **Unified Visibility & Collaboration**: Allows organizing related applications and packages in a single repository.
+- **Simplified Dependency Management**: Easily share code and dependencies.
+- **Consistent Tooling & Standards**: Easier to enforce coding conventions, CI/CD pipelines, and development tools across all teams.
+- **Streamlined Onboarding**: New developers only need to clone one repo to access the entire codebase, speeding up setup and understanding.
+
+### Challenges
+
+- **Performance Issues**: As a monorepo grows, operations like cloning, fetching, and running builds can become slow. Tools and infrastructure need to be optimized to handle the large scale.
+- **Tooling Complexity**: The tools used for version control, building, and testing must be able to handle a large and complex codebase efficiently. This often requires custom or highly specialized tooling.
+- **Access Control**: Managing access and permissions can be more complicated. Since all code is in one repository, it can be difficult to restrict access to specific projects without complex configurations.
+- **Learning Curve**: New developers may face a steeper learning curve when navigating a vast codebase. Onboarding can require more time to understand the project structure and various interdependencies.
+
+### Misconceptions
+
+1. Monorepos are monolithic and not suitable for Microservices and Microfrontends
+2. "Everyone can change my code"
+3. Teams losing their autonomy
+
+
+## Polyrepo
+
+Each project, service, or component has its own repository. Each repo often has a single build artifact and a simple build pipeline. Polyrepo is suitable for projects where each component or service is independent or loosely coupled.
+
+### Use Cases
+
+- **Distinct Teams and Ownership**: When different teams own and manage distinct projects, a polyrepo provides clear ownership and autonomy.
+- **Diverse Technology Stacks**: It allows teams to use the best tools and languages for their specific projects without being restricted to a single, company-wide stack.
+- **Independent Release Cycles**: Teams can release their projects on their own schedule without having to coordinate with other teams.
+- **Granular Security and Access Control**: Access to each project can be controlled individually, ensuring that developers only have access to the repository they need.
+
+### Benefits
+
+- **Autonomous Teams**: Each team can work independently with different libraries and release cycles.
+- **Isolation of Projects**: Easier to manage dependencies and avoid unintended side effects.
+- **Security**: You can restrict access to sensitive repositories without exposing the entire codebase.
+
+### Challenges
+
+- **Costly Cross-Repo Changes**: Changes across repos can't be atomic, requiring multiple commits per repository. Plus difficulty in coordinating changes across repositories.
+- **Introducing Potential Bugs**: Some bugs can only occur at the point of integration rather than when code is changed.
+- **Cumbersome Code Sharing**: Requires setting up a separate repository for the shared code: tooling, build pipeline, committers, package publishing. Increases the burden of maintenance, security, and quality control.
+- **Inconsistent Tooling and Standards**: Teams may adopt different tools (scripts, test, build, lint, deploy) and conventions, making the development experience vary too greatly.
+- **Overhead When Maintaining Multiple Repositories**: Requires maintaining awareness of all repositories and their respective functions.
+- **Onboarding Complexity**: Assigning new team members to the correct repositories may take additional time and effort.
+
+
+## Decision Considerations
+
+- **Team Size**: Small teams often prefer monorepos for simplicity; larger teams may need polyrepos for scalability.
+- **Project Complexity**: Highly interdependent services benefit from monorepos; independent microservices fit polyrepos better.
+- **Tooling**: Modern build tools (like Bazel or Nx) help mitigate monorepo scaling issues.
+- **Governance**: Strong coding standards and review processes are essential regardless of repo model.  

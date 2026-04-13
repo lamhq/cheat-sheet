@@ -1,0 +1,60 @@
+# Agent Skills
+
+Use Agent Skills in VS Code.
+
+To use Agent Skills, enable the `chat.useAgentSkills` setting.
+
+
+## Create a skill
+
+To create a skill:
+
+1. Create a `.github/skills` directory in your workspace.
+2. Create a subdirectory for your skill (for example, `.github/skills/webapp-testing`).
+3. Create a `SKILL.md` file in the skill directory with the following structure:
+
+   ```md title=".github/skills/webapp-testing/SKILL.md"
+   ---
+   name: skill-name
+   description: Description of what the skill does and when to use it
+   ---
+
+   # Skill Instructions
+
+   Your detailed instructions, guidelines, and examples go here...
+   ```
+
+4. (Optional) add scripts, examples, or other resources that the skill may need.
+
+For example, a skill for testing web applications might include:
+
+- `SKILL.md` - Instructions for running tests
+- `test-template.js` - A template test file
+- `examples/` - Example test scenarios
+
+> [!TIPS]
+> Type `/skills` in the chat input to quickly open the Configure Skills menu.
+
+### Generate a skill with AI
+
+Type `/create-skill` in chat and describe the skill you want (for example, "a skill for running and debugging integration tests"). 
+
+The agent asks clarifying questions and generates a `SKILL.md` file with the directory structure, instructions, and frontmatter.
+
+
+## Use shared skills
+
+You can use skills created by others in [github/awesome-copilot](https://github.com/github/awesome-copilot) repository and [anthropics/skills](https://github.com/anthropics/skills) repository.
+
+To use a shared skill:
+
+1. Browse the available skills in the repository
+2. Copy the skill directory to your `.github/skills/` folder
+3. Review and customize the `SKILL.md` file for your needs
+4. Optionally, modify or add resources as needed
+
+
+## Other Topics
+
+- [Agent Skills vs custom instructions](https://code.visualstudio.com/docs/copilot/customization/agent-skills#_agent-skills-vs-custom-instructions)
+- [Agent Skills standard](https://agentskills.io)

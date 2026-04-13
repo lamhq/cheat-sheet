@@ -1,0 +1,113 @@
+import { PackageManagerTabs } from '@theme'
+
+# boardgame.io
+
+## Introduction
+
+`boardgame.io` is an open‑source JavaScript framework designed specifically for building turn‑based multiplayer games.
+
+It handles state management, networking, and synchronization so you can focus on writing the actual game rule.
+
+
+## Features
+
+- **State Management**: Game state is managed seamlessly across clients, server and storage.  
+- **Multiplayer Support**: Game state is kept in sync in realtime and across platforms..  
+- **Game Phases**: Lets you define different phases with unique rules and turn orders (e.g., betting phase vs. play phase).  
+- **Lobby**: Player matchmaking and game creation.  
+- **Prototyping**: Includes a simulation interface to test moves before building the UI.  
+- **Extendable**: Plugin system that allows creating new abstractions.  
+- **View-layer Agnostic**: Use the vanilla JS client or the bindings for React.  
+- **Logs**: Game logs with the ability to time travel (viewing the board at an earlier state).  
+- **AI Bots**: Automatically generated bots can play your game for testing or single‑player modes.  
+
+
+## Installation
+
+<PackageManagerTabs command="install boardgame.io" />
+
+
+## State
+
+Game state are defined in two objects: `G` and `ctx`.
+
+```js
+{
+  // The game state (managed by you).
+  G: {},
+
+  // Read-only metadata (managed by the framework).
+  ctx: {
+    turn: 0,
+    currentPlayer: '0',
+    numPlayers: 2,
+  }
+}
+```
+
+> [!CAUTION]
+> Because state can be sent between client and server,
+`G` must be a JSON-serializable object; in particular, it must
+not contain classes or functions.
+
+
+## Moves
+
+Moves are functions that changes the game state `G` when a particular game move is made.
+
+They must not depend on external state or have any side-effects.
+
+It's defined as part of the game configuration object:
+
+```js
+moves: {
+  drawCard: ({ G, ctx }) => {
+    const card = G.deck.pop();
+    G.hand.push(card);
+  },
+
+  // ...
+}
+```
+
+On the client, `moves` is provided through your component’s props:
+
+```tsx
+props.moves.drawCard();
+```
+
+## Events
+
+Events are functions provided by the framework that allow you to manipulate the game flow, like ending the turn, changing the game phase etc.
+
+Events are dispatched from the client in a similar way to `moves`:
+
+```tsx
+props.events.endTurn();
+```
+
+
+## Phase
+
+A phase is a distinct stage in the game that overrides the game configuration while it is active.
+
+For example, you can use a different set of moves or a different turn order during a phase.
+
+The game can transition between different **phases**, and **turns** occur inside phases.
+
+
+## Turn
+
+A turn is a period of the game that is associated with an individual player. It typically consists of one or more moves made by that player before it passes on to another player.
+
+> [!NOTE]
+> You can also allow other players to play during your turn if needed.
+
+
+## Stage
+
+A stage is similar to a phase, except that it happens within a turn, and applies to individual players rather than the game as a whole.
+
+A turn may be subdivided into many stages, each allowing a different set of moves and overriding other game configuration options while that stage is active.
+
+Different players can be in different stages during a turn.

@@ -1,0 +1,226 @@
+# AWS MCP Servers
+
+AWS MCP (Model Context Protocol) Servers cho phép AI trong Cursor IDE tương tác trực tiếp với các dịch vụ AWS. Thay vì phải mở AWS Console hoặc chạy AWS CLI, bạn chỉ cần hỏi AI bằng ngôn ngữ tự nhiên.
+
+## Danh sách MCP Servers đã cài đặt
+
+1. **CloudWatch MCP - Logs, Metrics, Alarms**
+2. **Terraform MCP - Infrastructure as Code**
+3. **ECS MCP - Container orchestration**
+4. **SNS/SQS MCP - Messaging & Queues**
+5. **Aurora PostgreSQL MCP - Database operations**
+6. **IAM MCP - Identity & Access Management**
+7. **Valkey MCP - ElastiCache/Redis operations**
+8. **CloudTrail MCP - API audit logs**
+9. **Cost Explorer MCP - Cost analysis**
+10. **AWS Diagram MCP - Architecture diagrams**
+11. **AWS Documentation MCP - Latest AWS docs**
+
+---
+
+# 2. Hướng dẫn cho Backend Engineers
+
+## 2.1 Debug với CloudWatch Logs
+
+Khi cần debug lỗi trong production/staging, hỏi AI:
+
+```
+# Tìm lỗi trong API
+"Query log group bid-up/ecs/api/staging, filter ERROR trong 1 giờ qua, limit 50"
+
+# Tìm request cụ thể
+"Tìm log có chứa orderId=abc123 trong bid-up/ecs/api/dev"
+
+# Phân tích pattern lỗi
+"Phân tích log group bid-up/ecs/api/staging từ 9h đến 10h sáng nay"
+
+# Xem log theo user
+"Tìm tất cả log liên quan userId=user_123 trong 24h qua"
+```
+
+## 2.2 Kiểm tra Message Queues (SQS)
+
+```
+# Xem trạng thái queue
+"Liệt kê tất cả SQS queues và số messages đang chờ"
+
+# Xem messages trong DLQ
+"Xem messages trong dead-letter queue bid-up-dlq"
+
+# Kiểm tra queue metrics
+"Số messages trong queue bid-up-order-queue trong 1 giờ qua"
+```
+
+## 2.3 Kiểm tra Cache (Valkey/ElastiCache)
+
+```
+# Xem cache status
+"Kiểm tra trạng thái ElastiCache cluster"
+
+# Xem cache metrics
+"Cache hit rate của Valkey cluster trong 24h qua"
+```
+
+---
+
+# 3. Hướng dẫn cho DevOps Engineers
+
+## 3.1 Monitoring với CloudWatch
+
+```
+# Xem alarms đang báo
+"Có alarm nào đang ALARM không?"
+
+# Xem lịch sử alarm
+"Lịch sử alarm CPUUtilization-High trong 7 ngày qua"
+
+# Xem metrics ECS
+"CPU và Memory utilization của ECS service api trong 24h qua"
+
+# Gợi ý alarm
+"Gợi ý alarm cho metric AWS/ECS CPUUtilization của service api"
+```
+
+## 3.2 Quản lý ECS Services
+
+```
+# Xem trạng thái services
+"Liệt kê tất cả ECS services trong cluster bid-up-dev-cluster"
+
+# Xem task definitions
+"Xem task definition của service api"
+
+# Xem running tasks
+"Các tasks đang chạy của service api"
+
+# Xem deployment history
+"Lịch sử deployment của ECS service api"
+```
+
+## 3.3 Infrastructure với Terraform
+
+```
+# Review Terraform code
+"Review file modules/ecs/main.tf và gợi ý cải thiện security"
+
+# Validate Terraform
+"Validate Terraform configuration trong thư mục infrastructure"
+
+# Scan security
+"Scan security issues trong Terraform code"
+
+# Generate Terraform
+"Tạo Terraform module cho Lambda function mới"
+```
+
+## 3.4 IAM & Security
+
+```
+# Xem IAM roles
+"Liệt kê IAM roles có prefix bid-up"
+
+# Xem policies
+"Xem policy gắn với role bid-up-ecs-task-role"
+
+# Audit với CloudTrail
+"Xem API calls của user X trong 24h qua"
+
+# Tìm unauthorized access
+"Tìm AccessDenied events trong CloudTrail 7 ngày qua"
+```
+
+## 3.5 Cost Management
+
+```
+# Xem chi phí
+"Chi phí AWS tháng này theo service"
+
+# So sánh chi phí
+"So sánh chi phí tháng này với tháng trước"
+
+# Tìm cost anomalies
+"Có cost anomaly nào trong 7 ngày qua không?"
+```
+
+---
+
+# 4. Troubleshooting Scenarios
+
+## Scenario 1: API trả về 500 Error
+
+```
+1. "Query log group bid-up/ecs/api/staging, filter ERROR trong 30 phút qua"
+2. "Phân tích log group bid-up/ecs/api/staging để tìm pattern lỗi"
+3. "CPU và Memory của ECS service api trong 1 giờ qua" (kiểm tra resource)
+4. "Có alarm nào đang ALARM không?" (kiểm tra alerts)
+```
+
+## Scenario 2: Queue bị backlog
+
+```
+1. "Liệt kê SQS queues và số messages đang chờ"
+2. "Xem messages trong DLQ" (nếu có messages fail)
+3. "Query log tìm ERROR liên quan queue processing"
+4. "Kiểm tra ECS service consumer có đang healthy không"
+```
+
+## Scenario 3: Deployment failed
+
+```
+1. "Xem deployment history của ECS service api"
+2. "Xem events của ECS service api" (tìm lỗi deployment)
+3. "Query log group bid-up/ecs/api/staging từ lúc deploy"
+4. "Kiểm tra task definition mới có gì khác"
+```
+
+## Scenario 4: High latency
+
+```
+1. "CPU và Memory utilization của ECS services trong 1 giờ qua"
+2. "Cache hit rate của Valkey trong 1 giờ qua"
+3. "RDS connection count và CPU trong 1 giờ qua"
+4. "Query log tìm slow queries hoặc timeout"
+```
+
+---
+
+# 5. Cấu hình & Prerequisites
+
+## AWS Profile
+
+Tất cả MCP servers đang dùng profile: `saola-aws-mcp`, region: `ap-southeast-1`
+
+```bash
+# Tạo profile (nếu chưa có)
+aws configure --profile saola-aws-mcp
+
+# Kiểm tra profile
+aws sts get-caller-identity --profile saola-aws-mcp
+```
+
+## IAM Permissions cần có
+
+- `CloudWatch: cloudwatch:*, logs:*`
+- `ECS: ecs:Describe*, ecs:List*`
+- `SQS/SNS: sqs:*, sns:*`
+- `RDS: rds-data:* (cần enable Data API)`
+- `IAM: iam:Get*, iam:List*`
+- `CloudTrail: cloudtrail:LookupEvents`
+- `Cost Explorer: ce:Get*`
+
+## File cấu hình
+
+MCP config location: `~/.cursor/mcp.json`
+
+---
+
+# 6. Log Groups Reference
+
+- `bid-up/ecs/api/dev` - API service (dev)
+- `bid-up/ecs/api/staging` - API service (staging)
+- `bid-up/ecs/admin-api/dev` - Admin API (dev)
+- `bid-up/ecs/admin-api/staging` - Admin API (staging)
+- `bid-up/ecs/admin/dev` - Admin frontend (dev)
+- `bid-up/ecs/admin/staging` - Admin frontend (staging)
+
+---

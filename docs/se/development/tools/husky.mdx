@@ -1,0 +1,105 @@
+# Husky
+
+## Version
+
+This document is for version 9.1.7 (March 2026).
+
+
+## Introduction
+
+Husky is a tool that makes it easy to set up and manage Git hooks.
+
+Git hooks are scripts that run automatically on certain Git events, like committing or pushing code.
+
+Husky allows tasks like code formatting, linting, or tests to run automatically before commits or pushes.
+
+
+## Installation
+
+```sh
+npx husky init
+```
+
+Update your CI workflow to avoid installing Git Hooks on CI servers. For instance, in GitHub Action:
+```yaml
+# https://docs.github.com/en/actions/learn-github-actions/variables
+env:
+  HUSKY: 0
+```
+
+On CI server the `"prepare": "husky"` script may fail because Husky won't be installed. To fix this, create `.husky/install.mjs` with content:
+```ts title=".husky/install.mjs"
+// Skip Husky install in production and CI
+if (process.env.NODE_ENV === 'production' || process.env.CI === 'true') {
+  process.exit(0)
+}
+const husky = (await import('husky')).default
+console.log(husky())
+```
+
+Then, use it in `prepare`:
+```json title="package.json"
+{
+  "scripts": {
+    // other scripts...
+    "prepare": "node .husky/install.mjs"
+  }
+}
+```
+
+
+## Adding Git Hooks
+
+To add a hook:
+```sh
+echo "npm test" > .husky/pre-commit
+```
+
+
+## Testing Hooks
+
+To test a hook without committing, add `exit 1` to the hook script to abort the Git command:
+```bash title=".husky/pre-commit"
+# Your WIP script
+# ...
+
+exit 1
+```
+
+Then try to commit:
+```sh
+git commit -m "testing pre-commit code"
+# A commit will not be created
+```
+
+
+## Lint staged files
+
+Run `lint-staged` before committing (via `pre-commit` hook):
+
+```sh
+echo "npx lint-staged" > .husky/pre-commit
+```
+
+
+## Lint commit message
+
+Run `commitlint` before committing (via `commit-msg` hook):
+
+```sh
+echo "npx --no -- commitlint --edit \$1" > .husky/commit-msg
+```
+
+
+## Check branch name
+
+Check branch name format before push (via `pre-push` hook):
+
+```sh
+echo "npx git-branch-is -r '^(feature|fix)/[a-z\-\d\.]+$'" > .husky/pre-push
+```
+
+
+## References
+
+https://typicode.github.io/husky/

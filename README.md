@@ -1,4 +1,4 @@
-# Learning Cheat sheet
+# Cheat sheet
 
 ## Overview
 
@@ -32,19 +32,19 @@ pnpm install
 
 ## Running the Project
 
-Start the development server:
+### Using command line
+
+Start the dev server:
 
 ```bash
 npm run dev
 ```
 
-Then open http://localhost:5002
+Then open the URL output in the terminal to view the website in your browser.
 
-**Use VS Code launch config**:
+### Using VS Code extension
 
-A launch config is available in `.vscode/launch.json`.
-
-You can start it from the Run and Debug panel to run `npm run dev` in the integrated terminal.
+To quickly view the documentation in the browser, you can install the [Cheat Sheet Utils](https://github.com/lamhq/cheat-sheet-utils) extension. It will start the dev server and open the correct url for the current opening markdown file.
 
 
 ## Deployment

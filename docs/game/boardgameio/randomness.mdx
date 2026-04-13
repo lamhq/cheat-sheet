@@ -1,0 +1,48 @@
+# Randomness
+
+## Using Randomness
+
+The object passed to move functions contains an object `random`, which exposes a range of functions for generating randomness.
+
+```ts
+{
+  moves: {
+    rollDie: ({ G, random }) => {
+      G.dieRoll = random.D6(); // dieRoll = 1–6
+    },
+
+    rollThreeDice: ({ G, random }) => {
+      G.diceRoll = random.D6(3); // diceRoll = [1–6, 1–6, 1–6]
+    }
+  },
+}
+```
+
+
+## Seed
+
+You can set the initial seed used for the random number generator on your game object:
+
+```ts
+const game = {
+  seed: 42,
+  // ...
+};
+```
+
+
+### Common APIs
+
+- [`die`](https://boardgame.io/documentation/#/random?id=_1-die): throw a die with dimensions and throw count.
+- [`Number`](https://boardgame.io/documentation/#/random?id=_2-number): returns a random number between 0 and 1.
+- [`Shuffle`](https://boardgame.io/documentation/#/random?id=_3-shuffle): shuffle an array.
+
+```ts
+random.Die(6, 3);  // dice = [1-6, 1-6, 1-6]
+random.D4(3);  // dice = [1-4, 1-4, 1-4]
+// also D6, D8, D10, D12, D20
+
+const n = random.Number();
+
+G.deck = random.Shuffle(G.deck);
+```

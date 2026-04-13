@@ -1,0 +1,137 @@
+import { PackageManagerTabs } from '@theme'
+
+# Jest
+
+## Version
+
+This document is for version `30.0.0` (2025).
+
+
+## Overview
+
+Jest is a JavaScript testing framework that works out-of-the-box for most projects.
+
+When developing TypeScript projects, `ts-jest` is a TypeScript preprocessor that enables Jest to test TypeScript code seamlessly.
+
+
+## Installation 
+
+<PackageManagerTabs command="add --save-dev jest@^30.3.0 ts-jest@^29.4.6 @types/jest@^30.0.0" />
+
+- `ts-jest` is a Jest transformer that allows you to use TypeScript with Jest.
+- `@types/jest` provides TypeScript type definitions for Jest's global APIs.
+
+Create Jest configuration automatically using `ts-jest`:
+
+```bash
+npx ts-jest config:init
+```
+
+
+## Monorepo Configuration
+
+For monorepo structures, use Jest's `projects` configuration:
+
+```javascript title="jest.config.js"
+module.exports = {
+  projects: [
+    '<rootDir>/packages/package-a',
+    '<rootDir>/packages/package-b',
+  ],
+};
+```
+
+Each project can have its own config file. The main Jest instance will run tests for all specified projects.
+
+In each package directory:
+
+```javascript title="packages/package-a/jest.config.js"
+module.exports = {
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+  displayName: 'package-a',
+  rootDir: '.',
+};
+```
+
+
+## Coverage Configuration
+
+```javascript title="jest.config.js"
+module.exports = {
+  preset: 'ts-jest',
+  collectCoverage: true,
+  coverageDirectory: 'coverage',
+  coverageReporters: ['text', 'lcov', 'html'],
+  collectCoverageFrom: [
+    'src/**/*.ts',
+    '!src/**/*.d.ts',
+    '!src/**/index.ts',
+  ],
+  coverageThreshold: {
+    global: {
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80,
+    },
+  },
+};
+```
+
+
+## ESLint Integration
+
+See [ESLint](./eslint.mdx#jest) for details on how to set up ESLint for Jest tests.
+
+
+## Writing Tests
+
+For TypeScript projects, create `sum.ts`:
+
+```typescript title="sum.ts"
+export function sum(a: number, b: number): number {
+  return a + b;
+}
+```
+
+Create `sum.test.ts`:
+
+```typescript title="sum.test.ts"
+// no need to import `describe, expect, test` from `@jest/globals`, as they are globally available via `@types/jest`
+import { sum } from './sum';
+
+describe('sum module', () => {
+  test('adds 1 + 2 to equal 3', () => {
+    expect(sum(1, 2)).toBe(3);
+  });
+});
+```
+
+## Running Tests
+
+Add a test script to your `package.json`:
+
+```json title="package.json"
+{
+  "scripts": {
+    "test": "jest"
+  }
+}
+```
+
+To run all tests:
+
+```bash
+npm run test
+```
+
+
+## References
+
+- https://jestjs.io/docs/getting-started
+- https://kulshekhar.github.io/ts-jest/docs/getting-started/installation
+- https://kulshekhar.github.io/ts-jest/docs/guides/using-with-monorepo
+- https://jestjs.io/docs/next/configuration#projects-arraystring--projectconfig
+- https://kulshekhar.github.io/ts-jest/docs/debugging
+- https://github.com/jest-community/eslint-plugin-jest

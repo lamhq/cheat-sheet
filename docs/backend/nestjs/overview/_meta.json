@@ -1,0 +1,11 @@
+[
+  "controllers",
+  "providers",
+  "modules",
+  "middlewares",
+  "exception-filters",
+  "pipes",
+  "guards",
+  "interceptors",
+  "custom-decorators"
+]
