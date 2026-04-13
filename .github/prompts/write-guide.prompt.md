@@ -1,17 +1,21 @@
 ---
 agent: agent
 model: Claude Haiku 4.5 (copilot)
-tools: ['web']
-description: Write Tool guide from provided URLs. For example, install and configure Jest, ESLint, Prettier, etc.
+description: Write a completed guide from provided URLs (Jest, ESLint, Prettier, etc.)
 ---
 
-Use the `fetch_webpage` tool to read URLs provided by the user.
+Use the `fetch_webpage` tool to read all provided URLs.
 
-From the content of those URLs, write a guide with step‑by‑step instructions on how to install, configure, and use the referenced software or tools.
+From the content of those URLs, write a guide with step‑by-step instructions on how to install, configure, and use the referenced software or tools.
 
-Limit the guide’s scope to TypeScript, Node.js, NestJS, Postgres, MongoDB, React, Next.js, PNPM, PNPM Workspace, GitHub Actions, ESLint (flat config format), VS Code.
+Limit the guide's scope to TypeScript, Node.js, NestJS, Postgres, MongoDB, React, Next.js, PNPM, PNPM Workspace, GitHub Actions, ESLint (flat config format), VS Code.
 
-If the guide use npm commands to install packages:
+Include a **References** section at the end of the guide with the original URLs for further reading.
+
+
+## NPM Commands
+
+If the guide uses npm commands to install packages:
 - add this line to the top of the guide: `import { PackageManagerTabs } from '@theme'`
 - use the following syntax to specify the package manager instead of writing the command directly:
 ```tsx
@@ -20,9 +24,17 @@ If the guide use npm commands to install packages:
 
 For each package in the install command (`<PackageManagerTabs command="..." />`), read the npm registry to find the latest version and add the version constraint (`@^{latest-version}`) to the command. *For example, if the command is `npm install --save-dev eslint-plugin-jest`, you should read the npm registry to find the latest version of `eslint-plugin-jest` and update the command to `npm install --save-dev eslint-plugin-jest@^{latest-version}`*.
 
+
+## Code Snippets
+
 For code snippets, specify file name using the following syntax:
 ```{language} title="{file-name}"
 {code}
 ```
 
-Include a **References** section at the end of the guide with the original URLs for further reading.
+
+## When to use this prompt
+
+Use this prompt when you want to create a comprehensive guide based on multiple web resources, limit the content to match your technical stack, and ensure consistency in formatting and style.
+
+This prompt rewrites the content in the documentation format used by Rspress, which is more intuitive and readable.
