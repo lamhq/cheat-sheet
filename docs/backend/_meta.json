@@ -73,5 +73,6 @@
     "type": "dir",
     "collapsed": true
   },
-  "keycloak"
+  "keycloak",
+  "testcontainers"
 ]
