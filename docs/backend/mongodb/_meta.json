@@ -11,5 +11,6 @@
     "type": "dir",
     "collapsed": true
   },
-  "shell"
+  "shell",
+  "backup-restore"
 ]

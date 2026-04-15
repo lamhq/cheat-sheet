@@ -1,0 +1,18 @@
+# Backup & Restore
+
+## Backup
+
+This command backs up a MongoDB database (collections, indexes, ...) to a specified directory `/backup/{database}`:
+
+```bash
+mongodump --uri="mongodb+srv://{username}:{password}@{host}/{database}" --out=/backup/ --gzip
+```
+
+
+## Restore
+
+This command restores a MongoDB database from a specified directory `/backup/{database}`:
+
+```bash
+mongorestore --uri="mongodb+srv://{username}:{password}@{host}/{database}" --gzip /backup/{database}
+```
