@@ -8,12 +8,16 @@
     "link": "/backend"
   },
   {
-    "text": "DevOps",
-    "link": "/devops"
+    "text": "AI",
+    "link": "/ai"
   },
   {
     "text": "Others",
     "items": [
+      {
+        "text": "DevOps",
+        "link": "/devops"
+      },
       {
         "text": "Web",
         "link": "/web"
