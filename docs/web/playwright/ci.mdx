@@ -1,0 +1,60 @@
+# Setting up CI
+
+## GitHub Actions
+
+```yml title=".github/workflows/playwright.yml"
+name: Playwright Tests
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+    - uses: actions/setup-node@v5
+      with:
+        node-version: lts/*
+    - name: Install dependencies
+      run: npm ci
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+    - name: Run Playwright tests
+      run: npx playwright test
+    - uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30
+```
+
+The workflow performs these steps:
+
+1. Clone your repository
+2. Install Node.js
+3. Install NPM Dependencies
+4. Install Playwright Browsers
+5. Run Playwright tests
+6. Upload HTML report to the GitHub UI
+
+## HTML Report
+
+The HTML Report shows you a full report of your tests.
+
+You can filter the report by browsers, passed tests, failed tests, skipped tests, and flaky tests.
+
+To download the HTML Report, in the workflow run, under "Artifacts" section, click on the `playwright-report` to download your report in the format of a zip file.
+
+To view the HTML Report, extract the zip in a folder that has Playwright installed, run the following command in the terminal:
+
+```bash
+npx playwright show-report <report-folder>
+```
+
+In the report, you can also view the trace of your tests and inspect each action to try to find out why the tests are failing.
+
+![](https://github.com/microsoft/playwright/assets/13063165/10fe3585-8401-4051-b1c2-b2e92ac4c274)

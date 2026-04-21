@@ -2,13 +2,16 @@
   "overview",
   "writing-tests",
   "generate-tests",
-  "global-setup",
-  "debug-tests",
+  "mock-api-req",
+  "auth",
   "api-testing",
+  "storage",
   "configuration",
   "projects",
+  "global-setup",
+  "pom",
+  "debug-tests",
   "monitoring",
-  "mock-api",
   "tracing",
-  "storage"
+  "ci"
 ]
