@@ -1,0 +1,41 @@
+# Playwright MCP
+
+## Introduction
+
+The Playwright MCP server provides browser automation capabilities, enabling LLMs to interact with web pages.
+
+
+## Installation
+
+To install the Playwright MCP server to VS Code via the VS Code CLI:
+
+```bash
+code --add-mcp '{"name":"playwright","command":"npx","args":["@playwright/mcp@latest"]}'
+```
+
+## Usage
+
+Ask your AI assistant to interact with a web page:
+
+```
+Navigate to https://demo.playwright.dev/todomvc and add a few todo items.
+```
+
+Other capabilities include:
+- Navigate to a page: ask "Go to https://example.com"
+- Click an element: ask "Click the 'Submit' button"
+- Fill a form: ask "Fill the 'Email' field with 'example@example.com'"
+- Take a screenshot: ask "Take a screenshot of the page"
+- Extract information: ask "What is the title of the page?" or "List all the links on the page"
+- Run Playwright code: ask "Run this Playwright code: `await page.click('button#submit')`"
+- Mock an API: ask "Mock the API endpoint '/api/data' to return `{ data: 'mocked data' }`"
+
+## Configuration options
+
+- [Run in headless mode](https://playwright.dev/docs/getting-started-mcp#headed-mode).
+- [Choose browser to run](https://playwright.dev/docs/getting-started-mcp#browser-selection).
+- [User profiles & browser extension](https://playwright.dev/docs/getting-started-mcp#user-profile)
+
+## References
+
+- [Playwright MCP](https://playwright.dev/docs/getting-started-mcp)

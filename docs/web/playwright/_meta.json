@@ -13,5 +13,7 @@
   "debug-tests",
   "monitoring",
   "tracing",
-  "ci"
+  "ci",
+  "mcp",
+  "cli"
 ]

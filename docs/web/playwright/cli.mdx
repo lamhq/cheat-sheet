@@ -1,0 +1,36 @@
+import { PackageManagerTabs } from '@theme'
+
+# Playwright CLI
+
+## Introduction
+
+Playwright CLI is a command-line interface for running Playwright tests.
+
+It is designed for coding agents. It provides token-efficient browser control and installable skills.
+
+## Installation
+
+Install globally:
+
+<PackageManagerTabs command="install -g @playwright/cli" />
+
+Or run locally via `npx`:
+
+```bash
+npx playwright-cli --help
+```
+
+Install skills:
+
+```bash
+npx playwright-cli install --skills
+```
+
+## Usage
+
+Try asking your coding agent:
+
+```
+Use playwright skills to test https://demo.playwright.dev/todomvc/.
+Take screenshots for all successful and failing scenarios.
+```
