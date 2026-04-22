@@ -1,11 +1,17 @@
-# Playwright MCP
+import { PackageManagerTabs } from '@theme'
 
-## Introduction
+# AI Agent
+
+Integrate Playwright with AI agents.
+
+## Playwright MCP
+
+### Introduction
 
 The Playwright MCP server provides browser automation capabilities, enabling LLMs to interact with web pages.
 
 
-## Installation
+### Installation
 
 To install the Playwright MCP server to VS Code via the VS Code CLI:
 
@@ -13,7 +19,7 @@ To install the Playwright MCP server to VS Code via the VS Code CLI:
 code --add-mcp '{"name":"playwright","command":"npx","args":["@playwright/mcp@latest"]}'
 ```
 
-## Usage
+### Usage
 
 Ask your AI assistant to interact with a web page:
 
@@ -30,12 +36,47 @@ Other capabilities include:
 - Run Playwright code: ask "Run this Playwright code: `await page.click('button#submit')`"
 - Mock an API: ask "Mock the API endpoint '/api/data' to return `{ data: 'mocked data' }`"
 
-## Configuration options
+### Configuration options
 
 - [Run in headless mode](https://playwright.dev/docs/getting-started-mcp#headed-mode).
 - [Choose browser to run](https://playwright.dev/docs/getting-started-mcp#browser-selection).
 - [User profiles & browser extension](https://playwright.dev/docs/getting-started-mcp#user-profile)
 
-## References
+### References
 
 - [Playwright MCP](https://playwright.dev/docs/getting-started-mcp)
+
+## Playwright CLI
+
+### Introduction
+
+Playwright CLI is a command-line interface for running Playwright tests.
+
+It is designed for coding agents. It provides token-efficient browser control and installable skills.
+
+### Installation
+
+Install globally:
+
+<PackageManagerTabs command="install -g @playwright/cli" />
+
+Or run locally via `npx`:
+
+```bash
+npx playwright-cli --help
+```
+
+Install skills:
+
+```bash
+npx playwright-cli install --skills
+```
+
+### Usage
+
+Try asking your coding agent:
+
+```
+Use playwright skills to test https://demo.playwright.dev/todomvc/.
+Take screenshots for all successful and failing scenarios.
+```

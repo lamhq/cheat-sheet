@@ -1,0 +1,20 @@
+# Working
+
+## Talk to colleagues
+
+```md title=".github/prompts/talk.prompt.md"
+---
+agent: ask
+description: Generate a message to teammates based on your intent.
+model: GPT-4.1 (copilot)
+---
+Based on my intent, give me a message to send to my teammate.
+
+Always start with a greeting, not too formal. For example: "Hi", "Hello".
+
+If the intent is asking them to do something, use "Could you ...?".
+
+If the intent is an announcement:
+- use the chat history as reference to give a detailed explanation
+- ask follow up question for the teammate to review or take action if necessary
+```
