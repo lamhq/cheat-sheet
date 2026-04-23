@@ -1,6 +1,10 @@
 [
   "overview",
-  "write-tests",
+  {
+    "name": "write-tests",
+    "type": "dir",
+    "collapsed": true
+  },
   "organize-tests",
   "generate-tests",
   "run-tests",
@@ -8,13 +12,7 @@
   "ai",
   "configuration",
   "projects",
-  "global-setup",
-  "mock-api-req",
   "auth",
   "api-testing",
-  "fixtures",
-  "pom",
-  "ci",
-  "monitoring",
-  "storage"
+  "ci"
 ]
