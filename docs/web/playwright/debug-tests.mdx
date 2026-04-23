@@ -1,41 +1,117 @@
 # Debugging Tests
 
-The [Playwright Test for VSCode](https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright) extension provides debugging tools to help you identify and fix issues in your tests.
+## UI mode
+
+It's recommended to debug tests with UI Mode, you can:
+- walk through each step of the test 
+- see what was happening before, during, and after each step
+- view element's locator (Pick Locator button)
+- test your locators in the locator playground
+
+
+## VS Code Extension
+
+After installing the Playwright Test extension, you can debug tests inside VS Code.
 
 You can:
-- Set breakpoints
-- Inspect variables
-- View detailed error messages
-- Get AI-powered suggestions to resolve test failures
-- Use trace viewer to analyze test execution step-by-step
+- set breakpoints
+- inspect variables
+- view detailed error messages
+- resolve test failures using AI
+- verify a locator by clicking on it in code and see it's highlighted in browser
+- open [trace viewer](#trace-viewer) to analyze test execution
 
 
-## Use Breakpoints
+## Playwright Inspector
 
-Set a breakpoint by clicking in the gutter next to a line number. Right-click the test and select **Debug Test**.
+Debug tests with the Playwright Inspector:
 
-![](https://playwright.dev/assets/images/debug-mode-e145cba936d960900fc79b646016a9ba.png)
+```sh
+npx playwright test --debug
+```
+
+This command opens a browser window and Playwright Inspector. You can:
+
+- step through your test code line by line
+- run your test from start to finish
+- use the Pick Locator button like in UI mode
+
+![](https://playwright.dev/assets/images/run-tests-debug-04d9391d458299856c76dee6394874e0.png)
+
+To debug one test file:
+
+```sh
+npx playwright test example.spec.ts --debug
+```
 
 
-## Pick locator
+## Test reports
 
-While debugging you can use the **Pick Locator** button to select an element on the page and see the locator that Playwright would use to find that element.
+The HTML Reporter shows you a full report of your tests.
 
-![](https://playwright.dev/assets/images/ui-mode-pick-locator-91b71dca4af49fdfad305a57b9d657b8.png)
+It's opened automatically if some tests failed.
+
+You can open it manually with:
+
+```sh
+npx playwright show-report
+```
+
+![](https://playwright.dev/assets/images/html-report-951cba1d9da23ab59e46459fe2e73036.png)
 
 
-## Fix with AI
+## Trace Viewer
 
-When a test fails, click the sparkle icon next to the error to get an AI-powered fix suggestion from Copilot.
-
-![](https://playwright.dev/assets/images/fix-with-ai-011728a352c48c0083ac472fe739815d.png)
-
-
-## Use Trace Viewer
-
-Enable the **Show Trace Viewer** option in the Playwright sidebar. When your test finishes, a detailed trace will automatically open, providing you with a complete timeline of your test execution.
+### Introduction
 
 ![](https://playwright.dev/assets/images/trace-viewer-debug-1386da3466791b55394091f252ec2ca9.png)
 
-> [!INFO]
-> Flaky tests are tests that sometimes pass and sometimes fail without any changes to the code or environment.
+Playwright records everything that happens during a test run into a `.zip` file.
+
+Trace Viewer is a GUI tool that lets you view trace files.
+
+Trace files include:
+- **DOM snapshots** before, during, and after each action  
+- **Screenshots** rendered as a filmstrip  
+- **Network requests and responses**  
+- **Console logs and errors**  
+- **Source code location** for each action  
+- **Execution timeline** with duration and failure points  
+- **Metadata** like browser type, viewport, and test duration
+
+Traces are normally generated in CI environments for debugging purposes.
+
+
+### Features
+
+- **Step-by-step analysis**: Navigate through each action your test performed with precise timestamps
+- **DOM inspection**: View DOM snapshots at any point during test execution to see exactly what the page looked like
+- **Network monitoring**: Examine all network requests and responses that occurred during the test
+- **Console logs**: Access all console messages and errors from the browser
+- **Source mapping**: Jump directly to the source code that executed each action
+- **Visual debugging**: See screenshots and understand what the user would have seen at each step
+
+### Enable Trace Recording
+
+```ts title="playwright.config.ts"
+import { defineConfig } from '@playwright/test';
+export default defineConfig({
+  retries: process.env.CI ? 2 : 0, // set to 2 when running on CI
+  // ...
+  use: {
+    trace: 'on-first-retry', // record traces on first retry of each test
+  },
+});
+```
+
+### Viewing trace
+
+You can view traces by opening the HTML report:
+
+```sh
+npx playwright show-report
+```
+
+Click on the trace icon next to the test's file name, you can then view the trace of your tests and inspect each action to try to find out why the tests are failing.
+
+![](https://playwright.dev/assets/images/html-report-failed-tests-465ab63abc3dcd0728f6449628ffa906.png)

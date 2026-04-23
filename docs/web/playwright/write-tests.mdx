@@ -53,74 +53,6 @@ test.describe('SauceDemo login flow', () => {
 ```
 
 
-## Structuring tests
-
-- `describe`: declare a group of tests
-- `step`: declares a test step that is shown in the report
-
-```ts
-import { test, expect } from '@playwright/test';
-
-test.describe('Login flow', () => {
-  test('valid user can log in', async ({ page }) => {
-    await test.step('Navigate to login page', async () => {
-      await page.goto('https://www.saucedemo.com/');
-    });
-
-    await test.step('Fill credentials and submit', async () => {
-      await page.fill('#user-name', 'standard_user');
-      await page.fill('#password', 'secret_sauce');
-      await page.click('#login-button');
-    });
-
-    await test.step('Verify dashboard', async () => {
-      await expect(page).toHaveURL(/inventory.html/);
-      await expect(page.locator('.inventory_item_name').first())
-        .toHaveText('Sauce Labs Backpack');
-    });
-  });
-});
-```
-
-
-## Test Hooks
-
-- `beforeAll`, `afterAll`: executed once, before/after all tests in its scope (root or nested describe)
-- `beforeEach`, `afterEach`: executed before/after each test
-
-```ts
-import { test, expect } from '@playwright/test';
-
-// Global hooks: run once for ALL tests in this file
-test.beforeAll(() => console.log('🌍 Global beforeAll'));
-test.afterAll(() => console.log('🌍 Global afterAll'));
-
-test('Outside test #1', async ({ page }) => {
-  console.log('➡️ Outside test #1');
-  await page.goto('https://example.com');
-  await expect(page).toHaveTitle(/Example/);
-});
-
-test.describe('Inside describe block', () => {
-  // Local hooks: run once for tests in THIS block only
-  test.beforeAll(() => console.log('📦 Local beforeAll'));
-  test.afterAll(() => console.log('📦 Local afterAll'));
-
-  test('Inside test #1', async ({ page }) => {
-    console.log('➡️ Inside test #1');
-    await page.goto('https://example.com');
-    await expect(page.locator('h1')).toHaveText('Example Domain');
-  });
-
-  test('Inside test #2', async ({ page }) => {
-    console.log('➡️ Inside test #2');
-    await page.goto('https://example.com');
-    await expect(page).toHaveTitle(/Example/);
-  });
-});
-```
-
-
 ## Finding elements
 
 [Locators](https://playwright.dev/docs/locators) represent a way to find element(s) on the page.
@@ -182,7 +114,7 @@ await page.getByLabel('Password').fill('secret-password');
 ```
 
 
-## Element Assertions
+## Assertions
 
 Check [here](https://playwright.dev/docs/test-assertions) for a list of available assertions.
 
@@ -229,6 +161,7 @@ await expect(page).toHaveURL(/inventory.html/);
 
 - `toBeOK()` – response status is OK (200–299)  
 - `toBe(statusCode)` – response has specific status code
+- `toMatchObject`: checks if an object matches a subset of properties. Allows extra properties to be present in the value
 
 ```ts
 import { test, expect } from '@playwright/test';
@@ -239,9 +172,6 @@ test('API returns OK response', async ({ request }) => {
 });
 ```
 
-### Others
-
-- `toMatchObject`: checks if an object matches a subset of properties. Allows extra properties to be present in the value
 
 ```ts
 const value = {
@@ -253,6 +183,44 @@ expect(value).toMatchObject({ a: 1, c: true });
 expect(value).toMatchObject({ b: 2, c: true });
 
 expect([{ a: 1, b: 2 }]).toMatchObject([{ a: 1 }]);
+```
+
+
+## Test Hooks
+
+- `beforeAll`, `afterAll`: executed once, before/after all tests in its scope (root or nested describe)
+- `beforeEach`, `afterEach`: executed before/after each test
+
+```ts
+import { test, expect } from '@playwright/test';
+
+// Global hooks: run once for ALL tests in this file
+test.beforeAll(() => console.log('🌍 Global beforeAll'));
+test.afterAll(() => console.log('🌍 Global afterAll'));
+
+test('Outside test #1', async ({ page }) => {
+  console.log('➡️ Outside test #1');
+  await page.goto('https://example.com');
+  await expect(page).toHaveTitle(/Example/);
+});
+
+test.describe('Inside describe block', () => {
+  // Local hooks: run once for tests in THIS block only
+  test.beforeAll(() => console.log('📦 Local beforeAll'));
+  test.afterAll(() => console.log('📦 Local afterAll'));
+
+  test('Inside test #1', async ({ page }) => {
+    console.log('➡️ Inside test #1');
+    await page.goto('https://example.com');
+    await expect(page.locator('h1')).toHaveText('Example Domain');
+  });
+
+  test('Inside test #2', async ({ page }) => {
+    console.log('➡️ Inside test #2');
+    await page.goto('https://example.com');
+    await expect(page).toHaveTitle(/Example/);
+  });
+});
 ```
 
 
