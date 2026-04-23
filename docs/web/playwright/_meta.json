@@ -14,5 +14,6 @@
   "projects",
   "auth",
   "api-testing",
+  "screenshot-cmp",
   "ci"
 ]
