@@ -4,6 +4,16 @@
     "label": "AI"
   },
   {
+    "name": "ai-agents",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "github-copilot",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
     "name": "using-ai",
     "type": "dir",
     "collapsed": true

@@ -18,5 +18,11 @@
     "name": "implementation",
     "label": "Implementation",
     "collapsed": true
+  },
+  {
+    "type": "dir",
+    "name": "testing",
+    "label": "Testing",
+    "collapsed": true
   }
 ]

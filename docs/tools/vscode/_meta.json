@@ -5,7 +5,6 @@
   "fastapi",
   "typescript",
   "debug",
-  "ai",
   {
     "name": "dev-containers",
     "type": "dir",
