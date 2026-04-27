@@ -1,0 +1,123 @@
+# Fixtures
+
+## Introduction
+
+Test fixtures are objects provided to each test function as arguments. They are used to establish the environment for each test.
+
+Test fixtures are isolated between tests. 
+
+
+## Built-in fixtures
+
+Common built-in fixtures include:
+- `page` — isolated page for the test
+- `context` — isolated browser context
+- `browser` — shared browser instance across tests
+- `browserName` — current browser name
+- `request` — isolated API request context
+
+
+## Creating a fixture
+
+To create your own fixture, use `test.extend()` to create a new `test` object:
+
+```ts title="my-test.ts"
+import { test as base } from '@playwright/test';
+import { TodoPage } from './todo-page';
+import { SettingsPage } from './settings-page';
+
+type MyFixtures = {
+  todoPage: TodoPage;
+  settingsPage: SettingsPage;
+};
+
+export const test = base.extend<MyFixtures>({
+  todoPage: async ({ page }, use) => {
+    const todoPage = new TodoPage(page);
+    await todoPage.goto();
+    await todoPage.addToDo('item1');
+    await todoPage.addToDo('item2');
+    await use(todoPage);
+    await todoPage.removeAll();
+  },
+  settingsPage: async ({ page }, use) => {
+    await use(new SettingsPage(page));
+  },
+});
+
+export { expect } from '@playwright/test';
+```
+
+
+## Using a fixture
+
+Import the `test` object from the fixture file and use it in your tests:
+
+```ts title="todo.spec.ts"
+import { test, expect } from './my-test';
+
+test.beforeEach(async ({ settingsPage }) => {
+  await settingsPage.switchToDarkMode();
+});
+
+test('basic test', async ({ todoPage, page }) => {
+  await todoPage.addToDo('something nice');
+  await expect(page.getByTestId('todo-title')).toContainText('something nice');
+});
+```
+
+## Overriding fixtures
+
+The following example overrides the `page` fixture by automatically navigating to the `baseURL`
+:
+```ts title="fixtures.ts"
+import { test as base } from '@playwright/test';
+
+export const test = base.extend({
+  page: async ({ baseURL, page }, use) => {
+    await page.goto(baseURL);
+    await use(page);
+  },
+});
+```
+
+## Worker-scoped fixtures
+
+Playwright uses worker processes to run test files.
+
+Worker fixtures run once per worker process.
+
+To define a worker-scoped fixture, pass `{ scope: 'worker' }` when extending the test.
+
+```ts title="fixtures.ts"
+import { test as base } from '@playwright/test';
+
+// Define a worker-scoped fixture
+const test = base.extend<{ workerFixture: string }>({
+  workerFixture: [async ({}, use) => {
+    console.log('Setup worker fixture');
+    await use('shared value');
+    console.log('Teardown worker fixture');
+  }, { scope: 'worker' }],
+});
+
+test('first test using worker fixture', async ({ workerFixture }) => {
+  console.log(workerFixture); // shared value
+});
+
+test('second test using worker fixture', async ({ workerFixture }) => {
+  console.log(workerFixture); // shared value
+});
+```
+
+## Advanced Topics
+
+- [Automatic fixtures](https://playwright.dev/docs/test-fixtures#automatic-fixtures): describes auto-start fixtures using `{ auto: true }`.
+- [Fixture timeout](https://playwright.dev/docs/test-fixtures#fixture-timeout): shows how to set longer timeouts for slow fixture setup/teardown.
+- [Fixtures-options](https://playwright.dev/docs/test-fixtures#fixtures-options): create a configurable fixture.
+- [Execution order](https://playwright.dev/docs/test-fixtures#execution-order): details how fixture setup/teardown order is determined.
+- [Combine custom fixtures from multiple modules](https://playwright.dev/docs/test-fixtures#combine-custom-fixtures-from-multiple-modules): merge test fixtures from multiple files or modules.
+- [Box fixtures](https://playwright.dev/docs/test-fixtures#box-fixtures): hiding fixture steps from reports.
+- [Custom fixture title](https://playwright.dev/docs/test-fixtures#custom-fixture-title): customizing fixture title that will be shown in test reports and error messages.
+- [Adding global hooks](https://playwright.dev/docs/test-fixtures#adding-global-beforeeach-aftereach-hooks): using fixtures to create global beforeEach/afterEach hooks.
+- [Adding global beforeAll/afterAll hooks](https://playwright.dev/docs/test-fixtures#adding-global-beforeall-afterall-hooks): using fixtures to create global beforeAll/afterAll hooks.

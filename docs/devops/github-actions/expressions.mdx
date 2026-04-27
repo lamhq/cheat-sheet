@@ -1,5 +1,16 @@
 # Expressions
 
+## Introduction
+
+GitHub Actions expressions use the `${{ }}` syntax to dynamically evaluate and insert values into workflows.
+
+**Example:**
+```yml
+if: ${{ contains(github.event.head_commit.message, 'skip-tests') }}
+env:
+  STATUS: ${{ job.status }}
+```
+
 ## Literals
 
 These are the basic data types you can use in expressions:

@@ -1,0 +1,55 @@
+# Visual comparisons
+
+## Introduction
+
+Playwright can produce and compare screenshots.
+
+## Generating screenshots
+
+On first execution, Playwright test will generate reference screenshots. Subsequent runs will compare against the reference.
+
+```ts
+import { test, expect } from '@playwright/test';
+
+test('example test', async ({ page }) => {
+  await page.goto('https://playwright.dev');
+  await expect(page).toHaveScreenshot();
+});
+```
+
+The snapshot name and path can be configured with [`testConfig.snapshotPathTemplate`](https://playwright.dev/docs/api/class-testconfig#test-config-snapshot-path-template) in the playwright config.
+
+
+## Updating screenshots
+
+```sh
+npx playwright test --update-snapshots
+```
+
+## Custom style
+
+You can apply a custom stylesheet to your page while taking screenshot.
+
+You can filter out dynamic or volatile elements, hence improving the screenshot determinism.
+
+```ts title="playwright.config.ts"
+import { defineConfig } from '@playwright/test';
+export default defineConfig({
+  expect: {
+    toHaveScreenshot: {
+      stylePath: './screenshot.css'
+    },
+  },
+});
+```
+
+Or in your test:
+
+```ts
+import { test, expect } from '@playwright/test';
+
+test('example test', async ({ page }) => {
+  await page.goto('https://playwright.dev');
+  await expect(page).toHaveScreenshot({ stylePath: path.join(__dirname, 'screenshot.css') });
+});
+```

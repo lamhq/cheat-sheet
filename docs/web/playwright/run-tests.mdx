@@ -1,0 +1,85 @@
+# Running tests
+
+## Command line
+
+Runs tests on all browsers:
+
+```sh
+npx playwright test
+```
+
+Run test on headed mode:
+
+```sh
+npx playwright test --headed
+```
+
+Run a single test file:
+
+```sh
+npx playwright test landing-page.spec.ts
+```
+
+Run a set of test files from different directories:
+
+```sh
+npx playwright test tests/todo-page/ tests/landing-page/
+```
+
+Run files which file name contains keyword `landing` or `login`:
+
+```sh
+npx playwright test landing login
+```
+
+Run test matching a title:
+
+```sh
+npx playwright test -g "add a todo item"
+```
+
+Run last failed tests:
+
+```sh
+npx playwright test --last-failed
+```
+
+
+## UI mode
+
+It's recommended to use UI mode for local development:
+
+```sh
+npx playwright test --ui
+```
+
+![](https://playwright.dev/assets/images/ui-mode-error-ccd897a716874f5a9879220df24f1168.png)
+
+Supported Features:
+
+- **Run tests interactively** → See tests execute step by step in a browser.  
+- **Watch test execution live** → Observe actions like clicks, navigation, and assertions.  
+- **Debug easily** → Pause at breakpoints, inspect elements, and replay steps.  
+- **Explore locators** → Hover over elements to confirm selectors are correct.  
+- **View logs and errors** → Get detailed output alongside the browser view.  
+- **Step through retries** → See how flaky tests behave across multiple attempts.  
+- **Inspect screenshots and traces** → Quickly check visual output and recorded traces.  
+- **Edit and rerun tests** → Make changes and re-execute without leaving the UI.  
+- **Parallel test visualization** → Watch multiple tests running across browsers/workers.  
+- **Interactive development** → Use it as a playground to refine selectors and flows before finalizing tests.
+- **Watch mode** → Automatically re-runs tests when files change, speeding up development feedback.  
+
+
+## VS Code extension
+
+After installing the [extension](https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright), click the Testing icon in the VS Code Activity Bar to open the Test Explorer.
+
+Here you can:
+- View all detected tests in your project
+- Managing projects, tools, and settings
+- Run a Single Test
+- Run All Tests
+- Run tests on Multiple Browsers by selecting the projects (browsers) you want to test against
+- Show the browser while running tests
+
+![](https://playwright.dev/assets/images/testing-sidebar-25b968f725bc3c175a12a4aa8b662c81.png)

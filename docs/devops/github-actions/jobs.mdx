@@ -121,6 +121,31 @@ You can run scripts and shell commands in steps using the `run` key:
           expr $value \* 9 > math-homework.txt
 ```
 
+## Conditional execution
+
+You can use conditionals to further control whether jobs or steps in your workflow will run.
+
+At Job level:
+```yml
+jobs:
+  run_if_label_matches:
+    if: github.event.label.name == 'bug'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'The label was bug'
+```
+
+At Step level:
+```yml
+jobs:
+  state_event_type:
+    runs-on: ubuntu-latest
+    steps:
+    - name: if is issue
+      if: github.event.issue
+      run: |
+        echo An issue was closed
+```
 
 ## Job Outputs
 
@@ -139,6 +164,8 @@ jobs:
       - id: step2
         run: echo "test=world" >> "$GITHUB_OUTPUT"
 ```
+
+Using job outputs in another job:
 
 ```yml
 jobs:

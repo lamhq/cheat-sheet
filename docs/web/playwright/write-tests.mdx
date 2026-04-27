@@ -2,7 +2,7 @@
 
 ## Overview
 
-A Playwright test includes steps to:
+A Playwright test includes steps that:
 - perform actions on a web page
 - assert the state against expectations
 
@@ -12,6 +12,8 @@ Tests are isolated. Each test runs in a clean, independent environment.
 
 > [!INFO]
 > By receiving a [page fixture](https://playwright.dev/docs/test-fixtures#built-in-fixtures), pages are isolated between tests due to the [Browser Context](https://playwright.dev/docs/browser-contexts), which is equivalent to a brand new browser profile.
+
+Example test:
 
 ```ts
 import { test, expect } from '@playwright/test';
@@ -51,7 +53,7 @@ test.describe('SauceDemo login flow', () => {
 ```
 
 
-## Locators
+## Finding elements
 
 [Locators](https://playwright.dev/docs/locators) represent a way to find element(s) on the page.
 
@@ -72,7 +74,7 @@ await page.getByRole('button', { name: 'Sign in' }).click();
 ```
 
 
-## Actions
+## Interacting with elements
 
 Check [here](https://playwright.dev/docs/input) for all available actions.
 
@@ -89,7 +91,7 @@ Check [here](https://playwright.dev/docs/input) for all available actions.
 await page.goto('https://playwright.dev/');
 ```
 
-### Locator actions
+### Element actions
 
 - `locator.click()` – click on an element  
 - `locator.fill()` – enter text into input fields  
@@ -159,6 +161,7 @@ await expect(page).toHaveURL(/inventory.html/);
 
 - `toBeOK()` – response status is OK (200–299)  
 - `toBe(statusCode)` – response has specific status code
+- `toMatchObject`: checks if an object matches a subset of properties. Allows extra properties to be present in the value
 
 ```ts
 import { test, expect } from '@playwright/test';
@@ -169,9 +172,6 @@ test('API returns OK response', async ({ request }) => {
 });
 ```
 
-### Others
-
-- `toMatchObject`: checks if an object matches a subset of properties. Allows extra properties to be present in the value
 
 ```ts
 const value = {
@@ -183,36 +183,6 @@ expect(value).toMatchObject({ a: 1, c: true });
 expect(value).toMatchObject({ b: 2, c: true });
 
 expect([{ a: 1, b: 2 }]).toMatchObject([{ a: 1 }]);
-```
-
-
-## Structuring tests
-
-- `describe`: declare a group of tests
-- `step`: declares a test step that is shown in the report
-
-```ts
-import { test, expect } from '@playwright/test';
-
-test.describe('Login flow', () => {
-  test('valid user can log in', async ({ page }) => {
-    await test.step('Navigate to login page', async () => {
-      await page.goto('https://www.saucedemo.com/');
-    });
-
-    await test.step('Fill credentials and submit', async () => {
-      await page.fill('#user-name', 'standard_user');
-      await page.fill('#password', 'secret_sauce');
-      await page.click('#login-button');
-    });
-
-    await test.step('Verify dashboard', async () => {
-      await expect(page).toHaveURL(/inventory.html/);
-      await expect(page.locator('.inventory_item_name').first())
-        .toHaveText('Sauce Labs Backpack');
-    });
-  });
-});
 ```
 
 

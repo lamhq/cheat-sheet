@@ -10,40 +10,38 @@ The Documentation Structure document describes the structure of the project's do
 
 A Documentation Structure document should include:
 
-### Purpose
+### Introduction
 
 - Purpose of the documentation directory.
 - How it supports the project lifecycle.
 
-### Folder Structure
+### Directory Layout
 
 - Present the directory tree.
 - Describe the role of each directory and its main files.
-
-### Best Practices
-
-- Principles for maintaining clear, consistent, and traceable documentation.
 
 ## Example
 
 ````md title="documentation-structure.md"
 # Documentation Structure
 
-## Purpose
+## Introduction
 
-This document describes the structure the `docs/` folder which stores all the project documentation.
+This document describes the structure of the `docs/` directory, which contains all project documentation (features, design, development, testing, etc.).
 
-## Folder Structure
+## Directory Layout
 
 ```
 docs/
-├── documentation-structure.md
 ├── project-overview.md
-├── tasks/
-│   └── {task-id}-{task-name}.md
+├── project-structure.md
+├── documentation-structure.md
 ├── requirements/
-│   ├── srs.md
-│   └── {feature-name}.md
+│   └── {component}/
+│       └── {feature-name}.md
+├── tasks/
+│   └── {component}/
+│       └── {task-number}-{task-name}.md
 ├── design/
 │   ├── system-architecture.md
 │   └── {component}/
@@ -56,49 +54,40 @@ docs/
 │   └── {component}/
 │       ├── architectural-pattern.md
 │       ├── coding-standards.md
-│       ├── coding-guidelines.md
-│       └── repository-guide.md
+│       └── coding-guidelines.md
 ├── tests/
-│   └── {feature-name}-test-suite.md
+│   └── {component}/
+│       └── {feature-name}.md
 └── maintenance/
     ├── deployment-guide.md
-    ├── monitoring-guide.md
-    ├── backup-recovery.md
-    └── release-notes.md
+    └── monitoring-guide.md
 ```
 
-- `documentation-structure.md`: describes the structure of the project's documentation directory.
-- `project-overview.md`: Provides a high-level summary of the project → **Vision**.
-- `tasks/`: describes works need to be done (new feature, bug fix, or improvement) with clear description, scope, and acceptance criteria.
-- `requirements/`:
-  - `srs.md`: Software Requirements Specification document. Contains system-wide functional and non-functional requirements → **System Requirements**.
-  - `{feature-name}.md`: Feature Specification Document. Defines detailed functionality, behavior, and requirements of software features to guide development, testing, and ensure alignment with user needs. → **Feature Details**.
-- `design/`: Contains all technical design documentation.
-  - `system-architecture.md`: High-level architecture of the system. Includes system architecture diagrams, component descriptions, technology stack, data flow, and integration points.
-  - `{component}/`: Contains documentation for each component.
-    - `component-design.md`: Breaks down each module/component into detailed specifications.
-    - `api-design.md`: API endpoints, request/response formats.
-    - `database-design.md`: Schema, ER diagrams, data relationships.
-    - `ui-design.md`: UI/UX mockups, wireframes, or prototypes.
-- `implementation/`: Contains required documentation for implementation phase.
-  - `development-workflows.md`: Git branching, CI/CD, code review process.
-  - `architectural-pattern.md`: Clean architecture, hexagonal architecture, layered architecture, etc.
-  - `coding-standards.md`: Rules for code style (naming, formatting, conventions).
-  - `coding-guidelines.md`: Best practices, code patterns, recipes.
-  - `repository-guide.md`: Instructions on how to work with the project repository.
-- `tests/{feature-name}-test-suite.md`: Contains all test cases for a feature.
-- `maintenance/`: Contains maintenance and operational documentation.
-  - `deployment-guide.md`: Instructions for deploying the system.
-  - `monitoring-guide.md`: How to monitor system health, logs, alerts.
-  - `backup-recovery.md`: Disaster recovery and backup strategy.
-  - `release-notes.md`: What changed in each release
+- `project-overview.md`: high-level project summary.
+- `project-structure.md`: project root's layout.
+- `documentation-structure.md`: directory layout of `docs/`.
+- `requirements/`: feature documentation, grouped by component.
+- `tasks/`: project tasks, grouped by component.
+- `design/`: technical design documentation.
+  - `system-architecture.md`: system's high-level design.
+  - `{component}/`: component-specific documentations.
+    - `component-design.md`: component design.
+    - `api-design.md`: API specs.
+    - `database-design.md`: schema and data model.
+    - `ui-design.md`: UI/UX mockups and wireframes.
+- `implementation/`: implementation guidance.
+  - `development-workflows.md`: branching, CI/CD, reviews.
+  - `architectural-pattern.md`: architecture patterns.
+  - `coding-standards.md`: style and formatting rules.
+  - `coding-guidelines.md`: implementation practices.
+- `tests/{component}/`: component test documentation.
+  - `{feature-name}.md`: feature's test cases.
+- `maintenance/`: operational documentation.
+  - `deployment-guide.md`: deployment instructions.
+  - `monitoring-guide.md`: monitoring and alerts.
 
-## Best Practices
+`{component}` can be:
 
-Best practices when writing documentation:
-
-- Use consistent naming conventions.
-- Maintain traceability across documents.
-- Keep explanations concise and accessible.
-- Update documentation when features or architecture change.
+- `auth`: responsible for authentication, authorization, login
+- `diary`: responsible for activity management, tags, statistics
 ````

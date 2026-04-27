@@ -6,11 +6,5 @@
     "type": "dir",
     "collapsed": true,
     "label": "MCP"
-  },
-  {
-    "name": "github-copilot",
-    "type": "dir",
-    "collapsed": true,
-    "label": "GitHub Copilot"
   }
 ]

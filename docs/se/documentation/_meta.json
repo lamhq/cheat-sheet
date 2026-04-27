@@ -1,12 +1,8 @@
 [
   "documentation-structure",
   "project-overview",
-  {
-    "type": "dir",
-    "name": "requirement-analysis",
-    "label": "Requirement Analysis",
-    "collapsed": true
-  },
+  "fsd",
+  "task",
   {
     "type": "dir",
     "name": "design",
@@ -18,5 +14,6 @@
     "name": "implementation",
     "label": "Implementation",
     "collapsed": true
-  }
+  },
+  "test-suite"
 ]

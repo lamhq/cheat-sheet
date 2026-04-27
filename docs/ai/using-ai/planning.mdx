@@ -1,0 +1,90 @@
+# Planning
+
+## Create daily todo list
+
+Prompt:
+
+````markdown
+Give me a todo list for today.
+
+The todo list must follow this template:
+
+```md
+# {Day of week: Mon, Sat} {d/M: 19/4}
+
+## Morning
+
+- [ ] hh:mm item 1
+- [ ] hh:mm item 2
+- [ ] hh:mm item 3
+
+## Afternoon
+
+- [ ]  ...
+
+## Night
+
+- [ ]  ...
+```
+
+Todo items must be scheduled based on the following rules:
+- `buy breakfast` is on everyday at 8:00
+- `working` is from Mon to Fri at 8:30
+- `practicing English speaking` is from Mon to Fri, at 08:15
+- `cooking` is on everyday at 09:30
+- `have lunch` is on everyday at 11:00 for 1 hour
+- `take a nap` is on everyday at 12:30 for 40 minutes
+- `eat fruit` must start before `gym` or `running` 1 hour
+- `gym` is from Mon to Thu, start from 15:00 for 1 hour
+- `running` is on Sat, Sun, at 16:00
+- `protein supplement` is on Mon, Wed, Fri
+- `drink creatine` is on Tue, Thu, Sat
+- `take a shower` is on everyday at 17:45 for 15 minutes
+- `have dinner` is on everyday at 18:00 for 30 minutes
+- `relaxing` is on Sat, Sun
+- `learning` is on everyday, at night, start from 19:00, for 1 hour 30 minutes
+- `massage eyes` is on everyday at 21:30 for 15 minutes
+- `go to bed` is at 22:30
+- `practice English communication` is on Tue at 19:00 for 1 hour
+- `practice English communication` is on Thu at 19:00 for 2 hour
+````
+
+
+## Create gym schedule
+
+Liệt kê các bài tập:
+
+```md
+cho tôi danh sách cái bài tập thể hình ở phòng gym giúp phát triển cơ ngực toàn diện
+
+trả lời mỗi bài tập theo định dạng sau: `- tên bài tập (nhóm cơ): mô tả cách tập ngắn gọn`
+
+ví dụ: - Barbell Bench Press (ngực trên): Đẩy tạ đòn nằm ngang
+```
+
+Lên lịch tập:
+
+````md
+dựa theo các bài tập thể hình ở trên, cho tôi lịch tập tất cả các tuần sao cho:
+- mỗi tuần tập 4 buổi
+- mỗi buổi tập 4 bài tập
+- mỗi tuần tập cổ (1 lần/tuần), cẳng tay (2 lần/tuần), squat (1 lần/tuần), deadlift (1 lần/tuần), calf raise (1 lần/tuần)
+- không tập ngực và chân trong cùng một buổi và liên tiếp nhau
+- thêm tuần cho đến khi tập hết các bài tập trong danh sách
+
+ví dụ:
+```md
+### Tuần 1
+- **Ngày 1**: bài tập 1, bài tập 2, bài tập 3, bài tập 4
+- **Ngày 2**: ...
+```
+````
+
+Kiểm tra lịch tập:
+
+````md
+dựa theo lịch tập thể hình và các bài tập ở trên, kiểm tra lại lịch tập và báo cáo kết quả:
+- tất cả các bài tập đều được lên lịch đầy đủ
+- không tập ngực và chân trong cùng một buổi và liên tiếp nhau
+- mỗi tuần tập cổ (1 lần/tuần), cẳng tay (2 lần/tuần), squat (1 lần/tuần), deadlift (1 lần/tuần), calf raise (1 lần/tuần)
+```

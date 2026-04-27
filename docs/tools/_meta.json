@@ -10,12 +10,6 @@
     "label": "Visual Studio Code"
   },
   {
-    "name": "ai-agents",
-    "type": "dir",
-    "collapsed": true,
-    "label": "AI Agents"
-  },
-  {
     "name": "macos",
     "type": "dir",
     "collapsed": true,

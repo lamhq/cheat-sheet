@@ -1,14 +1,19 @@
 [
   "overview",
-  "writing-tests",
+  {
+    "name": "write-tests",
+    "type": "dir",
+    "collapsed": true
+  },
+  "organize-tests",
   "generate-tests",
-  "global-setup",
+  "run-tests",
   "debug-tests",
-  "api-testing",
+  "ai",
   "configuration",
   "projects",
-  "monitoring",
-  "mock-api",
-  "tracing",
-  "storage"
+  "auth",
+  "api-testing",
+  "screenshot-cmp",
+  "ci"
 ]
