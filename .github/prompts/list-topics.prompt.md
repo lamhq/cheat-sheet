@@ -13,6 +13,4 @@ For each section (any heading level) in the fetched content, provide a summary l
 
 ## When to use this prompt
 
-Use this prompt when you want to quickly get an overview of the content in a web page, especially long articles with multiple sections.
-
-This can help you decide which sections are relevant to your needs and provide references to the original web page for further reading.
+Use this prompt when you want to quickly get an overview of the content in a web page, especially long articles with multiple sections. This can help you decide which sections are relevant to your needs and provide references to the original web page for further reading.

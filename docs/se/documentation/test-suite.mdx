@@ -1,0 +1,231 @@
+# Test Suite
+
+Guidelines for writing a Test Suite document.
+
+## Introduction
+
+A Test Suite document describes the collection of test cases for a specific feature.
+
+
+## Document Structure
+
+A Test Suite document typically includes the following sections:
+
+### Introduction
+
+This section provides context so anyone opening the document immediately knows what it covers and who is responsible for it.
+
+- **Feature:** The feature of the software being tested.
+- **Author:** The person who created the document.
+
+### Test Cases
+
+Contain a list of test cases, each may include the following information:
+
+#### Metadata
+
+| Field              | Description |
+|--------------------|---------|
+| **ID**             | Unique identifier for the test case (e.g., TC-101) |
+| **Title**          | Short descriptive title of the test case |
+| **Objective**      | One sentence explaining *why* the test exists.   |
+| **Preconditions**  | Conditions that must be met before executing the test case |
+| **Priority**       | High |
+| **Version**        | The software version this suite applies to |
+| **Status**         | Passed, Failed, Blocked, Skipped |
+| **Platform**       | The platform or environment the test case applies to (e.g., Web, iOS, Android) |
+| **Environment**    | Where the test is executed (e.g., Staging, Production) |
+
+#### Pre-conditions
+
+State exactly what state the system must be in. If the pre-condition isn't met, the test cannot be performed.
+
+#### Test Data
+
+List the specific strings, files, or account details needed.
+
+#### Test Steps
+
+Write a logical sequence of user actions.
+
+Do:
+- Keep steps atomic (one action per step).
+- Use imperative language (e.g., "Click," "Enter," "Navigate").
+- Focus on actions, not observations (verification happens in the next section).
+
+#### Expected Result
+
+State what the system must do. This is the source of truth for "Pass" or "Fail."
+
+Do: Be precise. Instead of "It should log in," use "The dashboard page loads, and the welcome message 'Welcome, Admin' is displayed."
+
+#### Postconditions
+
+Describe the "cleanup" needed to return the system to its original state so that other tests aren't affected.
+
+Example: "Delete the user account created during this test."
+
+
+## Examples
+
+```md
+# Login Feature Test Suite
+
+## Introduction
+
+- **Feature:** User Authentication - Login
+- **Author:** QA Team
+
+## Test Case 1: Successful Login with Valid Credentials
+
+### Metadata
+
+| Field              | Value |
+|--------------------|---------|
+| **ID**             | TC-101 |
+| **Title**          | User successfully logs in with valid email and password |
+| **Objective**      | Verify that users can authenticate with correct credentials and access the dashboard. |
+| **Preconditions**  | User account exists with email "john.doe@example.com" and password "SecurePass123!" |
+| **Priority**       | High |
+| **Version**        | v1.0+ |
+| **Status**         | Passed |
+| **Platform**       | Web |
+| **Environment**    | Staging |
+
+### Test Data
+
+- **Email:** john.doe@example.com
+- **Password:** SecurePass123!
+
+### Test Steps
+
+1. Navigate to the login page at https://staging.example.com/login
+2. Enter "john.doe@example.com" in the email field
+3. Enter "SecurePass123!" in the password field
+4. Click the "Sign In" button
+5. Wait for page to load
+
+### Expected Result
+
+The dashboard page loads successfully, and the welcome message "Welcome, John Doe" is displayed in the header. The user is logged in and can access all authenticated features.
+
+### Postconditions
+
+No cleanup required as this is a standard authentication flow.
+
+---
+
+## Test Case 2: Login with Invalid Email Format
+
+### Metadata
+
+| Field              | Value |
+|--------------------|---------|
+| **ID**             | TC-102 |
+| **Title**          | User login fails with invalid email format |
+| **Objective**      | Verify that the system rejects login attempts with malformed email addresses. |
+| **Preconditions**  | User is on the login page; no user is currently logged in |
+| **Priority**       | High |
+| **Version**        | v1.0+ |
+| **Status**         | Passed |
+| **Platform**       | Web |
+| **Environment**    | Staging |
+
+### Test Data
+
+- **Email:** invalid.email.format
+- **Password:** SecurePass123!
+
+### Test Steps
+
+1. Navigate to the login page at https://staging.example.com/login
+2. Enter "invalid.email.format" in the email field
+3. Enter "SecurePass123!" in the password field
+4. Click the "Sign In" button
+
+### Expected Result
+
+An error message "Please enter a valid email address" is displayed below the email field. The form is not submitted, and the user remains on the login page.
+
+### Postconditions
+
+No cleanup required.
+
+---
+
+## Test Case 3: Login with Incorrect Password
+
+### Metadata
+
+| Field              | Value |
+|--------------------|---------|
+| **ID**             | TC-103 |
+| **Title**          | User login fails with incorrect password |
+| **Objective**      | Verify that the system denies access when an incorrect password is provided. |
+| **Preconditions**  | User account exists with email "jane.smith@example.com"; user is not logged in |
+| **Priority**       | High |
+| **Version**        | v1.0+ |
+| **Status**         | Passed |
+| **Platform**       | Web |
+| **Environment**    | Staging |
+
+### Test Data
+
+- **Email:** jane.smith@example.com
+- **Correct Password:** CorrectPass456!
+- **Incorrect Password:** WrongPassword789!
+
+### Test Steps
+
+1. Navigate to the login page at https://staging.example.com/login
+2. Enter "jane.smith@example.com" in the email field
+3. Enter "WrongPassword789!" in the password field
+4. Click the "Sign In" button
+5. Wait for response
+
+### Expected Result
+
+An error message "Invalid email or password" is displayed. The user remains on the login page and is not authenticated.
+
+### Postconditions
+
+No cleanup required.
+
+---
+
+## Test Case 4: Login with Empty Fields
+
+### Metadata
+
+| Field              | Value |
+|--------------------|---------|
+| **ID**             | TC-104 |
+| **Title**          | User login fails with empty email and password fields |
+| **Objective**      | Verify that the system validates required fields and prevents submission with empty inputs. |
+| **Preconditions**  | User is on the login page; both email and password fields are empty |
+| **Priority**       | Medium |
+| **Version**        | v1.0+ |
+| **Status**         | Passed |
+| **Platform**       | Web |
+| **Environment**    | Staging |
+
+### Test Data
+
+- **Email:** (empty)
+- **Password:** (empty)
+
+### Test Steps
+
+1. Navigate to the login page at https://staging.example.com/login
+2. Leave the email field empty
+3. Leave the password field empty
+4. Click the "Sign In" button
+
+### Expected Result
+
+Validation errors appear: "Email is required" below the email field and "Password is required" below the password field. The form is not submitted.
+
+### Postconditions
+
+No cleanup required.
+```
