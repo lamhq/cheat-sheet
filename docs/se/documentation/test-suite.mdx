@@ -26,7 +26,6 @@ Contain a list of test cases, each may include the following information:
 
 | Field              | Description |
 |--------------------|---------|
-| **ID**             | Unique identifier for the test case (e.g., TC-101) |
 | **Title**          | Short descriptive title of the test case |
 | **Objective**      | One sentence explaining *why* the test exists.   |
 | **Preconditions**  | Conditions that must be met before executing the test case |
@@ -82,7 +81,6 @@ Example: "Delete the user account created during this test."
 
 | Field              | Value |
 |--------------------|---------|
-| **ID**             | TC-101 |
 | **Title**          | User successfully logs in with valid email and password |
 | **Objective**      | Verify that users can authenticate with correct credentials and access the dashboard. |
 | **Preconditions**  | User account exists with email "john.doe@example.com" and password "SecurePass123!" |
@@ -121,7 +119,6 @@ No cleanup required as this is a standard authentication flow.
 
 | Field              | Value |
 |--------------------|---------|
-| **ID**             | TC-102 |
 | **Title**          | User login fails with invalid email format |
 | **Objective**      | Verify that the system rejects login attempts with malformed email addresses. |
 | **Preconditions**  | User is on the login page; no user is currently logged in |
@@ -159,7 +156,6 @@ No cleanup required.
 
 | Field              | Value |
 |--------------------|---------|
-| **ID**             | TC-103 |
 | **Title**          | User login fails with incorrect password |
 | **Objective**      | Verify that the system denies access when an incorrect password is provided. |
 | **Preconditions**  | User account exists with email "jane.smith@example.com"; user is not logged in |
@@ -199,7 +195,6 @@ No cleanup required.
 
 | Field              | Value |
 |--------------------|---------|
-| **ID**             | TC-104 |
 | **Title**          | User login fails with empty email and password fields |
 | **Objective**      | Verify that the system validates required fields and prevents submission with empty inputs. |
 | **Preconditions**  | User is on the login page; both email and password fields are empty |
