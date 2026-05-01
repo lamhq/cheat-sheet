@@ -4,7 +4,75 @@ import { PackageManagerTabs } from '@theme'
 
 Integrate Playwright with AI agents.
 
+## Test Agents
+
+### Introduction
+
+Test Agents are a set of of instructions and MCP tools for generating and fixing Playwright tests:
+- `planner` creates a human-readable Markdown test plan
+- `generator` turns test plan into executable Playwright test files
+- `healer` repairs failing generated tests by updating selectors, waits, or test flow
+
+Test Agents should be regenerated whenever Playwright is updated.
+
+### Installation
+
+Generate agent definitions for your project with:
+
+```bash
+npx playwright init-agents --loop=vscode
+```
+
+- Agent definitions are stored under `.github/agents`
+- Regenerate them after updating Playwright to keep the tools and instructions current
+
+### Planner
+
+Planner agent explores the app and produces a test plan
+
+Input:
+- a clear request such as “Generate a plan for login functionality”
+- optional Product Requirement Document for context
+
+Output:
+- A Markdown test plan. Stored in `specs/`
+
+
+### Generator
+
+Generator agent uses the Markdown plan to produce executable Playwright Tests.
+
+It verifies selectors and assertions against the actual UI in real time.
+
+Input:
+- Test plan file
+
+Output:
+- A test suite under `tests/`
+- generated tests may fail and can be healed automatically by the healer agent 
+
+
+### Healer
+
+Healer agent fixes failing tests.
+
+It:
+- replays failing steps
+- inspects the UI for updated locators
+- suggests patches (e.g., locator update, wait adjustment, data fix)
+- reruns tests until they pass or stop safely
+
+Input:
+- failing test name
+
+Output:
+- a passing test, or a skipped test if the healer believes that functionality is broken.
+
+
 ## Playwright MCP
+
+> [!NOTE]
+> If you already installed Test Agents, it included MCP server installation as well, so you can skip this section.
 
 ### Introduction
 
