@@ -118,6 +118,15 @@ await page.getByLabel('Password').fill('secret-password');
 
 Check [here](https://playwright.dev/docs/test-assertions) for a list of available assertions.
 
+### Page-Level Assertions
+
+- `toHaveURL()` – page has expected URL  
+- `toHaveScreenshot()` – page matches screenshot  
+
+```ts
+await expect(page).toHaveURL(/inventory.html/);
+```
+
 ### Element State Assertions
 
 - `toBeVisible()` – element is visible  
@@ -146,15 +155,6 @@ await expect(page.getByText('Welcome, John!')).toBeVisible();
 
 ```ts
 await expect(page.getByTitle('Issues count')).toHaveText('25 issues');
-```
-
-### Page-Level Assertions
-
-- `toHaveURL()` – page has expected URL  
-- `toHaveScreenshot()` – page matches screenshot  
-
-```ts
-await expect(page).toHaveURL(/inventory.html/);
 ```
 
 ### Response Assertions
@@ -238,4 +238,36 @@ Conditionally skip a test (or a group of tests):
 test('skip this test', async ({ page, browserName }) => {
   test.skip(browserName === 'firefox', 'Still working on it');
 });
+```
+
+
+## Best Practices
+
+Best practices for writing Playwright tests:
+
+### Leverage Auto‑waiting
+
+- Use methods like `click`, `fill`, `type`, `check` wait for the element to be actionable.  
+- Avoid explicit waiting (`waitForSelector`, `waitForLoadState`, `waitForTimeout()`, ` waitUntil: 'networkidle'`).
+
+✅ Do:
+
+```ts
+await page.getByRole('button', { name: 'Sign in' }).click();
+
+await expect(page).toHaveURL(targetRoute);
+```
+
+❌ Don't:
+
+```ts
+// ❌ Anti-pattern: manual visibility check before click
+const signInButton = page.getByRole('button', { name: 'Sign in' });
+
+if (await signInButton.isVisible()) {
+  await signInButton.click();
+}
+
+// ❌ Anti-pattern: no leveraging auto‑waiting at all
+expect(page.url()).toContain('/dashboard');
 ```
