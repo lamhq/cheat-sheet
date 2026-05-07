@@ -1,0 +1,120 @@
+# Static Assets
+
+## Introduction
+
+Rspress supports static assets for:
+- Images, videos and other static assets used in MDX files
+- Logo image at the top left corner of the site
+- Site favicon icon
+- Homepage logo image
+- Other static assets
+
+The "document root directory" is the folder set by `root` field in `rspress.config.ts`:
+
+```ts title="rspress.config.ts"
+import { defineConfig } from '@rspress/core';
+
+export default defineConfig({
+  root: 'docs',
+});
+```
+
+
+## Static assets used in MDX files
+
+### Regular static assets
+
+If there is an image in the same directory as the markdown, you can reference it like this:
+
+```md title="index.mdx"
+![](./skip-link-check.png)
+```
+
+### Public folder assets
+
+Files under `public` folder are copied unchanged and served from the base root path (default `/`).
+
+Example structure:
+
+```tree title="docs-structure.tree"
+docs
+├── public
+│   └── skip-link-check.png
+├── index.mdx
+```
+
+In the above `index.mdx` file, you can use an absolute path to reference `skip-link-check.png`:
+
+```mdx title="index.mdx"
+![](/skip-link-check.png)
+```
+
+
+## Top-left logo
+
+Configure the site logo with `logo` in `rspress.config.ts`:
+
+```ts title="rspress.config.ts"
+import { defineConfig } from '@rspress/core';
+
+export default defineConfig({
+  logo: 'https://avatars.githubusercontent.com/u/56892468?s=200&v=4',
+});
+```
+
+`logo` supports:
+- external URL
+- absolute path (`/rspress-logo.png` from public)
+- relative path (`./docs/public/rspress-logo.png`)
+
+For dark mode, use object configuration of the logo:
+
+```ts title="rspress.config.ts"
+import { defineConfig } from '@rspress/core';
+
+export default defineConfig({
+  logo: {
+    light: 'https://avatars.githubusercontent.com/u/56892468?s=200&v=4',
+    dark: 'https://avatars.githubusercontent.com/u/56892468?s=200&v=4',
+  },
+});
+```
+
+
+## Favicon
+
+Specify favicon with `icon`:
+
+```ts title="rspress.config.ts"
+import { defineConfig } from '@rspress/core';
+
+export default defineConfig({
+  icon: 'https://avatars.githubusercontent.com/u/56892468?s=200&v=4',
+});
+```
+
+`icon` supports:
+- external link
+- absolute path (`/favicon.ico` from public)
+- relative path (`./docs/public/favicon.ico`)
+- `file://` protocol, such as `file:///local_path/favicon.ico`
+
+
+## Homepage logo
+
+In the frontmatter configuration of the homepage, you can specify the homepage logo image through the `hero.image.src` field
+
+```mdx title="index.mdx"
+---
+pageType: home
+
+hero:
+  image:
+    src: https://avatars.githubusercontent.com/u/56892468?s=200&v=4
+    alt: Rspress
+---
+```
+
+`hero.image.src` also supports:
+- external URL
+- absolute path from `public` folder

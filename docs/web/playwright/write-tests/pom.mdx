@@ -76,10 +76,3 @@ test('should show Page Object Model article', async ({ page }) => {
   await expect(page.locator('article')).toContainText('Page Object Model is a common pattern');
 });
 ```
-
-
-## Best practices
-
-- Use POM to encapsulate page behavior and selectors.
-- Keep tests focused on behavior, not locator details.
-- Share common actions through reusable methods like `goto()`, `getStarted()`, and `pageObjectModel()`.

@@ -1,0 +1,98 @@
+# Rspress
+
+## Introduction
+
+Rspress is a React-based static site generator built on `Rsbuild`.
+
+It targets documentation and content sites with:
+- a default doc theme,
+- fast dev startup,
+- AI-friendly output,
+- MDX support,
+- plugin extensibility.
+
+## Why use Rspress
+
+### Build performance
+
+Rspress optimizes startup speed and build times with:
+- `lazyCompilation`: pages are only compiled when visited in dev mode
+- Route preload on hover
+- Use cache for production builds
+- Rspress uses Rspack, a rust-based bundler, which is 5 to 10 times more efficient than traditional packaging tools.
+
+### AI-native
+
+Rspress can render pages as Markdown files (SSG-MD).
+
+It can also generate index files compliant with the [llms.txt](https://llmstxt.org/) specification.
+
+### Theme and customization
+
+Rspress includes a polished default theme and supports customization via:
+- CSS variables
+- BEM class names
+- ESM re-export overrides
+- `rspress eject`
+
+```bash title="eject-command.sh"
+# Export nav component to theme directory
+npx rspress eject Nav
+```
+
+### Automatic layout generation
+
+Rspress auto-generates:
+- navbar: global navigation entrance (top).
+- sidebar: article directory under the current navigation (left).
+- page outline: display the outline structure of the current page (right).
+
+You can configure navigation with:
+- declarative `_meta.json`
+- or programmatic `nav` / `sidebar` config
+
+### MDX support
+
+Rspress supports MDX with:
+- React components inside markdown
+- custom container syntax
+- frontmatter metadata
+- code line highlighting syntax
+
+### Documentation DX
+
+Built-in authoring improvements include:
+- dead-link checking
+- file-based code blocks with `file="./path/to/file"`
+- support `preview` and `playground` for component docs and interactive examples
+
+### SSG
+
+Rspress generates pure static HTML for production sites, so you can deploy to GitHub Pages, Netlify, Vercel, or any static host.
+
+### Internationalization
+
+Built-in I18n support includes:
+- translations for multiple languages
+- automatic tree shaking of unused locale text
+- extendable via `i18nSource`
+
+### Multi-version docs
+
+Rspress supports versioned documentation with simple config and directory structure.
+
+### Full-text search
+
+Out-of-the-box search uses FlexSearch and works without extra configuration.
+
+### Custom Theme
+
+You can extend the default theme or build a full custom theme.
+
+### Plugin system
+
+Rspress supports plugins to extend site functionality via an official plugin API.
+
+### Component documentation
+
+Rspress supports component previews and live playgrounds using MDX syntax.

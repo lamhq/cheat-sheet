@@ -4,7 +4,7 @@ How to organize test files and structure test cases for maintainability and read
 
 ## Project Structure
 
-Example project structure:
+An example Playwright project structure:
 
 ```
 my-playwright-project/
@@ -17,96 +17,29 @@ my-playwright-project/
 │   │   └── login.spec.ts
 │   └── order/              # Order-related tests
 │       └── checkout.spec.ts
-├── utils/                  # Helper functions and global setup/teardown
-│   └── api-helpers.ts
-├── playwright-report/      # Generated HTML reports (gitignored)
-├── .env                    # Environment variables (gitignored)
+├── setup/                  # Global setup/teardown scripts
+│   ├── global-setup.ts
+│   └── global-teardown.ts
+├── utils/                  # Helper functions and utilities
+│   └── api.ts
 ├── playwright.config.ts    # Global framework configuration
-└── package.json            # Node.js dependencies and scripts
+├── package.json            # Node.js dependencies and scripts
+├── playwright-report/      # Generated HTML reports (gitignored)
+└── .env                    # Environment variables (gitignored)
 ```
 
 Where:
 - `pages/`: Contains Page Object Model (POM) classes. Each class encapsulates interactions and locators for a specific page.
-- `tests/`: Contains all test specification files, organized by module/domain (`auth`, `order`, etc.).
+- `tests/`: Contains all test specification files, organized by components (e.g., `auth`, `order`).
+- `setup/`: Contains global setup and teardown scripts.
 - `utils/`: Contains helper functions, global setup/teardown logic, and any shared utilities.
+
 
 ## Test File Naming
 
 Each test file is named to reflect the feature to be tested.
 
-Examples: `login.spec.ts`, `register.spec.ts`, `logout.spec.ts`, etc.
-
-## Test File Structure
-
-Example test file for login:
-
-```typescript title="login.spec.ts"
-import { test, expect } from "@playwright/test";
-
-/**
- * Authentication Test Suite
- * Feature: User Login
- */
-
-test.describe("Login via Email", () => {
-  // Test Case: Success Path
-  test("User should be able to login with valid credentials", async ({ page }) => {
-    // ... (Implementation)
-  });
-
-  // Test Case: Failure Path
-  test("User should see an error message with invalid credentials", async ({ page }) => {
-    // ... (Implementation)
-  });
-
-  // Test Case: UI/UX Path
-  test("Login page should display all required form elements", async ({ page }) => {
-    // ... (Implementation)
-  });
-});
-
-test.describe("Login via Social Media", () => {
-  // Similar structure for social media login tests...
-});
-```
-
-- `test.describe()`: represent a scenario related to the feature being tested. For example:
-  - "Login via Email"
-  - "Login via Social Media"
-  - "Checkout with Credit Card"
-  - "Checkout with PayPal"
-- `test()`: the actual test case, describe an expected behavior/outcome. For example:
-  - "User should be able to login with valid credentials"
-  - "User should see an error message with invalid credentials"
-  - "Login page should display all required form elements"
-
-## Test case structure
-
-Within each test case, use `test.step()` to break down the test into logical phases.
-
-Example:
-
-```typescript
-import { test, expect } from '@playwright/test';
-
-test.describe('Checkout with ATM Card', () => {
-  test('User should be able to complete a purchase using a valid ATM card', async ({ page }) => {
-
-    await test.step('Create test data', async () => {
-      // ... (Implementation)
-    });
-
-    await test.step('Initiate payment', async () => {
-      // ... (Implementation)
-    });
-
-    await test.step('Pay', async () => {
-      // ... (Implementation)
-    });
-
-    await test.step('Verify payment result', async () => {
-      // ... (Implementation)
-    });
-  });
-});
-```
+Examples:
+- `login.spec.ts`
+- `register.spec.ts`
+- `logout.spec.ts`

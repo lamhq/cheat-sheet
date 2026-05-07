@@ -536,3 +536,182 @@ expect((await container.exec(["curl", `http://host.testcontainers.internal:8000`
 ```
 
 This works by starting an SSHd container and mapping the exposed host port through it so other containers can access it.
+
+
+## Compose Guide
+
+### Start a Docker Compose environment
+
+Use `DockerComposeEnvironment` with a compose path and file:
+
+```js title="compose.js"
+const { DockerComposeEnvironment } = require("testcontainers");
+
+const composeFilePath = "/path/to/build-context";
+const composeFile = "docker-compose.yml";
+
+const environment = await new DockerComposeEnvironment(composeFilePath, composeFile).up();
+```
+
+Start only selected services:
+
+```js title="compose.js"
+const environment = await new DockerComposeEnvironment(composeFilePath, composeFile)
+  .up(["redis", "postgres"]);
+```
+
+### Wait strategy
+
+Use `withWaitStrategy()` with Docker container names, not service names. With Compose v2, first replica names are usually `<service>-1`.
+
+```js title="compose.js"
+const environment = await new DockerComposeEnvironment(composeFilePath, composeFile)
+  .withWaitStrategy("redis-1", Wait.forLogMessage("Ready to accept connections"))
+  .withWaitStrategy("postgres-1", Wait.forHealthCheck())
+  .up(["redis", "postgres"]);
+```
+
+Override the default wait strategy for all services:
+
+```js title="compose.js"
+const environment = await new DockerComposeEnvironment(composeFilePath, composeFile)
+  .withDefaultWaitStrategy(Wait.forHealthCheck())
+  .up();
+```
+
+### Pull policy
+
+By default, images are pulled if missing. Override it:
+
+```js title="compose.js"
+const { DockerComposeEnvironment, PullPolicy } = require("testcontainers");
+
+const environment = await new DockerComposeEnvironment(composeFilePath, composeFile)
+  .withPullPolicy(PullPolicy.alwaysPull())
+  .up();
+```
+
+Custom pull policy example:
+
+```js title="compose.js"
+const { GenericContainer, ImagePullPolicy } = require("testcontainers");
+
+class CustomPullPolicy implements ImagePullPolicy {
+  public shouldPull(): boolean {
+    return true;
+  }
+}
+
+const environment = await new DockerComposeEnvironment(composeFilePath, composeFile)
+  .withPullPolicy(new CustomPullPolicy())
+  .up();
+```
+
+### Build and environment settings
+
+Rebuild images before starting:
+
+```js title="compose.js"
+const environment = await new DockerComposeEnvironment(composeFilePath, composeFile)
+  .withBuild()
+  .up();
+```
+
+Use a custom `.env` file:
+
+```js title="compose.js"
+const environment = await new DockerComposeEnvironment(composeFilePath, composeFile)
+  .withEnvironmentFile(".env.custom")
+  .up();
+```
+
+Enable Compose profiles:
+
+```js title="compose.js"
+const environment = await new DockerComposeEnvironment(composeFilePath, composeFile)
+  .withProfiles("profile1", "profile2")
+  .up();
+```
+
+Disable recreate mode:
+
+```js title="compose.js"
+const environment = await new DockerComposeEnvironment(composeFilePath, composeFile)
+  .withNoRecreate()
+  .up();
+```
+
+Set environment variables for compose substitution:
+
+```js title="compose.js"
+const environment = await new DockerComposeEnvironment(composeFilePath, composeFile)
+  .withEnvironment({ "TAG": "VALUE" })
+  .up();
+```
+
+### Project name and cleanup
+
+Use a custom project name:
+
+```js title="compose.js"
+const environment = await new DockerComposeEnvironment(composeFilePath, composeFile)
+  .withProjectName("test")
+  .up();
+```
+
+Disable automatic cleanup registration while keeping explicit teardown available:
+
+```js title="compose.js"
+const environment = await new DockerComposeEnvironment(composeFilePath, composeFile)
+  .withProjectName("test")
+  .withAutoCleanup(false)
+  .up();
+```
+
+### Custom Docker Compose client
+
+Provide custom compose client options:
+
+```js title="compose.js"
+const environment = await new DockerComposeEnvironment(composeFilePath, composeFile)
+  .withClientOptions({ executable: { standalone: true, executablePath: "/path/to/docker-compose" } })
+  .up();
+```
+
+### Downing and stopping environments
+
+Tear down the environment:
+
+```js title="compose.js"
+const environment = await new DockerComposeEnvironment(composeFilePath, composeFile).up();
+await environment.down();
+```
+
+Wait for shutdown with timeout:
+
+```js title="compose.js"
+await environment.down({ timeout: 10_000 });
+```
+
+Keep volumes after teardown:
+
+```js title="compose.js"
+await environment.down({ removeVolumes: false });
+```
+
+Stop instead of down when sharing networks or dependencies:
+
+```js title="compose.js"
+const environment = await new DockerComposeEnvironment(composeFilePath, composeFile).up();
+await environment.stop();
+```
+
+### Interacting with compose containers
+
+Access containers by their compose-managed name format `<service-name>-<index>`:
+
+```js title="compose.js"
+const container = environment.getContainer("alpine-1");
+```
+
+This guide covers the main Compose options available in `testcontainers-node`, including startup, wait handling, pull policy, rebuild, environment customization, cleanup control, and container access.

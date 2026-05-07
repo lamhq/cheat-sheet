@@ -1,0 +1,101 @@
+# Customization
+
+Customize the look and feel of your Rspress site.
+  
+## Home page
+
+You can define the content of the Home page through frontmatter:
+
+```yaml title="docs/index.mdx"
+---
+pageType: home
+title: Rspress
+titleSuffix: 'Rsbuild-based Static Site Generator'
+
+hero:
+  name: Rspress
+  text: A documentation solution
+  tagline: A modern documentation development technology stack
+  actions:
+    - theme: brand
+      text: Introduction
+      link: /en/guide/introduction
+    - theme: alt
+      text: Quick Start
+      link: /en/guide/getting-started
+
+features:
+  - title: 'MDX Support'
+    details: MDX is a powerful way to write content. You can use React components in Markdown.
+    icon: 📦
+  - title: 'Feature Rich'
+    details: Out of box support for i18n, full-text search etc.
+    icon: 🎨
+  - title: 'Customizable'
+    details: You can customize the theme ui and the build process.
+    icon: 🚀
+---
+```
+
+## Styling
+
+### CSS variables
+
+You can override [built-in CSS variables](https://rspress.rs/ui/vars) through importing your custom CSS file in `theme/index.tsx`:
+
+```tsx title="theme/index.tsx"
+import './index.css';
+export * from '@rspress/core/theme-original';
+```
+
+Or use `globalStyles` in `rspress.config.ts`:
+
+```ts title="rspress.config.ts"
+import { defineConfig } from '@rspress/core';
+import path from 'path';
+
+export default defineConfig({
+  globalStyles: path.join(__dirname, 'styles/index.css'),
+});
+```
+
+
+### BEM classnames
+
+Rspress uses BEM names for built-in components. Override styles by targeting these selectors:
+
+```css title="styles/index.css"
+.rp-[component-name]__[element-name]--[modifier-name] {
+  /* styles */
+}
+```
+
+Examples:
+
+```css title="styles/index.css"
+.rp-nav {}
+.rp-link {}
+.rp-tabs {}
+.rp-codeblock {}
+.rp-codeblock__title {}
+.rp-codeblock__description {}
+.rp-nav-menu__item,
+.rp-nav-menu__item--active {}
+```
+
+## Components
+
+Override built-in components with ESM re-exports.
+
+The below example overrides the default `Layout` component to add some content before the navbar title, then re-exports everything from the original theme:
+
+```tsx title="theme/index.tsx"
+import { Layout as BasicLayout } from '@rspress/core/theme-original';
+
+const Layout = () => <BasicLayout beforeNavTitle={<div>some content</div>} />;
+
+export { Layout };
+export * from '@rspress/core/theme-original';
+```
+
+To override the entire component, follow this [guide](https://rspress.rs/guide/basic/custom-theme#eject).

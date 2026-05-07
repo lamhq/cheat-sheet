@@ -1,0 +1,146 @@
+# Routing
+
+## What it is
+
+Rspress uses filesystem routing.
+
+File paths map directly to route paths, so the site structure is intuitive and easy to reason about.
+
+
+## Mapping rules
+
+- `docs/index.md` → `/`
+- `docs/zoo.md` → `/zoo`
+- `docs/foo/index.md` → `/foo/`
+- `docs/foo/bar.md` → `/foo/bar`
+
+```text title="structure.tree"
+docs
+├── foo
+│   ├── bar.md
+│   └── index.md
+├── zoo.md
+└── index.md
+```
+
+Do not use both a folder and a file with the same name under docs. For example, this is invalid:
+- `docs/foo/index.md`
+- `docs/foo.md`
+
+## TSX routing
+
+`.tsx` files can also become routes if they export a component.
+
+```tsx title="foo.tsx"
+export default () => {
+  return <div>foo</div>;
+};
+```
+
+You can add frontmatter export to customize page rendering:
+
+```tsx title="foo.tsx"
+export const frontmatter = {
+  pageType: 'custom',
+};
+```
+
+## Custom route behavior
+
+Use `route.include` and `route.exclude` in `rspress.config.ts` to control which files are registered as routes.
+
+```ts title="rspress.config.ts"
+import { defineConfig } from '@rspress/core';
+
+export default defineConfig({
+  route: {
+    include: ['other-dir/**/*'],
+    exclude: ['components/**/*', 'fragments/**/*'],
+  },
+});
+```
+
+## Excluding files starting with `_`
+
+Files beginning with `_` are excluded from routing by default via `route.excludeConvention`. 
+
+This makes it easy to keep MDX fragments or internal React components in docs without turning them into pages.
+
+Example structure:
+
+```tree title="docs-structure.tree"
+docs
+├── _button.mdx
+└── index.mdx
+components
+└── button.tsx
+```
+
+Example usage:
+
+```mdx title="docs/index.mdx"
+import ButtonFragment from './_button.mdx';
+import Button from '../../components/button';
+
+<ButtonFragment />
+<Button />
+```
+
+## Best practices
+
+- Keep documentation pages in `docs` directory.
+- Place non-doc content like custom components outside `docs` when possible.
+- If you keep fragments or components in `docs`, exclude them explicitly with `route.exclude`.
+
+Best practice file structure:
+
+```tree
+├── docs
+│   ├── components  # React components used in documentation
+│   │   └── Example.tsx
+│   ├── zh
+│   │   ├── fragments   # zh document fragments
+│   │   │   └── example.mdx
+│   │   └── index.mdx
+│   └── en
+│       ├── fragments   # en document fragments
+│       │   └── example.mdx
+│       └── index.mdx
+└── theme
+    ├── components # React components for theme
+    │   └── DocFooter.tsx
+    └── index.tsx
+```
+
+```ts title="rspress.config.ts"
+import { defineConfig } from '@rspress/core';
+
+export default defineConfig({
+  route: {
+    exclude: ['*/components/**/*', '*/fragments/**/*'],
+  },
+  lang: 'en',
+  locales: [
+    { lang: 'zh', label: '中文' },
+    { lang: 'en', label: 'English' },
+  ],
+});
+```
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "lib": ["DOM", "ESNext"],
+    "jsx": "react-jsx",
+    "moduleResolution": "bundler",
+    "paths": {
+      "i18n": ["./i18n.json"],
+      "@theme": ["./theme/index.tsx"]
+    }
+  },
+  "include": ["docs", "theme", "rspress.config.ts"],
+  "mdx": {
+    "checkMdx": true
+  }
+}
+```

@@ -2,7 +2,7 @@
 
 ## Overview
 
-PNPM Workspace is a feature that allows you to manage multiple interdependent packages within a single repository (monorepo).
+PNPM Workspace is a feature that allows you to manage multiple interdependent project (packages or apps) within a single repository (aka monorepo).
 
 It's ideal for projects that contain multiple apps, libraries, or services that share dependencies or tooling.
 
@@ -14,13 +14,13 @@ The workspace protocol (`workspace:`) is a special way to declare dependencies i
 It ensures that dependencies resolve strictly to local workspace packages instead of falling back to the npm registry.
 
 How it works:
-1. PNPM uses a `pnpm-workspace.yaml` file at the root of your repo to define which folders contain packages.
-2. Each package has its own `package.json`, and dependencies between them can be linked using the `workspace:` protocol.
+1. PNPM uses a `pnpm-workspace.yaml` file at the root of your repo to define which projects belong to your workspace.
+2. Each project has its own `package.json`, and dependencies between them can be linked using the `workspace:` protocol.
 3. When you publish, `workspace:` specs in `package.json` are automatically converted into semver ranges.
 
 Example:
 
-```json
+```json title="package.json"
 {
   "dependencies": {
     "foo": "workspace:*",        // Always link to local foo
@@ -52,7 +52,7 @@ packages:
   - "apps/*"
 ```
 
-`package.json` of the `shared-utils` package:
+`package.json` of the `shared-utils` project:
 
 ```json title="packages/shared-utils/package.json"
 {
@@ -62,7 +62,7 @@ packages:
 }
 ```
 
-`package.json` of the `web-app` application:
+`package.json` of the `web-app` project:
 
 ```json title="apps/web-app/package.json"
 {
@@ -74,15 +74,15 @@ packages:
 }
 ```
 
-Here, the app declares `shared-utils` as a dependency using the **`workspace:*`** protocol.  
-- `workspace:*` means: always link to the local `shared-utils` package, regardless of version.  
+- The `web-app` project declares `shared-utils` as a dependency using the **`workspace:*`** protocol.  
+- `workspace:*`: always link to the local `shared-utils` project, regardless of version.  
 - If `shared-utils` didn't exist locally, installation would fail instead of fetching from npm.
 - On publish: pnpm converts `workspace:*` into the actual version (`"1.0.0"`) in the published `package.json`.
 
 
 ## Configuring Workspace
 
-Create a `pnpm-workspace.yaml` file in the project root to define the packages in the workspace:
+Create a `pnpm-workspace.yaml` file in the project root to define the projects in the workspace:
 
 ```yaml title="pnpm-workspace.yaml"
 packages:
@@ -93,11 +93,11 @@ packages:
 - `packages/`: contains shared libraries or utilities used by the applications.
 
 
-## Adding applications
+## Adding projects
 
-To add a new application to the workspace, create a new folder under `apps/` with a `package.json` file.
+To add a new project to the workspace, create a new folder under `apps/` with a `package.json` file.
 
-For example, to add a `web` application:
+For example, to add a `web` project:
 ```
 .
 ├── apps
@@ -108,52 +108,38 @@ For example, to add a `web` application:
 └── pnpm-workspace.yaml
 ```
 
-## Adding packages
-
-To add a new package to the workspace, create a new folder under `packages/` with a `package.json` file.
-
-For example, to add a `utils` package:
-```
-.
-├── packages
-│   └── utils
-│       └── package.json
-├── package.json
-├── pnpm-lock.yaml
-└── pnpm-workspace.yaml
-```
-
 
 ## Installing dependencies
 
-Install a npm package to a repo in the workspace:
-```bash
-pnpm -F <project> add <package>
-```
-- `-F <project>`: run the command only for the specific workspace project named `<project>`
-- `<package>`: installs the given npm package as a dependency for that project.
+Install a package to a project in the workspace:
 
-Install a local package into a project:
 ```bash
-pnpm -F <project> add <package> --workspace
-```
-- `--workspace`: Ensures that if the package already exists in another workspace project, pnpm will link it using the workspace protocol instead of fetching it from the registry
-
-Install a dependency with a specific version range:
-```bash
-pnpm -F <project> add <package>@^1.0.0 --workspace
+# install `lodash` for `web` project
+pnpm --filter web add lodash
+pnpm -F web add lodash
 ```
 
-> [!NOTE]
-> The version is defined using the `version` field in `package.json` of the package.
+Remove a dependency from a project:
+
+```bash
+# remove `lodash` from `web` project
+pnpm -F web remove lodash
+```
+
+Install a dependency into the root of the monorepo (root `package.json`):
+
+```bash
+# install `eslint` to the root `package.json`
+pnpm add eslint -w
+```
 
 > [!INFO]
-> `project` and `package` are defined using the `name` field in `package.json`
+> The workspace project name is defined in project's `package.json` (`name` field).
 
 
 ## Running scripts
 
-Run a script of a specific project:
+Run a script (defined in the `package.json`) of a project:
 
 ```bash
 pnpm -F <project> run <script-name>
@@ -175,8 +161,12 @@ Run in projects that depend on `utils`:
 pnpm -F '...utils' run <script-name>
 ```
 
+
+## Running binaries
+
 Run a local installed binary from a specific project:
 
 ```bash
-pnpm -F <project> exec <package>
+# run Playwright tests in the `web-e2e` project
+pnpm -F web-e2e exec playwright test
 ```

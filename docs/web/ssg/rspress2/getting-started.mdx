@@ -1,0 +1,94 @@
+import { PackageManagerTabs } from '@theme'
+
+# Getting Started
+
+## Create a project
+
+<PackageManagerTabs command="create rspress@latest" />
+
+
+## Add to existing project
+
+<PackageManagerTabs command="install @rspress/core -D" />
+
+Create docs and initial content:
+
+Add scripts to `package.json`:
+
+```json title="package.json"
+{
+  "scripts": {
+    "dev": "rspress dev",
+    "build": "rspress build",
+    "preview": "rspress preview"
+  }
+}
+```
+
+Create `rspress.config.ts`:
+
+```ts title="rspress.config.ts"
+import { defineConfig } from '@rspress/core';
+
+export default defineConfig({
+  root: 'docs',
+});
+```
+
+Create `tsconfig.json`:
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "lib": ["DOM", "ES2020"],
+    "jsx": "react-jsx",
+    "target": "ES2020",
+    "noEmit": true,
+    "skipLibCheck": true,
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "moduleDetection": "force",
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+    "noUncheckedSideEffectImports": true,
+    "isolatedModules": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  },
+  "include": ["docs", "theme", "rspress.config.ts"],
+  "mdx": {
+    "checkMdx": true
+  }
+}
+```
+
+## Start
+
+```bash
+npm run dev
+```
+
+You can customize host or port:
+
+```bash
+rspress dev --port 8080 --host 0.0.0.0
+```
+
+## Build
+
+```bash
+npm run build
+```
+
+Default output directory: `doc_build`
+
+### Preview
+
+Start the local preview service with the following command:
+
+```bash
+npm run preview
+```

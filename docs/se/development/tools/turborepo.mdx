@@ -67,51 +67,55 @@ npx turbo run
 
 ### Running tasks
 
-Running multiple tasks:
-
-```bash title="Terminal"
-npx turbo run build test lint
-```
-
-Run task with terminal UI, good for viewing task's output individually:
+Run a specific task for a package:
 
 ```bash
-npx turbo run dev --ui tui
+# run the `lint` task for the `web` package
+npx turbo run web#lint
 ```
 
-Filtering by package:
+Running multiple tasks:
 
-```bash title="Terminal"
-npx turbo build -F @repo/api
+```bash
+# run the `dev` tasks for `api` and `web` packages
+npx turbo run web#dev api#dev
+
+# Run the `build` task for the `docs` and `web` packages
+npx turbo run build --filter=docs --filter=web
 ```
 
-Filtering by directory:
+Run tasks for changed packages:
 
-```bash title="Terminal"
-npx turbo lint -F @repo/api
+```bash
+# Run any packages in `apps` subdirectories that have changed since the last commit
+npx turbo run build --filter={.apps/*}[HEAD^1]
 ```
 
-Run task in a package and all packages that **depend on it**:
+Exclude a package:
 
-```bash title="Terminal"
-npx turbo lint -F ...@repo/api
+```bash
+# Any packages in `apps` subdirectories except `./apps/admin`
+npx turbo run build --filter=./apps/* --filter=!./apps/admin
 ```
 
-Run task in a package and all of **its dependencies**:
+Run task for package's dependents:
 
-```bash title="Terminal"
-npx turbo lint -F web...
+```bash
+# run `lint` task for any packages that depend on `@acme/ui`
+npx turbo run lint --filter=...@acme/ui
 ```
 
-Combining filters:
+Run task for package's dependencies:
 
-```bash title="Terminal"
-npx turbo build -F ...ui -F {./packages/*} -F [HEAD^1] build
+```bash
+# run `build` task for `@acme/ui` and all of its dependencies
+npx turbo run build --filter=@acme/ui...
 ```
 
 Run tasks in watch mode:
 
-```bash title="Terminal"
+```bash
+# Run the `dev` and `lint` tasks in watch mode
 npx turbo watch dev lint
 ```
 
