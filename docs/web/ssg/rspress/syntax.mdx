@@ -1,152 +1,457 @@
-# Writing content
+# Syntax
 
-## Use React in Markdown file
+## MDX
 
-Rspress supports [MDX](https://mdxjs.com/), a powerful way to develop content.
-
-You can use React components in Markdown files:
+MDX is a combination of Markdown and JSX syntax, allowing you to write and use React components directly in Markdown documents.
 
 ```md
-import { CustomComponent } from './custom';
+# Hello, world!
 
-# Hello world
+import { PackageManagerTabs } from '@rspress/core/theme';
 
-<CustomComponent />
+<PackageManagerTabs command="create rspress@latest" />
 ```
 
-MDX files can import each other:
+Every `.mdx` file is compiled to a React component.
 
-```md
-import Foo from './shared/foo.mdx';
+It's recommended to use `.mdx` for all documentation files, as it enables you to write regular Markdown plus import built-in Rspress components.
 
-# Hello world
+You can import one MDX file into another and render it like a component.
 
-<Foo />
+You can also import plain React components from `.tsx` files.
+
+```md title="docs/index.mdx"
+import MdxFragment from './_mdx-fragment.mdx';
+import TsxComponent from './_tsx-component';
+
+Testing the use of MDX fragments and React components.
+
+<MdxFragment />
+
+<TsxComponent />
 ```
 
-## Page title and metadata
+```md title="docs/_mdx-fragment.mdx"
+This is **mdx fragment**.
+```
 
-You can add Front Matter (YAML-formatted object) at the beginning of your Markdown file to define metadata
+```tsx title="docs/_tsx-component.tsx"
+import { useState } from 'react';
+
+export default () => {
+  const [count, setCount] = useState(0);
+  return (
+    <p>
+      This is a component from tsx{' '}
+      <button onClick={() => setCount(count => count + 1)}>
+        {count}
+      </button>
+    </p>
+  );
+};
+```
+
+MDX fragments and React components should be excluded from routing by prefixing filenames with `_`. You can also keep components outside docs, such as in a separate components directory.
+
+
+## Page title
+
+By default, the page's `h1` heading will be used as the title of the HTML document.
+
+If you want to use a different title, you can use front matter to specify the title of the page:
 
 ```md
 ---
-title: Hello world
+title: My Home Page
 ---
+
+This is my **home page content**.
 ```
 
-By default, Rspress uses h1 headings as html headings.
+## Description
 
-You can also access properties defined in Front Matter in the body:
+By default, Rspress extracts the first contentful paragraph below the `h1` heading as the description.
+
+You can override it:
 
 ```md
 ---
-title: Hello world
+description: A brief introduction to my home page for SEO and social sharing.
 ---
-
-# {frontmatter.title}
 ```
 
+## Meta tags
 
-## Content Block
-
-You can use [GitHub Markdown Alerts Syntax](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts) to create custom blocks:
-
-```md
-:::note
-Useful information that users should know, even when skimming content.
-:::
-:::tip
-Helpful advice for doing things better or more easily.
-:::
-:::important
-Key information users need to know to achieve their goal.
-:::
-:::warning
-Urgent info that needs immediate user attention to avoid problems.
-:::
-:::danger
-Advises about risks or negative outcomes of certain actions.
-:::
-:::details
-Collapsable content
-:::
-
-:::tip
-Using GitHub Markdown Alerts Syntax enable previewing the document on GitHub.
-:::
-You can also use the `:::` syntax to create custom blocks with title:
+Use frontmatter to add custom meta tags
 
 ```md
-:::note
-This is a `block` of type `note`
-:::
-
-:::tip
-This is a `block` of type `tip`
-:::
-
-:::info
-This is a `block` of type `info`
-:::
-
-:::warning
-This is a `block` of type `warning`
-:::
-
-:::danger
-This is a `block` of type `danger`
-:::
-
-:::details
-This is a `block` of type `details` (toggleable)
-:::
-
-:::tip Custom Title
-This is a `block` of `Custom Title`
-:::
-
-:::tip{title="Custom Title"}
-This is a `block` of `Custom Title`
-:::
+---
+head:
+  - - meta
+    - property: og:url
+      content: https://example.com/foo/
+  - - meta
+    - property: og:image
+      content: https://example.com/bar.jpg
+---
 ```
 
+## Code blocks
 
-## Code block
+### Basic usage
+
+You can use the \`\`\` syntax to create code blocks:
 
 ````md
 ```js
 console.log('Hello World');
 ```
+````
 
-```js title="hello.js"
-console.log('Hello World');
+### Code block title
+
+Add `title="..."` attribute to add a title to a code block:
+
+````md
+```jsx title="src/components/HelloCodeBlockTitle.tsx"
+const HelloCodeBlockTitle = (props) => {
+  return <h1>Hello CodeBlock Title</h1>;
+};
 ```
 ````
 
-### Show line numbers
+### File code block
 
-To display line numbers, you can enable the `showLineNumbers` option in the [config file](https://rspress.dev/api/config/config-build#markdownshowlinenumbers).
+Reference files relative to the current MDX location:
+
+````md title="docs/foo.mdx"
+```tsx file="./_tsx-component.tsx"
+```
+````
+
+```tsx title="docs/_tsx-component.tsx"
+import { useState } from 'react';
+
+export default () => {
+  const [count, setCount] = useState(0);
+  return (
+    <p>
+      This is a component from tsx{' '}
+      <button onClick={() => setCount(count => count + 1)}>
+        {count}
+      </button>
+    </p>
+  );
+};
+```
+
+Use `<root>/` for paths relative to the project root:
+
+````md title="docs/foo.mdx"
+```tsx file="<root>/src/components/Button.tsx"
+```
+````
 
 
 ### Line highlighting
 
+To use Notation line highlight, add  `transformerNotationHighlight` to `rspress.config.ts`:
+
+```ts title="rspress.config.ts"
+import { defineConfig } from '@rspress/core';
+import { transformerNotationHighlight } from '@shikijs/transformers';
+
+export default defineConfig({
+  markdown: {
+    shiki: {
+      transformers: [transformerNotationHighlight()],
+    },
+  },
+});
+```
+
+Then use `// [!code highlight]` comments in your code blocks. In below example, lines 1, 3, and 4 will be highlighted:
+
 ````md
-```js title="hello.js"
-console.log('Hello World'); // [!code highlight]
+```ts
+console.log('Highlighted'); // [!code highlight]
+console.log('Not highlighted');
+// [!code highlight:2]
+console.log('Highlighted');
+console.log('Highlighted');
+```
+````
 
-const a = 1; // [!code highlight]
-// [!code highlight]
-console.log(a); // [!code highlight]
+### Line numbers
 
-const b = 2;
+Show line numbers for individual code blocks using the `lineNumbers` meta attribute:
 
-console.log(b);
+````md
+```ts lineNumbers
+function hello() {
+  console.log('Line numbers enabled for this block');
+}
+```
+````
+
+On set in the config:
+
+```ts title="rspress.config.ts"
+export default {
+  markdown: {
+    showLineNumbers: true,
+  },
+};
+```
+
+Disable line numbers for a specific code block by using `lineNumbers=false`.
+
+
+### Wrap code
+
+Use `wrapCode` meta attribute to wrap long lines:
+
+````md
+```ts wrapCode
+const longLine = 'This is a very long line of code that will wrap when the wrapCode meta attribute is present';
+```
+````
+
+Enable it globally with `markdown.defaultWrapCode`:
+
+```ts title="rspress.config.ts"
+export default {
+  // ...
+  markdown: {
+    defaultWrapCode: true,
+  },
+};
+```
+
+
+### Code block height
+
+- `fold` enables expandable code blocks.
+- `height="X"` sets a fixed height for the code block with vertical scrollbar.
+
+````md
+```tsx fold height="350"
+// Put longer code content here to trigger expand/collapse
 ```
 ````
 
 
-## Customizing title's anchor id
+### Combine meta attributes
+
+You can combine multiple meta attributes together:
+
+````md
+```ts lineNumbers wrapCode title="example.ts"
+const longLine = 'This code block has line numbers, code wrapping, and a title';
+```
+````
+
+
+### Diff code blocks
+
+Use `// [!code --]` and `// [!code ++]` comments for deleted/added styling.
+
+````md
+```ts
+console.log('deleted'); // [!code --]
+console.log('added'); // [!code ++]
+console.log('unchanged');
+```
+````
+
+```ts title="rspress.config.ts"
+import { defineConfig } from '@rspress/core';
+import { transformerNotationDiff } from '@shikijs/transformers';
+export default defineConfig({
+  markdown: {
+    shiki: {
+      transformers: [transformerNotationDiff()],
+    },
+  },
+});
+```
+
+
+### Error highlighting
+
+Use `// [!code error-level]` comments to indicate error severity with different styles.
+
+````md
+```ts
+console.log('No errors or warnings');
+console.error('Error'); // [!code error]
+console.warn('Warning'); // [!code warning]
+```
+````
+
+```ts title="rspress.config.ts"
+import { defineConfig } from '@rspress/core';
+import { transformerNotationErrorLevel } from '@shikijs/transformers';
+export default defineConfig({
+  markdown: {
+    shiki: {
+      transformers: [transformerNotationErrorLevel()],
+    },
+  },
+});
+```
+
+### Focus lines
+
+````md
+```ts
+console.log('Not focused');
+console.log('Focused'); // [!code focus]
+console.log('Not focused');
+```
+````
+
+```ts title="rspress.config.ts"
+import { defineConfig } from '@rspress/core';
+import { transformerNotationFocus } from '@shikijs/transformers';
+export default defineConfig({
+  markdown: {
+    shiki: {
+      transformers: [transformerNotationFocus()],
+    },
+  },
+});
+```
+
+
+## Links
+
+### Internal links
+
+Rspress supports two main link styles: **file path format** and **URL format**. Both render the same result.
+
+It's recommended to use relative file paths for:
+- better IDE support: hint, jump to the corresponding file, auto-update file links when moving files, etc.
+- supported by GitHub interface and other Markdown editors.
+- no need to worry about `cleanUrls` configuration.
+
+```md
+[Relative path](../start/getting-started.mdx)
+```
+
+
+### External links
+
+External links that are not in this docsite will automatically add `target="_blank" rel="noreferrer"`.
+
+
+### Asset links
+
+Links to static resources in the documentation site will be kept as is.
+
+You need to exclude these links from dead link checking.
+
+```ts title="rspress.config.ts"
+import { defineConfig } from '@rspress/core';
+
+export default defineConfig({
+  markdown: {
+    link: {
+      checkDeadLinks: {
+        excludes: ['/og-image.png', '/llms-full.txt'],
+      },
+    },
+  },
+});
+```
+
+### Anchor links
+
+Use `#` to jump to sections in the current or another page.
+
+```md
+[Jump to #File Path Format](#file-path-format)
+
+[Jump to Getting Started#1-Initialize Project](../start/getting-started.mdx#1-initialize-project)
+```
+
+#### Customizing anchor IDs
+
+By default, Rspress will automatically generate ids, to customize the id of the header:
 
 ```md
 ## Hello world \{#custom-id}
+```
+
+### Dead link checking
+
+Enable dead link validation with `markdown.link.checkDeadLinks`.
+
+```ts title="rspress.config.ts"
+import { defineConfig } from '@rspress/core';
+
+export default defineConfig({
+  markdown: {
+    link: {
+      checkDeadLinks: true,
+    },
+  },
+});
+```
+
+### Dead image checking
+
+Enable broken image reference checks with `markdown.image.checkDeadImages`.
+
+```ts title="rspress.config.ts"
+import { defineConfig } from '@rspress/core';
+
+export default defineConfig({
+  markdown: {
+    image: {
+      checkDeadImages: true,
+    },
+  },
+});
+```
+
+
+## Container
+
+Rspress supports two container syntaxes to mark important information and provide hints to users: `:::` syntax and [GitHub Markdown Alerts syntax](https://rspress.rs/guide/use-mdx/container#github-markdown-alerts-syntax).
+
+It's recommended to use `:::` syntax for better multiple lines support and flexible content inside containers.
+
+```md
+:::note
+This is a `note` callout
+:::
+
+:::tip
+This is a `tip` callout
+:::
+
+:::info
+This is an `info` callout
+:::
+
+:::warning
+This is a `warning` callout
+:::
+
+:::danger
+This is a `danger` callout
+:::
+
+:::details
+This is a `details` callout
+:::
+```
+
+Custom titles:
+
+```md
+:::tip Custom Title
+This is a callout with a custom title
+:::
 ```

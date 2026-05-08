@@ -8,18 +8,6 @@
     "link": "/backend"
   },
   {
-    "text": "Software Engineering",
-    "link": "/se"
-  },
-  {
-    "text": "Game",
-    "link": "/game"
-  },
-  {
-    "text": "Data Engineering",
-    "link": "/de"
-  },
-  {
     "text": "Web",
     "link": "/web"
   },
@@ -28,7 +16,24 @@
     "link": "/devops"
   },
   {
-    "text": "Tools",
-    "link": "/tools"
+    "text": "Software Engineering",
+    "link": "/se"
+  },
+  {
+    "text": "Others",
+    "items": [
+      {
+        "text": "Tools",
+        "link": "/tools"
+      },
+      {
+        "text": "Data Engineering",
+        "link": "/de"
+      },
+      {
+        "text": "Game",
+        "link": "/game"
+      }
+    ]
   }
 ]
