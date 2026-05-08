@@ -14,6 +14,7 @@
 		"rspress-plugin-mermaid": "^1.0.1"
 	},
 	"devDependencies": {
+		"@shikijs/transformers": "^4.0.2",
 		"@types/node": "^18.11.17",
 		"prettier": "^3.8.0"
 	}

@@ -1,0 +1,58 @@
+[
+  {
+    "name": "requirements",
+    "label": "Requirements",
+    "type": "file"
+  },
+  {
+    "name": "quality-attributes",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "components",
+    "type": "dir",
+    "label": "Components",
+    "collapsed": true
+  },
+  {
+    "name": "patterns",
+    "type": "dir",
+    "label": "Patterns",
+    "collapsed": true
+  },
+  {
+    "name": "case-studies",
+    "label": "Case Studies",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "principles",
+    "label": "Principles",
+    "type": "file"
+  },
+  {
+    "name": "communication",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "data-mng",
+    "type": "dir",
+    "label": "Data Management",
+    "collapsed": true
+  },
+  {
+    "name": "caching",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "stream-processing",
+    "type": "dir",
+    "collapsed": true
+  },
+  "bote",
+  "interview"
+]

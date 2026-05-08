@@ -1,0 +1,61 @@
+# Test Filtering
+
+## Skipping Tests
+
+```ts
+import { assert, describe, it } from 'vitest'
+
+describe.skip('skipped suite', () => { // [!code highlight]
+  it('test', () => {
+    // Suite skipped, no error
+    assert.equal(Math.sqrt(4), 3)
+  })
+})
+
+describe('suite', () => { // [!code highlight]
+  it.skip('skipped test', () => {
+    // Test skipped, no error
+    assert.equal(Math.sqrt(4), 3)
+  })
+})
+```
+
+## Run only one test
+
+```ts
+import { assert, describe, it } from 'vitest'
+
+// Only this suite (and others marked with only) are run
+describe.only('suite', () => { // [!code highlight]
+  it('test', () => {
+    assert.equal(Math.sqrt(4), 3)
+  })
+})
+
+describe('another suite', () => {
+  it('skipped test', () => {
+    // Test skipped, as tests are running in Only mode
+    assert.equal(Math.sqrt(4), 3)
+  })
+
+  it.only('test', () => { // [!code highlight]
+    // Only this test (and others marked with only) are run
+    assert.equal(Math.sqrt(4), 2)
+  })
+})
+```
+
+
+## Unimplemented
+
+```ts
+import { describe, it } from 'vitest'
+
+// An entry will be shown in the report for this suite
+describe.todo('unimplemented suite') // [!code highlight]
+
+// An entry will be shown in the report for this test
+describe('suite', () => {
+  it.todo('unimplemented test') // [!code highlight]
+})
+```

@@ -1,5 +1,6 @@
 import * as path from 'node:path';
 import { defineConfig } from '@rspress/core';
+import { transformerNotationHighlight } from '@shikijs/transformers';
 import katex from 'rspress-plugin-katex';
 import mermaid from 'rspress-plugin-mermaid';
 
@@ -11,6 +12,11 @@ export default defineConfig({
   themeConfig: {
     lastUpdated: true,
     enableScrollToTop: true,
+  },
+  markdown: {
+    shiki: {
+      transformers: [transformerNotationHighlight()],
+    },
   },
   // enable math syntax
   plugins: [katex(), mermaid()],
