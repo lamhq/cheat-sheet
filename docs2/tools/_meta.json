@@ -1,6 +1,7 @@
 [
   {
     "name": "index",
+    "type": "file",
     "label": "Tools"
   },
   {

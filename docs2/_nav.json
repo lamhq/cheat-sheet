@@ -26,5 +26,9 @@
   {
     "text": "DevOps",
     "link": "/devops"
+  },
+  {
+    "text": "Tools",
+    "link": "/tools"
   }
 ]
