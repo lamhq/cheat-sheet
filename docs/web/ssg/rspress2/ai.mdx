@@ -1,0 +1,77 @@
+# AI
+
+## AI features
+
+Rspress provides the following capabilities to help AI better understand Rspress's features, configuration, and best practices:
+- Agent Skills
+- `llms.txt`
+- plain Markdown docs for direct AI input
+- `AGENTS.md`
+
+
+## Agent Skills
+
+Agent Skills are knowledge packs for coding agents, installed from `rstackjs/agent-skills`.
+
+Useful Rspress-related skills:
+- `rspress-v2-upgrade`: migrate Rspress v1 → v2
+- `rspress-custom-theme`: customize theme with CSS vars, layout slots, wrapping, or ejection
+- `rspress-description-generator`: generate and maintain `description` frontmatter
+
+Install a skill with your runtime:
+
+```sh
+npx skills add rstackjs/agent-skills --skill rspress-v2-upgrade
+```
+
+After installing, use natural language prompts like:
+
+```text
+Help me upgrade this Rspress v1 project to v2
+```
+
+## `llms.txt` support
+
+[llms.txt](https://llmstxt.org/) is a standard that helps LLMs discover and use project documentation. 
+
+Rspress exposes AI-friendly documentation indexes:
+- `llms.txt`: contain concise page titles, links, descriptions. Can be access at https://rspress.rs/llms.txt
+- `llms-full.txt`: full concatenated of every documentation page (https://rspress.rs/llms-full.txt)
+
+Enable `llms` in `rspress.config.ts`:
+
+```ts title="rspress.config.ts"
+import { defineConfig } from '@rspress/core';
+
+export default defineConfig({
+  llms: true,
+});
+```
+
+## Markdown docs
+
+Every Rspress page has a corresponding `.md` version.
+
+On any doc page, you can click "Copy Markdown" or "Copy Markdown Link" under the title to get the Markdown content or link.
+
+## `AGENTS.md`
+
+Create an `AGENTS.md` file in your project so Agents can better understand your project (e.g., project structure, overall architecture).
+
+```markdown title="AGENTS.md"
+# AGENTS.md
+
+You are an expert in JavaScript, Rspress, and documentation site development. You write maintainable, performant, and accessible code.
+
+## Commands
+
+- `npm run dev` - Start the dev server
+- `npm run build` - Build the site for production
+- `npm run preview` - Preview the production build locally
+
+## Docs
+
+- Rspress: https://rspress.rs/llms.txt
+- Rsbuild: https://rsbuild.rs/llms.txt
+- Rspack: https://rspack.rs/llms.txt
+```

@@ -1,0 +1,95 @@
+# uv
+
+## Introduction
+
+uv is an extremely fast Python package and project manager, written in Rust.
+
+
+## Installation
+
+Install uv in macOS using Homebrew:
+
+```bash
+brew install uv
+```
+
+## Creating projects
+
+Create a new Python project in a new directory:
+
+```bash
+uv init hello-world
+cd hello-world
+```
+
+Initialize a project in the working directory:
+
+```bash
+mkdir hello-world
+cd hello-world
+uv init
+```
+
+
+### Project structure
+
+```
+.
+├── .venv
+│   ├── bin
+│   ├── lib
+│   └── pyvenv.cfg
+├── .python-version
+├── README.md
+├── main.py
+├── pyproject.toml
+└── uv.lock
+```
+
+- `.venv` is the virtual environment created by uv. It contains the Python interpreter and all installed packages for the project.
+- `.python-version` specifies the Python version to use when creating the virtual environment.
+- `pyproject.toml`: contains metadata about your project. It is used to manage dependencies
+- `uv.lock`: lock file that contains the exact versions of all dependencies used in the project
+
+
+## Managing dependencies
+
+Add a dependency to the project:
+
+```bash
+uv add requests
+```
+
+Specify version constraints when adding a dependency:
+
+```bash
+uv add 'requests==2.31.0'
+```
+
+Migrate dependencies from `requirements.txt`:
+
+```bash
+uv add -r requirements.txt -c constraints.txt
+```
+
+
+## Running commands
+
+Run arbitrary scripts or commands in your project environment.
+
+Run a dependency's CLI tool:
+
+```bash
+uv run -- flask run -p 3000
+```
+
+Run a Python script:
+
+```bash
+uv run example.py
+```
+
+
+## References
+
+https://docs.astral.sh/uv/

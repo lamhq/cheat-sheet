@@ -2,6 +2,7 @@
 agent: agent
 model: Raptor mini (Preview) (copilot)
 description: Create concise learning note for a web page
+tools: [web/fetch]
 ---
 
 use the `fetch_webpage` tool to get the content from the provided URL.

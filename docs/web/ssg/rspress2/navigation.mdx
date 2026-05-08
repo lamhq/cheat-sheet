@@ -1,0 +1,268 @@
+# Navigation
+
+## Introduction
+
+Rspress can build navigation and sidebar automatically from:
+- `_nav.json` for the top navbar
+- `_meta.json` for sidebar structure
+
+> [!NOTE]
+> Automated navbar/sidebar will only work if there are no `nav` and `sidebar` configurations in the config file `rspress.config.ts`.
+
+
+## Basic usage
+
+File placement:
+- `docs/_nav.json` defines top-level navigation
+- `docs/**/_meta.json` defines sidebar structure per directory
+
+Example:
+```tree
+docs
+├── _nav.json
+└── guide
+    ├── _meta.json
+    ├── introduction.mdx
+    └── advanced
+        ├── _meta.json
+        └── plugin-development.md
+```
+
+If your document supports i18n, place `_nav.json` inside each locale folder:
+```tree
+docs
+├── en
+│   ├── _nav.json
+│   └── guide
+│       ├── _meta.json
+│       ├── introduction.mdx
+│       └── advanced/_meta.json
+└── zh
+    ├── _nav.json
+    └── guide
+        ├── _meta.json
+        ├── introduction.mdx
+        └── advanced/_meta.json
+```
+
+## JSON schema type hint
+
+Rspress provides schema files for IDE support:
+- `@rspress/core/meta-json-schema.json`
+- `@rspress/core/nav-json-schema.json`
+
+Example VS Code config:
+```json title=".vscode/settings.json"
+{
+  "json.schemas": [
+    {
+      "fileMatch": ["**/_meta.json"],
+      "url": "./node_modules/@rspress/core/meta-json-schema.json"
+    },
+    {
+      "fileMatch": ["**/_nav.json"],
+      "url": "./node_modules/@rspress/core/nav-json-schema.json"
+    }
+  ]
+}
+```
+
+## Navbar config
+
+Refer to [nav config](https://rspress.rs/api/config/config-theme#nav) for details.
+
+Each navbar item follows this interface:
+
+```ts
+interface NavItem {
+  // Navbar text
+  text: string;
+  // Navbar link
+  link: '/';
+  // Whether it is a download link
+  download?: boolean;
+  // Activation rules for navbar links
+  activeMatch: '^/$|^/';
+  // svg tag string or image URL(optional)
+  tag?: string;
+}
+```
+
+Example:
+
+```json title="docs/_nav.json"
+[
+  {
+    "text": "Guide",
+    "link": "/guide/introduction",
+    "activeMatch": "^/guide/"
+  }
+]
+```
+
+
+## Sidebar config
+
+`_meta.json` is an array of sidebar items. Supported item types include:
+
+- `string` file names
+- `file`
+- `dir`
+- `dir-section-header`
+- `divider`
+- `section-header`
+- `custom-link`
+
+### file
+
+```json
+{
+  "type": "file",
+  "name": "introduction",
+  "label": "Introduction"
+}
+```
+
+### dir
+
+```json
+{
+  "type": "dir",
+  "name": "advanced",
+  "label": "Advanced",
+  "collapsible": true,
+  "collapsed": false
+}
+```
+
+### dir-section-header
+
+Acts like a directory header in the UI:
+```json
+{
+  "type": "dir-section-header",
+  "name": "advanced",
+  "label": "Advanced",
+  "collapsible": true,
+  "collapsed": false
+}
+```
+
+### divider
+
+```json
+{
+  "type": "divider",
+  "dashed": true
+}
+```
+
+### section-header
+
+```json
+{
+  "type": "section-header",
+  "label": "Section Header"
+}
+```
+
+### custom-link
+
+```json
+{
+  "type": "custom-link",
+  "link": "/my-link",
+  "label": "My Link"
+}
+```
+
+Nested custom links:
+
+```json
+{
+  "type": "custom-link",
+  "label": "My Link",
+  "items": [
+    { "type": "custom-link", "label": "Sub Link 1", "link": "/sub-link-1" },
+    { "type": "custom-link", "label": "Sub Link 2", "link": "/sub-link-2" }
+  ]
+}
+```
+
+
+## Tag icons
+
+Sidebar and navbar items support `tag`, which can contain SVG or image URLs.
+
+Example:
+
+```json title="_meta.json"
+{
+  "type": "file",
+  "name": "introduction",
+  "label": "Introduction",
+  "tag": "new, experimental"
+}
+```
+
+You can also define tag through frontmatter in a page:
+
+```mdx title="foo.mdx"
+---
+tag: new
+---
+
+# Foo
+
+some text
+```
+
+Multiple tags are separated by commas:
+
+```mdx
+---
+tag: new, experimental
+---
+```
+
+You can also add tags in `_meta.json`:
+
+```json title="_meta.json"
+[
+  {
+    "name": "foo",
+    "type": "file",
+    "tag": "new, experimental"
+  }
+]
+```
+
+Rspress has built-in tags rendered as badges:
+
+- `new`
+- `experimental`
+- `deprecated`
+- `updated`
+
+
+Use an SVG string directly:
+
+```mdx
+---
+tag: <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2L2 7l10 5 10-5-10-5z"/></svg>
+---
+```
+
+Use an external image URL or data URL:
+
+```mdx
+---
+tag: https://example.com/icon.png
+---
+```
+
+```mdx
+---
+tag: data:image/svg+xml;base64,...
+---
+```
