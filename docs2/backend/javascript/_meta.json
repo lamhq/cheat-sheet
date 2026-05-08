@@ -1,0 +1,19 @@
+[
+  {
+    "name": "types",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Types"
+  },
+  {
+    "name": "syntax",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Syntax"
+  },
+  {
+    "name": "fetch",
+    "label": "HTTP Client",
+    "type": "file"
+  }
+]

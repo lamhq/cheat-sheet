@@ -1,9 +1,5 @@
 [
   {
-    "text": "Backend",
-    "link": "/backend"
-  },
-  {
     "text": "AI",
     "link": "/ai"
   },
@@ -21,10 +17,6 @@
       {
         "text": "Tools",
         "link": "/tools"
-      },
-      {
-        "text": "Data Engineering",
-        "link": "/de"
       }
     ]
   }

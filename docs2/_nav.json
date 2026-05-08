@@ -1,10 +1,18 @@
 [
   {
+    "text": "Backend",
+    "link": "/backend"
+  },
+  {
     "text": "Software Engineering",
     "link": "/se"
   },
   {
     "text": "Game",
     "link": "/game"
+  },
+  {
+    "text": "Data Engineering",
+    "link": "/de"
   }
 ]
