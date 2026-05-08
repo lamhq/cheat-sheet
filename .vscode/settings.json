@@ -1,4 +1,7 @@
 {
+  "files.associations": {
+    "*.mdx": "markdown"
+  },
   "explorer.sortOrder": "mixed",
   "editor.insertSpaces": true,
   "editor.tabSize": 2,
@@ -7,9 +10,6 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,
-  "files.associations": {
-    "*.mdx": "markdown"
-  },
   "files.exclude": {
     "**/.ipynb_checkpoints": true
   },
