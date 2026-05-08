@@ -1,0 +1,50 @@
+# Static Assets
+
+## Introduction
+
+Rspress supports static assets for:
+- Images, videos and other static assets used in MDX files
+- Logo image at the top left corner of the site
+- Site favicon icon
+- Homepage logo image
+- Other static assets
+
+The "document root directory" is the folder set by `root` field in `rspress.config.ts`:
+
+```ts title="rspress.config.ts"
+import { defineConfig } from '@rspress/core';
+
+export default defineConfig({
+  root: 'docs',
+});
+```
+
+
+## Static assets used in MDX files
+
+### Regular static assets
+
+If there is an image in the same directory as the markdown, you can reference it like this:
+
+```md title="index.mdx"
+![](./skip-link-check.png)
+```
+
+### Public folder assets
+
+Files under `public` folder are copied unchanged and served from the base root path (default `/`).
+
+Example structure:
+
+```text title="docs-structure.tree"
+docs
+├── public
+│   └── skip-link-check.png
+├── index.mdx
+```
+
+In the above `index.mdx` file, you can use an absolute path to reference `skip-link-check.png`:
+
+```md title="index.mdx"
+![](/skip-link-check.png)
+```
