@@ -4,8 +4,9 @@
 
 A Deployment is a higher-level Kubernetes object that wraps around a Pod and adds features such as self-healing, scaling, zero-downtime rollouts, and versioned rollbacks.
 
-> [!INFO]
-> You can deploy containers by define them in a Pod template. However, static Pods don't self-heal, they don't scale, and they don't allow for easy updates and rollbacks.
+:::info
+You can deploy containers by define them in a Pod template. However, static Pods don't self-heal, they don't scale, and they don't allow for easy updates and rollbacks.
+:::
 
 
 ## Deployment spec
@@ -14,17 +15,17 @@ A Deployment object is a high-level Kubernetes resource that describes the desir
 
 It is defined in YAML or JSON file, called the Deployment spec:
 
-```yml {6,8,10}
+```yml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: my-deployment
 spec:
-  replicas: 2
+  replicas: 2 # [!code highlight]
   selector:
-    matchLabels:
+    matchLabels: # [!code highlight]
       app: my-app
-  template:
+  template: # [!code highlight]
     metadata:
       labels:
         app: my-app
@@ -49,8 +50,9 @@ spec:
 
 The controller element reconciling observed state with desired state defined in the Deployment spec.
 
-> [!NOTE]
-> Reconciliation refers to the process where the controller ensures that the actual state of a resource matches its desired state as defined in the resource's specification.
+:::note
+Reconciliation refers to the process where the controller ensures that the actual state of a resource matches its desired state as defined in the resource's specification.
+:::
 
 Responsibilities:
 
@@ -76,8 +78,9 @@ It's not recommended to manage ReplicaSets directly, but let the Deployment cont
 
 A Deployment object only manages a single Pod template.
 
-> [!NOTE]
-> For example, an application with a front-end web service and a shopping basket service will have a different Pod template for each. As a result, it'll need two Deployment objects, one managing frontend web Pods, the other managing any shopping basket Pods.
+:::note
+For example, an application with a front-end web service and a shopping basket service will have a different Pod template for each. As a result, it'll need two Deployment objects, one managing frontend web Pods, the other managing any shopping basket Pods.
+:::
 
 
 ## Rolling update
@@ -100,9 +103,10 @@ strategy:
 - `maxUnavailable`: the maximum number of Pods that can be unavailable during a rolling update
 - `maxSurge`: the maximum number of extra Pods that can be created above the desired number of replicas during a rolling update
 
-> [!NOTE]
-> As the desired state of the app requests 10 replicas, `maxSurge: 1` means you'll never have more than 11 replicas during the update process, and `maxUnavailable: 1` means you'll never have less than 9. The net result is a rollout that updates two Pods at a time
+:::note
+As the desired state of the app requests 10 replicas, `maxSurge: 1` means you'll never have more than 11 replicas during the update process, and `maxUnavailable: 1` means you'll never have less than 9. The net result is a rollout that updates two Pods at a time
 (the delta between 9 and 11 is 2).
+:::
 
 
 ## Rollback
@@ -112,7 +116,8 @@ Kubernetes maintains a documented revision history of rollouts.
 Rolling updates create new ReplicaSets, but old ReplicaSets aren't
 deleted, makes them ideal for executing rollbacks.
 
-> [!TIP]
-> You can use the command `kubectl get rs` to list all ReplicaSets
+:::tip
+You can use the command `kubectl get rs` to list all ReplicaSets
+:::
 
 Rollbacks follow the same rules as rolling update (defined in the `strategy` block of the Deployment object).

@@ -8,7 +8,7 @@ A Service provides a single point of entry for accessing one or more Pods. It ma
 
 Services rely on **labels** and **selectors** to associate with Pods. For a Service to send traffic to a Pod, all labels of that Pod needs to match with the ones Service is selecting (Boolean AND).
 
-```yml {9,10}
+```yml
 apiVersion: v1
 kind: Service
 metadata:
@@ -17,8 +17,8 @@ spec:
   ports:
   - port: 8080
   selector:
-    app: hello-world   <<==== Send to Pods with these labels
-    env: tkb           <<==== Send to Pods with these labels
+    app: hello-world   <<==== Send to Pods with these labels # [!code highlight]
+    env: tkb           <<==== Send to Pods with these labels # [!code highlight]
 ```
 
 Services are not ephemeral.
@@ -32,17 +32,17 @@ Services cannot provide application-layer host and path routing.
 
 Basic structure of a Service spec:
 
-```yml {3,6,8,10}
+```yml
 apiVersion: v1
 kind: Service
-metadata:
+metadata: # [!code highlight]
   name: frontend
 spec:
-  type:
+  type: # [!code highlight]
 
-  selector:
+  selector: # [!code highlight]
 
-  ports:
+  ports: # [!code highlight]
   - port: 80
     targetPort: 8080
 ```
@@ -53,8 +53,9 @@ spec:
 - `selector`: labels of the Pods to send traffic to
 - `ports`: define container target port and the port for the service
 
-> [!TIP]
-> Pods inside the cluster can access the service using the address `[service-name]:[port]`. In the example above, the address would be `frontend:8080`.
+:::tip
+Pods inside the cluster can access the service using the address `[service-name]:[port]`. In the example above, the address would be `frontend:8080`.
+:::
 
 
 ## Service types
@@ -117,8 +118,9 @@ spec:
 - `port: 8080`: The port that the service exposes **inside the cluster**. Other pods will use this to reach the service (using address: `nginx-nodeport:8080`).
 - `nodePort: 31000`: A static port that’s opened **on every node** in the cluster. External clients can send traffic to any node’s IP on this port, and it gets routed to the service.
 
-> [!TIP]
-> You can get node's IP using the command `kubectl get nodes -o wide`
+:::tip
+You can get node's IP using the command `kubectl get nodes -o wide`
+:::
 
 
 ### LoadBalancer
@@ -149,8 +151,9 @@ spec:
     targetPort: 8080
 ```
 
-> [!TIP]
-> You can access the load balancer using its public IP address (the `EXTERNAL-IP` field from the `kubectl get svc --watch` command) with the port defined in the YML file.
+:::tip
+You can access the load balancer using its public IP address (the `EXTERNAL-IP` field from the `kubectl get svc --watch` command) with the port defined in the YML file.
+:::
 
 
 ### ExternalName

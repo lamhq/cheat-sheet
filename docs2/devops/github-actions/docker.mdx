@@ -11,7 +11,7 @@ You can configure service containers for each job in a workflow. GitHub creates 
 
 To create a [PostgreSQL service container](https://docs.github.com/en/actions/tutorials/use-containerized-services/create-postgresql-service-containers) and connect to it:
 
-```yml {25,38,40}
+```yml
 name: PostgreSQL Service Example
 on: push
 
@@ -36,7 +36,7 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-        ports:
+        ports: # [!code highlight]
           # Maps tcp port 5432 on service container to the host
           - 5432:5432
 
@@ -49,9 +49,9 @@ jobs:
         # a new PostgreSQL table.
         env:
           # The hostname used to communicate with the PostgreSQL service container
-          POSTGRES_HOST: localhost
+          POSTGRES_HOST: localhost # [!code highlight]
           # The default PostgreSQL port
-          POSTGRES_PORT: 5432
+          POSTGRES_PORT: 5432 # [!code highlight]
 ```
 
 In above example, the job is running on the runner machine, so we need to map the container port to the host machine in order to connect to the PostgreSQL service at `localhost:5432`.

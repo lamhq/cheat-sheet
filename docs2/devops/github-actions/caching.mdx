@@ -3,7 +3,7 @@
 You can use the official [actions/cache](https://github.com/actions/cache) action to cache files or directories.
 
 Example for caching Node.js dependencies using npm:
-```yml {14}
+```yml
 name: Caching with npm
 on: push
 jobs:
@@ -17,7 +17,7 @@ jobs:
         uses: actions/cache@v4
         with:
           # npm cache files are stored in `~/.npm` on Linux/macOS
-          path: ~/.npm
+          path: ~/.npm # [!code highlight]
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-

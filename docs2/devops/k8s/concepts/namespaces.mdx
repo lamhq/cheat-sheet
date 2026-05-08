@@ -19,8 +19,9 @@ Namespaces are not designed for strong workload isolation.
 
 **Not a Security Boundary**: Namespaces are not designed to provide strong security isolation (for example, they don't prevent access to resources in other namespaces).
 
-> [!TIP]
-> If you need strong workload isolation, the current method is to use multiple clusters.
+:::tip
+If you need strong workload isolation, the current method is to use multiple clusters.
+:::
 
 **Shared Cluster Resources**: Namespaces share the same underlying cluster resources, such as nodes and the control plane. This means that resource contention or misconfigurations in one namespace can potentially affect others
 

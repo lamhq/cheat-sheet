@@ -18,5 +18,9 @@
   {
     "text": "Web",
     "link": "/web"
+  },
+  {
+    "text": "DevOps",
+    "link": "/devops"
   }
 ]
