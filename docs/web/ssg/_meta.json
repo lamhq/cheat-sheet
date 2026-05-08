@@ -1,3 +1,4 @@
 [
-  { "name": "rspress", "type": "dir" }
+  { "name": "rspress", "type": "dir" },
+  { "name": "nextra", "type": "dir" }
 ]

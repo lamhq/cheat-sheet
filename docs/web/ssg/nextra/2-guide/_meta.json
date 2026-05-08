@@ -1,0 +1,37 @@
+[
+  {
+    "type": "file",
+    "name": "1-organize-files",
+    "label": "Organize Files"
+  },
+  {
+    "type": "file",
+    "name": "2-markdown",
+    "label": "Markdown"
+  },
+  {
+    "type": "file",
+    "name": "3-syntax-highlighting",
+    "label": "Syntax Highlighting"
+  },
+  {
+    "type": "file",
+    "name": "4-link-image",
+    "label": "Link & Image"
+  },
+  {
+    "type": "file",
+    "name": "5-css",
+    "label": "CSS"
+  },
+  {
+    "type": "file",
+    "name": "6-npmyarn",
+    "label": "NPM/Yarn"
+  },
+  {
+    "type": "file",
+    "name": "7-table",
+    "label": "Table"
+  }
+]
