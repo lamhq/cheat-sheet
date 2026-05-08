@@ -8,13 +8,17 @@ tools: [execute, read/problems, read/readFile, read/viewImage, read/terminalSele
 ## Workflow
 
 1. **Migrate pages incrementally**
-   - Move (not copy) a directory under `docs/` to `docs2/`
+   - Move (not copy) the biggest directory under `docs/` to `docs2/`
    - Add an item that corresponds to the moved directory to `docs2/_nav.json` to add an item to the top navigation bar of the documentation website (also remove it from `docs/_meta.json`).
+   - For `_meta.json` files, make sure every object item has a `"type"` field, either `"file"` or `"dir"` depending on whether it maps to a `.mdx` file or a folder.
    - For each `*.mdx` file in the moved directory (recursively):
       - Replace Meta line highlight `{n1, n2,...}` with Notation line highlight `// [!code highlight]`
       - Replace GitHub Markdown Alerts syntax `> [!...]` with `:::` syntax
 
-2. **Validate UI**.
+
+Plain string items like `"yaml"` are fine — only objects need the `"type"` field.
+
+2. **Validate UI**
    - Make sure sidebar items in the two versions are the same.
    - For each migrated page:
       - Open the page in browser with base URL: `http://localhost:3000/`
