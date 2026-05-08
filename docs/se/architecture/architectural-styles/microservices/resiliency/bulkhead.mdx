@@ -4,8 +4,9 @@
 
 Bulkhead pattern is used to isolate failures of one component from affecting the others, in a distributed system.
 
-> [!INFO]
-> Based on the concept of a "bulkhead" in ships, they are made not as a whole, but by shielding from certain areas, if there is happens a flood or fire, the relevant compartment is closed and isolated.
+:::info
+Based on the concept of a "bulkhead" in ships, they are made not as a whole, but by shielding from certain areas, if there is happens a flood or fire, the relevant compartment is closed and isolated.
+:::
 
 Examples:
 - **Separate connection pools for each downstream service**: Prevents one failing connection from affecting others.

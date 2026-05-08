@@ -23,25 +23,25 @@ This document is for **Data** mode. Because it has necessary features and easy t
 
 Use React Router in the application:
 
-```tsx showLineNumbers {1-4,9-14,19} title="index.tsx"
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router";
+```tsx showLineNumbers title="index.tsx"
+import { // [!code highlight]
+  createBrowserRouter, // [!code highlight]
+  RouterProvider, // [!code highlight]
+} from "react-router"; // [!code highlight]
 
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <div>Hello World</div>,
-  },
-]);
+const router = createBrowserRouter([ // [!code highlight]
+  { // [!code highlight]
+    path: "/", // [!code highlight]
+    element: <div>Hello World</div>, // [!code highlight]
+  }, // [!code highlight]
+]); // [!code highlight]
 
 const root = document.getElementById("root");
 
 ReactDOM.createRoot(root).render(
-  <RouterProvider router={router} />
+  <RouterProvider router={router} /> // [!code highlight]
 );
 ```

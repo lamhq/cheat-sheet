@@ -6,22 +6,17 @@
 	"scripts": {
 		"dev": "rspress dev",
 		"build": "rspress build",
-		"preview": "rspress preview",
-		"lint": "ls docs/**/*.mdx | node scripts/lint-markdown.js",
-		"prepare": "node .husky/install.mjs"
+		"preview": "rspress preview"
 	},
 	"dependencies": {
-		"rspress": "^1.40.2",
-		"rspress-plugin-katex": "^0.3.0",
-		"rspress-plugin-mermaid": "^1.0.0"
+		"@rspress/core": "^2.0.0",
+		"rspress-plugin-katex": "^1.0.1",
+		"rspress-plugin-mermaid": "^1.0.1"
 	},
 	"devDependencies": {
+		"@shikijs/transformers": "^4.0.2",
 		"@types/node": "^18.11.17",
-		"husky": "^9.1.7",
-		"lint-staged": "^16.1.2",
+		"dotenv": "^17.4.2",
 		"prettier": "^3.8.0"
-	},
-	"lint-staged": {
-		"*.mdx": "node scripts/lint-markdown.js"
 	}
 }

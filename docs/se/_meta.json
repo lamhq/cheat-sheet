@@ -1,7 +1,8 @@
 [
   {
     "name": "index",
-    "label": "Software Engineering"
+    "label": "Software Engineering",
+    "type": "file"
   },
   {
     "name": "system-design",

@@ -41,5 +41,6 @@ Pre-splitting ranges involves manually creating and distributing chunks for a sh
 
 When ingesting large volumes of data, pre-splitting can help distribute the data evenly across shards from the beginning.
 
-> [!CAUTION]
-> It is advised to only pre-split ranges for empty collections. Attempting to manually split ranges for a non-empty collection can result in irregular range boundaries and sizes, and may also cause the balancing behavior to function inefficiently or crashed.
+:::danger
+It is advised to only pre-split ranges for empty collections. Attempting to manually split ranges for a non-empty collection can result in irregular range boundaries and sizes, and may also cause the balancing behavior to function inefficiently or crashed.
+:::

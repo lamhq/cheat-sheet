@@ -1,4 +1,4 @@
 [
-  { "name": "index", "label": "Data Engineering" },
+  { "name": "index", "label": "Data Engineering", "type": "file" },
   { "name": "big-data", "type": "dir", "collapsed": true }
 ]

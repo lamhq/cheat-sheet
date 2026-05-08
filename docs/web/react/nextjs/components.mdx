@@ -130,9 +130,9 @@ export async function getData() {
 }
 ```
 
-> [!INFO]
-> You don't need to install the `server-only` or `client-only` package in `package.json`. The contents of these packages from NPM are not used by Next.js.
-
+:::info
+You don't need to install the `server-only` or `client-only` package in `package.json`. The contents of these packages from NPM are not used by Next.js.
+:::
 
 ## Passing props to Client Components
 
@@ -148,9 +148,9 @@ The following are not supported:
 
 ## Passing props to Dynamic Components
 
-> [!NOTE]
-> This guide is for [Partial Prerendering](./concepts.mdx#partial-prerendering).
-
+:::note
+This guide is for [Partial Prerendering](./concepts.mdx#partial-prerendering).
+:::
 To pass request data from your `<Page/>` component to a dynamic component, you can forward the request `Promise` as a prop:
 
 ```tsx title="app/page.tsx"

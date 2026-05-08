@@ -1,7 +1,8 @@
 [
   {
     "name": "index",
-    "label": "AI"
+    "label": "AI",
+    "type": "file"
   },
   {
     "name": "ai-agents",

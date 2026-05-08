@@ -2,7 +2,8 @@
   "monolith",
   {
     "name": "multi-tier",
-    "label": "Multi-Tier"
+    "label": "Multi-Tier",
+    "type": "file"
   },
   {
     "name": "microservices",
@@ -11,6 +12,7 @@
   },
   {
     "name": "eda",
-    "label": "Event-Driven"
+    "label": "Event-Driven",
+    "type": "file"
   }
 ]

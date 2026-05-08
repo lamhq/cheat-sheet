@@ -23,8 +23,9 @@ Occurs when a second read of the same data retrieves different results because a
 
 Occurs when a transaction re-executes a query and retrieves a different set of rows, because another transaction has inserted, updated, or deleted rows that meet the query criteria.
 
-> [!NOTE]
-> Phantom Read involves changes in the set of rows returned by a query (e.g., new rows added or deleted), while Non-Repeatable Read involves changes to the values of previously retrieved rows.
+:::note
+Phantom Read involves changes in the set of rows returned by a query (e.g., new rows added or deleted), while Non-Repeatable Read involves changes to the values of previously retrieved rows.
+:::
 
 
 ## Isolation Levels

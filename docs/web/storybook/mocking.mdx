@@ -1,3 +1,5 @@
+import { PackageManagerTabs } from '@theme'
+
 # Mocking
 
 ## Modules
@@ -90,7 +92,7 @@ Instead of defining `parameters.msw` in each story, it can also be configured at
 
 For components that receive data from context defined in higher component tree, you can wrap your component in a `decorator` that includes the necessary context.
 
-```tsx title=".storybook/preview.ts" {11-14}
+```tsx title=".storybook/preview.ts"
 import React from 'react';
 
 // Replace your-framework with the framework you are using, e.g. react-vite, nextjs, nextjs-vite, etc.
@@ -101,10 +103,10 @@ import { ThemeProvider } from 'styled-components';
 const preview: Preview = {
   decorators: [
     (Story, { parameters }) => {
-      const { theme = 'light' } = parameters;
-      return (
-        <ThemeProvider theme={theme}>
-          <Story />
+      const { theme = 'light' } = parameters; // [!code highlight]
+      return ( // [!code highlight]
+        <ThemeProvider theme={theme}> // [!code highlight]
+          <Story /> // [!code highlight]
         </ThemeProvider>
       );
     },

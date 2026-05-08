@@ -16,8 +16,9 @@ Avoid client code to bind too tightly to the interface of a microservice:
 
 *An `Email` microservice that send emails to customers. To send the email, the microservice needs to get `firstname`, `lastname`, and `email` from the `Customer` data. The `Email` service only care about those fields and ignore the rest.*
 
-> [!WARNING]
-> Some binding technologies (especially that used by strongly typed languages) attempts to bind all fields even unused ones, which can cause consumers to break when a field is removed.
+:::warning
+Some binding technologies (especially that used by strongly typed languages) attempts to bind all fields even unused ones, which can cause consumers to break when a field is removed.
+:::
 
 
 ## Right Technology
@@ -74,8 +75,9 @@ Tools like Pact can perform consumer-driven contract testing to to tackle semant
 
 If you support multiple client libraries, testing each library with the latest service version can also help.
 
-> [!NOTE]
-> Without schemas, testing gets harder and requires extra work to catch breaking changes.
+:::note
+Without schemas, testing gets harder and requires extra work to catch breaking changes.
+:::
 
 
 ## Semantic Versioning

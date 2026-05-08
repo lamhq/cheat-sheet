@@ -7,7 +7,7 @@ Create a simple Tic-Tac-Toe game with React (TypeScript) and Boardgame.io.
 
 Here's a complete configuration for a Tic-Tac-Toe game:
 
-```ts title="src/games/tic-tac-toe.ts" {21,27,28}
+```ts title="src/games/tic-tac-toe.ts"
 import type { Game, Move } from "boardgame.io";
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { IsVictory, IsDraw } from './utils';
@@ -28,14 +28,14 @@ const clickCell: Move<TicTacToeGameState> = ({ G, ctx, playerID }, id) => {
 export const TicTacToeGame: Game<TicTacToeGameState> = {
   name: 'tictactoe',
 
-  setup: () => {
+  setup: () => { // [!code highlight]
     return {
       cells: Array<string | null>(9).fill(null),
     };
   },
 
-  moves: {
-    clickCell,
+  moves: { // [!code highlight]
+    clickCell, // [!code highlight]
   },
 
   turn: {
@@ -229,10 +229,10 @@ With no UI built yet, boardgame.io renders a Debug Panel. This panel allows you 
 
 Render the game state `G` into actual cells that are clickable by creating a React component with required props:
 
-```tsx title="src/Board.tsx" {3}
+```tsx title="src/Board.tsx"
 import React from 'react';
 import type { BoardProps } from 'boardgame.io/react';
-import type { GameState } from './games/tic-tac-toe.ts'
+import type { GameState } from './games/tic-tac-toe.ts' // [!code highlight]
 
 interface TicTacToeBoardProps extends BoardProps<GameState> {
   // Additional custom properties for your component

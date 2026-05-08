@@ -1,7 +1,8 @@
 [
   {
     "name": "index",
-    "label": "DevOps"
+    "label": "DevOps",
+    "type": "file"
   },
   "ci",
   "cd",

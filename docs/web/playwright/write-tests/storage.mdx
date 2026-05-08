@@ -3,10 +3,10 @@
 ## Cookie
 
 Get All Cookies:
-```ts {3}
+```ts
 test.describe("cookie demo", () => {
   test("some test", async ({ page, context }) => {
-    const cookies = await context.cookies();
+    const cookies = await context.cookies(); // [!code highlight]
     console.log(cookies);
   });
 });

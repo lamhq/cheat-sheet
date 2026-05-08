@@ -4,8 +4,9 @@ A microservice emit events, other microservices consume and react to accordingly
 
 The microservice publishing an event doesn't know which services will consume it, coupling is greatly reduced.
 
-> [!NOTE]
-> With request-driven, the sender knows what should be done and instructs the other service, indicating a stronger domain coupling due to the requester's awareness of the downstream service's capabilities.
+:::note
+With request-driven, the sender knows what should be done and instructs the other service, indicating a stronger domain coupling due to the requester's awareness of the downstream service's capabilities.
+:::
 
 ## Implementation
 
@@ -35,8 +36,9 @@ Where loose coupling is preferred.
 
 FYI, more teams replacing request-driven interactions with event-driven interactions.
 
-> [!NOTE]
-> Microservice architecture can contain a mix of different styles of interaction, so it's not necessary to go all in with event-driven collaboration.
+:::note
+Microservice architecture can contain a mix of different styles of interaction, so it's not necessary to go all in with event-driven collaboration.
+:::
 
 ## Disadvantages
 

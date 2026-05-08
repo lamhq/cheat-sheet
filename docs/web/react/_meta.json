@@ -18,11 +18,13 @@
   },
   {
     "name": "react-hook-form",
+    "type": "file",
     "collapsed": true,
     "label": "Form Handling"
   },
   {
     "name": "react-query",
+    "type": "file",
     "collapsed": true,
     "label": "Data Fetching & Mutation"
   },
@@ -34,6 +36,7 @@
   },
   {
     "name": "jotai",
+    "type": "file",
     "collapsed": true,
     "label": "Global State"
   },
@@ -45,11 +48,13 @@
   },
   {
     "name": "joy-ui",
+    "type": "file",
     "collapsed": true,
     "label": "UI Library"
   },
   {
     "name": "react-testing-library",
+    "type": "file",
     "collapsed": true,
     "label": "Testing"
   },

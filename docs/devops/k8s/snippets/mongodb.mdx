@@ -25,7 +25,7 @@ kubectl create secret generic mongo-secret --from-literal=MONGO_INITDB_ROOT_PASS
 
 ## PersistentVolume
 
-```yml title="volume.yml" {12,20}
+```yml title="volume.yml"
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -37,7 +37,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   local:
-    path: /path/to/data-dir
+    path: /path/to/data-dir # [!code highlight]
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -45,7 +45,7 @@ spec:
             - key: kubernetes.io/hostname
               operator: In
               values:
-                - [hostname]
+                - [hostname] # [!code highlight]
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

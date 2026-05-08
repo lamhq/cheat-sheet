@@ -61,8 +61,9 @@ async findOne(
 }
 ```
 
-> [!NOTE]
-> Note that `validateCustomDecorators` option must be set to `true`. `ValidationPipe` does not validate arguments annotated with the custom decorators by default.
+:::note
+Note that `validateCustomDecorators` option must be set to `true`. `ValidationPipe` does not validate arguments annotated with the custom decorators by default.
+:::
 
 
 ## Decorator compositions
@@ -90,5 +91,6 @@ You can then use this custom `@Auth()` decorator as follows:
 findAllUsers() {}
 ```
 
-> [!NOTE]
-> Some decorators, such as `@ApiHideProperty()`, are not composable and won't work properly with the applyDecorators function.
+:::note
+Some decorators, such as `@ApiHideProperty()`, are not composable and won't work properly with the applyDecorators function.
+:::

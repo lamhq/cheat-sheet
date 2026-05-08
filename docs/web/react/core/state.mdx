@@ -103,9 +103,9 @@ export default function Form() {
 }
 ```
 
-> [!INFO]
-> The `draft` provided by Immer is a special type of object, called a [`Proxy`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy), that "records" what you do with it. Immer figures out which parts of the `draft` have been changed, and produces a completely new object that contains your edits.
-
+:::info
+The `draft` provided by Immer is a special type of object, called a [`Proxy`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy), that "records" what you do with it. Immer figures out which parts of the `draft` have been changed, and produces a completely new object that contains your edits.
+:::
 
 ## Updating arrays in state
 

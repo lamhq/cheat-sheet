@@ -2,17 +2,17 @@
 
 ## Skipping Tests
 
-```ts {3,11}
+```ts
 import { assert, describe, it } from 'vitest'
 
-describe.skip('skipped suite', () => {
+describe.skip('skipped suite', () => { // [!code highlight]
   it('test', () => {
     // Suite skipped, no error
     assert.equal(Math.sqrt(4), 3)
   })
 })
 
-describe('suite', () => {
+describe('suite', () => { // [!code highlight]
   it.skip('skipped test', () => {
     // Test skipped, no error
     assert.equal(Math.sqrt(4), 3)
@@ -22,11 +22,11 @@ describe('suite', () => {
 
 ## Run only one test
 
-```ts {4, 16}
+```ts
 import { assert, describe, it } from 'vitest'
 
 // Only this suite (and others marked with only) are run
-describe.only('suite', () => {
+describe.only('suite', () => { // [!code highlight]
   it('test', () => {
     assert.equal(Math.sqrt(4), 3)
   })
@@ -38,7 +38,7 @@ describe('another suite', () => {
     assert.equal(Math.sqrt(4), 3)
   })
 
-  it.only('test', () => {
+  it.only('test', () => { // [!code highlight]
     // Only this test (and others marked with only) are run
     assert.equal(Math.sqrt(4), 2)
   })
@@ -48,14 +48,14 @@ describe('another suite', () => {
 
 ## Unimplemented
 
-```ts {4,8}
+```ts
 import { describe, it } from 'vitest'
 
 // An entry will be shown in the report for this suite
-describe.todo('unimplemented suite')
+describe.todo('unimplemented suite') // [!code highlight]
 
 // An entry will be shown in the report for this test
 describe('suite', () => {
-  it.todo('unimplemented test')
+  it.todo('unimplemented test') // [!code highlight]
 })
 ```

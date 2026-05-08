@@ -17,8 +17,9 @@ Benefits:
 - **Flexibility**: services can be changed independently from one another, allowing for changes to be made to the functionality of the system without requiring other services to change.
 - **Faster development**: when services are able to be developed independently, it allows more work to be done in parallel and reduce the impact of adding more developers to a project.
 
-> [!TIP]
-> Minimizing the interface / expectations between modules / microservices reduces the impact of changes, making them easier to understand and update.
+:::tip
+Minimizing the interface / expectations between modules / microservices reduces the impact of changes, making them easier to understand and update.
+:::
 
 
 ## Cohesion
@@ -29,8 +30,9 @@ When related functionality resides in one service, making changes is easier and 
 
 Strong cohesion allows changes to be implemented and deployed in one place without involving others.
 
-> [!WARNING]
-> Weak cohesion occurs when related functionality is spread across the system. Making changes in multiple places increases the risk and time required for deployment. To avoid these issues, we need to find boundaries that ensure related behavior is in one place and communicate loosely with other boundaries.
+:::warning
+Weak cohesion occurs when related functionality is spread across the system. Making changes in multiple places increases the risk and time required for deployment. To avoid these issues, we need to find boundaries that ensure related behavior is in one place and communicate loosely with other boundaries.
+:::
 
 > THE CODE THAT CHANGES TOGETHER, STAYS TOGETHER.
 

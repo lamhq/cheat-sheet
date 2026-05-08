@@ -13,6 +13,7 @@
   },
   {
     "name": "fetch",
-    "label": "HTTP Client"
+    "label": "HTTP Client",
+    "type": "file"
   }
 ]

@@ -57,9 +57,9 @@ export default async function Page() {
 
 ### Partial Prerendering
 
-> [!CAUTION]
-> This feature is currently experimental and subject to change, it's not recommended for production.
-
+:::danger
+This feature is currently experimental and subject to change, it's not recommended for production.
+:::
 Partial Prerendering (PPR) is a mix of Static Rendering and Dynamic Rendering.
 
 It allows the dynamic parts of the page to be rendered at request time, while the static shell is **prerendered**:
@@ -120,10 +120,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 }
 ```
 
-> [!INFO]
-> * `experimental_ppr` will apply to all children of the route segment.
-> * To disable PPR for children segments, you can set `experimental_ppr` to `false` in the child segment.
-
+:::info
+* `experimental_ppr` will apply to all children of the route segment.
+* To disable PPR for children segments, you can set `experimental_ppr` to `false` in the child segment.
+:::
 
 ## Client Rendering
 
@@ -138,9 +138,9 @@ On subsequent navigations:
 - The **RSC Payload** is prefetched and cached for instant navigation.
 - **Client Components** are rendered entirely on the client, without the server-rendered HTML.
 
-> [!INFO]
-> Hydration is React's process for attaching event handlers to the DOM, to make the static HTML interactive.
-
+:::info
+Hydration is React's process for attaching event handlers to the DOM, to make the static HTML interactive.
+:::
 
 ## Prefetching
 

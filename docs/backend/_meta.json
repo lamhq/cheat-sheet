@@ -1,7 +1,8 @@
 [
   {
     "name": "index",
-    "label": "Backend Development"
+    "label": "Backend Development",
+    "type": "file"
   },
   {
     "name": "markdown",

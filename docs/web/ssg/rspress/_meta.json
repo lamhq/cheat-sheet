@@ -1,7 +1,10 @@
 [
+  "getting-started",
+  "ai",
   "routing",
-  "syntax",
+  "navigation",
+  "static-assets",
   "customization",
-  "ui-components",
-  "math"
+  "syntax",
+  "ui-components"
 ]

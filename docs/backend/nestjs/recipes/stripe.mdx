@@ -53,8 +53,9 @@ Once logged in:
 
 3. Copy your **Secret Key** for backend use
 
-> [!CAUTION]
-> Never commit your secret key to version control. Always use environment variables.
+:::danger
+Never commit your secret key to version control. Always use environment variables.
+:::
 
 
 ## Installing Dependencies
@@ -70,7 +71,7 @@ For TypeScript support, types are included in the package.
 
 Add Stripe configuration to your `.env` file:
 
-```env
+```sh
 STRIPE_SECRET_KEY=sk_test_your_secret_key_here
 STRIPE_SUCCESS_URL=http://localhost:3000
 STRIPE_CANCEL_URL=http://localhost:3000
@@ -155,8 +156,9 @@ export class CheckoutService {
 
 ## Redirect to Checkout page
 
-> [!NOTE]
-> Instructions in this section are applied to the web app (built with Next.js).
+:::note
+Instructions in this section are applied to the web app (built with Next.js).
+:::
 
 Install Stripe JavaScript library to your web app:
 
@@ -168,8 +170,9 @@ Add Stripe public key to your `.env` file:
 NEXT_PUBLIC_STRIPE_PUBLIC_KEY=pk_test_your_publishable_key_here
 ```
 
-> [!INFO]
-> Use the `NEXT_PUBLIC_` prefix to expose this variable to the client.
+:::info
+Use the `NEXT_PUBLIC_` prefix to expose this variable to the client.
+:::
 
 Initialize Stripe Client:
 

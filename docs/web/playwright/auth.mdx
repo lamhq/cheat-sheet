@@ -68,9 +68,9 @@ test('test', async ({ page }) => {
 });
 ```
 
-> [!NOTE]
-> UI mode will not run the `setup` project. You must manually run the `auth.setup.ts` whenever existing authentication expires.
-
+:::note
+UI mode will not run the `setup` project. You must manually run the `auth.setup.ts` whenever existing authentication expires.
+:::
 ## One account per parallel worker
 
 This is the recommended approach for tests that modify server-side state. 

@@ -72,5 +72,6 @@ async function uploadProductImage(productId: number, file: File) {
 
 - `createProduct` action sends form data to backend API to create a new product. If an image file is provided, it calls `uploadProductImage` to upload the image after adding the product.
 
-> [!NOTE]
-> The backend API should accept `Content-Type: multipart/form-data` for these POST requests, as the data is sent using FormData.
+:::note
+The backend API should accept `Content-Type: multipart/form-data` for these POST requests, as the data is sent using FormData.
+:::

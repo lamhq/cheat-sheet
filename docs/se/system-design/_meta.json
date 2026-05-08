@@ -1,7 +1,8 @@
 [
   {
     "name": "requirements",
-    "label": "Requirements"
+    "label": "Requirements",
+    "type": "file"
   },
   {
     "name": "quality-attributes",
@@ -28,7 +29,8 @@
   },
   {
     "name": "principles",
-    "label": "Principles"
+    "label": "Principles",
+    "type": "file"
   },
   {
     "name": "communication",

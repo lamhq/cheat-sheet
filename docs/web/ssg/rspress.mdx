@@ -1,95 +1,98 @@
-import { PackageManagerTabs } from '@theme'
-
 # Rspress
 
-Lightning Fast Static Site Generator.
+## Introduction
 
-## Why Rspress
+Rspress is a React-based static site generator built on `Rsbuild`.
 
-- Build Performance: fast startup speed, good development experience.
-- MDX Support.
-- Basic Capabilities of Documentation Site: 
-  - internationalization
-  - multi-version support
-  - full-text search
-  - custom document theme
-- Extensible through plugin
+It targets documentation and content sites with:
+- a default doc theme,
+- fast dev startup,
+- AI-friendly output,
+- MDX support,
+- plugin extensibility.
 
+## Why use Rspress
 
-## Quick start
+### Build performance
 
-### Create new project
+Rspress optimizes startup speed and build times with:
+- `lazyCompilation`: pages are only compiled when visited in dev mode
+- Route preload on hover
+- Use cache for production builds
+- Rspress uses Rspack, a rust-based bundler, which is 5 to 10 times more efficient than traditional packaging tools.
 
-<PackageManagerTabs command="create rspress@latest" />
+### AI-native
 
+Rspress can render pages as Markdown files (SSG-MD).
 
-### Add Rspress to existing project
+It can also generate index files compliant with the [llms.txt](https://llmstxt.org/) specification.
 
-<PackageManagerTabs command="install rspress -D" />
+### Theme and customization
 
-Add the following script to `package.json`:
+Rspress includes a polished default theme and supports customization via:
+- CSS variables
+- BEM class names
+- ESM re-export overrides
+- `rspress eject`
 
-```json title="package.json"
-{
-  "scripts": {
-    "dev": "rspress dev --port 5050",
-    "build": "rspress build",
-    "preview": "rspress preview --port 5050"
-  }
-}
+```bash title="eject-command.sh"
+# Export nav component to theme directory
+npx rspress eject Nav
 ```
 
-Create a configuration file:
+### Automatic layout generation
 
-```js title="rspress.config.ts"
-import { defineConfig } from 'rspress/config';
+Rspress auto-generates:
+- navbar: global navigation entrance (top).
+- sidebar: article directory under the current navigation (left).
+- page outline: display the outline structure of the current page (right).
 
-export default defineConfig({
-  root: 'docs',
-});
-```
+You can configure navigation with:
+- declarative `_meta.json`
+- or programmatic `nav` / `sidebar` config
 
-Create a TypeScript configuration file:
+### MDX support
 
-```json title="tsconfig.json"
-{
-  "compilerOptions": {
-    "target": "ES2020",
-    "lib": ["DOM", "ES2020"],
-    "module": "ESNext",
-    "jsx": "react-jsx",
-    "noEmit": true,
-    "strict": true,
-    "skipLibCheck": true,
-    "isolatedModules": true,
-    "resolveJsonModule": true,
-    "moduleResolution": "bundler",
-    "useDefineForClassFields": true,
-    "allowImportingTsExtensions": true
-  },
-  "include": ["docs", "theme", "rspress.config.ts"],
-  "mdx": {
-    "checkMdx": true
-  }
-}
-```
+Rspress supports MDX with:
+- React components inside markdown
+- custom container syntax
+- frontmatter metadata
+- code line highlighting syntax
 
-### Start dev server
+### Documentation DX
 
-<PackageManagerTabs command="run dev" />
+Built-in authoring improvements include:
+- dead-link checking
+- file-based code blocks with `file="./path/to/file"`
+- support `preview` and `playground` for component docs and interactive examples
 
+### SSG
 
-### Build
+Rspress generates pure static HTML for production sites, so you can deploy to GitHub Pages, Netlify, Vercel, or any static host.
 
-<PackageManagerTabs command="run build" />
+### Internationalization
 
-### Preview
+Built-in I18n support includes:
+- translations for multiple languages
+- automatic tree shaking of unused locale text
+- extendable via `i18nSource`
 
-```sh
-rspress preview --port 8080
-```
+### Multi-version docs
 
+Rspress supports versioned documentation with simple config and directory structure.
 
-## Reference
+### Full-text search
 
-https://v1.rspress.rs/
+Out-of-the-box search uses FlexSearch and works without extra configuration.
+
+### Custom Theme
+
+You can extend the default theme or build a full custom theme.
+
+### Plugin system
+
+Rspress supports plugins to extend site functionality via an official plugin API.
+
+### Component documentation
+
+Rspress supports component previews and live playgrounds using MDX syntax.

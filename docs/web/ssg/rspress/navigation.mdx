@@ -6,9 +6,9 @@ Rspress can build navigation and sidebar automatically from:
 - `_nav.json` for the top navbar
 - `_meta.json` for sidebar structure
 
-> [!NOTE]
-> Automated navbar/sidebar will only work if there are no `nav` and `sidebar` configurations in the config file `rspress.config.ts`.
-
+:::note
+Automated navbar/sidebar will only work if there are no `nav` and `sidebar` configurations in the config file `rspress.config.ts`.
+:::
 
 ## Basic usage
 
@@ -17,7 +17,7 @@ File placement:
 - `docs/**/_meta.json` defines sidebar structure per directory
 
 Example:
-```tree
+```text
 docs
 ├── _nav.json
 └── guide
@@ -29,7 +29,7 @@ docs
 ```
 
 If your document supports i18n, place `_nav.json` inside each locale folder:
-```tree
+```text
 docs
 ├── en
 │   ├── _nav.json

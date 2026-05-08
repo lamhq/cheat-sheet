@@ -1,7 +1,8 @@
 [
   {
     "name": "index",
-    "label": "Game Development"
+    "label": "Game Development",
+    "type": "file"
   },
   {
     "name": "boardgameio",

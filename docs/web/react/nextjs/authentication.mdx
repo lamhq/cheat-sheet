@@ -224,5 +224,6 @@ Once authenticated, you can implement authorization to check if the user is auth
 
 **On the server**, use a middelware to perform authentication & authorization checks on every request. Avoid database checks to prevent performance issues.
 
-> [!CAUTION]
-> Be cautious when doing checks in [Layouts](https://nextjs.org/docs/app/guides/authentication#layouts-and-auth-checks) as these don't re-render on navigation, meaning the user session won't be checked on every route change.
+:::danger
+Be cautious when doing checks in [Layouts](https://nextjs.org/docs/app/guides/authentication#layouts-and-auth-checks) as these don't re-render on navigation, meaning the user session won't be checked on every route change.
+:::

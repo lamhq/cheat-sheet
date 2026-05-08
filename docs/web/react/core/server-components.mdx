@@ -8,8 +8,8 @@ They are sent to the client as serialized HTML, reducing the amount of JavaScrip
 
 In example below, the `<Page>` component is a Server Component that fetches data about a post, and passes it as props to the `<LikeButton>` which handles client-side interactivity.
 
-```tsx filename="app/[id]/page.tsx" highlight={1,12} switcher
-import LikeButton from '@/app/ui/like-button'
+```tsx filename="app/[id]/page.tsx" highlight= switcher
+import LikeButton from '@/app/ui/like-button' // [!code highlight]
 import { getPost } from '@/lib/data'
 
 export default async function Page({
@@ -20,7 +20,7 @@ export default async function Page({
   const { id } = await params
   const post = await getPost(id)
 
-  return (
+  return ( // [!code highlight]
     <div>
       <main>
         <h1>{post.title}</h1>

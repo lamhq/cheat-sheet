@@ -6,8 +6,9 @@ Schema Registry is a service that manages and stores schemas for data serializat
 
 It's commonly used with Kafka to ensure data compatibility and evolution.
 
-> [!INFO]
-> A schema defines the structure of message data. It defines allowed data types, their format, and relationships
+:::info
+A schema defines the structure of message data. It defines allowed data types, their format, and relationships
+:::
 
 
 ## Key Features & Benefits
@@ -187,5 +188,6 @@ When a schema evolves, new versions are tied to the same subject.
 
 The name of the subject depends on the configured [subject name strategy](https://docs.confluent.io/platform/current/schema-registry/fundamentals/serdes-develop/index.html#sr-schemas-subject-name-strategy), which by default is `TopicNameStrategy`.
 
-> [!NOTE]
-> With `TopicNameStrategy`, the schema for the record values in `mytopic` should be registered under the subject `mytopic-value`. And the schema for the record keys in `mytopic` should be registered under the subject `mytopic-key`.
+:::note
+With `TopicNameStrategy`, the schema for the record values in `mytopic` should be registered under the subject `mytopic-value`. And the schema for the record keys in `mytopic` should be registered under the subject `mytopic-key`.
+:::

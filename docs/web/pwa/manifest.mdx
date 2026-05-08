@@ -9,9 +9,9 @@ It includes:
 - icon
 - theme color
 
-> [!WARNING]
-> A web app manifest is required for your PWA to meet the installability criteria in every browser, although Chrome may still allow installation without it.
-
+:::warning
+A web app manifest is required for your PWA to meet the installability criteria in every browser, although Chrome may still allow installation without it.
+:::
 
 ## Create a manifest
 
@@ -77,9 +77,9 @@ To ensure the manifest is set up correctly, you can use DevTools in every Chromi
   - `type`: The MIME type of the icon file, such as `image/png`
   - `sizes`: The size of the icon, formatted as `<width>x<height>`. Required sizes are `192x192`, `512x512`
 
-> [!CAUTION]
-> While PNGs can include transparency, providing transparent icons may cause unexpected issues on some operating systems. For example, iOS, iPadOS, and Android 8 and later fill in the transparency with a background color out of your control. For better compatibility, use a square non-transparent icon.
-
+:::danger
+While PNGs can include transparency, providing transparent icons may cause unexpected issues on some operating systems. For example, iOS, iPadOS, and Android 8 and later fill in the transparency with a background color out of your control. For better compatibility, use a square non-transparent icon.
+:::
 
 ### Maskable icons
 
@@ -89,9 +89,9 @@ To do so, provide a square image file that has its main icon contained within a 
 
 ![](https://web.dev/static/learn/pwa/web-app-manifest/image/the-safe-area-marked-a-4-06cd30afb47b2_1920.png)
 
-> [!CAUTION]
-> If you don't provide a maskable icon, devices that expect them may shrink your icon and make it into the shape they need with a white background. If your maskable icon isn't displaying well, you can improve it by adding more padding.
-
+:::danger
+If you don't provide a maskable icon, devices that expect them may shrink your icon and make it into the shape they need with a white background. If your maskable icon isn't displaying well, you can improve it by adding more padding.
+:::
 Maskable icons should be 512 by 512 at least.
 
 

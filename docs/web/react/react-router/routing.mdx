@@ -38,18 +38,18 @@ An index route is a special route that matches the parent route's path exactly.
 
 It's useful when you want to render a default component when no specific sub-routes are matched.
 
-```ts showLineNumbers {4,5,10,11}
+```ts showLineNumbers
 import { createBrowserRouter } from "react-router";
 
 createBrowserRouter([
-  // renders at "/"
-  { index: true, Component: Home },
+  // renders at "/" // [!code highlight]
+  { index: true, Component: Home }, // [!code highlight]
   {
     Component: Dashboard,
     path: "/dashboard",
     children: [
-      // renders at "/dashboard"
-      { index: true, Component: DashboardHome },
+      // renders at "/dashboard" // [!code highlight]
+      { index: true, Component: DashboardHome }, // [!code highlight]
       { path: "settings", Component: DashboardSettings },
     ],
   },

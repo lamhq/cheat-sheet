@@ -1,0 +1,39 @@
+[
+  {
+    "text": "AI",
+    "link": "/ai"
+  },
+  {
+    "text": "Backend",
+    "link": "/backend"
+  },
+  {
+    "text": "Web",
+    "link": "/web"
+  },
+  {
+    "text": "DevOps",
+    "link": "/devops"
+  },
+  {
+    "text": "Software Engineering",
+    "link": "/se"
+  },
+  {
+    "text": "Others",
+    "items": [
+      {
+        "text": "Tools",
+        "link": "/tools"
+      },
+      {
+        "text": "Data Engineering",
+        "link": "/de"
+      },
+      {
+        "text": "Game",
+        "link": "/game"
+      }
+    ]
+  }
+]
