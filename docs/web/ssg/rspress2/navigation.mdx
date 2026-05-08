@@ -201,6 +201,68 @@ Example:
   "type": "file",
   "name": "introduction",
   "label": "Introduction",
-  "tag": "<svg width=\"1em\" height=\"1em\" viewBox=\"0 0 32 32\"><path fill=\"currentColor\" d=\"M4 6h24v2H4zm0 18h24v2H4zm0-12h24v2H4zm0 6h24v2H4z\"/></svg>"
+  "tag": "new, experimental"
 }
+```
+
+You can also define tag through frontmatter in a page:
+
+```mdx title="foo.mdx"
+---
+tag: new
+---
+
+# Foo
+
+some text
+```
+
+Multiple tags are separated by commas:
+
+```mdx
+---
+tag: new, experimental
+---
+```
+
+You can also add tags in `_meta.json`:
+
+```json title="_meta.json"
+[
+  {
+    "name": "foo",
+    "type": "file",
+    "tag": "new, experimental"
+  }
+]
+```
+
+Rspress has built-in tags rendered as badges:
+
+- `new`
+- `experimental`
+- `deprecated`
+- `updated`
+
+
+Use an SVG string directly:
+
+```mdx
+---
+tag: <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2L2 7l10 5 10-5-10-5z"/></svg>
+---
+```
+
+Use an external image URL or data URL:
+
+```mdx
+---
+tag: https://example.com/icon.png
+---
+```
+
+```mdx
+---
+tag: data:image/svg+xml;base64,...
+---
 ```

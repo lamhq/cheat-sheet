@@ -4,5 +4,7 @@
   "routing",
   "navigation",
   "static-assets",
-  "customization"
+  "customization",
+  "syntax",
+  "ui-components"
 ]

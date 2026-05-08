@@ -99,3 +99,104 @@ export * from '@rspress/core/theme-original';
 ```
 
 To override the entire component, follow this [guide](https://rspress.rs/guide/basic/custom-theme#eject).
+
+
+## Add global components
+
+To add some custom global components to the page, use `globalUIComponents` in `rspress.config.ts`:
+
+```ts title="rspress.config.ts"
+import { defineConfig } from '@rspress/core';
+import path from 'path';
+
+export default defineConfig({
+  globalUIComponents: [path.join(__dirname, 'components', 'MyComponent.tsx')],
+});
+```
+
+You can also pass props:
+
+```ts title="rspress.config.ts"
+import { defineConfig } from '@rspress/core';
+
+export default defineConfig({
+  globalUIComponents: [
+    [
+      path.join(__dirname, 'components', 'MyComponent.tsx'),
+      {
+        foo: 'bar',
+      },
+    ],
+  ],
+});
+```
+
+Global components are automatically imported and rendered:
+
+```tsx title="compSideEffect.tsx"
+import { useEffect } from 'react';
+import { useLocation } from '@rspress/core/runtime';
+
+export default function PluginSideEffect() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    // First-time mount
+  }, []);
+
+  useEffect(() => {
+    // Route changes
+  }, [pathname]);
+
+  return null;
+}
+```
+
+
+## Customize page layout
+
+Use `pageType` in frontmatter to control layout.
+
+In MDX page:
+
+```md
+---
+pageType: custom
+---
+```
+
+For Component page:
+
+```tsx title="foo.tsx"
+export const frontmatter = {
+  pageType: 'custom',
+};
+```
+
+Supported values:
+- `home`: homepage layout
+- `doc`: standard doc page with navbar, sidebar, outline
+- `doc-wide`: wide doc layout
+- `custom`: custom page with top navbar
+- `blank`: custom page without top navbar
+- `404`: not found page
+
+Control individual layout elements via frontmatter:
+
+- `navbar`: show/hide navbar
+- `sidebar`: show/hide sidebar
+- `outline`: show/hide outline
+- `footer`: show/hide footer
+- `globalUIComponents`: show/hide global components
+
+Example:
+
+```md title="foo.mdx"
+---
+navbar: false
+sidebar: false
+outline: false
+footer: false
+globalUIComponents: false
+---
+```
