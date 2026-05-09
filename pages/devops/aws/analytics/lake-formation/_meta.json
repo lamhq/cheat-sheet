@@ -1,6 +1,6 @@
-{
-  "getting-started": "Getting started",
-  "tutorials": "Tutorials",
-  "permission": "Permissions",
-  "sharing-data": "Sharing Data"
-}
+[
+  "getting-started",
+  "tutorials",
+  "permission",
+  "sharing-data"
+]

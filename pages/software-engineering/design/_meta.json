@@ -1,5 +1,5 @@
-{
-  "api": "API",
-  "database": "Database",
-  "ood": "Object-Oriented Design"
-}
+[
+  "api",
+  "database",
+  "ood"
+]

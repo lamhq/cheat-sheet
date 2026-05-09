@@ -1,4 +1,4 @@
-{
-  "fsx-windows": "FSx for Windows",
-  "fsx-lustre": "FSx for Lustre"
-}
+[
+  "fsx-windows",
+  "fsx-lustre"
+]

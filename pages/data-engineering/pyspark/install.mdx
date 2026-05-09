@@ -7,13 +7,13 @@ Setting up PySpark by itself can be challenging and time consuming because of al
 Using Docker and VS Code Dev Container is a quick way to start your development.
 
 Open VS Code, create a `requirements.txt` file in project directory:
-```txt filename="requirements.txt"
+```txt title="requirements.txt"
 pyspark==3.5.3
 ```
 
 Add a Dev Container Configuration File with below content:
 
-```json filename=".devcontainer/devcontainer.json"
+```json title=".devcontainer/devcontainer.json"
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/docker-in-docker
 {
@@ -119,7 +119,7 @@ cp spark-defaults.conf.template spark-defaults.conf
 ```
 
 Open the config file and add this line:
-``` filename="spark-defaults.conf"
+``` title="spark-defaults.conf"
 spark.driver.bindAddress 127.0.0.1
 ```
 

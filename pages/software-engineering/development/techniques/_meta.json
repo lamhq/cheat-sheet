@@ -1,5 +1,4 @@
-{
-  "storing-pwd": "Storing Password",
-  "generate-id": "Generate ID",
-  "authentication": "Authentication"
-}
+[
+  "storing-pwd",
+  "generate-id"
+]

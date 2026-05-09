@@ -1,5 +1,5 @@
-{
-  "access": "Accessing Data",
-  "update": "Updating Data",
-  "transform": "Transforming Data"
-}
+[
+  "access",
+  "update",
+  "transform"
+]

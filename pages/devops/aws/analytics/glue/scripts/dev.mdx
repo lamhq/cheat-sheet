@@ -36,11 +36,11 @@ Docker image: `amazon/aws-glue-libs:glue_libs_4.0.0_image_01`.
 To set up docker for local development:
 
 1. Set up AWS credentials:
-    ```filename="~/.aws/config"
+    ```title="~/.aws/config"
     [default]
     region = us-east-1
     ```
-    ```filename="~/.aws/credentials"
+    ```title="~/.aws/credentials"
     [default]
     aws_access_key_id = 
     aws_secret_access_key = 
@@ -67,7 +67,7 @@ docker run -it --rm \
 ```
 
 To develop with VS Code, create a Dev Container setting:
-```json filename=".devcontainer/devcontainer.json"
+```json title=".devcontainer/devcontainer.json"
 {
 	"name": "AWS GLue",
 	"image": "amazon/aws-glue-libs:glue_libs_4.0.0_image_01",

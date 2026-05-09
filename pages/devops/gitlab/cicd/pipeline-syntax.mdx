@@ -53,14 +53,14 @@ To reuse configuration from different configuration files, combine `include` and
 
 In the following example, a `script` is defined in the `included.yml` file. Then, it is refered in the `.gitlab-ci.yml` file by `extends`.
 
-```yml filename="included.yml"
+```yml title="included.yml"
 .template:
   script:
     - echo Hello!
 ```
 - `.template`: a hidden job, won't be executed directly
 
-```yml filename=".gitlab-ci.yml"
+```yml title=".gitlab-ci.yml"
 include: included.yml
 
 useTemplate:
@@ -77,13 +77,13 @@ useTemplate:
 
 You can use `!reference` tags to reuse configuration from included configuration files as well.
 
-```yml filename="configs.yml"
+```yml title="configs.yml"
 .setup:
   script:
     - echo creating environment
 ```
 
-```yml filename=".gitlab-ci.yml"
+```yml title=".gitlab-ci.yml"
 include:
   - local: configs.yml
 

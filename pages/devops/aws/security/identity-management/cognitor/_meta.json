@@ -1,4 +1,4 @@
-{
-  "user-pool": "User Pools",
-  "identity-pool": "Identity Pools"
-}
+[
+  "user-pool",
+  "identity-pool"
+]

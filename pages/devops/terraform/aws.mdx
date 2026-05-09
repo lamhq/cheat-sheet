@@ -2,7 +2,7 @@
 
 ## Variables
 
-```hcl filename="variables.tf"
+```hcl title="variables.tf"
 variable "region" {
   description = "AWS region where resources will be created"
   type        = string
@@ -26,7 +26,7 @@ variable "artifact_bucket" {
 ```
 
 Supply values for input variables by creating a `params.tfvars` file:
-```hcl filename="params.tfvars"
+```hcl title="params.tfvars"
 region          = ""
 owner           = ""
 project         = ""
@@ -41,7 +41,7 @@ terraform apply -var-file="params.tfvars" --auto-approve
 
 ## Provider
 
-```hcl filename="provider.tf"
+```hcl title="provider.tf"
 terraform {
   required_providers {
     aws = {
@@ -79,7 +79,7 @@ Here's a list of recommended local values:
   - `arn:aws:s3:::${local.bucket_prefix}/source/*`
   - `s3://${local.bucket_prefix}/source/*`
 
-```hcl filename="locals.tf"
+```hcl title="locals.tf"
 locals {
   env = terraform.workspace == "default" ? "prod": terraform.workspace
   name_prefix = "${var.project}-${local.env}"
@@ -93,7 +93,7 @@ locals {
 *You can skip this section if you want to store Terraform state as a local file on disk.*
 
 Configuration for S3 backend:
-```hcl filename="backend.tf"
+```hcl title="backend.tf"
 terraform {
   backend "s3" {
     encrypt = true
@@ -103,7 +103,7 @@ terraform {
 
 Since a backend block cannot refer to named values (like input variables, locals, or data source attributes). We'll define dynamic arguments in a separated file `backend.tfvars`:
 
-```hcl filename="backend.tfvars"
+```hcl title="backend.tfvars"
 region               = ""
 workspace_key_prefix = ""
 bucket               = ""

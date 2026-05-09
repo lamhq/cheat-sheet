@@ -1,6 +1,4 @@
-{
-  "modeling": "Software Modeling",
-  "design": "Software Design",
-  "development": "Software Development",
-  "management": "Project Management"
-}
+[
+  "modeling",
+  "management"
+]

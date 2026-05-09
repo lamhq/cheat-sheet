@@ -1,4 +1,3 @@
-{
-  "commit-conv": "Commit convention",
-  "dev-workflow-simple": "Development workflow (simple)"
-}
+[
+  "dev-workflow-simple"
+]

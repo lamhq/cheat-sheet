@@ -1,4 +1,4 @@
-{
-  "audit-manager": "AWS Audit Manager",
-  "artifact": "AWS Artifact"
-}
+[
+  "audit-manager",
+  "artifact"
+]

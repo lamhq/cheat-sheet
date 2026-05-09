@@ -1,7 +1,7 @@
-{
-  "vim": "Vim",
-  "curl": "curl",
-  "zip": "zip",
-  "gzip": "gzip",
-  "tar": "tar"
-}
+[
+  "vim",
+  "curl",
+  "zip",
+  "gzip",
+  "tar"
+]

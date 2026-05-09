@@ -32,7 +32,7 @@ This creates a function stub in your `supabase` folder:
 
 ## Writting Functions
 
-```ts filename="supabase/functions/hello-world/index.ts"
+```ts title="supabase/functions/hello-world/index.ts"
 Deno.serve(async (req) => {
   const { name } = await req.json()
   const data = {

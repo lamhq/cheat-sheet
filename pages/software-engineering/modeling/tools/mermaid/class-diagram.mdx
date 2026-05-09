@@ -2,7 +2,7 @@
 
 ## Snippet
 
-````mdx filename="Markdown"
+````mdx title="Markdown"
 ```mermaid
 ---
 title: Animal example
@@ -54,7 +54,7 @@ classDiagram
 
 
 ## Class members
-````mdx filename="Markdown"
+````mdx title="Markdown"
 ```mermaid
 classDiagram
     class BankAccount {
@@ -77,7 +77,7 @@ classDiagram
 
 ## Return type
 
-````mdx filename="Markdown"
+````mdx title="Markdown"
 ```mermaid
 classDiagram
     class BankAccount {
@@ -120,7 +120,7 @@ classDiagram
 - `..|>`: Realization
 - `..`: Link (Dashed)
 
-````mdx filename="Markdown"
+````mdx title="Markdown"
 ```mermaid
 classDiagram
 classA <|-- classB : Inheritance
@@ -148,7 +148,7 @@ classE o-- classF
 - `0..n` zero to n (where n>1)
 - `1..n` one to n (where n>1)
 
-````mdx filename="Markdown"
+````mdx title="Markdown"
 ```mermaid
 classDiagram
     Customer "1" --> "*" Ticket
@@ -172,7 +172,7 @@ classDiagram
 - `<<Service>>` To represent a service class
 - `<<Enumeration>>` To represent an enum
 
-````mdx filename="Markdown"
+````mdx title="Markdown"
 ```mermaid
 classDiagram
 class Shape{
@@ -211,7 +211,7 @@ class Color{
 
 ## Generic Types
 
-````mdx filename="Markdown"
+````mdx title="Markdown"
 ```mermaid
 classDiagram
 class Square~Shape~{
@@ -236,7 +236,7 @@ class Square~Shape~{
 
 ## Class Note
 
-````mdx filename="Markdown"
+````mdx title="Markdown"
 ```mermaid
 classDiagram
     note "Note for the diagram"
@@ -264,7 +264,7 @@ classDiagram
 
 A namespace groups classes.
 
-````mdx filename="Markdown"
+````mdx title="Markdown"
 ```mermaid
 classDiagram
 namespace BaseShapes {
@@ -292,7 +292,7 @@ namespace BaseShapes {
 
 Setting the direction of the diagram:
 
-````mdx filename="Markdown"
+````mdx title="Markdown"
 ```mermaid
 classDiagram
   direction RL

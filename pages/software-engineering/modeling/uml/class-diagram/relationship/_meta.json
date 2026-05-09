@@ -1,5 +1,5 @@
-{
-  "associations": "Associations",
-  "generalization": "Generalization",
-  "realization": "Realization"
-}
+[
+  "associations",
+  "generalization",
+  "realization"
+]

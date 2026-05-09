@@ -1,15 +1,15 @@
-{
-  "configuration": "Configuration",
-  "providers": "Providers",
-  "resources": "Resources",
-  "data-source": "Data Sources",
-  "input-vars": "Input Variables",
-  "local-val": "Local Values",
-  "output-val": "Output Values",
-  "expressions": "Expressions",
-  "modules": "Modules",
-  "functions": "Built-in Functions",
-  "backend": "Backend Configuration",
-  "state": "State",
-  "workspaces": "Workspaces"
-}
+[
+  "configuration",
+  "providers",
+  "resources",
+  "data-source",
+  "input-vars",
+  "local-val",
+  "output-val",
+  "expressions",
+  "modules",
+  "functions",
+  "backend",
+  "state",
+  "workspaces"
+]

@@ -1,4 +1,4 @@
-{
-  "cli": "Supabase CLI",
-  "edge-functions": "Edge Functions"
-}
+[
+  "cli",
+  "edge-functions"
+]

@@ -1,5 +1,5 @@
-{
-  "uml": "UML",
-  "crc-cards": "CRC Cards",
-  "tools": "Modeling Tools"
-}
+[
+  "uml",
+  "crc-cards",
+  "tools"
+]

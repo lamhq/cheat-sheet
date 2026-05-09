@@ -1,5 +1,4 @@
-{
-  "rest-api": "REST",
-  "graphql": "GraphQL",
-  "pagination": "Pagination"
-}
+[
+  "rest-api",
+  "pagination"
+]

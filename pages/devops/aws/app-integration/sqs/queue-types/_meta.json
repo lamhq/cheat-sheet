@@ -1,4 +1,4 @@
-{
-  "standard": "Standard",
-  "fifo": "FIFO"
-}
+[
+  "standard",
+  "fifo"
+]

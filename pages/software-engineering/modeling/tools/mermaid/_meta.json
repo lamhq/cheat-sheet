@@ -1,6 +1,6 @@
-{
-  "config": "Configurations",
-  "class-diagram": "Class diagrams",
-  "block-diagram": "Block Diagrams",
-  "sub-graph": "Sub Graph"
-}
+[
+  "config",
+  "class-diagram",
+  "block-diagram",
+  "sub-graph"
+]

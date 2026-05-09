@@ -1,6 +1,6 @@
-{
-  "iam": "IAM",
-  "sts": "Amazon STS",
-  "cognitor": "Amazon Cognito",
-  "sso": "AWS Single Sign-On"
-}
+[
+  "iam",
+  "sts",
+  "cognitor",
+  "sso"
+]

@@ -1,11 +1,11 @@
-{
-  "db-instance": "Database Instance & Storage",
-  "multi-az": "Multi-AZ",
-  "read-replicas": "Read Replicas",
-  "scaling": "Scaling",
-  "encryption": "Encryption",
-  "monitoring": "Monitoring",
-  "access-control": "Authorization & Access Control",
-  "backup-recovery": "Backup & Recovery",
-  "pricing": "Pricing"
-}
+[
+  "db-instance",
+  "multi-az",
+  "read-replicas",
+  "scaling",
+  "encryption",
+  "monitoring",
+  "access-control",
+  "backup-recovery",
+  "pricing"
+]

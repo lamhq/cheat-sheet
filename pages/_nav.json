@@ -1,0 +1,22 @@
+[
+  {
+    "text": "Backend",
+    "link": "/backend"
+  },
+  {
+    "text": "Data Engineering",
+    "link": "/data-engineering"
+  },
+  {
+    "text": "DevOps",
+    "link": "/devops"
+  },
+  {
+    "text": "Soft skills",
+    "link": "/soft-skills"
+  },
+  {
+    "text": "Software Engineering",
+    "link": "/software-engineering"
+  }
+]

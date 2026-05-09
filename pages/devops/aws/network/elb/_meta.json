@@ -1,5 +1,5 @@
-{
-  "load-balancer-types": "Load Balancer Types",
-  "components": "ELB Components",
-  "monitoring": "Monitoring"
-}
+[
+  "load-balancer-types",
+  "components",
+  "monitoring"
+]

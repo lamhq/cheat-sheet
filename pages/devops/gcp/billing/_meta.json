@@ -1,6 +1,6 @@
-{
-  "free-trial": "Free trial",
-  "free-tier": "Free Tier",
-  "billing": "Billing",
-  "budgets": "Budgets"
-}
+[
+  "free-trial",
+  "free-tier",
+  "billing",
+  "budgets"
+]

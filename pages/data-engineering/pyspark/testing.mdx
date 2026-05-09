@@ -6,13 +6,13 @@ In this guide, we have a function that perform data transformation. Then we'll w
 ## The code to test
 
 The input dataframe for transformation:
-```py filename="main.py"
+```py title="main.py"
 data = [("Alice  ",), (" Bob",), ("  Charlie  "), ("David     Jones",)]
 df = spark.createDataFrame(data, ["name"])
 ```
 
 The function that transform data, in this case, remove extra spaces of the column `name`:
-```py filename="remove_extra_spaces.py"
+```py title="remove_extra_spaces.py"
 from pyspark.sql.functions import col, regexp_replace
 
 # Remove additional spaces in `name`
@@ -21,7 +21,7 @@ def remove_extra_spaces(df):
 ```
 
 Apply the transformation function to our DataFrame:
-```py filename="main.py"
+```py title="main.py"
 result_df = remove_extra_spaces(df, "name")
 ```
 
@@ -56,7 +56,7 @@ assertSchemaEqual(s1, s2)  # pass, schemas are identical
 ## Option 2: Using Pytest
 
 Create a pytest fixture:
-```py filename="conftest.py"
+```py title="conftest.py"
 import pytest
 
 @pytest.fixture
@@ -66,7 +66,7 @@ def spark_fixture():
 ```
 
 Write test:
-```py filename="test_single_space.py"
+```py title="test_single_space.py"
 import pytest
 from pyspark.testing.utils import assertDataFrameEqual
 

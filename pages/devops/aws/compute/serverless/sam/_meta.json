@@ -1,5 +1,5 @@
-{
-  "setup": "Set up",
-  "getting-started": "Getting Started",
-  "typescript": "TypeScript"
-}
+[
+  "setup",
+  "getting-started",
+  "typescript"
+]

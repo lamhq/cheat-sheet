@@ -1,8 +1,8 @@
-{
-  "volume": "EBS Volumes",
-  "snapshot": "Snapshots",
-  "encryption": "Encryption",
-  "logging": "Logging and Auditing",
-  "monitoring": "Monitoring",
-  "raid": "RAID"
-}
+[
+  "volume",
+  "snapshot",
+  "encryption",
+  "logging",
+  "monitoring",
+  "raid"
+]

@@ -1,4 +1,4 @@
-{
-  "well-arch-frm": "AWS Well-Architected Framework",
-  "outpost": "AWS Outpost"
-}
+[
+  "well-arch-frm",
+  "outpost"
+]
