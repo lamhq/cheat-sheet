@@ -1,0 +1,16 @@
+[
+  {
+    "name": "core-infr",
+    "label": "Core Infrastructure",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "cloudrun",
+    "label": "Cloud Run",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
+]

@@ -1,0 +1,7 @@
+[
+  "cicd",
+  "build-stage",
+  "quality-check",
+  "testing",
+  "packaging"
+]
