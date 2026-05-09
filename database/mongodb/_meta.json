@@ -1,0 +1,10 @@
+[
+  "aggregation",
+  "backup-restore",
+  "basic",
+  "crud",
+  "draft",
+  "indexing",
+  "query",
+  "view"
+]

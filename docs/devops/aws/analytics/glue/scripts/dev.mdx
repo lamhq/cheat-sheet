@@ -36,23 +36,23 @@ Docker image: `amazon/aws-glue-libs:glue_libs_4.0.0_image_01`.
 To set up docker for local development:
 
 1. Set up AWS credentials:
-    ```title="~/.aws/config"
+    ```bash title="~/.aws/config"
     [default]
     region = us-east-1
     ```
-    ```title="~/.aws/credentials"
+    ```bash title="~/.aws/credentials"
     [default]
     aws_access_key_id = 
     aws_secret_access_key = 
     ```
 
 2. Pull the image:
-    ```sh
+    ```bash
     docker pull amazon/aws-glue-libs:glue_libs_4.0.0_image_01
     ```
 
 To run a python script with **spark-submit**:
-```sh
+```bash
 docker run -it --rm \
   --name glue_spark_submit \
   -v ~/.aws:/home/glue_user/.aws \
