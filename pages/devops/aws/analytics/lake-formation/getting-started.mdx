@@ -39,7 +39,9 @@ You can register data locations in the Lake Formation console at **Data lake loc
 
 When you register a location, you specify an IAM role that grants read/write permissions on that location. Lake Formation assumes that role when supplying temporary credentials to integrated services.
 
-> Lake Formation provides data access rather than using the users permissions.
+:::note
+Lake Formation provides data access rather than using the users permissions.
+:::
 
 You can specify either the Lake Formation service-linked role or create your own role.
 
@@ -127,7 +129,9 @@ Add the following inline policy to the role:
 - `lakeformation:GrantPermissions` enables the workflow to grant the SELECT permission on target tables.
 - `iam:PassRole` enables the service to assume the role `LakeFormationWorkflowRole` to create crawlers and jobs and to attach the role to the created crawlers and jobs.
 
-> The `LakeFormationWorkflowRole` is an IAM role used in AWS Lake Formation to manage workflows. This role is essential for creating metadata tables in the Data Catalog and writing data to target locations in Amazon S3
+:::note
+The `LakeFormationWorkflowRole` is an IAM role used in AWS Lake Formation to manage workflows. This role is essential for creating metadata tables in the Data Catalog and writing data to target locations in Amazon S3
+:::
 
 If you are ingesting data that is outside the data lake location, add an inline policy granting permissions to read the source data.
 

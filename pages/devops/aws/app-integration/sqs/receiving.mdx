@@ -20,7 +20,9 @@ More requests are used, which implies higher cost.
 
 Short polling is the default behavior.
 
-> The following diagram shows the short-polling behavior of messages returned from a standard queue after one of your system components makes a receive request. Amazon SQS returns messages A, C, D, and B from these servers. Message E isn't returned for this request, but it's returned for a subsequent request.
+:::note
+The following diagram shows the short-polling behavior of messages returned from a standard queue after one of your system components makes a receive request. Amazon SQS returns messages A, C, D, and B from these servers. Message E isn't returned for this request, but it's returned for a subsequent request.
+:::
 
 ![](./images/short-polling.png)
 

@@ -8,7 +8,9 @@ IAM users have associated credentials (access key ID and secret access key) to s
 
 The credentials for IAM roles are programmatically obtained, temporary, and rotated automatically. The roles assumed programmatically expire.
 
-> When launching an EC2 instance, for instance, an IAM role is assigned that the application running on the virtual machine can assume to gain access to the temporary credentials needed for signing API calls.
+:::note
+When launching an EC2 instance, for instance, an IAM role is assigned that the application running on the virtual machine can assume to gain access to the temporary credentials needed for signing API calls.
+:::
 
 Creating a role involves selecting a trusted entity that can assume the role.
 

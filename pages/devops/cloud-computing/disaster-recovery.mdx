@@ -22,7 +22,9 @@ Cheapest, slowest option.
 
 The simplest disaster recovery strategy. If something happens to your production system, restore that system from backup.
 
-> If an EC2 instance goes offline, we can restore it from a snapshot.
+:::note
+If an EC2 instance goes offline, we can restore it from a snapshot.
+:::
 
 
 ## Pilot light
@@ -49,9 +51,13 @@ Where you have a scaled-down version of your production system already running i
 
 It's similar to the pilot light with a bit more scaled up.
 
-> We have three web servers and a database server in the `us-east-1` region with live replication to a database server in `us-west-1` region along with a web server as a standby.
+:::note
+We have three web servers and a database server in the `us-east-1` region with live replication to a database server in `us-west-1` region along with a web server as a standby.
+:::
 >
-> In case of losing the `us-east-1` region, the system can still function by scaling up and adding more web servers in `us-west-1` to handle the traffic.
+:::note
+In case of losing the `us-east-1` region, the system can still function by scaling up and adding more web servers in `us-west-1` to handle the traffic.
+:::
 
 ![](./images/warm-standby.png)
 
