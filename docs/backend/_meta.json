@@ -75,5 +75,10 @@
     "collapsed": true
   },
   "keycloak",
-  "testcontainers"
+  "testcontainers",
+  {
+    "name": "redis",
+    "type": "dir"
+  },
+  "rabbitmq"
 ]
