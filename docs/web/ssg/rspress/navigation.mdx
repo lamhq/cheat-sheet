@@ -45,28 +45,6 @@ docs
         └── advanced/_meta.json
 ```
 
-## JSON schema type hint
-
-Rspress provides schema files for IDE support:
-- `@rspress/core/meta-json-schema.json`
-- `@rspress/core/nav-json-schema.json`
-
-Example VS Code config:
-```json title=".vscode/settings.json"
-{
-  "json.schemas": [
-    {
-      "fileMatch": ["**/_meta.json"],
-      "url": "./node_modules/@rspress/core/meta-json-schema.json"
-    },
-    {
-      "fileMatch": ["**/_nav.json"],
-      "url": "./node_modules/@rspress/core/nav-json-schema.json"
-    }
-  ]
-}
-```
-
 ## Navbar config
 
 Refer to [nav config](https://rspress.rs/api/config/config-theme#nav) for details.
@@ -103,17 +81,95 @@ Example:
 
 ## Sidebar config
 
-`_meta.json` is an array of sidebar items. Supported item types include:
+A `_meta.json` file contains an array of sidebar items. Each item can be one of the following types:
 
-- `string` file names
-- `file`
-- `dir`
-- `dir-section-header`
-- `divider`
-- `section-header`
-- `custom-link`
+```ts
+export type FileSideMeta = {
+  type: 'file';
+  name: string;
+  label?: string;
+  tag?: string;
+  overviewHeaders?: number[];
+  context?: string;
+};
+
+export type DirSideMeta = {
+  type: 'dir';
+  name: string;
+  label?: string;
+  collapsible?: boolean;
+  collapsed?: boolean;
+  tag?: string;
+  overviewHeaders?: number[];
+  context?: string;
+};
+
+export type DirSectionHeaderSideMeta = Omit<DirSideMeta, 'type'> &
+  Omit<SectionHeaderMeta, 'type'> & { type: 'dir-section-header' };
+
+export type DividerSideMeta = {
+  type: 'divider';
+  dashed?: boolean;
+};
+
+export type SectionHeaderMeta = {
+  type: 'section-header';
+  label: string;
+  tag?: string;
+};
+
+export type CustomLinkMeta =
+  | {
+      // file link
+      type: 'custom-link';
+      label: string;
+      tag?: string;
+      overviewHeaders?: number[];
+      context?: string;
+      link: string;
+    }
+  | {
+      // dir link
+      type: 'custom-link';
+      label: string;
+      tag?: string;
+      overviewHeaders?: number[];
+      context?: string;
+      link?: string;
+      collapsible?: boolean;
+      collapsed?: boolean;
+      items: _CustomLinkMetaWithoutTypeField[];
+    };
+
+export type SideMetaItem =
+  | FileSideMeta
+  | DirSideMeta
+  | DirSectionHeaderSideMeta
+  | DividerSideMeta
+  | SectionHeaderMeta
+  | CustomLinkMeta
+  | string;
+```
+
+### string
+
+When item is `string`, it means that the item is a file, and the file name is the string (without extension), for example:
+
+```json title="_meta.json"
+[
+  "introduction",
+  "advanced"
+]
+```
 
 ### file
+
+When item is object with `type` of `file`, it create a sidebar item that corresponds to a file, where:
+
+- `name` means the file name, without suffix
+- `label` means the display name of the file in the sidebar
+
+Example:
 
 ```json
 {
@@ -124,6 +180,15 @@ Example:
 ```
 
 ### dir
+
+When item is object with `type` of `dir`, it create a sidebar item that corresponds to a directory, where:
+
+- `name` means the directory name
+- `label` means the display name of the directory in the sidebar
+- `collapsible` means whether the directory can be collapsed
+- `collapsed` means whether the directory is initially collapsed
+
+Example:
 
 ```json
 {
@@ -265,4 +330,26 @@ tag: https://example.com/icon.png
 ---
 tag: data:image/svg+xml;base64,...
 ---
+```
+
+## JSON schema type hint
+
+Rspress provides schema files for IDE support:
+- `@rspress/core/meta-json-schema.json`
+- `@rspress/core/nav-json-schema.json`
+
+Example VS Code config:
+```json title=".vscode/settings.json"
+{
+  "json.schemas": [
+    {
+      "fileMatch": ["**/_meta.json"],
+      "url": "./node_modules/@rspress/core/meta-json-schema.json"
+    },
+    {
+      "fileMatch": ["**/_nav.json"],
+      "url": "./node_modules/@rspress/core/nav-json-schema.json"
+    }
+  ]
+}
 ```
