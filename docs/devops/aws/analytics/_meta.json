@@ -1,20 +1,18 @@
 [
-  "athena",
   {
-    "name": "data-pipeline",
+    "name": "lake-formation",
     "type": "dir",
     "collapsed": true
   },
-  "data-pipeline",
+  "redshift",
   "emr",
   {
     "name": "glue",
     "type": "dir",
     "collapsed": true
   },
-  "glue",
   {
-    "name": "images",
+    "name": "data-pipeline",
     "type": "dir",
     "collapsed": true
   },
@@ -23,15 +21,8 @@
     "type": "dir",
     "collapsed": true
   },
-  "kinesis",
-  {
-    "name": "lake-formation",
-    "type": "dir",
-    "collapsed": true
-  },
-  "lake-formation",
   "msk",
-  "opensearch",
   "quicksight",
-  "redshift"
+  "athena",
+  "opensearch"
 ]

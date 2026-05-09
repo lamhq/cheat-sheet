@@ -1,31 +1,5 @@
 [
   {
-    "name": "index",
-    "label": "DevOps",
-    "type": "file"
-  },
-  "ci",
-  "cd",
-  "progressive-delivery",
-  "gitops",
-  {
-    "name": "docker",
-    "type": "dir",
-    "collapsed": true
-  },
-  "podman",
-  {
-    "name": "k8s",
-    "type": "dir",
-    "collapsed": true
-  },
-  "github-pages",
-  {
-    "name": "github-actions",
-    "type": "dir",
-    "collapsed": true
-  },
-  {
     "name": "cloud-computing",
     "type": "dir",
     "collapsed": true
@@ -48,6 +22,11 @@
   },
   {
     "name": "linux",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "docker",
     "type": "dir",
     "collapsed": true
   },

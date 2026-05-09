@@ -1,16 +1,11 @@
 [
-  "access-control",
-  "backup",
   "concepts",
-  "global-table",
   "indexes",
-  "performance",
-  "pricing",
   "scalability",
   "security",
-  {
-    "name": "snippets",
-    "type": "dir",
-    "collapsed": true
-  }
+  "access-control",
+  "backup",
+  "performance",
+  "global-table",
+  "pricing"
 ]

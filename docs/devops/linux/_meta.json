@@ -1,25 +1,20 @@
 [
-  "commands",
-  "cronjob",
-  "disk",
   "distributions",
-  "environment",
+  "commands",
   "file-dir",
+  "permission",
+  "environment",
+  "redirection",
+  "pipelines",
+  "search",
+  "ssh",
+  "pkg-mgmt",
   "heredoc",
   "network",
-  "permission",
-  "pipelines",
-  "pkg-mgmt",
   "process",
-  "redirection",
-  "search",
-  "shell-script",
-  "ssh",
-  "ssl",
   "system",
-  {
-    "name": "utils",
-    "type": "dir",
-    "collapsed": true
-  }
+  "disk",
+  "cronjob",
+  "ssl",
+  "shell-script"
 ]

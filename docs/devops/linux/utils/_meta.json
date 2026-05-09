@@ -1,7 +1,7 @@
 [
-  "curl",
-  "gzip",
-  "tar",
   "vim",
-  "zip"
+  "curl",
+  "zip",
+  "gzip",
+  "tar"
 ]

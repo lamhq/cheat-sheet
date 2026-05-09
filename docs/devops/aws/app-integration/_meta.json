@@ -4,32 +4,23 @@
     "type": "dir",
     "collapsed": true
   },
-  "api-gateway",
   "app-flow",
   {
     "name": "app-sync",
     "type": "dir",
     "collapsed": true
   },
-  "app-sync",
   "event-bridge",
-  {
-    "name": "images",
-    "type": "dir",
-    "collapsed": true
-  },
-  "mq",
   "sns",
+  "mq",
   {
     "name": "sqs",
     "type": "dir",
     "collapsed": true
   },
-  "sqs",
   {
     "name": "step-function",
     "type": "dir",
     "collapsed": true
-  },
-  "step-function"
+  }
 ]

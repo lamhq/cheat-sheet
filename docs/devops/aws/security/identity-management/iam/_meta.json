@@ -1,11 +1,6 @@
 [
-  "api-auth",
   "credentials",
-  "cross-account-role-access",
-  {
-    "name": "images",
-    "type": "dir",
-    "collapsed": true
-  },
-  "policies"
+  "policies",
+  "api-auth",
+  "cross-account-role-access"
 ]

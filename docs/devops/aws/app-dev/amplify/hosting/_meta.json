@@ -1,10 +1,7 @@
 [
-  "custom-domain",
-  "password-protection",
   {
     "name": "react",
     "type": "dir",
     "collapsed": true
-  },
-  "react"
+  }
 ]

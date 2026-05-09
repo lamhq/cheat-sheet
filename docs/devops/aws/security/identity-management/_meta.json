@@ -1,21 +1,14 @@
 [
   {
-    "name": "cognitor",
-    "type": "dir",
-    "collapsed": true
-  },
-  "cognitor",
-  {
     "name": "iam",
     "type": "dir",
     "collapsed": true
   },
-  "iam",
+  "sts",
   {
-    "name": "images",
+    "name": "cognitor",
     "type": "dir",
     "collapsed": true
   },
-  "sso",
-  "sts"
+  "sso"
 ]

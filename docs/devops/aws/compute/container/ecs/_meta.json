@@ -1,13 +1,8 @@
 [
   "concepts",
-  "ecs-anywhere",
-  "fargate",
-  {
-    "name": "images",
-    "type": "dir",
-    "collapsed": true
-  },
   "integration",
   "scaling",
-  "security"
+  "security",
+  "fargate",
+  "ecs-anywhere"
 ]

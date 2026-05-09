@@ -1,9 +1,9 @@
 [
-  "cpu",
-  "env-var",
   "memory",
+  "cpu",
+  "timeout",
   "networking",
-  "roles",
   "storage",
-  "timeout"
+  "env-var",
+  "roles"
 ]

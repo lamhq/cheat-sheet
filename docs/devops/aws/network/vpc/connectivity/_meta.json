@@ -1,10 +1,5 @@
 [
-  {
-    "name": "images",
-    "type": "dir",
-    "collapsed": true
-  },
   "internet",
-  "vpc-to-on-premises",
-  "vpc-to-vpc"
+  "vpc-to-vpc",
+  "vpc-to-on-premises"
 ]

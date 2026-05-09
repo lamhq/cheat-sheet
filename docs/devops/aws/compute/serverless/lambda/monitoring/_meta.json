@@ -1,6 +1,6 @@
 [
-  "lambda-insight",
   "logging",
+  "tracing",
   "metrics",
-  "tracing"
+  "lambda-insight"
 ]

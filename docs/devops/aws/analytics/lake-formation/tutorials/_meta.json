@@ -1,4 +1,4 @@
 [
-  "glue-job",
-  "s3-data-lake"
+  "s3-data-lake",
+  "glue-job"
 ]

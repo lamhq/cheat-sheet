@@ -1,5 +1,5 @@
 [
-  "credential-vending",
   "metadata-access",
-  "underlying-access"
+  "underlying-access",
+  "credential-vending"
 ]

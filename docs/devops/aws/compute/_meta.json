@@ -1,18 +1,5 @@
 [
   {
-    "name": "aws-batch",
-    "type": "dir",
-    "collapsed": true
-  },
-  "aws-batch",
-  "beanstalk",
-  {
-    "name": "container",
-    "type": "dir",
-    "collapsed": true
-  },
-  "container",
-  {
     "name": "ec2",
     "type": "dir",
     "collapsed": true
@@ -22,13 +9,21 @@
     "type": "dir",
     "collapsed": true
   },
-  "ec2-auto-scaling",
-  "ec2",
+  {
+    "name": "aws-batch",
+    "type": "dir",
+    "collapsed": true
+  },
+  "beanstalk",
+  "wavelength",
+  {
+    "name": "container",
+    "type": "dir",
+    "collapsed": true
+  },
   {
     "name": "serverless",
     "type": "dir",
     "collapsed": true
-  },
-  "serverless",
-  "wavelength"
+  }
 ]

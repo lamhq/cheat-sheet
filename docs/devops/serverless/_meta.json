@@ -1,11 +1,10 @@
 [
-  "api-gateway",
   "commands",
   "monitoring",
+  "api-gateway",
   {
     "name": "python",
     "type": "dir",
     "collapsed": true
-  },
-  "python"
+  }
 ]

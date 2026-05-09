@@ -1,45 +1,39 @@
 [
   {
-    "name": "access-control",
-    "type": "dir",
-    "collapsed": true
-  },
-  "access-control",
-  {
     "name": "api-types",
     "type": "dir",
     "collapsed": true
   },
-  "api-types",
-  "caching",
-  {
-    "name": "canary-deployment",
-    "type": "dir",
-    "collapsed": true
-  },
-  "canary-deployment",
   "end-points",
-  {
-    "name": "integration-type",
-    "type": "dir",
-    "collapsed": true
-  },
-  "integration-type",
-  "monitoring",
-  "openapi",
-  "pricing",
-  {
-    "name": "scenarios",
-    "type": "dir",
-    "collapsed": true
-  },
-  "scenarios",
   {
     "name": "stage",
     "type": "dir",
     "collapsed": true
   },
-  "stage",
+  {
+    "name": "canary-deployment",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "integration-type",
+    "type": "dir",
+    "collapsed": true
+  },
+  "openapi",
+  "caching",
+  "usage-plans",
   "throttling",
-  "usage-plans"
+  "monitoring",
+  {
+    "name": "access-control",
+    "type": "dir",
+    "collapsed": true
+  },
+  "pricing",
+  {
+    "name": "scenarios",
+    "type": "dir",
+    "collapsed": true
+  }
 ]

@@ -1,7 +1,7 @@
 [
   "components",
+  "workflow-types",
   "error-handling",
   "integration-patterns",
-  "pricing",
-  "workflow-types"
+  "pricing"
 ]

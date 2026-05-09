@@ -1,12 +1,31 @@
 [
   {
-    "name": "analytics",
+    "name": "infrastructure",
     "type": "dir",
     "collapsed": true
   },
-  "analytics",
   {
-    "name": "app-dev",
+    "name": "database",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "network",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "storage",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "security",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "analytics",
     "type": "dir",
     "collapsed": true
   },
@@ -15,73 +34,13 @@
     "type": "dir",
     "collapsed": true
   },
-  "app-integration",
-  {
-    "name": "certifications",
-    "type": "dir",
-    "collapsed": true
-  },
-  "certifications",
-  {
-    "name": "compliance",
-    "type": "dir",
-    "collapsed": true
-  },
-  {
-    "name": "compute",
-    "type": "dir",
-    "collapsed": true
-  },
   {
     "name": "cost",
     "type": "dir",
     "collapsed": true
   },
-  "cost",
   {
-    "name": "database",
-    "type": "dir",
-    "collapsed": true
-  },
-  "database",
-  {
-    "name": "dev-tools",
-    "type": "dir",
-    "collapsed": true
-  },
-  {
-    "name": "governance",
-    "type": "dir",
-    "collapsed": true
-  },
-  {
-    "name": "images",
-    "type": "dir",
-    "collapsed": true
-  },
-  {
-    "name": "infrastructure",
-    "type": "dir",
-    "collapsed": true
-  },
-  "infrastructure",
-  {
-    "name": "machine-learning",
-    "type": "dir",
-    "collapsed": true
-  },
-  {
-    "name": "media",
-    "type": "dir",
-    "collapsed": true
-  },
-  {
-    "name": "migration",
-    "type": "dir",
-    "collapsed": true
-  },
-  {
-    "name": "monitoring",
+    "name": "certifications",
     "type": "dir",
     "collapsed": true
   },
@@ -89,24 +48,5 @@
     "name": "naming-convention",
     "type": "dir",
     "collapsed": true
-  },
-  "naming-convention",
-  {
-    "name": "network",
-    "type": "dir",
-    "collapsed": true
-  },
-  "network",
-  {
-    "name": "security",
-    "type": "dir",
-    "collapsed": true
-  },
-  "security",
-  {
-    "name": "storage",
-    "type": "dir",
-    "collapsed": true
-  },
-  "storage"
+  }
 ]

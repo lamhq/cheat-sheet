@@ -1,40 +1,24 @@
 [
+  "invoke",
+  "handler",
+  "lifecycle",
   "architecture",
+  "runtime",
+  "processor",
+  "extension",
+  "error-handling",
+  "secrets",
   "concurrency",
-  {
-    "name": "configuration",
-    "type": "dir",
-    "collapsed": true
-  },
+  "layer",
+  "version",
+  "pricing",
   "deployment",
+  "integration",
+  "limitations",
+  "powertools",
   {
     "name": "development",
     "type": "dir",
     "collapsed": true
-  },
-  "development",
-  "error-handling",
-  "extension",
-  "handler",
-  {
-    "name": "images",
-    "type": "dir",
-    "collapsed": true
-  },
-  "integration",
-  "invoke",
-  "layer",
-  "lifecycle",
-  "limitations",
-  {
-    "name": "monitoring",
-    "type": "dir",
-    "collapsed": true
-  },
-  "powertools",
-  "pricing",
-  "processor",
-  "runtime",
-  "secrets",
-  "version"
+  }
 ]

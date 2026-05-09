@@ -1,16 +1,15 @@
 [
   "comprehend",
-  "forecast",
-  "fraud-detector",
   "kendra",
+  "textract",
   "rekognition",
+  "forecast",
+  "speech",
+  "translate",
+  "fraud-detector",
   {
     "name": "sage-maker",
     "type": "dir",
     "collapsed": true
-  },
-  "sage-maker",
-  "speech",
-  "textract",
-  "translate"
+  }
 ]

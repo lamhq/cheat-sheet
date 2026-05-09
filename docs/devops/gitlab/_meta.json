@@ -3,11 +3,5 @@
     "name": "cicd",
     "type": "dir",
     "collapsed": true
-  },
-  "cicd",
-  {
-    "name": "deploy-release",
-    "type": "dir",
-    "collapsed": true
   }
 ]

@@ -1,25 +1,9 @@
 [
-  "backup",
-  {
-    "name": "block-storage",
-    "type": "dir",
-    "collapsed": true
-  },
-  {
-    "name": "file-storage",
-    "type": "dir",
-    "collapsed": true
-  },
-  {
-    "name": "images",
-    "type": "dir",
-    "collapsed": true
-  },
   {
     "name": "s3",
     "type": "dir",
     "collapsed": true
   },
-  "s3",
-  "storage-gateway"
+  "storage-gateway",
+  "backup"
 ]

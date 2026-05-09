@@ -1,8 +1,8 @@
 [
-  "cer-manager",
-  "cloud-hsm",
-  "kms",
   "least-privilege",
+  "secret-manager",
   "parameter-store",
-  "secret-manager"
+  "kms",
+  "cloud-hsm",
+  "cer-manager"
 ]

@@ -1,17 +1,11 @@
 [
+  "subnet",
+  "network-basic",
+  "routing",
+  "security",
   {
     "name": "connectivity",
     "type": "dir",
     "collapsed": true
-  },
-  "connectivity",
-  {
-    "name": "images",
-    "type": "dir",
-    "collapsed": true
-  },
-  "network-basic",
-  "routing",
-  "security",
-  "subnet"
+  }
 ]

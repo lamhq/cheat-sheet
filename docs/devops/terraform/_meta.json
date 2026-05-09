@@ -1,26 +1,18 @@
 [
-  {
-    "name": "aws",
-    "type": "dir",
-    "collapsed": true
-  },
-  "aws",
-  "cli",
-  {
-    "name": "cloud",
-    "type": "dir",
-    "collapsed": true
-  },
-  "cloud",
   "getting-started",
   {
     "name": "language",
     "type": "dir",
     "collapsed": true
   },
-  "language",
+  "cli",
   {
-    "name": "tips",
+    "name": "cloud",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "aws",
     "type": "dir",
     "collapsed": true
   }

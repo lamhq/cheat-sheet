@@ -1,14 +1,12 @@
 [
   {
-    "name": "identity-pool",
-    "type": "dir",
-    "collapsed": true
-  },
-  "identity-pool",
-  {
     "name": "user-pool",
     "type": "dir",
     "collapsed": true
   },
-  "user-pool"
+  {
+    "name": "identity-pool",
+    "type": "dir",
+    "collapsed": true
+  }
 ]

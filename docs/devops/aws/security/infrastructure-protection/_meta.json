@@ -1,17 +1,11 @@
 [
-  "aws-security-hub",
   "aws-shield",
   {
     "name": "aws-waf",
     "type": "dir",
     "collapsed": true
   },
-  "aws-waf",
+  "network-firewall",
   "firewall-manager",
-  {
-    "name": "images",
-    "type": "dir",
-    "collapsed": true
-  },
-  "network-firewall"
+  "aws-security-hub"
 ]

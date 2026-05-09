@@ -1,27 +1,20 @@
 [
   {
-    "name": "cloudformation",
-    "type": "dir",
-    "collapsed": true
-  },
-  "cloudformation",
-  "config",
-  "control-tower",
-  "directory-service",
-  {
-    "name": "images",
-    "type": "dir",
-    "collapsed": true
-  },
-  "license-manager",
-  {
     "name": "organizations",
     "type": "dir",
     "collapsed": true
   },
-  "organizations",
+  "control-tower",
+  "directory-service",
+  {
+    "name": "cloudformation",
+    "type": "dir",
+    "collapsed": true
+  },
   "proton",
+  "system-manager",
+  "config",
   "ram",
-  "service-catalog",
-  "system-manager"
+  "license-manager",
+  "service-catalog"
 ]

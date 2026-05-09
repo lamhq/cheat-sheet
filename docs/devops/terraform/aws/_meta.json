@@ -1,9 +1,9 @@
 [
-  "appsync",
-  "ec2",
-  "glue",
-  "lake-formation",
-  "lambda",
   "s3",
-  "vpc"
+  "ec2",
+  "vpc",
+  "lambda",
+  "lake-formation",
+  "glue",
+  "appsync"
 ]

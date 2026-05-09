@@ -1,6 +1,6 @@
 [
-  "aurora-serverless",
-  "backup",
   "multi-az",
-  "replicas"
+  "replicas",
+  "backup",
+  "aurora-serverless"
 ]

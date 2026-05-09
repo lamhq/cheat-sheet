@@ -1,17 +1,12 @@
 [
-  "budgets",
-  "compute-optimizer",
+  "free-tier",
+  "pricing",
   "consolidated-billing",
+  "budgets",
+  "cur",
   "cost-explorer",
   "cost-profiler",
-  "cur",
-  "free-tier",
-  {
-    "name": "images",
-    "type": "dir",
-    "collapsed": true
-  },
-  "pricing",
+  "compute-optimizer",
   "savings-plans",
   "support"
 ]

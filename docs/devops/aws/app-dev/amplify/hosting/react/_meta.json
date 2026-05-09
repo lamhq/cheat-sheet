@@ -1,6 +1,6 @@
 [
+  "setup",
   "deploy",
   "integrate-api",
-  "integrate-auth",
-  "setup"
+  "integrate-auth"
 ]

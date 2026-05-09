@@ -1,4 +1,4 @@
 [
-  "kinesis-video-stream",
-  "transcoder"
+  "transcoder",
+  "kinesis-video-stream"
 ]

@@ -1,8 +1,8 @@
 [
-  "ai",
-  "analytics",
+  "infrastructure",
+  "management",
   {
-    "name": "billing",
+    "name": "networking",
     "type": "dir",
     "collapsed": true
   },
@@ -11,25 +11,17 @@
     "type": "dir",
     "collapsed": true
   },
-  "compute",
-  "database",
-  "deployment",
-  "develop",
-  "infrastructure",
-  "management",
-  "monitoring",
-  {
-    "name": "networking",
-    "type": "dir",
-    "collapsed": true
-  },
-  "networking",
-  "security",
   "serverless",
   {
     "name": "storage",
     "type": "dir",
     "collapsed": true
   },
-  "storage"
+  "database",
+  "develop",
+  "deployment",
+  "monitoring",
+  "security",
+  "analytics",
+  "ai"
 ]
