@@ -1,0 +1,16 @@
+[
+  {
+    "name": "guideline",
+    "label": "Guideline",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "project-hightlights",
+    "label": "Project Highlights",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
+]

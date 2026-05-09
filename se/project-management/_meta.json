@@ -1,0 +1,20 @@
+[
+  "overview",
+  "agile",
+  "jira-setup-workflow",
+  "project-manager-workflow",
+  {
+    "name": "scrum",
+    "label": "Scrum",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "jira",
+    "label": "Jira",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
+]

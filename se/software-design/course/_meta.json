@@ -1,0 +1,13 @@
+[
+  "introduction",
+  "object-oriented-thinking",
+  "requirement-gathering",
+  "compromise",
+  {
+    "name": "design",
+    "label": "Design",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
+]

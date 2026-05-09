@@ -1,0 +1,20 @@
+[
+  "intro",
+  "conceptual-design",
+  "technical-design",
+  "model-checking",
+  {
+    "name": "design-principles",
+    "label": "Design Principles",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "uml",
+    "label": "UML",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
+]

@@ -1,0 +1,7 @@
+[
+  "dependency-injection",
+  "dynamic-query",
+  "queue-pattern",
+  "service-pattern",
+  "synchronous-event-handling"
+]
