@@ -1,0 +1,14 @@
+[
+  {
+    "name": "oop",
+    "type": "dir"
+  },
+  {
+    "name": "design-principles",
+    "type": "dir"
+  },
+  {
+    "name": "design-patterns",
+    "type": "dir"
+  }
+]

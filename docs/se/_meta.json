@@ -24,5 +24,13 @@
     "type": "dir",
     "collapsed": true,
     "label": "Software Development"
+  },
+  {
+    "name": "modeling",
+    "type": "dir"
+  },
+  {
+    "name": "management",
+    "type": "dir"
   }
 ]

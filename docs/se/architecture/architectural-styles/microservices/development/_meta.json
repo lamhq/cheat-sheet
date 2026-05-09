@@ -1,6 +1,9 @@
 [
   "code-reuse",
-  "code-organization",
+  {
+    "name": "code-organization",
+    "type": "dir"
+  },
   "documenting",
   "dev-exp"
 ]

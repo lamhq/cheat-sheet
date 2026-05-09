@@ -1,5 +1,8 @@
 [
-  "monolith",
+  {
+    "name": "monolith",
+    "type": "dir"
+  },
   {
     "name": "multi-tier",
     "label": "Multi-Tier",

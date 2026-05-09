@@ -1,4 +1,10 @@
 [
-  "sharding",
-  "consistent-hashing"
+  {
+    "name": "sharding",
+    "type": "dir"
+  },
+  {
+    "name": "consistent-hashing",
+    "type": "dir"
+  }
 ]

@@ -12,14 +12,23 @@
   "choosing-db",
   "transaction",
   "concurrency",
-  "indexing",
-  "replication",
+  {
+    "name": "indexing",
+    "type": "dir"
+  },
+  {
+    "name": "replication",
+    "type": "dir"
+  },
   {
     "name": "partitioning",
     "type": "dir",
     "collapsed": true
   },
   "eventual-consistency",
-  "cap-theorem",
+  {
+    "name": "cap-theorem",
+    "type": "dir"
+  },
   "base-model"
 ]

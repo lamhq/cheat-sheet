@@ -1,8 +1,17 @@
 [
-  "load-balancer",
-  "message-broker",
+  {
+    "name": "load-balancer",
+    "type": "dir"
+  },
+  {
+    "name": "message-broker",
+    "type": "dir"
+  },
   "api-gateway",
   "cdn",
-  "server",
+  {
+    "name": "server",
+    "type": "dir"
+  },
   "proxy"
 ]

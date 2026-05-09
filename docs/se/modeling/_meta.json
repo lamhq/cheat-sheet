@@ -1,0 +1,14 @@
+[
+  {
+    "name": "uml",
+    "type": "dir"
+  },
+  {
+    "name": "crc-cards",
+    "type": "dir"
+  },
+  {
+    "name": "tools",
+    "type": "dir"
+  }
+]

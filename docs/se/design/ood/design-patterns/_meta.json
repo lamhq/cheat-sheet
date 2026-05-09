@@ -4,7 +4,10 @@
   "decorator",
   "simple-factory",
   "factory-method",
-  "abstract-factory",
+  {
+    "name": "abstract-factory",
+    "type": "dir"
+  },
   "builder",
   "cor"
 ]

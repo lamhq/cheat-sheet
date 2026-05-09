@@ -1,0 +1,11 @@
+[
+  {
+    "name": "api",
+    "type": "dir"
+  },
+  "database",
+  {
+    "name": "ood",
+    "type": "dir"
+  }
+]
