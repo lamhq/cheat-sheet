@@ -1,8 +1,8 @@
-# Refs and the Reflog
+# Refs
+
+Methods of referring to a commit.
 
 The majority of git commands accept a commit reference as a parameter. By understanding the many ways to refer to a commit, you make all of these commands that much more powerful.
-
-In this article, we will explore the many methods of referring to a commit.
 
 ## Hashes
 
