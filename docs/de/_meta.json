@@ -1,4 +1,8 @@
 [
   { "name": "index", "label": "Data Engineering", "type": "file" },
-  { "name": "big-data", "type": "dir", "collapsed": true }
+  { "name": "big-data", "type": "dir", "collapsed": true },
+  { "name": "jupyter-notebook", "type": "dir" },
+  { "name": "numpy", "type": "dir" },
+  { "name": "pandas", "type": "dir" },
+  { "name": "pyspark", "type": "dir" }
 ]
