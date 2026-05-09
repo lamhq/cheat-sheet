@@ -1,9 +1,0 @@
-[
-  "s3",
-  "ec2",
-  "vpc",
-  "lambda",
-  "lake-formation",
-  "glue",
-  "appsync"
-]

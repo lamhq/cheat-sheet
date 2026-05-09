@@ -1,7 +1,0 @@
-[
-  "aws-shield",
-  "aws-waf",
-  "network-firewall",
-  "firewall-manager",
-  "aws-security-hub"
-]

@@ -1,9 +1,0 @@
-[
-  "memory",
-  "cpu",
-  "timeout",
-  "networking",
-  "storage",
-  "env-var",
-  "roles"
-]

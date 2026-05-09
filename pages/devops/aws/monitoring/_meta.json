@@ -1,7 +1,0 @@
-[
-  "cloudwatch",
-  "cloudtrail",
-  "grafana",
-  "prometheus",
-  "health"
-]
