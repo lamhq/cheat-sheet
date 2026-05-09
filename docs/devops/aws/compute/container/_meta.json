@@ -1,0 +1,16 @@
+[
+  "app-runner",
+  "ecr",
+  {
+    "name": "ecs",
+    "type": "dir",
+    "collapsed": true
+  },
+  "ecs",
+  {
+    "name": "eks",
+    "type": "dir",
+    "collapsed": true
+  },
+  "eks"
+]

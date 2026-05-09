@@ -1,0 +1,19 @@
+[
+  "access-control",
+  "encryption",
+  "event",
+  {
+    "name": "images",
+    "type": "dir",
+    "collapsed": true
+  },
+  "lifecycle",
+  "logging",
+  "monitoring",
+  "object-lock",
+  "optimizing-perf",
+  "pricing",
+  "replication",
+  "storage-classes",
+  "versioning"
+]

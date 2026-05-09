@@ -1,0 +1,34 @@
+[
+  {
+    "name": "aws-batch",
+    "type": "dir",
+    "collapsed": true
+  },
+  "aws-batch",
+  "beanstalk",
+  {
+    "name": "container",
+    "type": "dir",
+    "collapsed": true
+  },
+  "container",
+  {
+    "name": "ec2",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "ec2-auto-scaling",
+    "type": "dir",
+    "collapsed": true
+  },
+  "ec2-auto-scaling",
+  "ec2",
+  {
+    "name": "serverless",
+    "type": "dir",
+    "collapsed": true
+  },
+  "serverless",
+  "wavelength"
+]

@@ -1,0 +1,12 @@
+[
+  "availability",
+  "disaster-recovery",
+  "ha",
+  {
+    "name": "images",
+    "type": "dir",
+    "collapsed": true
+  },
+  "serverless",
+  "solutions"
+]

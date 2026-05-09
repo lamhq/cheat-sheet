@@ -1,0 +1,14 @@
+[
+  "dns",
+  "health-checks",
+  "hosted-zones",
+  {
+    "name": "images",
+    "type": "dir",
+    "collapsed": true
+  },
+  "pricing",
+  "records",
+  "resolver",
+  "routing-policices"
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "name": "aurora",
+    "type": "dir",
+    "collapsed": true
+  },
+  "aurora",
+  {
+    "name": "rds",
+    "type": "dir",
+    "collapsed": true
+  },
+  "rds"
+]

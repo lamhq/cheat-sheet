@@ -1,0 +1,32 @@
+[
+  {
+    "name": "cloudfront",
+    "type": "dir",
+    "collapsed": true
+  },
+  "cloudfront",
+  {
+    "name": "elb",
+    "type": "dir",
+    "collapsed": true
+  },
+  "elb",
+  "global-acc",
+  {
+    "name": "images",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "route53",
+    "type": "dir",
+    "collapsed": true
+  },
+  "route53",
+  {
+    "name": "vpc",
+    "type": "dir",
+    "collapsed": true
+  },
+  "vpc"
+]

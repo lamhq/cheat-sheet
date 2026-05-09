@@ -1,0 +1,26 @@
+[
+  "dead-letter-queue",
+  {
+    "name": "images",
+    "type": "dir",
+    "collapsed": true
+  },
+  "integrations",
+  "metadata",
+  "monitoring",
+  {
+    "name": "queue-types",
+    "type": "dir",
+    "collapsed": true
+  },
+  "queue-types",
+  "quotas",
+  "receiving",
+  {
+    "name": "security",
+    "type": "dir",
+    "collapsed": true
+  },
+  "settings",
+  "tmp-queues"
+]

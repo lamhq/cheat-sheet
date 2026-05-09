@@ -1,0 +1,29 @@
+[
+  {
+    "name": "data-protection",
+    "type": "dir",
+    "collapsed": true
+  },
+  "dos",
+  {
+    "name": "identity-management",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "images",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "infrastructure-protection",
+    "type": "dir",
+    "collapsed": true
+  },
+  "shared-responsibility-model",
+  {
+    "name": "threat-detection",
+    "type": "dir",
+    "collapsed": true
+  }
+]

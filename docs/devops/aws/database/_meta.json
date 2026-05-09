@@ -1,0 +1,20 @@
+[
+  "documentdb",
+  {
+    "name": "dynamodb",
+    "type": "dir",
+    "collapsed": true
+  },
+  "dynamodb",
+  "elasticache",
+  "keyspaces",
+  "neptune",
+  "qldb",
+  {
+    "name": "relational",
+    "type": "dir",
+    "collapsed": true
+  },
+  "relational",
+  "timestream"
+]

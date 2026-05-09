@@ -24,5 +24,42 @@
     "name": "github-actions",
     "type": "dir",
     "collapsed": true
-  }
+  },
+  {
+    "name": "cloud-computing",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "aws",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "gcp",
+    "type": "dir",
+    "collapsed": true
+  },
+  "vercel",
+  {
+    "name": "supabase",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "linux",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "terraform",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "serverless",
+    "type": "dir",
+    "collapsed": true
+  },
+  "bitbucket-pipelines"
 ]

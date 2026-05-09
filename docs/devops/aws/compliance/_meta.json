@@ -1,0 +1,9 @@
+[
+  "artifact",
+  "audit-manager",
+  {
+    "name": "images",
+    "type": "dir",
+    "collapsed": true
+  }
+]

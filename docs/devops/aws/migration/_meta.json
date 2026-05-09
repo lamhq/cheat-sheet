@@ -1,0 +1,12 @@
+[
+  "app-discovery",
+  "app-migration",
+  "aws-caf",
+  "data-sync",
+  "dms",
+  "migration-hub",
+  "sms",
+  "snow-family",
+  "strategies",
+  "transfer-family"
+]

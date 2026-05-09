@@ -1,0 +1,8 @@
+[
+  "cloudwatch-alarm",
+  "cloudwatch-log",
+  "dimensions",
+  "metrics",
+  "namespace",
+  "statistics"
+]

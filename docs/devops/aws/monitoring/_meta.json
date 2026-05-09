@@ -1,0 +1,17 @@
+[
+  "cloudtrail",
+  {
+    "name": "cloudwatch",
+    "type": "dir",
+    "collapsed": true
+  },
+  "cloudwatch",
+  "grafana",
+  "health",
+  {
+    "name": "images",
+    "type": "dir",
+    "collapsed": true
+  },
+  "prometheus"
+]

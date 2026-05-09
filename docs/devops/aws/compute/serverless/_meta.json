@@ -1,0 +1,15 @@
+[
+  "app-repo",
+  {
+    "name": "lambda",
+    "type": "dir",
+    "collapsed": true
+  },
+  "lambda",
+  {
+    "name": "sam",
+    "type": "dir",
+    "collapsed": true
+  },
+  "sam"
+]

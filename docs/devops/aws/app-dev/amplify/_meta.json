@@ -1,0 +1,12 @@
+[
+  "api",
+  "auth",
+  "cli",
+  {
+    "name": "hosting",
+    "type": "dir",
+    "collapsed": true
+  },
+  "hosting",
+  "studio"
+]

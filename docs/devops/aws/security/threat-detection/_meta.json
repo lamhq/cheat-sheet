@@ -1,0 +1,12 @@
+[
+  "detective",
+  "guardduty",
+  {
+    "name": "images",
+    "type": "dir",
+    "collapsed": true
+  },
+  "inspector",
+  "macie",
+  "trusted-advisor"
+]

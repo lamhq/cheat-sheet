@@ -1,0 +1,13 @@
+[
+  "ami",
+  "guides",
+  "instance-types",
+  "ip",
+  "logging",
+  "migration",
+  "monitoring",
+  "networking",
+  "placement-group",
+  "pricing",
+  "spot-instances"
+]

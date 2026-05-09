@@ -1,0 +1,11 @@
+[
+  "access-control",
+  "backup-recovery",
+  "db-instance",
+  "encryption",
+  "monitoring",
+  "multi-az",
+  "pricing",
+  "read-replicas",
+  "scaling"
+]
