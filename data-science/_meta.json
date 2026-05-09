@@ -1,0 +1,72 @@
+[
+  {
+    "name": "big-data",
+    "label": "Big Data",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "business-analytics",
+    "label": "Business Analytics",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "chatbot",
+    "label": "Chatbot",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "excel",
+    "label": "Excel",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "machine-learning",
+    "label": "Machine Learning",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "meltano",
+    "label": "Meltano",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "probability",
+    "label": "Probability",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "r-lang",
+    "label": "R Language",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "rasa",
+    "label": "Rasa",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "statistics",
+    "label": "Statistics",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
+]

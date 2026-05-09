@@ -1,0 +1,34 @@
+[
+  "basic",
+  "command-line",
+  "architecture",
+  "http-api",
+  {
+    "name": "best-practices",
+    "label": "Best Practices",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "conv-patterns",
+    "label": "Conversation Patterns",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "production",
+    "label": "Production",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "concepts",
+    "label": "Concepts",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
+]
