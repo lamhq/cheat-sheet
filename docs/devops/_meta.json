@@ -40,5 +40,33 @@
     "type": "dir",
     "collapsed": true
   },
-  "bitbucket-pipelines"
+  "bitbucket-pipelines",
+  {
+    "name": "azure-pipeline",
+    "label": "Azure Pipeline",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "cicd",
+    "label": "CI/CD",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "heroku",
+    "label": "Heroku",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "jenkins",
+    "label": "Jenkins",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
 ]
