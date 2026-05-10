@@ -32,7 +32,8 @@ example/
 ├── 1-introduction.md
 ├── 2-getting-started.md
 ├── 3-advanced-topics/
-└── 3-advanced-topics.md
+├── 3-advanced-topics.md
+└── 4-other-topics/
 ```
 
 The `_meta.json` file under `example/` should be:

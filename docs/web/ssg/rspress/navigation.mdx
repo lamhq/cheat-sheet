@@ -10,13 +10,11 @@ Rspress can build navigation and sidebar automatically from:
 Automated navbar/sidebar will only work if there are no `nav` and `sidebar` configurations in the config file `rspress.config.ts`.
 :::
 
-## Basic usage
 
-File placement:
-- `docs/_nav.json` defines top-level navigation
-- `docs/**/_meta.json` defines sidebar structure per directory
+## Navbar config
 
-Example:
+Navbar items are defined in `_nav.json` file at the root of the `docs/` directory:
+
 ```text
 docs
 ├── _nav.json
@@ -28,7 +26,8 @@ docs
         └── plugin-development.md
 ```
 
-If your document supports i18n, place `_nav.json` inside each locale folder:
+If your document supports i18n, `_nav.json` is placed inside each locale directory:
+
 ```text
 docs
 ├── en
@@ -45,11 +44,7 @@ docs
         └── advanced/_meta.json
 ```
 
-## Navbar config
-
-Refer to [nav config](https://rspress.rs/api/config/config-theme#nav) for details.
-
-Each navbar item follows this interface:
+Each navbar item is an object that follows this interface:
 
 ```ts
 interface NavItem {
@@ -78,181 +73,59 @@ Example:
 ]
 ```
 
+Refer to [nav config](https://rspress.rs/api/config/config-theme#nav) for details.
+
 
 ## Sidebar config
 
-A `_meta.json` file contains an array of sidebar items. Each item can be one of the following types:
+Sidebar is displayed on the left with multiple levels.
 
-```ts
-export type FileSideMeta = {
-  type: 'file';
-  name: string;
-  label?: string;
-  tag?: string;
-  overviewHeaders?: number[];
-  context?: string;
-};
+Sidebar items for a level are defined in `_meta.json` in each directory under `docs/`.
 
-export type DirSideMeta = {
-  type: 'dir';
-  name: string;
-  label?: string;
-  collapsible?: boolean;
-  collapsed?: boolean;
-  tag?: string;
-  overviewHeaders?: number[];
-  context?: string;
-};
+The order of items in `_meta.json` matches the order of items in the sidebar.
 
-export type DirSectionHeaderSideMeta = Omit<DirSideMeta, 'type'> &
-  Omit<SectionHeaderMeta, 'type'> & { type: 'dir-section-header' };
+Sidebar items can be:
+- **Link**: Corresponds to a file.
+- **Collapsible menu**: Corresponds to a folder.
+- **Section header**: Acts as a header only.
+- **Divider**: Visually separates items.
+- **Custom link**: Links to any URL, optionally with nested items.
 
-export type DividerSideMeta = {
-  type: 'divider';
-  dashed?: boolean;
-};
+Example directory:
 
-export type SectionHeaderMeta = {
-  type: 'section-header';
-  label: string;
-  tag?: string;
-};
-
-export type CustomLinkMeta =
-  | {
-      // file link
-      type: 'custom-link';
-      label: string;
-      tag?: string;
-      overviewHeaders?: number[];
-      context?: string;
-      link: string;
-    }
-  | {
-      // dir link
-      type: 'custom-link';
-      label: string;
-      tag?: string;
-      overviewHeaders?: number[];
-      context?: string;
-      link?: string;
-      collapsible?: boolean;
-      collapsed?: boolean;
-      items: _CustomLinkMetaWithoutTypeField[];
-    };
-
-export type SideMetaItem =
-  | FileSideMeta
-  | DirSideMeta
-  | DirSectionHeaderSideMeta
-  | DividerSideMeta
-  | SectionHeaderMeta
-  | CustomLinkMeta
-  | string;
+```
+docs
+├── _nav.json
+└── example/
+    ├── _meta.json
+    ├── introduction.mdx
+    ├── advanced-topics/
+    ├── advanced-topics.mdx
+    └── other-topics/
 ```
 
-### string
-
-When item is `string`, it means that the item is a file, and the file name is the string (without extension), for example:
-
-```json title="_meta.json"
+```json title="docs/example/_meta.json"
 [
   "introduction",
-  "advanced"
+  {
+    "name": "advanced-topics",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "label": "Other Topics",
+    "name": "other-topics",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
 ]
 ```
 
-### file
-
-When item is object with `type` of `file`, it create a sidebar item that corresponds to a file, where:
-
-- `name` means the file name, without suffix
-- `label` means the display name of the file in the sidebar
-
-Example:
-
-```json
-{
-  "type": "file",
-  "name": "introduction",
-  "label": "Introduction"
-}
-```
-
-### dir
-
-When item is object with `type` of `dir`, it create a sidebar item that corresponds to a directory, where:
-
-- `name` means the directory name
-- `label` means the display name of the directory in the sidebar
-- `collapsible` means whether the directory can be collapsed
-- `collapsed` means whether the directory is initially collapsed
-
-Example:
-
-```json
-{
-  "type": "dir",
-  "name": "advanced",
-  "label": "Advanced",
-  "collapsible": true,
-  "collapsed": false
-}
-```
-
-### dir-section-header
-
-Acts like a directory header in the UI:
-```json
-{
-  "type": "dir-section-header",
-  "name": "advanced",
-  "label": "Advanced",
-  "collapsible": true,
-  "collapsed": false
-}
-```
-
-### divider
-
-```json
-{
-  "type": "divider",
-  "dashed": true
-}
-```
-
-### section-header
-
-```json
-{
-  "type": "section-header",
-  "label": "Section Header"
-}
-```
-
-### custom-link
-
-```json
-{
-  "type": "custom-link",
-  "link": "/my-link",
-  "label": "My Link"
-}
-```
-
-Nested custom links:
-
-```json
-{
-  "type": "custom-link",
-  "label": "My Link",
-  "items": [
-    { "type": "custom-link", "label": "Sub Link 1", "link": "/sub-link-1" },
-    { "type": "custom-link", "label": "Sub Link 2", "link": "/sub-link-2" }
-  ]
-}
-```
+- `introduction.mdx`: Rendered as a link item in the sidebar. The label is automatically retrieved from the `h1` heading in the file.
+- `advanced-topics/`: Rendered as a collapsible menu item because it is a folder. If a file with the same name exists, the folder takes precedence.
+- `other-topics/`: Rendered as a collapsible menu item with an explicit `label` since no file exists to provide the label automatically.
 
 
 ## Tag icons

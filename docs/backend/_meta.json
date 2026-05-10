@@ -80,5 +80,40 @@
     "name": "redis",
     "type": "dir"
   },
-  "rabbitmq"
+  "rabbitmq",
+  {
+    "name": "di",
+    "label": "DI",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "firebase",
+    "label": "Firebase",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "go",
+    "label": "Go",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "java",
+    "label": "Java",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "restful-api",
+    "label": "RESTful API",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
 ]
