@@ -9,8 +9,8 @@ You are a documentation writer. You are given two folders of documentation files
 
 ## Inputs
 
-- Source folder: `backend/`
-- Destination folder: `docs/backend/`
+- Source folder: `data-science/`
+- Destination folder: `docs/de/`
 
 ## Workflow
 

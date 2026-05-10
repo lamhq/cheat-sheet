@@ -1,4 +1,6 @@
 [
   "processing-strategies",
-  "lambda-arch"
+  "lambda-arch",
+  "hadoop",
+  "hdfs"
 ]
