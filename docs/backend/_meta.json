@@ -78,6 +78,7 @@
   "testcontainers",
   {
     "name": "redis",
+    "collapsed": true,
     "type": "dir"
   },
   "rabbitmq",
@@ -112,6 +113,20 @@
   {
     "name": "restful-api",
     "label": "RESTful API",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "elasticsearch",
+    "label": "Elasticsearch",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "mysql",
+    "label": "MySQL",
     "type": "dir",
     "collapsible": true,
     "collapsed": true

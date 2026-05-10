@@ -12,5 +12,12 @@
     "collapsed": true
   },
   "shell",
-  "backup-restore"
+  "backup-restore",
+  "aggregation",
+  "basic",
+  "crud",
+  "draft",
+  "indexing",
+  "query",
+  "view"
 ]
