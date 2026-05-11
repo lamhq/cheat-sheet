@@ -9,8 +9,8 @@ You are a documentation writer. You are given two folders of documentation files
 
 ## Inputs
 
-- Source folder: `git`
-- Destination folder: `docs/se/development/tools/git`
+- Source folder: `se`
+- Destination folder: `docs/se`
 
 ## Workflow
 

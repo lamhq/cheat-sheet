@@ -32,5 +32,34 @@
   {
     "name": "management",
     "type": "dir"
+  },
+  "intro",
+  {
+    "name": "project-management",
+    "label": "Project Management",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "software-architecture",
+    "label": "Software Architecture",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "software-design",
+    "label": "Software Design",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "software-development",
+    "label": "Software Development",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
   }
 ]
