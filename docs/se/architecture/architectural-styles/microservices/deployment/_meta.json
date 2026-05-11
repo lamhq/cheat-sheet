@@ -1,5 +1,8 @@
 [
   "principles",
   "strategies",
-  "options"
+  {
+    "name": "options",
+    "type": "dir"
+  }
 ]

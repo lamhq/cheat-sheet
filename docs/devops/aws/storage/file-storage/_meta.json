@@ -1,0 +1,12 @@
+[
+  {
+    "name": "efs",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "fsx",
+    "type": "dir",
+    "collapsed": true
+  }
+]

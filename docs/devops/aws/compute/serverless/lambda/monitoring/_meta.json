@@ -1,0 +1,6 @@
+[
+  "logging",
+  "tracing",
+  "metrics",
+  "lambda-insight"
+]

@@ -1,0 +1,6 @@
+[
+  "kinesis-data-stream",
+  "kinesis-data-firehorse",
+  "kinesis-data-analytics",
+  "kinesis-video-stream"
+]

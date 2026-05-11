@@ -1,8 +1,0 @@
-{
-  "metrics": "CloudWatch Metrics",
-  "statistics": "Statistics",
-  "namespace": "Namespace",
-  "dimensions": "Dimensions",
-  "cloudwatch-log": "CloudWatch Logs",
-  "cloudwatch-alarm": "CloudWatch Alarm"
-}

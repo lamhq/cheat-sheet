@@ -5,8 +5,10 @@
   "smart-actions",
   {
     "name": "customization",
+    "label": "Customization",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   "context",
   "code-review",

@@ -4,12 +4,16 @@
   "types",
   {
     "name": "core",
+    "label": "Core",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   {
     "name": "orm",
+    "label": "ORM",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   }
 ]

@@ -1,0 +1,24 @@
+[
+  "invoke",
+  "handler",
+  "lifecycle",
+  "architecture",
+  "runtime",
+  "processor",
+  "extension",
+  "error-handling",
+  "secrets",
+  "concurrency",
+  "layer",
+  "version",
+  "pricing",
+  "deployment",
+  "integration",
+  "limitations",
+  "powertools",
+  {
+    "name": "development",
+    "type": "dir",
+    "collapsed": true
+  }
+]

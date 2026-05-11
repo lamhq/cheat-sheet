@@ -1,0 +1,11 @@
+[
+  "encapsulate-changes",
+  "program-to-interfaces",
+  "composition",
+  "strive-for-loose-coupling",
+  "single-resp",
+  "open-closed",
+  "liskov",
+  "interface-seg",
+  "dependency-inversion"
+]

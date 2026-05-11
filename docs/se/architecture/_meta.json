@@ -1,12 +1,16 @@
 [
   {
     "name": "architectural-styles",
+    "label": "Architectural Styles",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   {
     "name": "architectural-patterns",
+    "label": "Architectural Patterns",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   }
 ]

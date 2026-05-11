@@ -3,8 +3,10 @@
   "getting-started",
   {
     "name": "concepts",
+    "label": "Concepts",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   "cli",
   "architecture",
@@ -12,7 +14,8 @@
     "name": "snippets",
     "label": "Snippets",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   "helm"
 ]

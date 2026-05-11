@@ -1,0 +1,10 @@
+[
+  "use-case-diagram",
+  {
+    "name": "class-diagram",
+    "type": "dir"
+  },
+  "activity-diagram",
+  "sequence-diagram",
+  "component-diagram"
+]

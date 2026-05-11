@@ -1,0 +1,23 @@
+[
+  {
+    "name": "uml",
+    "label": "UML",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "crc-cards",
+    "label": "CRC Cards",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "tools",
+    "label": "Tools",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
+]

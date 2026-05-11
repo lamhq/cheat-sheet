@@ -1,0 +1,15 @@
+[
+  {
+    "name": "queue-types",
+    "type": "dir",
+    "collapsed": true
+  },
+  "settings",
+  "receiving",
+  "quotas",
+  "monitoring",
+  "metadata",
+  "integrations",
+  "tmp-queues",
+  "dead-letter-queue"
+]

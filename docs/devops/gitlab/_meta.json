@@ -1,0 +1,9 @@
+[
+  {
+    "name": "cicd",
+    "label": "CI/CD",
+    "type": "dir",
+    "collapsed": true,
+    "collapsible": true
+  }
+]

@@ -2,7 +2,9 @@
   "design-process",
   {
     "name": "design-patterns",
+    "label": "Design Patterns",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   }
 ]

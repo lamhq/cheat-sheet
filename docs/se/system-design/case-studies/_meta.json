@@ -1,5 +1,8 @@
 [
-  "web-app",
+  {
+    "name": "web-app",
+    "type": "dir"
+  },
   {
     "name": "ride-hailing",
     "type": "dir",

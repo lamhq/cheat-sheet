@@ -2,13 +2,17 @@
   "getting-started",
   {
     "name": "request",
+    "label": "Request",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   {
     "name": "response",
+    "label": "Response",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   "api-doc",
   "router",

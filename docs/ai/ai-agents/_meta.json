@@ -5,6 +5,7 @@
     "name": "mcp",
     "type": "dir",
     "collapsed": true,
-    "label": "MCP"
+    "label": "MCP",
+    "collapsible": true
   }
 ]

@@ -2,8 +2,10 @@
   "overview",
   {
     "name": "write-tests",
+    "label": "Write Tests",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   "organize-tests",
   "generate-tests",

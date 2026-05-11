@@ -1,0 +1,26 @@
+[
+  "overview",
+  "distributed-scrum",
+  "metrics",
+  {
+    "name": "roles",
+    "label": "Roles",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "artifacts",
+    "label": "Artifacts",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "ceremonies",
+    "label": "Ceremonies",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
+]

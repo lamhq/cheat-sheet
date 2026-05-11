@@ -1,0 +1,13 @@
+[
+  "options",
+  {
+    "name": "providers",
+    "label": "Providers",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  "env-variables",
+  "pages",
+  "callbacks"
+]

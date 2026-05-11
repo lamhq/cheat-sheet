@@ -1,0 +1,16 @@
+[
+  {
+    "name": "course",
+    "label": "Course",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "design-pattern",
+    "label": "Design Pattern",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
+]

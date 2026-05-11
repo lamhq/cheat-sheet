@@ -1,0 +1,41 @@
+[
+  "infrastructure",
+  "management",
+  {
+    "name": "networking",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "compute",
+    "type": "dir",
+    "collapsed": true
+  },
+  "serverless",
+  {
+    "name": "storage",
+    "type": "dir",
+    "collapsed": true
+  },
+  "database",
+  "develop",
+  "deployment",
+  "monitoring",
+  "security",
+  "analytics",
+  "ai",
+  {
+    "name": "core-infr",
+    "label": "Core Infrastructure",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "cloudrun",
+    "label": "Cloud Run",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
+]

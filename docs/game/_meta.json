@@ -2,11 +2,15 @@
   {
     "name": "index",
     "label": "Game Development",
-    "type": "file"
+    "type": "file",
+    "collapsible": true,
+    "collapsed": true
   },
   {
     "name": "boardgameio",
+    "label": "Board Game IO",
     "collapsed": true,
-    "type": "dir"
+    "type": "dir",
+    "collapsible": true
   }
 ]

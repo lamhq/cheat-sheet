@@ -7,8 +7,10 @@
   },
   {
     "name": "typescript",
+    "label": "TypeScript",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   {
     "name": "react-router",

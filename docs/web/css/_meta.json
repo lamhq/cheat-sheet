@@ -6,7 +6,9 @@
   "css-modules",
   {
     "name": "tailwind-css",
+    "label": "Tailwind CSS",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   }
 ]

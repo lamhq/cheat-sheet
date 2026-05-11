@@ -5,7 +5,10 @@
     "collapsed": true,
     "label": "Design"
   },
-  "splitting-monolith",
+  {
+    "name": "splitting-monolith",
+    "type": "dir"
+  },
   {
     "name": "communication",
     "type": "dir",

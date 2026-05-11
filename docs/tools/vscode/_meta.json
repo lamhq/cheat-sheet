@@ -7,8 +7,10 @@
   "debug",
   {
     "name": "dev-containers",
+    "label": "Dev Containers",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   "nodejs"
 ]

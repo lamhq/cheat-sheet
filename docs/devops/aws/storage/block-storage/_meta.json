@@ -1,0 +1,8 @@
+[
+  "instance-store",
+  {
+    "name": "ebs",
+    "type": "dir",
+    "collapsed": true
+  }
+]

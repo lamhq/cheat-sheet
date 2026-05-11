@@ -8,31 +8,36 @@
     "name": "vscode",
     "type": "dir",
     "collapsed": true,
-    "label": "Visual Studio Code"
+    "label": "Visual Studio Code",
+    "collapsible": true
   },
   {
     "name": "macos",
     "type": "dir",
     "collapsed": true,
-    "label": "macOS"
+    "label": "macOS",
+    "collapsible": true
   },
   {
     "name": "windows",
     "type": "dir",
     "collapsed": true,
-    "label": "Windows"
+    "label": "Windows",
+    "collapsible": true
   },
   {
     "name": "android",
     "type": "dir",
     "collapsed": true,
-    "label": "Android"
+    "label": "Android",
+    "collapsible": true
   },
   {
     "name": "ngrok",
     "type": "dir",
     "collapsed": true,
-    "label": "ngrok"
+    "label": "ngrok",
+    "collapsible": true
   },
   "postman",
   "udemy",

@@ -1,0 +1,9 @@
+[
+  "dns",
+  "records",
+  "hosted-zones",
+  "health-checks",
+  "routing-policices",
+  "pricing",
+  "resolver"
+]

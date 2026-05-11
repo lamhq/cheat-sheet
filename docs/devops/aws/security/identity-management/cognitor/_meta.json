@@ -1,0 +1,12 @@
+[
+  {
+    "name": "user-pool",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "identity-pool",
+    "type": "dir",
+    "collapsed": true
+  }
+]

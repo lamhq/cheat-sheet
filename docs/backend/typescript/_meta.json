@@ -4,7 +4,8 @@
     "name": "syntax",
     "type": "dir",
     "collapsed": true,
-    "label": "Syntax"
+    "label": "Syntax",
+    "collapsible": true
   },
   "style-guide",
   "module-resolution",
@@ -13,6 +14,8 @@
   {
     "name": "compilers",
     "type": "dir",
-    "label": "Compilers"
+    "label": "Compilers",
+    "collapsible": true,
+    "collapsed": true
   }
 ]

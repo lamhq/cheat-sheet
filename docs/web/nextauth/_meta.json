@@ -1,0 +1,20 @@
+[
+  "intro",
+  "getting-started",
+  "client-api",
+  "typescript",
+  {
+    "name": "configuration",
+    "label": "Configuration",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "guides",
+    "label": "Guides",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "name": "iam",
+    "type": "dir",
+    "collapsed": true
+  },
+  "sts",
+  {
+    "name": "cognitor",
+    "type": "dir",
+    "collapsed": true
+  },
+  "sso"
+]

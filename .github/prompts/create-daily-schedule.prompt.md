@@ -4,9 +4,9 @@ model: Raptor mini (Preview) (copilot)
 description: Create a daily schedule
 ---
 
-Return a todo list for a provided day (today if not specified).
+You job is to create a daily schedule for a provided day (today if not specified). The schedule should follow the below format and contain todo items, distributed based on rules.
 
-The todo list must follow this template:
+## Daily Schedule Template
 
 ```md
 # {Day of week: Mon, Sat} {d/M: 19/4}
@@ -26,25 +26,30 @@ The todo list must follow this template:
 - [ ]  ...
 ```
 
-*Morning* starts from 7:00 to 12:30, *Night* starts from 17:30 to 23:00, and *Afternoon* is the time in between.
+Where:
+- *Morning* starts from 7:00 to 12:30
+- *Afternoon* is from 12:30 to 17:30
+- *Night* starts from 17:30 to 23:00
+
+## Todo Items
 
 Todo items must be in the following order, scheduled based on the following rules:
-- `buy breakfast` is on everyday at 8:00
-- `practicing English speaking` is from Mon to Fri, at 08:15
-- `working` is from Mon to Fri at 8:30
-- `have lunch` is on everyday at 11:00 for 1 hour
-- `cooking` is on everyday, for 20 minutes
-- `take a nap` is on everyday at 12:30 for 40 minutes
-- `neck stretching` is on everyday
-- `working`
-- `eat fruit & protein` is on every day, at 14:00
-- `core training` is on every day for 10 minutes, at 14:50
-- `gym` is from Mon to Thu, start from 15:00 for 1 hour
-- `running` is on Sat, Sun, at 16:00
-- `take a shower` is on everyday at 17:45 for 15 minutes
-- `have dinner` is on everyday at 18:00 for 30 minutes
-- `massage eyes` is on everyday
-- `relaxing` is on Sat, Sun
-- `learning` is on everyday, at night, start from 19:00, for 1 hour 30 minutes
-- `go to bed` is at 22:30
-- `practice English communication` is on Tue at 19:00 for 1 hour, and on Thu at 19:00 for 2 hour
+- `buy breakfast`, every day, 8:00
+- `English pronunciation`, Mon-Fri, 08:15
+- `coding`, Mon-Fri, 8:30
+- `have lunch`, every day, 11:00, 40 minutes
+- `cooking`, every day, after `have lunch`, 20 minutes
+- `take a nap`, every day, 12:30, 40 minutes
+- `eat fruit & protein`, every day, 14:00
+- `core & neck training`, every day, 14:50, 10 minutes
+- `gym`, Mon-Thu, 15:00, 1 hour
+- `running`, Sat, Sun, 16:00
+- `take a shower`, every day, 17:45, 15 minutes
+- `have dinner`, every day, 18:00, 30 minutes
+- `massage eyes`, every day, 21:30
+- `relaxing`, Sun, 20:00, 1 hour
+- `technical learning`, Mon-Wed, Fri-Sat, 19:40, 1 hour 30 minutes
+- `go to bed`, every day, 22:30
+- `English speaking`, Thu, 19:00, 2 hours
+- `English reading`, Mon, Wed, Fri, 19:00, 30 minutes
+- `English writing`, Tue, Sat, 19:00, 30 minutes

@@ -1,0 +1,9 @@
+[
+  {
+    "name": "books",
+    "label": "Books",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
+]

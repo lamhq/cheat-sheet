@@ -1,8 +1,0 @@
-{
-  "least-privilege": "Principle of Least Privilege",
-  "secret-manager": "AWS Secrets Manager",
-  "parameter-store": "Parameter Store",
-  "kms": "AWS KMS",
-  "cloud-hsm": "AWS CloudHSM",
-  "cer-manager": "AWS Certificate Manager"
-}

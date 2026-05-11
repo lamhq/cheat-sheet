@@ -3,13 +3,15 @@
     "name": "types",
     "type": "dir",
     "collapsed": true,
-    "label": "Types"
+    "label": "Types",
+    "collapsible": true
   },
   {
     "name": "syntax",
     "type": "dir",
     "collapsed": true,
-    "label": "Syntax"
+    "label": "Syntax",
+    "collapsible": true
   },
   {
     "name": "fetch",

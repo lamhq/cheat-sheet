@@ -12,16 +12,16 @@
     "link": "/web"
   },
   {
-    "text": "DevOps",
-    "link": "/devops"
-  },
-  {
     "text": "Software Engineering",
     "link": "/se"
   },
   {
     "text": "Others",
     "items": [
+      {
+        "text": "DevOps",
+        "link": "/devops"
+      },
       {
         "text": "Tools",
         "link": "/tools"
@@ -33,6 +33,10 @@
       {
         "text": "Game",
         "link": "/game"
+      },
+      {
+        "text": "Finance",
+        "link": "/finance"
       }
     ]
   }

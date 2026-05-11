@@ -9,5 +9,15 @@
     "type": "dir",
     "collapsed": true,
     "label": "Tools"
-  }
+  },
+  "language",
+  {
+    "name": "documentation",
+    "label": "Documentation",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  "vcs",
+  "ide"
 ]

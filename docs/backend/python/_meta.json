@@ -22,23 +22,31 @@
   "debugging",
   {
     "name": "validation",
+    "label": "Validation",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   {
     "name": "testing",
+    "label": "Testing",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   {
     "name": "database",
+    "label": "Database",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   {
     "name": "api",
+    "label": "API",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   {
     "name": "techniques",

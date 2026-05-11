@@ -1,0 +1,11 @@
+[
+  "aws-shield",
+  {
+    "name": "aws-waf",
+    "type": "dir",
+    "collapsed": true
+  },
+  "network-firewall",
+  "firewall-manager",
+  "aws-security-hub"
+]
