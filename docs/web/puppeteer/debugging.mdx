@@ -23,8 +23,7 @@ await page.evaluate(() => console.log(`url is ${location.href}`));
 
 ### Use the debugger in the browser
 
-1. Set [`devtools`](../api/puppeteer.browserlaunchargumentoptions) to
-   `true` when launching Puppeteer:
+1. Set `devtools` to `true` when launching Puppeteer:
 
    ```ts
    const browser = await puppeteer.launch({devtools: true});

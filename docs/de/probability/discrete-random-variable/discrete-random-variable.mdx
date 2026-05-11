@@ -13,22 +13,22 @@ Example: the sum of two dice when rolling two fair dice.
 
 The probability that the random variable $X$ takes on a specific value $x$ is called $P(X=x)$.
 
-$$
+```math
 P(X=2) = 1/36 \\
 P(X=3) = 2/36 \\
-$$
+```
 
-$$
+```math
 P(X=x) = 0 \qquad x\text{ not in \{2, 3, 4, ..., 12\}}
-$$
+```
 
 ## Cumulative probability
 
 Cumulative probability is the probabiliy of the random variable X takes on a specific value xx for numbers less than or equal to $x$.
 
-$$
+```math
 F(x) = P(X \leq x)
-$$
+```
 
 | X  | P(X=x)      | F(x)        |
 |----|-------------|-------------|
@@ -49,20 +49,20 @@ $$
 
 Mean (or Expected Value) of a discrete random variable $X$ is the probability-weighted sum of all possible values.
 
-$$
+```math
 \mu = E(X) = x_1p(x_1) + x_2p(x_2) + ... + x_kp(x_k)
-$$
+```
 
 ### Example 1: rolling dice
 
 if you roll a fair die many many times, then the average of the numbers will get close to the mean $\mu$, which is $3.5$.
 
-$$
+```math
 \mu = E(X) = 1 \times \frac{1}{6}
   + 2 \times \frac{1}{6}
   + ... + 6 \times \frac{1}{6}
   = 3.5
-$$
+```
 
 ### Example 2: Car insurrance
 
@@ -81,25 +81,25 @@ Should I buy the **extra insurrance**?
 
 Without extra insurrance, i pay:
 
-$$
+```math
 E(X_1) = 800 \times p + 0 \times (1-p) = 800p
-$$
+```
 
 With extra insurrance:
 
-$$
+```math
 E(X_2) + 84 = 100 \times p + 0 \times (1-p) + 84 = 100p + 84
-$$
+```
 
 I should buy the extra insurrance if the cost of buying extra insurrance is smaller:
 
-$$
+```math
 \begin{align*}
 &E(X_2) + 84 < E(X_1) \\
 &\Rightarrow 100p + 84 < 800p \\
 &\Rightarrow p > 0.12
 \end{align*}
-$$
+```
 
 So, if i think my probability accident is larger than $12\%$, then i should buy the extra insurrance.
 
@@ -119,13 +119,13 @@ Let say you bet on a color red that have $18$ numbers, you get $1$ extra chip if
 
 Here we have a random variable $B$, for your bet. And there are two possible value: You win one $1$. Or you lose one $-1$.
 
-$$
+```math
 \begin{align*}
 P(B=1) &= 18/37 \\
 P(B=-1) &= 19/37 \\
 E(B) &= 1 \times \frac{18}{37} + (-1) \times \frac{19}{37} &= \frac{-1}{37} = -0.027027
 \end{align*}
-$$
+```
 
 So, on average, you will lose money with this bet, about $0.027$ chips. In the language of gambling, what this means is the so called house advantage. On average, the casino wins money.
 
@@ -134,13 +134,13 @@ So, on average, you will lose money with this bet, about $0.027$ chips. In the l
 
 Variance of a discrete random variable is the probability-weighted sum of all possible squared deviations from the mean.
 
-$$
+```math
 \begin{align*}
 \sigma^2 &= Var(X) \\
   &= E((X - \mu)^2) \\
   &= (x_1-\mu)^2p(x_1) + (x_2-\mu)^2p(x_2) +... + (x_k-\mu)^2p(x_k)
 \end{align*}
-$$
+```
 
 Standard Deviation is the square root of the variance $\sigma$.
 
@@ -149,25 +149,25 @@ Standard Deviation is the square root of the variance $\sigma$.
 
 Bernoulli distribution is the discrete probability distribution of a random variable $X$ which takes the value $1$ (success) with probability $p$ and the value $0$ (fail) with probability $q=1-p$.
 
-$$
+```math
 P_X(x) = \begin{cases}
   p &\text{for }x = 1 \\
   1 - p &\text{for }x = 0 \\
   0 &\text{otherwise}
 \end{cases}
-$$
+```
 
-$$
+```math
 E(X) = μ = 1×p + 0×(1-p) = p
-$$
+```
 
-$$
+```math
 \begin{align*}
 var(X)  &= σ^2 \\
         &= (1-p)^2 × p + (0-p)^2 × (1-p) \\
         &= p(1-p)
 \end{align*}
-$$
+```
 
 
 ## Binomial Distribution
@@ -176,51 +176,51 @@ When you repeat a Bernoulli random variable over and over again, this is now cal
 
 We have a random variable $X$ (number of success) that is the whole sum of all  Bernoulli random variables.
 
-$$
+```math
 X = B_1 + B_2 + ... + B_3
-$$
+```
 
 We say $X$ has **binomial distribution**. It depends on two parameters:
 
 - `n`: how many repetitions of the trial do I have?
 - `p`: the probability of the success.
 
-$$
+```math
 B(n, p)
-$$
+```
 
-$$
+```math
 \begin{align*}
 E(X)  &= E(B_1 + B_2 + ... + B_n) \\
       &= p + p + ... + p \\
       &= np
 \end{align*}
-$$
+```
 
-$$
+```math
 \begin{align*}
 var(X)  &= var(B_1 + B_2 + ... + B_n) \\
         &= p(1-p) + p(1-p) + ... + p(1-p) \\
         &= np(1-p)
 \end{align*}
-$$
+```
 
 The probability for $X$ to have the value $k$ is calculated as follow:
 
-$$
+```math
 P_n(k) = C_n^kp^kq^{n-k}
 \qquad
 k = 0, 1, 2, ..., n
-$$
+```
 
 **Công thức excel**:
 
-$$
+```math
 P(X=k) = \text{BINOM.DIST}(k, n, p, \text{FALSE})
-$$
-$$
+```
+```math
 f(k) = P(X \le k) = \text{BINOM.DIST}(k, n, p, \text{TRUE})
-$$
+```
 
 **Python**:
 
@@ -243,9 +243,9 @@ sum(stats.binom.pmf(k, n, p))
 
 Let's say you flip the coin five times, what's the probability that we get two heads?
 
-$$
+```math
 P(X=2) = \text{BINOM.DIST}(2, 5, 0.5, \text{FALSE}) = 0.3125
-$$
+```
 
 
 ## Application: Airline Overbooking
@@ -272,7 +272,7 @@ We have the inputs:
 
 Let's call $X$ is the number of people show up, $X$ is a random variable that has binomial distribution.
 
-$$
+```math
 \begin{align*}
 E(X) = np \\
 
@@ -283,7 +283,7 @@ E(\text{revenue}) &= \text{price} \times E(\text{show up}) - \text{cost} \times 
   &= \text{price} \times E(X) - \text{cost} \times \text{max}(0, E(X) - \text{seats}) \\
   &= price \times n \times p - \text{cost} \times \text{max}(0, (n \times p)  - \text{seats})
 \end{align*}
-$$
+```
 
 Let's say we sell $200$ tickets, the average revenue is $\$55,800$.
 

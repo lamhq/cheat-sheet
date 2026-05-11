@@ -48,13 +48,6 @@
     "collapsed": true
   },
   {
-    "name": "r-lang",
-    "label": "R Language",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  },
-  {
     "name": "rasa",
     "label": "Rasa",
     "type": "dir",
