@@ -13,7 +13,10 @@
   "language",
   {
     "name": "documentation",
-    "type": "dir"
+    "label": "Documentation",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
   },
   "vcs",
   "ide"

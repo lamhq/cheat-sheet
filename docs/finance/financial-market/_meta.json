@@ -1,10 +1,16 @@
 [
   {
     "name": "finance-tools",
-    "type": "dir"
+    "label": "Finance Tools",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
   },
   {
     "name": "financial-assets",
-    "type": "dir"
+    "label": "Financial Assets",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
   }
 ]

@@ -6,7 +6,10 @@
   "factory-method",
   {
     "name": "abstract-factory",
-    "type": "dir"
+    "label": "Abstract Factory",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
   },
   "builder",
   "cor"

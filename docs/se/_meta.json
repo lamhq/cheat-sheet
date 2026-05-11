@@ -2,36 +2,51 @@
   {
     "name": "index",
     "label": "Software Engineering",
-    "type": "file"
+    "type": "file",
+    "collapsible": true,
+    "collapsed": true
   },
   {
     "name": "system-design",
+    "label": "System Design",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   {
     "name": "architecture",
+    "label": "Architecture",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   {
     "name": "documentation",
+    "label": "Documentation",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   {
     "name": "development",
     "type": "dir",
     "collapsed": true,
-    "label": "Software Development"
+    "label": "Software Development",
+    "collapsible": true
   },
   {
     "name": "modeling",
-    "type": "dir"
+    "label": "Modeling",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
   },
   {
     "name": "management",
-    "type": "dir"
+    "label": "Management",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
   },
   "intro",
   {

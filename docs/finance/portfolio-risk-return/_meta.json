@@ -3,6 +3,9 @@
   "portfolio",
   {
     "name": "exercises",
-    "type": "dir"
+    "label": "Exercises",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
   }
 ]

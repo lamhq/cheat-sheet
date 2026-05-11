@@ -15,7 +15,9 @@
   "interpreter",
   {
     "name": "pdf",
+    "label": "PDF",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   }
 ]

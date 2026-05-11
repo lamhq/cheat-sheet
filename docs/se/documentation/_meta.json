@@ -7,13 +7,15 @@
     "type": "dir",
     "name": "design",
     "label": "Design",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   {
     "type": "dir",
     "name": "implementation",
     "label": "Implementation",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   "test-suite"
 ]

@@ -1,10 +1,16 @@
 [
   {
     "name": "sharding",
-    "type": "dir"
+    "label": "Sharding",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
   },
   {
     "name": "consistent-hashing",
-    "type": "dir"
+    "label": "Consistent Hashing",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
   }
 ]

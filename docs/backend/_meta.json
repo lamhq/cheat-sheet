@@ -6,80 +6,107 @@
   },
   {
     "name": "markdown",
+    "label": "Markdown",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
   "yaml",
   {
     "name": "javascript",
+    "label": "JavaScript",
     "type": "dir",
-    "collapsed": true,
-    "label": "Javascript"
+    "collapsible": true,
+    "collapsed": true
   },
   {
     "name": "typescript",
+    "label": "TypeScript",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
   {
     "name": "nodejs",
+    "label": "Node.js",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
   {
     "name": "nestjs",
+    "label": "NestJS",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
   {
     "name": "rxjs",
+    "label": "RxJS",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
   {
     "name": "prisma",
+    "label": "Prisma",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
   {
     "name": "deno",
+    "label": "Deno",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
   {
     "name": "python",
+    "label": "Python",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
   "api-design",
   "rest",
   {
     "name": "graphql",
+    "label": "GraphQL",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
   "grpc",
   {
     "name": "postgresql",
+    "label": "PostgreSQL",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
   {
     "name": "mongodb",
+    "label": "MongoDB",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
   {
     "name": "kafka",
+    "label": "Kafka",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
   "keycloak",
   "testcontainers",
   {
     "name": "redis",
-    "collapsed": true,
-    "type": "dir"
+    "label": "Redis",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
   },
   "rabbitmq",
   {

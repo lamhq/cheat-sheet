@@ -1,43 +1,59 @@
 [
   {
     "name": "cloud-computing",
+    "label": "Cloud Computing",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
   {
     "name": "aws",
+    "label": "AWS",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
   {
     "name": "gcp",
+    "label": "GCP",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
   "vercel",
   {
     "name": "supabase",
+    "label": "Supabase",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
   {
     "name": "linux",
+    "label": "Linux",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
   {
     "name": "docker",
+    "label": "Docker",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
   {
     "name": "terraform",
+    "label": "Terraform",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
   {
     "name": "serverless",
+    "label": "Serverless",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
   "bitbucket-pipelines",

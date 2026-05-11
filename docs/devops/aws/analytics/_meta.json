@@ -1,25 +1,33 @@
 [
   {
     "name": "lake-formation",
+    "label": "Lake Formation",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   "redshift",
   "emr",
   {
     "name": "glue",
+    "label": "Glue",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   {
     "name": "data-pipeline",
+    "label": "Data Pipeline",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   {
     "name": "kinesis",
+    "label": "Kinesis",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   "msk",
   "quicksight",

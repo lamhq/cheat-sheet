@@ -4,7 +4,9 @@
   "api-gateway",
   {
     "name": "python",
+    "label": "Python",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   }
 ]

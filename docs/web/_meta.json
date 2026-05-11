@@ -2,50 +2,65 @@
   {
     "name": "index",
     "type": "file",
-    "label": "Web Development"
+    "label": "Web Development",
+    "collapsible": true,
+    "collapsed": true
   },
   {
     "name": "css",
     "label": "CSS",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   {
     "name": "react",
+    "label": "React",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   {
     "name": "ssg",
+    "label": "SSG",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   {
     "name": "pwa",
+    "label": "PWA",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   {
     "name": "build-tools",
     "type": "dir",
     "label": "Build Tools",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   {
     "name": "storybook",
+    "label": "Storybook",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   {
     "name": "playwright",
+    "label": "Playwright",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   {
     "name": "security",
     "type": "dir",
     "collapsed": true,
-    "label": "Security"
+    "label": "Security",
+    "collapsible": true
   },
   {
     "name": "patterns",

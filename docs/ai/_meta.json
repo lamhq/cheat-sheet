@@ -2,21 +2,29 @@
   {
     "name": "index",
     "label": "AI",
-    "type": "file"
+    "type": "file",
+    "collapsible": true,
+    "collapsed": true
   },
   {
     "name": "ai-agents",
+    "label": "AI Agents",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
   {
     "name": "github-copilot",
+    "label": "GitHub Copilot",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
   {
     "name": "using-ai",
+    "label": "Using AI",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
   "langchain"

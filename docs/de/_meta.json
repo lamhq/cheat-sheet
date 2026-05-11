@@ -1,10 +1,10 @@
 [
   { "name": "index", "label": "Data Engineering", "type": "file" },
-  { "name": "big-data", "type": "dir", "collapsed": true },
-  { "name": "jupyter-notebook", "type": "dir" },
-  { "name": "numpy", "type": "dir" },
-  { "name": "pandas", "type": "dir" },
-  { "name": "pyspark", "type": "dir" },
+  { "name": "big-data", "label": "Big Data", "type": "dir", "collapsed": true, "collapsible": true },
+  { "name": "jupyter-notebook", "label": "Jupyter Notebook", "type": "dir", "collapsible": true, "collapsed": true },
+  { "name": "numpy", "label": "NumPy", "type": "dir", "collapsible": true, "collapsed": true },
+  { "name": "pandas", "label": "Pandas", "type": "dir", "collapsible": true, "collapsed": true },
+  { "name": "pyspark", "label": "PySpark", "type": "dir", "collapsible": true, "collapsed": true },
   {
     "name": "business-analytics",
     "label": "Business Analytics",

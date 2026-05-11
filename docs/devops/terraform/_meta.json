@@ -2,18 +2,24 @@
   "getting-started",
   {
     "name": "language",
+    "label": "Language",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   "cli",
   {
     "name": "cloud",
+    "label": "Cloud",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   {
     "name": "aws",
+    "label": "AWS",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   }
 ]

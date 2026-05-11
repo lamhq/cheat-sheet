@@ -1,7 +1,10 @@
 [
   {
     "name": "rest-api",
-    "type": "dir"
+    "label": "REST API",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
   },
   "pagination"
 ]

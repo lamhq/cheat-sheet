@@ -1,11 +1,17 @@
 [
   {
     "name": "api",
-    "type": "dir"
+    "label": "API",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
   },
   "database",
   {
     "name": "ood",
-    "type": "dir"
+    "label": "OOD",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
   }
 ]

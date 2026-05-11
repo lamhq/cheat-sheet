@@ -25,14 +25,18 @@
   },
   {
     "name": "graphql",
+    "label": "GraphQL",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   "websocket",
   {
     "name": "microservices",
+    "label": "Microservices",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   "openapi",
   {

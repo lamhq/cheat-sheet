@@ -3,12 +3,16 @@
   "replicaset",
   {
     "name": "sharding",
+    "label": "Sharding",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
   {
     "name": "data-modeling",
+    "label": "Data Modeling",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
   "shell",

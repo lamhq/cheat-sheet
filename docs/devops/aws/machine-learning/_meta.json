@@ -9,7 +9,9 @@
   "fraud-detector",
   {
     "name": "sage-maker",
+    "label": "SageMaker",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   }
 ]

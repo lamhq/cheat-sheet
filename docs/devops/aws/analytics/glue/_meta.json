@@ -7,8 +7,10 @@
   "triggers",
   {
     "name": "monitoring",
+    "label": "Monitoring",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   "bookmarks",
   "int-sessions",

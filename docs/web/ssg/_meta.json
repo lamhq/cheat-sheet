@@ -1,4 +1,4 @@
 [
-  { "name": "rspress", "type": "dir" },
-  { "name": "nextra", "type": "dir" }
+  { "name": "rspress", "label": "Rspress", "type": "dir", "collapsible": true, "collapsed": true },
+  { "name": "nextra", "label": "Nextra", "type": "dir", "collapsible": true, "collapsed": true }
 ]
