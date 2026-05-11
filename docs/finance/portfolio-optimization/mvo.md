@@ -33,17 +33,17 @@ Steps to find the **mean-variance efficient portfolio**:
     - $\sigma_{12}$: correlation between two assets
     - $E(r_f)$: return of risk-free asset
 1. Construct the formula to calculate **sharpe ratio** from $w_1$, $w_2$
-    ```latex
+    ```math
     S = \frac{E(r_s) - E(r_f)}{\sigma_s}
     ```
     
     with:
     
-    ```latex
+    ```math
     E(r_s) = w_1E_1 + w_2E_2
     ```
     
-    ```latex
+    ```math
     \sigma_s = \sqrt{w_1^2\sigma_1^2 + w_2^2\sigma_2^2 + 2w_1w_2\sigma_1\sigma_2\sigma_{12} }
     ```
 1. Use Excel Solver to find the **weight** that have highest **sharpe ratio**
@@ -67,22 +67,22 @@ Given the following inputs:
 Steps to find the **mean-variance efficient portfolio**:
 
 1. Construct the formula to calculate Expected Return of the result portfolio from weights:
-    ```latex
+    ```math
     R_p = w \times R
     ```
 1. Find the covariance matrix
-    ```latex
+    ```math
     cov = \rho \cdot (R \times R^T)
     ```
     - $\cdot$ is scalar multiplication between two matrices
     - $\times$ is matrix multiplication operator
     - $R^T$: transpose matrix of matrix $R$
 1. Construct the formula to calculate Standard Deviation of the result portfolio from weights:
-    ```latex
+    ```math
     \sigma_p = \sqrt{w \times cov \times w^T}
     ```
 1. Construct the formula to calculate Sharpe Ratio:
-    ```latex
+    ```math
     S = \frac{R_p-R_f}{\sigma_p}
     ```
 1. Use Excel solver to find the weight matrix that has highest Sharpe Ratio.
@@ -101,12 +101,12 @@ The Capital Allocation Line is a line drawn in the mean variance, in the expecte
 
 The expected return that we would get from combining the risky portfolio with the risk-free asset:
 
-```latex
+```math
 \begin{align*}
 E(r_p) &= w \times E(r_s) + (1 - w) \times r_f \\
   &= r_f + w \times E(r_s - r_f)
 \end{align*}
-```latex
+```
 
 - $E(r_p)$: epxected return of the combined portfolio
 - $r_s$: epxected return of the risky portfolio
@@ -115,27 +115,27 @@ E(r_p) &= w \times E(r_s) + (1 - w) \times r_f \\
 
 The portfolio's variance:
 
-```latex
+```math
 \begin{align*}
 \sigma_p^2 &= w^2\sigma_s^2 + (1-w)\sigma_f^2 +2w(1-w_1)\sigma_{fs} \\
   &= w^2\sigma_s^2
 \end{align*}
-```latex
+```
 
 Then we have:
 
-```latex
+```math
 w = \frac{\sigma_p}{\sigma_s}
-```latex
+```
 
 Replace $w$ in expected return formula, we have the expression of **Capital Allocation Line**:
 
-```latex
+```math
 \begin{align*}
 E(r_p) &= r_f + \frac{\sigma_p}{\sigma_s} \times E(r_s - r_f) \\
   &= r_f + \frac{E(r_s) - E(r_f)}{\sigma_s}\sigma_p
 \end{align*}
-```latex
+```
 
 The slope of the line delivers a special name called the **Sharpe ratio**. It tells you how much additional reward you get per unit of risk for holding in the risky portfolio. So it's the return premium that you get for investing in the risky portfolio per unit of risk. It's also sometimes called the reward to volatility ratio.
 
@@ -158,21 +158,21 @@ See more [here](https://analystprep.com/cfa-level-1-exam/portfolio-management/op
 
 The problem we're solving is trying to maximize expected utility by choosing the weight of the risky portfolio. The utility function is given by:
 
-```latex
+```math
 U = E(r_p) - \frac{1}{2}A\sigma_p^2
-```latex
+```
 
 Replace $E(r)$ and $\sigma$ from Capital Allocation Line formula, we have:
 
-```latex
+```math
 U = r_f + w \times E(r_{mve} - r_f) - \frac{1}{2}Aw^2\sigma_{mve}^2
-```latex
+```
 
 The optimal capital allocation for an investor with a risk aversion coefficient of $A$ is given by:
 
-```latex
+```math
 w = \frac{E(r_{mve}) - r_f}{A\sigma_{mve}^2}
-```latex
+```
 
 Where:
 

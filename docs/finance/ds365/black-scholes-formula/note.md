@@ -55,17 +55,17 @@ Upon expiration of the option, investor will compare the strike price and market
 
 The Black Scholes formula calculates the value of a call by taking the difference between **the amount you get if you exercise the option** minus **the amount you have to pay if you exercise the option**.
 
-```latex
+```math
 C(S, t) = N(d_1)S - N(d_2)Ke^{-rt}
-```latex
+```
 
-```latex
+```math
 d_1 = \frac{1} {s\sqrt{t}} [ln(\frac{S}{K}) + (r + \frac{s^2}{2})t]
-```latex
+```
 
-```latex
+```math
 d_2 = d_1 - s\sqrt{t}
-```latex
+```
 
 - $d_1$: how much can we expect if the option is exercised
 - $d_2$: the amount we pay when exercising the option

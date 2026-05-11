@@ -23,9 +23,9 @@ One straight line help us describe the rapport between all the data points we se
 
 Simple Regression has one beta coefficient and explanatory variable:
 
-```latex
+```math
 y = \alpha + \beta x  + \varepsilon
-```latex
+```
 
 - $\beta$: slope
 - $\alpha$: y-intercept
@@ -49,9 +49,9 @@ Some regressions have higher explanatory power than others.
 
 **R square** is a tool that allow us to distinguish regressions with good, reasonable and poor explanatory power.
 
-```latex
+```math
 R^2 = 1 - \frac{SSR}{TSS}
-```latex
+```
 
 - $R^2$: coefficient of determination
 - $SSR$: sum of squares of residuals. The distance from regression line to each data point. $\sum{(x - \hat{x})^2}$
@@ -66,9 +66,9 @@ Multivariate Regression consider more explanatory variables. A regression consid
 
 Multivariate Regression has multiple beta coefficients and explanatory variables:
 
-```latex
+```math
 y = \alpha + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \varepsilon
-```latex
+```
 
 ## p-values
 

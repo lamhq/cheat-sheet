@@ -6,9 +6,9 @@
 
 The return on an asset is calculated by accounting for **all cash flows over the holding period**, such as the ending value and any dividends received, **divided by the beginning value**. 
 
-```latex
+```math
 r = \frac{\text{ending value} + \text{cashflows}}{\text{begin value}} - 1
-```latex
+```
 
 Example:
 
@@ -16,22 +16,22 @@ Example:
 - Suppose your investment horizon is one year.
 - If the price per share at year’s end $110 and the cash dividends over the year are $5, what is your holding period return?
 
-```latex
+```math
 r = \frac{110 + 5}{100} - 1 = 0.15
-```latex
+```
 
 
 ### Average return over periods
 
 The **geometric mean** is useful for measuring performance of an asset over a past sample period, such as annual returns over `t` periods.
 
-```latex
+```math
 (1+r)^t = (1 + r_1) \times ... \times (1 + r_t)
-```latex
+```
 
-```latex
+```math
 r = \sqrt[n]{(1 + r_1)...(1 + r_t)} - 1
-```latex
+```
 
 Example:
 
@@ -47,9 +47,9 @@ What was your average annual return over the five-year periods?
 
 Annual return over this five-year period:
 
-```latex
+```math
 r = \sqrt[5]{0.8811 \times 0.7790 \times 1.2869 \times 1.1088 \times 1.0491} - 1 = 0.005438504
-```latex
+```
 
 
 ### Expected return
@@ -63,7 +63,7 @@ If we had a probability distribution of possible outcomes, the expected return i
 | Poor                 | 0.25        | -0.0675 |
 | Crash                | 0.05        | -0.52   |
 
-```latex
+```math
 \begin{align*}
 E(r) &= (0.25 \times 0.31) \\
  & + (0.45 \times 0.14) \\
@@ -71,7 +71,7 @@ E(r) &= (0.25 \times 0.31) \\
  & + (0.05 \times -0.52) \\
  &= 9.76\%
 \end{align*}
-```latex
+```
 
 If we had a time series of return, you can compute the average return using arithmetic mean:
 
@@ -85,36 +85,36 @@ Suppose you have five years of past returns, you can compute the expected return
 | Year 4 | 10.88%     |
 | Year 5 | 4.91%      |
 
-```latex
+```math
 \begin{align*}
 E(r) &= \frac{1}{5} \times (-11.89 - 22.10 + 28.69 + 10.88 + 4.91) \\
  &= ???
 \end{align*}
-```latex
+```
 
 ### Annualize returns
 
 *Arithmetic mean:*
 
-```latex
+```math
 \text{annual return} = \text{monthly return} \times 12
-```latex
+```
 
-```latex
+```math
 \text{annual return} = \text{daily return} \times 252
-```latex
+```
 
 *252 is the number of trading days.*
 
-```latex
+```math
 \text{annual return} = \text{weekly return} \times 52
-```latex
+```
 
 *Geometric mean:*
 
-```latex
+```math
 \text{annual return} = (1+\text{monthly return})^{12} - 1
-```latex
+```
 
 ## Measuring Risk
 
@@ -124,18 +124,18 @@ We measure the dispersion by using the standard deviation of the distribution of
 
 The variance is the expected value of the squared deviation from the mean (the probability weighted average of squared deviations).
 
-```latex
+```math
 \begin{align*}
 var(r) &= E(r - E(r))^2 \\
   &= \displaystyle\sum_{j=1}^mP_j(r_j-E(r))^2
 \end{align*}
-```latex
+```
 
 Standard deviation is the square root of variance.
 
-```latex
+```math
 \sigma = \sqrt{var(r)}
-```latex
+```
 
 **Example**:
 
@@ -145,33 +145,33 @@ Standard deviation is the square root of variance.
 | 50          | 10     |
 | 25          | -20    |
 
-```latex
+```math
 E(r) = 0.25 \times 40 + 0.5 \times 10 + 0.25 \times -20 = 10\%
-```latex
+```
 
-```latex
+```math
 \begin{align*}
 var(r) &= 0.25 \times (0.4-0.1)^2 \\
   & + 0.5 \times (0.1-0.1)^2 \\
   & + 0.25 \times (-0.2-0.1)^2 \\
   &= 0.045 = \sigma^2
 \end{align*}
-```latex
+```
 
-```latex
+```math
 \sigma = 0.21%
-```latex
+```
 
 
 ### Annualize volatility (risk)
 
-```latex
+```math
 \text{annual volatility} = \text{monthly volatility} \times \sqrt{12}
-```latex
+```
 
-```latex
+```math
 \text{annual volatility} = \text{weekly volatility} \times \sqrt{52}
-```latex
+```
 
 ### Skewness
 

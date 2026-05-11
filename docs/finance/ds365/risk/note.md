@@ -15,9 +15,9 @@ You should by stocks from companies operate in different industries (so they are
 
 To measure the relationship between two stocks (variables) we use **correlation coefficient**.
 
-```latex
+```math
 \rho_{xy} = \frac{(x - \overline{x})*(y - \overline{y})}{\sigma_x\sigma_y}
-```latex
+```
 
 Correlation between prices and correlation between returns may show different values:
 
@@ -29,7 +29,7 @@ Correlation between prices and correlation between returns may show different va
 
 If a portfolio contain multiple stocks, its risk will be a function of the **variances** of the stocks, and of the **correlation** (and Covariance) between them.
 
-```latex
+```math
 \begin{align*}
 \text{Portfolio Variance} &=  \text{Un-diversifiable risk} + \text{Diversifiable risk} \\
 
@@ -48,24 +48,24 @@ If a portfolio contain multiple stocks, its risk will be a function of the **var
   \end{bmatrix}
   \begin{bmatrix} w_1 \\ w_2 \\ ... \\ w_n \end{bmatrix}
 \end{align*}
-```latex
+```
 
 Covariance Matrix:
-```latex
+```math
 \Sigma = \begin{bmatrix}
   \sigma_1^2 & \sigma_{12} & ... & \sigma_{1n} \\
   \sigma_{21} & \sigma_2^2 & ... & \sigma_{2n} \\
   ... \\
   \sigma_{n1} & \sigma_n^2 & ... & \sigma_n^2
 \end{bmatrix}
-```latex
+```
 
 There are two types of investment risk:
 
 ![](https://cdn.corporatefinanceinstitute.com/assets/Screen-Shot-2018-09-26-at-10.09.31-AM.png)
 
-```latex
-```latex
+```
+```
 
 ### Un-diversifiable (Systematic) risk
 

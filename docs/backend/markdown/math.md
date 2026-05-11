@@ -102,7 +102,7 @@ or:
 
 Increase distance between inline expressions:
 
-```latex
+```math
 a \quad b
 ```
 

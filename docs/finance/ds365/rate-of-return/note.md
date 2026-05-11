@@ -18,24 +18,24 @@ Investments with different holding periods (timeframe) shouldn't be compared.
 
 Preferable when you have to deal with multiple assets over the same timeframe.
 
-```latex
+```math
 \text{simple rate of return} = \frac{\text{ending price} - \text{beginning price}}{\text{beginning price}}
-```latex
+```
 
 
 ### Logarithmic rate of return
 
 Preferable when you make calculations about a single asset over time.
 
-```latex
+```math
 \text{logarithmic rate of return} = \log{\frac{\text{ending price}}{\text{beginning price}}}
-```latex
+```
 
 ### Converts to yearly returns
 
-```latex
+```math
 \text{annual return} = [(\text{daily return} + 1)^{365}]*100
-```latex
+```
 
 
 ## Calculating the Rate of Return of a Portfolio of Securities

@@ -4,9 +4,9 @@
 
 Expected return of a portfolio is the weighted average of the expected returns of the individual assets.
 
-```latex
+```math
 E(P) = \sum_{i=1}^nw_iE_i
-```latex
+```
 
 | State of the economy | Prob. | Toyota | Pfizer | ½ Toyota + ½ Pfizer |
 |---|---|---|---|---|
@@ -19,15 +19,15 @@ E(P) = \sum_{i=1}^nw_iE_i
 
 Expected return of individual assets is calculated with the probabilities in each state of the economy. For example, with *Toyota*, it will be:
 
-```latex
+```math
 (0.1 \times 6) + (0.4 \times 7.5) + (0.3 \times 2) + (0.2 \times -3) = 3.6
-```latex
+```
 
 The expected return of portfolio ½ Toyota + ½ Pfizer is:
 
-```latex
+```math
 (0.5 \times 3.6) + (0.5 \times 2.95) = 3.275
-```latex
+```
 
 
 ## Measuring Risk
@@ -38,9 +38,9 @@ Then we can find the variance of that return around the portfolio's expected ret
 
 For example, the portfolio's weighted average return in Expansion state is:
 
-```latex
+```math
 (6\% \times 0.5) + (2.5\% \times 0.5) = 4.25\%
-```latex
+```
 
 | State of the economy | Prob. | Toyota | Pfizer | ½ Toyota + ½ Pfizer |
 |---|---|---|---|---|
@@ -53,7 +53,7 @@ For example, the portfolio's weighted average return in Expansion state is:
 
 The portfolio's variance is:
 
-```latex
+```math
 \begin{align*}
 \sigma^2 &= 
 0.1 \times (4.25 - 3.275)^2 \\
@@ -62,15 +62,15 @@ The portfolio's variance is:
 & + 0.2 \times (5.0 - 3.275)^2 \\
 & = 1.66
 \end{align*}
-```latex
+```
 
-```latex
+```math
 \sigma = 1.29\%
-```latex
+```
 
 ### Calculate portfolio's variance using matrix operation
 
-```latex
+```math
 \begin{align*}
 \sigma_{p}^2 &= 
   (w_1^2\sigma_1^2 + w_2^2\sigma_2^2 + ... + w_n^2\sigma_n^2 ) + \\
@@ -87,17 +87,17 @@ The portfolio's variance is:
   \end{bmatrix}
   \begin{bmatrix} w_1 \\ w_2 \\ ... \\ w_n \end{bmatrix}
 \end{align*}
-```latex
+```
 
 Covariance Matrix:
-```latex
+```math
 \Sigma = \begin{bmatrix}
   \sigma_1^2 & \sigma_{12} & ... & \sigma_{1n} \\
   \sigma_{21} & \sigma_2^2 & ... & \sigma_{2n} \\
   ... \\
   \sigma_{n1} & \sigma_n^2 & ... & \sigma_n^2
 \end{bmatrix}
-```latex
+```
 
 ## Co-movement between securities
 
@@ -109,13 +109,13 @@ Covariance and correlation measures allow us to evaluate how securities move or 
 
 Covariance is a measure of the pairwise co-movement between two securities. It is calculated by taking a probability-weighted average of the product of the deviations from the mean of each security. 
 
-```latex
+```math
 cov(x, y) = \sigma_{xy} = \displaystyle\sum P(r_x-E(r_x))(r_y-E(r_y))
-```latex
+```
 
 For example, the covariance between **Toyota** and **Pfizer** is:
 
-```latex
+```math
 \begin{align*}
 cov(r_T, r_P) &= \sigma_{T,P} = 0.1(6-3.6)(2.5-2.95) \\
   &+ 0.4(7.5-3.6)(-0.5-2.95) \\
@@ -123,7 +123,7 @@ cov(r_T, r_P) &= \sigma_{T,P} = 0.1(6-3.6)(2.5-2.95) \\
   &+ 0.2(-3-3.6)(13-2.95) \\
   &= -17.820
 \end{align*}
-```latex
+```
 
 The covariance is negative, which tells us the stocks of Toyota and Pfizer move in opposite directions.
 
@@ -135,9 +135,9 @@ Correlation is a standardized measure of co-movement
 
 It is defined as the covariance between two assets scaled by the product of the standard deviations of each asset.
 
-```latex
+```math
 \rho_{xy} = \frac{\sigma_{xy}}{\sigma_x\sigma_y}
-```latex
+```
 
 Correlation coefficient can only take values between `-1` to `+1`. 
 
@@ -201,14 +201,14 @@ What would be the volatility of your portfolio if you have 60% in equities and 4
 
 The volatility of a two-asset portfolio is given by:
 
-```latex
+```math
 \sigma_{p}^2 = 
   w_1^2\sigma_1^2 + w_2^2\sigma_2^2  + 2w_1\sigma_1w_2\sigma_2\rho_{12} 
-```latex
+```
 
 Note, however, the risk-free asset has zero variance and zero covariance. Therefore,
 
-```latex
+```math
 \sigma_{p}^2 = w_1^2\sigma_1^2 \\
 \sigma_{p} = 0.6 \times 18 = 10.8
-```latex
+```

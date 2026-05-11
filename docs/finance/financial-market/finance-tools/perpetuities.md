@@ -8,9 +8,9 @@ Perpetuity is a series of equal payments of a fixed amount for an infinite numbe
 
 ### Formula
 
-```latex
+```math
 PV = \frac{C}{r}
-```latex
+```
 
 - $PV$: present value
 - $C$: constant amount you receive per period
@@ -20,9 +20,9 @@ PV = \frac{C}{r}
 
 How much would you pay for the opportunity to get paid $1000 per year forever, if the interest rate is 10% per year?
 
-```latex
+```math
 PV = 1,000 / 0.1 = 10,000
-```latex
+```
 
 
 ## Growing Perpetuities
@@ -33,9 +33,9 @@ Perpetuity is a series of payments increasing at a constant growth rate for an i
 
 ### Formula
 
-```latex
+```math
 PV = \frac{C}{r - g}
-```latex
+```
 
 - $PV$: present value
 - $C$: constant amount you receive per period
@@ -46,6 +46,6 @@ PV = \frac{C}{r - g}
 
 How much would you pay for the opportunity to get paid $1000 per year forever, increasing 5% per year, if the interest rate is 10% per year?
 
-```latex
+```math
 PV = 1,000 / (0.1 - 0.05) = 20,000
-```latex
+```

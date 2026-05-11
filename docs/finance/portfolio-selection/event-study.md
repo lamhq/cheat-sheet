@@ -15,9 +15,9 @@ Event studies estimate the abnormal return around the date that new information 
 
 We could write an index model, and decompose the return into a market and firm's specific component.
 
-```latex
+```math
 r_t = a + b \times r_{mt} + e_t
-```latex
+```
 
 - $r_{mt}$: martket's return
 - $b$: the sensitivity of the stock of the market return
