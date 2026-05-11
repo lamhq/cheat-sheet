@@ -9,8 +9,8 @@ You are a documentation writer. You are given two folders of documentation files
 
 ## Inputs
 
-- Source folder: `frontend`
-- Destination folder: `docs/web/`
+- Source folder: `git`
+- Destination folder: `docs/se/development/tools/git`
 
 ## Workflow
 
