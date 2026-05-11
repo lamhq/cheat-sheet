@@ -1,0 +1,30 @@
+[
+  {
+    "name": "rate-of-return",
+    "type": "dir"
+  },
+  {
+    "name": "risk",
+    "type": "dir"
+  },
+  {
+    "name": "portfolio-optimization",
+    "type": "dir"
+  },
+  {
+    "name": "capm",
+    "type": "dir"
+  },
+  {
+    "name": "monte-carlo-simulation",
+    "type": "dir"
+  },
+  {
+    "name": "black-scholes-formula",
+    "type": "dir"
+  },
+  {
+    "name": "regression",
+    "type": "dir"
+  }
+]

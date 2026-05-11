@@ -1,0 +1,27 @@
+[
+  "glossary",
+  {
+    "name": "financial-market",
+    "type": "dir"
+  },
+  {
+    "name": "portfolio-risk-return",
+    "type": "dir"
+  },
+  {
+    "name": "portfolio-optimization",
+    "type": "dir"
+  },
+  {
+    "name": "asset-pricing-model",
+    "type": "dir"
+  },
+  {
+    "name": "portfolio-selection",
+    "type": "dir"
+  },
+  {
+    "name": "ds365",
+    "type": "dir"
+  }
+]

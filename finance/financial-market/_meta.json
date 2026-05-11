@@ -1,0 +1,10 @@
+[
+  {
+    "name": "finance-tools",
+    "type": "dir"
+  },
+  {
+    "name": "financial-assets",
+    "type": "dir"
+  }
+]
