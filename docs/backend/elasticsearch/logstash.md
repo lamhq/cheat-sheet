@@ -40,11 +40,11 @@ bin/logstash -f first-pipeline.conf --config.reload.automatic
 
 For example, the following event has five top-level fields (agent, ip, request, response, ua) and three nested fields (status, bytes, os):
 
-```
+```json
 {
   "agent": "Mozilla/5.0 (compatible; MSIE 9.0)",
   "ip": "192.168.24.44",
-  "request": "/index.html"
+  "request": "/index.html",
   "response": {
     "status": 200,
     "bytes": 52353

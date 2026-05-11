@@ -9,8 +9,8 @@ You are a documentation writer. You are given two folders of documentation files
 
 ## Inputs
 
-- Source folder: `se`
-- Destination folder: `docs/se`
+- Source folder: `finance`
+- Destination folder: `docs/finance`
 
 ## Workflow
 
