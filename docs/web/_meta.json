@@ -111,13 +111,6 @@
     "collapsed": true
   },
   {
-    "name": "oauth",
-    "label": "OAuth",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  },
-  {
     "name": "puppeteer",
     "label": "Puppeteer",
     "type": "dir",

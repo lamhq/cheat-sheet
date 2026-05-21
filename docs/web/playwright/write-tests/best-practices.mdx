@@ -74,19 +74,70 @@ test('Checkout with a ATM card should create a card transaction', async ({ page 
 
 ## Finding elements
 
-Use locators that refer to user-facing attributes (role, text and test id locators). It makes your tests resilient to changes in the DOM:
+### No explicit waits
+
+Use locator actions and web assertions that wait automatically.
+
+Do:
 
 ```ts
-// 👍
-page.getByRole('button', { name: 'submit' });
+test('checkout button should be visible and clickable', async ({ page }) => {
+  await page.goto('/checkout');
+
+  // ✅ Playwright auto-waits for the element to be ready
+  await expect(page.getByRole('button', { name: 'Checkout' })).toBeVisible();
+  await page.getByRole('button', { name: 'Checkout' }).click();
+
+  // ✅ Auto-wait assertion for navigation
+  await expect(page).toHaveURL(/\/confirmation$/);
+});
 ```
 
-Do not use XPath or CSS selectors:
+Don't:
 
 ```ts
-// 👎
-page.locator('button.buttonIcon.episode-actions-later');
+test('checkout button should be visible and clickable', async ({ page }) => {
+  await page.goto('/checkout');
+
+  // ❌ Bad: explicit wait with timeout
+  await page.waitForTimeout(2000);
+
+  // ❌ Bad: manual wait for selector
+  await page.waitForSelector('button#checkout');
+
+  // ❌ Assertions after forced waits
+  const checkoutButton = page.locator('button#checkout');
+  await checkoutButton.click();
+  expect(await page.url()).toContain('/confirmation');
+});
 ```
+
+### Use appropriate locators
+
+| **Locator Type** | **Best Use Case** | **Pros** | **Cons** |
+|------------------|-------------------|----------|----------|
+| **getByRole** | Buttons, links, headings | Semantic, accessible, stable | Requires proper HTML roles |
+| **getByLabel** | Form inputs | Matches user‑visible labels | Needs correct label association |
+| **getByText** | Static text content | Simple, readable | Fragile if text changes |
+| **getByPlaceholder** | Inputs with placeholders | Easy to use | Placeholder may change |
+
+```ts
+page.getByRole('button', { name: 'Sign in' })
+page.getByLabel('Username').fill('user')
+page.getByPlaceholder('Enter password').fill('secret')
+await expect(page.getByText('welcome')).toBeVisible();
+```
+
+### Avoid brittle CSS selectors
+
+Don’t rely on styling classes or deep DOM paths.  
+
+```ts
+// ❌
+page.locator('div > ul > li:nth-child(1)')
+```
+
+### Use `data-testid` as the last resort
 
 For elements that don't have natural roles or text, modify the HTML to add `data-testid` attribute for test stability:
 
@@ -95,13 +146,16 @@ For elements that don't have natural roles or text, modify the HTML to add `data
 ```
 
 ```ts
+// ⚠️ Warning: use test IDs only when there are no better options
 page.getByTestId('cart-item-count')
 ```
+
+### Chaining and filtering
 
 Use chaining and filtering to narrow down to specific elements:
 
 ```ts
-// 👍
+// ✅
 await page
   .getByRole('listitem')
   .filter({ hasText: 'Product 2' })
@@ -109,20 +163,12 @@ await page
   .click();
 ```
 
-Avoid brittle CSS selectors:
-
-```ts
-// 👎
-page.locator('.product-list > .product-item:nth-child(1) .add-to-cart-btn');
-```
-
 
 ## Assertions
 
-Use web-first assertions with automatic waiting:
+### Use assertions with automatic waiting
 
 ```ts
-// 👍
 await expect(page.getByText('welcome')).toBeVisible();
 
 await expect(page).toHaveURL('/dashboard');
@@ -136,28 +182,32 @@ await expect(page.getByTestId('cart-icon'))
 await expect(page.getByTestId('date-header')).toHaveText('Date');
 ```
 
+### Avoid attribute and content retrieval
+
 Do not retrieve element's content or attribute value and perform manual assertions on them:
 
 ```ts
-// 👎
-const descriptionText = await description.textContent();
+// ❌ Bad: getting element's content
+const descriptionText = await page.getByText('welcome').textContent();
+
+// ❌ Bad: assertion without auto-waiting
 expect(descriptionText).toMatch(
   /[A-Z][a-z]{2},\s+\d{1,2}\s+[A-Z][a-z]{2},\s+\d{4}/
 );
 
+// ❌ Bad: getting element's attribute value
 expect(await page.getByText('welcome').isVisible()).toBe(true);
 
+// ❌ Bad: getting page URL and performing manual assertion
 expect(page.url()).toContain('/dashboard');
 ```
+
+### No assertions in conditional blocks
 
 Never perform assertions inside conditional blocks (e.g., `if`, `else`, `switch`):
 
 ```ts
-// 👎
 test('login form should show error on empty submit', async ({ page }) => {
-  await page.goto('/login');
-  await page.getByRole('button', { name: 'Sign in' }).click();
-
   // ❌ Bad: assertion inside conditional
   if (await page.locator('.error').isVisible()) {
     await expect(page.locator('.error')).toHaveText('Invalid Username or password');
@@ -168,7 +218,11 @@ test('login form should show error on empty submit', async ({ page }) => {
 
 ## Page Object Model
 
-Use POM to encapsulate page behavior, interactions, and selectors:
+Best practices for Page Object Model classes.
+
+### Encapsulate page behavior, interactions, and selectors
+
+The page class encapsulates page behavior, interactions, and selectors:
 
 ```ts title="pages/login.page.ts"
 import { BasePage } from './base.page';
@@ -195,8 +249,7 @@ export class LoginPage extends BasePage {
 }
 ```
 
-
-Keep tests focused on behavior, not locator details:
+The main tests call page object's methods to interact with the page:
 
 ```ts title="login.spec.ts"
 import { test, expect } from '@playwright/test';
@@ -214,10 +267,11 @@ test('Login with valid credentials should navigate to dashboard', async ({ page 
 });
 ```
 
+### Return elements, not properties
+
 Never return element properties (like text content, attribute values, counts, or visibility) in Page object methods:
 
 ```ts title="pages/login.page.ts"
-// 👎
 export class LoginPage {
   constructor(private page) {}
 
@@ -236,24 +290,24 @@ test('invalid credentials should show error', async ({ page }) => {
 });
 ```
 
+### Never perform assertions in methods
+
 Page object methods should never perform assertions:
 
+Don't:
+
 ```ts title="pages/checkout.page.ts"
-// 👎
-export class CheckoutPage {
-  constructor(private page) {}
+const field = this.getContentField();
 
-  async assertPaymentMethodIsCard() {
-    // ❌ Bad: assertion inside page object
-    await expect(this.page.getByTestId('payment-method-label')).toHaveText('Card');
-  }
-}
+// ❌ Bad: assertion inside page object
+await expect(field).toBeVisible();
 
-// test
-test('checkout with ATM card should display payment method as Card', async ({ page }) => {
-  const checkoutPage = new CheckoutPage(page);
+await field.fill(content);
+```
 
-  // ❌ Test delegates assertion to page object
-  await checkoutPage.assertPaymentMethodIsCard();
-});
+Do:
+
+```ts
+// ✅ Correct: directly perform interactions without assertions in page object
+await this.getContentField().fill(content);
 ```

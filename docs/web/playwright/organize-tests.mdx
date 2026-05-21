@@ -13,15 +13,13 @@ my-playwright-project/
 │   ├── login.page.ts
 │   └── dashboard.page.ts
 ├── tests/                  # Test specification files
+│   ├── global-setup.ts     # Global setup script
 │   ├── auth/               # Authentication-related tests
 │   │   └── login.spec.ts
 │   └── order/              # Order-related tests
 │       └── checkout.spec.ts
-├── setup/                  # Global setup/teardown scripts
-│   ├── global-setup.ts
-│   └── global-teardown.ts
 ├── utils/                  # Helper functions and utilities
-│   └── api.ts
+│   └── db.ts
 ├── playwright.config.ts    # Global framework configuration
 ├── package.json            # Node.js dependencies and scripts
 ├── playwright-report/      # Generated HTML reports (gitignored)

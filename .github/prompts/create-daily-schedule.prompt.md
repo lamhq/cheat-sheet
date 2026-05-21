@@ -36,7 +36,7 @@ Where:
 Todo items must be in the following order, scheduled based on the following rules:
 - `buy breakfast`, every day, 8:00
 - `English pronunciation`, Mon-Fri, 08:15
-- `coding`, Mon-Fri, 8:30
+- `coding`, Mon-Fri, 8:30 and 14:15
 - `have lunch`, every day, 11:00, 40 minutes
 - `cooking`, every day, after `have lunch`, 20 minutes
 - `take a nap`, every day, 12:30, 40 minutes

@@ -1,8 +1,8 @@
 [
+  "pom",
   "fixtures",
   "global-setup",
   "mock-req",
-  "pom",
   "monitoring",
   "storage",
   "profile",
