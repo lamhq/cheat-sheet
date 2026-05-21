@@ -140,8 +140,8 @@ export class CheckoutPage {
   constructor(private page) {}
 
   async fillContent(content: string) {
-    // ❌ Bad: assertion inside page object
     const emailField = this.page.getByLabel('Email');
+    // ❌ Bad: assertion inside page object
     await expect(emailField).toBeVisible();
     await emailField.fill(content);
   }

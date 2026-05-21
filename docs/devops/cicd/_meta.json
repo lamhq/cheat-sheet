@@ -1,7 +1,11 @@
 [
   "cicd",
+  "ci",
+  "cd",
   "build-stage",
   "quality-check",
   "testing",
-  "packaging"
+  "packaging",
+  "gitops",
+  "progressive-delivery"
 ]
