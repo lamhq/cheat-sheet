@@ -97,20 +97,6 @@
     "collapsed": true
   },
   {
-    "name": "i18next",
-    "label": "i18next",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  },
-  {
-    "name": "nextauth",
-    "label": "NextAuth",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  },
-  {
     "name": "puppeteer",
     "label": "Puppeteer",
     "type": "dir",
