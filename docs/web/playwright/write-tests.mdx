@@ -590,3 +590,77 @@ test('skip this test', async ({ page, browserName }) => {
   // ...
 });
 ```
+
+## Anti-patterns
+
+### No explicit waits
+
+Never use explicit waits in tests. Playwright's auto-waiting and retrying assertions will handle waiting for elements to be ready.
+
+```ts
+// ❌ Bad: fixed timeout — brittle and slows tests
+await page.waitForTimeout(2000);
+
+// ❌ Bad: manual wait for selector
+await page.waitForSelector('button#checkout');
+
+// ❌ Bad: waiting for element state explicitly
+await page.waitForFunction(() => document.querySelector('#checkout') !== null);
+
+// ❌ Bad: waiting for navigation manually
+await page.waitForNavigation();
+
+// ❌ Bad: waiting for load state manually
+await page.waitForLoadState('networkidle');
+
+// ❌ Bad: waiting for response manually
+await page.waitForResponse('**/api/checkout');
+
+// ❌ Bad: waiting for event manually
+await page.waitForEvent('console');
+
+// ❌ Bad: waiting for URL manually
+await page.waitForURL('/checkout');
+```
+
+### No assertions in conditional blocks
+
+Never perform assertions inside conditional blocks (e.g., `if`, `else`, `switch`):
+
+```ts
+test('login form should show error on empty submit', async ({ page }) => {
+  // ❌ Bad: assertion inside conditional
+  if (await page.locator('.error').isVisible()) {
+    await expect(page.locator('.error')).toHaveText('Invalid Username or password');
+  }
+});
+```
+
+### Avoid CSS selectors
+
+Don’t rely on styling classes or deep DOM paths.  
+
+```ts
+// ❌
+page.locator('div.content > ul > li:nth-child(1)')
+```
+
+### Avoid attribute and content retrieval
+
+Do not retrieve element's content or attribute value and perform manual assertions on them:
+
+```ts
+// ❌ Bad: getting element's content
+const descriptionText = await page.getByText('welcome').textContent();
+
+// ❌ Bad: perform assertion without auto-waiting
+expect(descriptionText).toMatch(
+  /[A-Z][a-z]{2},\s+\d{1,2}\s+[A-Z][a-z]{2},\s+\d{4}/
+);
+
+// ❌ Bad: getting element's attribute value
+expect(await page.getByText('welcome').isVisible()).toBe(true);
+
+// ❌ Bad: getting page URL and performing manual assertion
+expect(page.url()).toContain('/dashboard');
+```

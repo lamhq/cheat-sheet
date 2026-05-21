@@ -7,10 +7,10 @@
     "collapsed": true,
     "collapsible": true
   },
-  "organize-tests",
   "generate-tests",
   "run-tests",
   "debug-tests",
+  "project-structure",
   "ai",
   "configuration",
   "projects",

@@ -1,48 +1,66 @@
 # Page Object Model
 
+Using Page Object Model (POM) with Playwright.
+
 ## Introduction
 
-A page object represents a part of your web application.
+Page Object Model (POM) is a **design pattern** in test automation that organizes web pages as objects, improving code readability, reusability, and maintainability by separating UI structure from test logic.
 
+:::info
 For example, an e-commerce web application might have a home page, a listings page and a checkout page. Each of them can be represented by page object models.
+:::
 
-Page objects create a higher-level API which suits your application, by capturing element selectors in one place and creating reusable code to avoid repetition, which  simplify maintenance.
+## Example
 
+Define a base page class to handle common operations:
 
-## Implementation
+```ts title="base.page.ts"
+import { Locator, Page } from '@playwright/test';
 
-Create a PlaywrightDevPage helper class to encapsulate common operations on a page:
+/**
+ * Base Page Object Model
+ * Contains common methods shared across all page objects
+ */
+export abstract class BasePage {
+  constructor(protected readonly page: Page) {}
 
-```ts title="playwright-dev-page.ts"
-import { expect, type Locator, type Page } from '@playwright/test';
+  public abstract getUrl(): string;
 
-export class PlaywrightDevPage {
-  readonly page: Page;
-  readonly getStartedLink: Locator;
-  readonly gettingStartedHeader: Locator;
-  readonly pomLink: Locator;
-  readonly tocList: Locator;
+  public navigate() {
+    return this.page.goto(this.getUrl());
+  }
+}
+```
 
+Then, create a page object class for each page of your application:
+
+```ts title="new-post.page.ts"
+import { Locator, Page } from '@playwright/test';
+import { BasePage } from './base.page';
+
+export class NewPostPage extends BasePage {
   constructor(page: Page) {
-    this.page = page;
-    this.getStartedLink = page.locator('a', { hasText: 'Get started' });
-    this.gettingStartedHeader = page.locator('h1', { hasText: 'Installation' });
-    this.pomLink = page.locator('li', { hasText: 'Guides' }).locator('a', { hasText: 'Page Object Model' });
-    this.tocList = page.locator('article div.markdown ul > li > a');
+    super(page);
   }
 
-  async goto() {
-    await this.page.goto('https://playwright.dev');
+  public getUrl(): string {
+    return '/new-post';
   }
 
-  async getStarted() {
-    await this.getStartedLink.first().click();
-    await expect(this.gettingStartedHeader).toBeVisible();
+  public getResultMessage(): Locator {
+    return this.page.getByRole('alert');
   }
 
-  async pageObjectModel() {
-    await this.getStarted();
-    await this.pomLink.click();
+  public fillTitle(title: string): Promise<void> {
+    return this.page.getByRole('textbox', { name: 'Title' }).fill(title);
+  }
+
+  public fillContent(content: string): Promise<void> {
+    return this.page.getByRole('textbox', { name: 'Content' }).fill(content);
+  }
+
+  public submitForm(): Promise<void> {
+    return this.page.locator('button:has-text("Submit")').click();
   }
 }
 ```
@@ -50,29 +68,95 @@ export class PlaywrightDevPage {
 Using the page object in tests:
 
 ```ts
-import { test, expect } from '@playwright/test';
-import { PlaywrightDevPage } from './playwright-dev-page';
+import { expect, test } from '@playwright/test';
+import { NewPostPage } from '../../pages/new-post.page';
 
-test('getting started should contain table of contents', async ({ page }) => {
-  const playwrightDev = new PlaywrightDevPage(page);
-  await playwrightDev.goto();
-  await playwrightDev.getStarted();
-  await expect(playwrightDev.tocList).toHaveText([
-    'How to install Playwright',
-    "What's installed",
-    'How to run the example test',
-    'How to open the HTML test report',
-    'Write tests using web-first assertions, fixtures and locators',
-    'Run single or multiple tests; headed mode',
-    'Generate tests with Codegen',
-    'View a trace of your tests',
-  ]);
-});
+test('should submit the form and show Success', async ({ page }) => {
+  const examplePage = new NewPostPage(page);
 
-test('should show Page Object Model article', async ({ page }) => {
-  const playwrightDev = new PlaywrightDevPage(page);
-  await playwrightDev.goto();
-  await playwrightDev.pageObjectModel();
-  await expect(page.locator('article')).toContainText('Page Object Model is a common pattern');
+  await examplePage.navigate();
+  await examplePage.fillTitle('Post Title');
+  await examplePage.fillContent('This is the content of the post.');
+  await examplePage.submitForm();
+
+  await expect(examplePage.getResultMessage()).toHaveText('Success');
 });
+```
+
+
+## Best practices
+
+### Return elements, not properties
+
+Never return element properties (like text content, attribute values, counts, or visibility) in Page object methods:
+
+Don't:
+
+```ts
+export class LoginPage {
+  constructor(private page) {}
+
+  async getResultMessage() {
+    // ❌ Bad: returning element property
+    return this.page.getByRole('alert').innerText();
+  }
+}
+
+test('invalid credentials should show error', async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  // ❌ Bad: get element property and perform non-retryable assertion
+  const errorMessage = await loginPage.getResultMessage();
+  expect(errorMessage).toBe('Invalid Username or password');
+});
+```
+
+Do:
+
+```ts
+export class LoginPage {
+  constructor(private page) {}
+
+  async getResultMessage() {
+    // ✅ Good: returning element directly
+    return this.page.getByRole('alert');
+  }
+}
+
+test('invalid credentials should show error', async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  // ✅ Good: perform retryable assertion on the element
+  await expect(loginPage.getResultMessage()).toHaveText('Invalid Username or password');
+});
+```
+
+### Never perform assertions in methods
+
+Never perform assertions inside methods of Page object.
+
+Don't:
+
+```ts
+export class CheckoutPage {
+  constructor(private page) {}
+
+  async fillContent(content: string) {
+    // ❌ Bad: assertion inside page object
+    const emailField = this.page.getByLabel('Email');
+    await expect(emailField).toBeVisible();
+    await emailField.fill(content);
+  }
+}
+```
+
+Do:
+
+```ts
+export class CheckoutPage {
+  constructor(private page) {}
+
+  async fillContent(content: string) {
+    // ✅ Correct: directly perform interactions without assertions in page object
+    await this.page.getByLabel('Email').fill(content);
+  }
+}
 ```

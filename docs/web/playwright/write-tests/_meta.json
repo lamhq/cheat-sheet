@@ -5,6 +5,5 @@
   "mock-req",
   "monitoring",
   "storage",
-  "profile",
-  "best-practices"
+  "profile"
 ]
