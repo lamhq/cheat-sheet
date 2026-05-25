@@ -5,33 +5,33 @@ Guidelines for writing a Repository Guide document.
 
 ## Introduction
 
-A Repository Guide is a reference document that helps developers and contributors quickly understand, set up, and work with a code repository.
-
-It provides essential context about the project's purpose, structure, and usage so that anyone joining the project can get up to speed with minimal friction.
+A Repository Guide document (aka `README.md`) serves as the front page of the project, explaining what the project does, how to install, use or contribute to it.
 
 ## Document Structure
 
 A Repository Guide typically includes the following sections:
 
 ### Introduction
-- One-line summary of what the repository is for.
 
-### Installation / Setup
-- Instructions to clone and set up the repository:
+- One-line summary purpose of the repository
+
+### Installation
+
+- System requirements (OS, dependencies, tools)
+- Step-by-step installation instructions
+
+### Repository Structure
+
+- Directory layout (tree view) with explanations
 
 ### Usage
 
-Instructions to:
+Basic commands or scripts to:
 - Run the application.
 - Run tests.
 - Lint the code.
 - Build the project.
 - Manage dependencies.
-
-### Repository Structure
-
-Provide a **tree view** with comments explaining each item.
-
 
 ## Best Practices
 
@@ -44,7 +44,6 @@ Provide a **tree view** with comments explaining each item.
 - **Highlight essentials upfront**: Title, purpose, and usage should be visible without scrolling.
 - **Use comments in repo structure**: Helps readers understand the purpose of each file/folder.
 - **Avoid clutter**: Remove unnecessary badges or verbose explanations.
-
 
 ## Examples
 
@@ -115,6 +114,6 @@ repo-name/
 ├── package.json    # Project metadata and dependencies
 ├── .eslintrc.js    # Linting configuration
 ├── .gitignore      # Files ignored by Git
-└── README.md       # Repository overview
+└── README.md       # Repository guide
 ```
 ````
