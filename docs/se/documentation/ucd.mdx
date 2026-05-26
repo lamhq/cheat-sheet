@@ -1,10 +1,10 @@
 # Use Case Document
 
-Guidelines for writing a Use Case document.
+Guide for writing Use Case documents.
 
 ## Introduction
 
-A Use Case document describes how a software feature works from the end‑user’s perspective.
+A Use Case document describes how a software feature works from the end-user's perspective.
 
 It focuses on goals, interactions, actors involved, preconditions, and postconditions, and outcomes.
 
@@ -66,7 +66,8 @@ A Use Case document typically includes the following sections:
 # Use Case: Password Reset
 
 ## Overview
-This use case describes how an end‑user resets their account password when they cannot log in. It focuses on the user’s actions, expected outcomes, and variations in the process, while ensuring security by not revealing whether an email is registered.
+
+Users reset their account password when login fails. The process covers actions, expected results, and variations, with security maintained by hiding email registration status.
 
 ## Actors
 - **Primary Actor:** Registered user who has forgotten their password.
@@ -82,7 +83,7 @@ This use case describes how an end‑user resets their account password when the
 3. The system prompts the user to enter their email address.
 4. The user enters their email and submits the request.
 5. The system displays a neutral message:  
-   *“If an account is registered with this email, you will receive a password reset link.”*
+   *"If an account is registered with this email, you will receive a password reset link."*
 6. The user checks their email inbox.
 7. If a reset link is received, the user clicks the link.
 8. The system displays a password reset form.
@@ -118,11 +119,11 @@ flowchart TD
 ```
 
 ## Postconditions
-- The user’s password is updated (if the account exists).
+- The user's password is updated (if the account exists).
 - The user can log in with the new password.
 
 ## Success Criteria
 - The user regains access to their account securely.
-- The process is clear, simple, and user‑friendly.
+- The process is clear, simple, and user-friendly.
 - The system does not disclose whether an email is registered.
 ````
