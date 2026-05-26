@@ -31,14 +31,24 @@ There're three compilation strategies to use library packages:
 - Export package's source code directly (TypeScript) in `exports` field of `package.json`.
 - The consumer's bundlers will compile the package in its build process.
 
-```json title="packages/ui/package.json"
+For example, if you had a `@repo/math` package, you might have the following `exports` field:
+
+```json title="package.json"
 {
-  "name": "@repo/ui",
   "exports": {
-    "./button": "./src/button.tsx",
-    "./card": "./src/card.tsx"
+    ".": "./src/constants.ts",
+    "./add": "./src/add.ts",
+    "./subtract": "./src/subtract.ts"
   }
 }
+```
+
+Then other packages can import add and subtract functions from the `@repo/math` package like so:
+
+```ts title="./apps/my-app/src/index.ts"
+import { GRAVITATIONAL_CONSTANT, SPEED_OF_LIGHT } from "@repo/math";
+import { add } from "@repo/math/add";
+import { subtract } from "@repo/math/subtract";
 ```
 
 Pros:
