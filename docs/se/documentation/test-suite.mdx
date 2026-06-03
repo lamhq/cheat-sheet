@@ -50,15 +50,15 @@ Do:
 
 #### Expected Result
 
-State what the system must do. Each test should focus on a single outcome.
+Defines the specific, observable outcome of a test case execution (what the tester should see or verify when the test runs).
 
 Do: Be precise. Instead of "It should log in," use "The dashboard page loads, and the welcome message 'Welcome, Admin' is displayed."
 
 #### Postconditions
 
-Describe the "cleanup" needed to return the system to its original state so that other tests aren't affected.
+Defines the expected state of the system, application, or database after a specific test case has been successfully executed.
 
-Example: "Delete the user account created during this test."
+It ensures that not only did the test pass its immediate assertions, but it also left the system in a known, stable, and correct state.
 
 
 ## Examples
@@ -102,14 +102,15 @@ Verify that a user can successfully log in with valid credentials.
 
 ### Expected Result
 
-- The dashboard page loads successfully
-- The welcome message "Welcome, testuser!" is displayed at the top of the page
-- The user's profile information is visible in the sidebar
-- The logout button is available in the navigation menu
+- User is authenticated.
+- Dashboard/home page is displayed.
+- Welcome message or profile info appears.
 
 ### Postconditions
 
-- Log out from the user account to return to the login page
+- A valid session or authentication token is created.
+- User has access rights to the system.
+- Login attempt is logged as successful.
 
 ---
 
@@ -141,13 +142,13 @@ Verify that the system rejects login attempts with incorrect password and displa
 
 ### Expected Result
 
-- The dashboard page does not load
-- The user remains on the login page
-- An error message "Invalid username or password" is displayed in red text
-- The username field retains the entered username
-- The password field is cleared
+- System denies access.
+- Error message shown (e.g., "Invalid username or password").
+- Login page remains visible for retry.
 
 ### Postconditions
 
-- No action required; the system remains in the initial state
+- User remains unauthenticated.
+- No session or token is created.
+- Failed login attempt is logged.
 ```
