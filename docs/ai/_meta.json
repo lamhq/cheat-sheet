@@ -22,10 +22,14 @@
   },
   {
     "name": "using-ai",
-    "label": "Using AI",
     "type": "dir",
     "collapsible": true,
     "collapsed": true
   },
-  "langchain"
+  {
+    "name": "langchain",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
 ]

@@ -1,0 +1,66 @@
+# Prompt Template
+
+Using LangChain `PromptTemplate` in Python to create dynamic prompts to send to your LLM.
+
+## Creating a PromptTemplate
+
+```python
+from langchain_core.prompts import PromptTemplate
+
+prompt_template = PromptTemplate(
+    input_variables=["adjective", "topic"],
+    template="Tell me a {adjective} joke about {topic}."
+)
+
+```
+
+## Passing variables
+
+Once created, you can pass your variables into the template using the `.format()` method to generate the final string.
+
+```python
+final_prompt = prompt_template.format(adjective="funny", topic="cats")
+
+print(final_prompt)
+# Output: Tell me a funny joke about cats.
+```
+
+## Chainging Template Engines (Jinja2)
+
+By default, LangChain uses Python's `f-string` syntax. If you need complex logic like loops or conditionals, you can pass `template_format="jinja2"`.
+
+```python
+jinja2_template = "Here is a list of items: {% for item in items %} {{ item }} {% endfor %}"
+
+prompt = PromptTemplate(
+    input_variables=["items"],
+    template=jinja2_template,
+    template_format="jinja2"
+)
+
+print(prompt.format(items=["apple", "banana", "cherry"]))
+
+```
+
+:::caution
+For security recommendations, never use Jinja2 templates from untrusted user sources
+:::
+
+
+## Connecting to an LLM
+
+In modern LangChain architectures, you pipe a `PromptTemplate` straight into a model using the `|` operator. The prompt template acts as a `Runnable` object.
+
+```python
+from langchain_core.prompts import PromptTemplate
+# Example using a placeholder wrapper or your model provider (e.g., langchain_openai)
+# from langchain_openai import ChatOpenAI
+
+prompt = PromptTemplate.from_template("What is the capital of {country}?")
+
+# Build the chain
+chain = prompt | llm 
+
+# When invoking the chain, pass the variables directly as a dictionary
+response = chain.invoke({"country": "France"})
+```

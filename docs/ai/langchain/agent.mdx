@@ -1,0 +1,78 @@
+# Agents
+
+AI Agents in LangChain.
+
+## Introduction
+
+An **AI Agent** is a software system that uses a Large Language Model (LLM) as a **reasoning engine** to independently determine a sequence of actions and execute them.
+
+![Core agent loop diagram](https://mintcdn.com/langchain-5e9cc07a/Tazq8zGc0yYUYrDl/oss/images/core_agent_loop.png?fit=max&auto=format&n=Tazq8zGc0yYUYrDl&q=85&s=ac72e48317a9ced68fd1be64e89ec063)
+
+### Chains vs. Agents
+
+Unlike basic chains with hard-coded steps, an agent dynamically decides which tools or steps are required to solve an open-ended problem. The LLM determines what to do next based on the shifting context of the task.
+
+- **Chains (Deterministic):** The developer explicitly hard-codes the control flow. While an LLM may perform specific steps (e.g., text summarization), it does not control the application's direction.
+- **Agents (Dynamic):** The control flow is fluid and managed iteratively by the LLM. The model selects an action, evaluates the outcome, and continues reasoning until the user's objective is met.
+
+## Giving LLMs "Superpowers" with Tools
+
+Tools are external functions or integrations that let the model safely interact with environments outside its static training data.
+
+Common implementations include:
+
+- Executing API requests or web search queries.
+- Querying or updating internal relational databases.
+- Running isolated Python code to handle precise data processing or mathematics.
+
+## The ReAct Architecture (Reasoning and Acting)
+
+The **ReAct** framework (Reasoning and Acting) is a foundational agent architecture that operates in a continuous loop:
+
+- **Reasoning (Thought):** The agent analyzes the objective and context using structured reasoning like Chain-of-Thought.
+- **Acting (Action):** The LLM decides to trigger an external tool with generated input arguments.
+- **Observation:** The application runs the tool, feeds the output back into the agent's context, and repeats the loop until resolved.
+
+```
+       ┌────────────────────────┐
+       │     User Objective     │
+       └───────────┬────────────┘
+                   ▼
+     ┌──► 1. REASONING (Thought)
+     │             │
+     │             ▼
+     │    2. ACTING (Tool Choice)
+     │             │
+     │             ▼
+     └─── 3. OBSERVATION (Tool Output)
+
+```
+
+## Implementation
+
+Modern stateful agents are built through **LangGraph**, which provides pre-built ReAct agents to handle state maintenance and tool invocation seamlessly.
+
+```python
+from langchain_core.tools import tool
+from langchain_openai import ChatOpenAI
+from langgraph.prebuilt import create_react_agent
+
+# 1. Define a tool function with descriptive docstrings
+@tool
+def internet_search(query: str) -> str:
+    """Useful for searching real-time information on the web."""
+    return f"Search result placeholder for: {query}"
+
+tools = [internet_search]
+model = ChatOpenAI(model="gpt-4o", temperature=0)
+
+# 2. Compile the stateful agent loop
+agent_executor = create_react_agent(model, tools)
+
+# 3. Execute the agent
+response = agent_executor.invoke({
+    "messages": [("user", "What are the latest updates about LangChain in 2026?")]
+})
+
+print(response["messages"][-1].content)
+```

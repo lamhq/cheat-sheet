@@ -1,0 +1,22 @@
+# Trace
+
+Integrate LangSmith Tracing into your LangChain applications to gain insights into the inner workings of your agents.
+
+## Introduction
+
+Your applications make many calls to LLMs. As these applications get more complex, it becomes important to be able to inspect what exactly is going on inside your agent. 
+
+The best way to do this is with LangSmith.
+
+## Getting started
+
+1. Sign up for a [LangSmith](https://smith.langchain.com/) account
+2. Create a project in the LangSmith dashboard and generate an API key
+3. Enable tracing by setting the following environment variables:
+  ```bash
+  export LANGSMITH_TRACING="true"
+  export LANGSMITH_ENDPOINT="https://apac.api.smith.langchain.com"
+  export LANGSMITH_PROJECT="demo"
+  export LANGSMITH_API_KEY="your-api-key"
+  ```
+4. Run your script again, then view traces in **LangSmith dashboard**.

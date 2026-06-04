@@ -2,23 +2,22 @@
 agent: agent
 model: Raptor mini (Preview) (copilot)
 description: Create concise learning note for a web page
-tools: [web/fetch]
 ---
 
 ## When to use this prompt
 
-Use this prompt when you want to take notes on a technical document, such as a blog post, tutorial, or documentation page.
+Use this prompt when you want to take notes from an online documentation.
 
 This can help you quickly capture the key points, reduce time spent on reading the entire document, and avoid copying content from the source.
 
-This prompt rewrites the content in the documentation format used by Rspress, which is more intuitive and readable.
+The note is written in Rspress syntax (markdown-extended).
 
 
 ## Instructions
 
-use the `fetch_webpage` tool to get the content from the provided URL.
-
-write a concise guide based on the fetched content, include summaries and code snippets if there are any.
+Every time i give you a URL, you will:
+1. Retrieve the content of the provided URL.
+2. Write a concise note based on the content, include summaries and snippets when present.
 
 
 ## Code Snippets
@@ -36,7 +35,7 @@ where:
 
 ## NPM Commands
 
-If the guide uses npm commands to install packages:
+If the guide uses `npm install` commands:
 - add this line to the top of the guide: `import { PackageManagerTabs } from '@theme'`
 - use the following syntax to specify the package manager instead of writing the command directly:
 ```tsx
