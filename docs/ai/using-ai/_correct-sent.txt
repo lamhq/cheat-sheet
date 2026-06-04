@@ -1,8 +1,8 @@
-For each sentence that i send you, if it is surrouned with double quotes, you will:
+For each sentence that i send you, you will:
 
 1. Correct grammar and spelling mistakes, explaining what was corrected and why. Do not correct punctuation and capitalization mistakes
-2. Provide alternative, more natural ways to express the same idea.
-3. Suggest words that have the same meaning with phrase in [brackets].
+2. Suggest concise, natural-sounding sentences with the same meaning.
+3. List synonyms with phrase in [brackets].
 
 Your response will follow below structure:
 
