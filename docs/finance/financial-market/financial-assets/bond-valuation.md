@@ -34,9 +34,9 @@ The value of a zero-coupon is simply the discounted value of the single cash flo
 
 **Formula:**
 
-```latex
+```math
 PV = FV / (1 + r)^t
-```latex
+```
 
 Where:
 
@@ -49,9 +49,9 @@ Where:
 
 One-year zero-coupon bond with a face value of $10,000 is sold in a market where the one-year discount rate is 5.35%. What is the market value of the bond?
 
-```latex
+```math
 PV = 10000 / (1+0.0535)^1
-```latex
+```
 
 
 ## Coupon bonds
@@ -68,11 +68,11 @@ The coupon rate of 12%, semi-annual payments. So it will make $1000 \times \frac
 
 So 4 coupon payments and the face values, are the two cash flows of this bond.
 
-```latex
+```math
 PV = 60 \times ADF(r=\frac{5.35\%}{2}, n=4) 
   + \frac{1000}{(1 + \frac{5.35\%}{2})^4} \\
   = 1124.56
-```latex
+```
 
 
 ## Internal rate of return
@@ -87,7 +87,7 @@ The IRR can be used to compare the return of different bonds with different coup
 
 Suppose a 20-year zero-coupon bond with a face value of $1,000,000 is selling for $455,500. What is the yield to maturity on this bond? (assumes that we use annual compounding)
 
-```latex
+```math
 455,500 = 1,000,000 / (1+r)^{20} \\
 r = 0.0401
-```latex
+```

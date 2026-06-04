@@ -2,9 +2,7 @@
   "fixtures",
   "global-setup",
   "mock-req",
-  "pom",
   "monitoring",
   "storage",
-  "profile",
-  "best-practices"
+  "profile"
 ]

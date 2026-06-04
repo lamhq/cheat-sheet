@@ -77,9 +77,9 @@ Maximizing utility in mean-variance space graphically corresponds to choosing th
 
 Under mean-variance preferences, utility is given by:
 
-```latex
+```math
 U = E(r) - \frac{1}{2}A\sigma^2
-```latex
+```
 
 - $E(r)$: expected return
 - $A$: coefficient of risk aversion.
@@ -145,13 +145,13 @@ Suppose you have two investment opportunities:  A gives you a future wealth of e
 
 The expected utility associated with investment B is given by:
 
-```latex
+```math
 \begin{align*}
 E[U(W)] &= 2/3 ×U(W1) +1/3 ×U(W2) \\
 &= 2/3 × ln(125,000) +1/3 × ln(55,000) \\
 &= 11.46
 \end{align*}
-```latex
+```
 
 ### Question 3
 

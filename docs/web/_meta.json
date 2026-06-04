@@ -21,15 +21,19 @@
     "collapsible": true
   },
   {
-    "name": "ssg",
-    "label": "SSG",
+    "name": "nextjs",
     "type": "dir",
     "collapsed": true,
-    "collapsible": true
+    "label": "Next.js"
+  },
+  {
+    "name": "rspress",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
   },
   {
     "name": "pwa",
-    "label": "PWA",
     "type": "dir",
     "collapsed": true,
     "collapsible": true
@@ -43,14 +47,12 @@
   },
   {
     "name": "storybook",
-    "label": "Storybook",
     "type": "dir",
     "collapsed": true,
     "collapsible": true
   },
   {
     "name": "playwright",
-    "label": "Playwright",
     "type": "dir",
     "collapsed": true,
     "collapsible": true
@@ -92,27 +94,6 @@
   {
     "name": "html",
     "label": "HTML",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  },
-  {
-    "name": "i18next",
-    "label": "i18next",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  },
-  {
-    "name": "nextauth",
-    "label": "NextAuth",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  },
-  {
-    "name": "oauth",
-    "label": "OAuth",
     "type": "dir",
     "collapsible": true,
     "collapsed": true

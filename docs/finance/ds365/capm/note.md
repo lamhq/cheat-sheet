@@ -38,9 +38,9 @@ Beta helps us quantify the relationship between a security and the overall marke
 
 Beta is typically measured with data from the past five years.
 
-```latex
+```math
 \beta = \frac{Cov(r_x, r_m)}{\sigma_m^2}
-```latex
+```
 
 Beta is calculated by the **covariance between the stock and the market** devided by the **variance of the market**.
 
@@ -52,9 +52,9 @@ Beta is calculated by the **covariance between the stock and the market** devide
 
 ## The CAPM formula
 
-```latex
+```math
 r_i = r_f + \beta_{im}(r_m - r_f)
-```latex
+```
 
 - $r_i$: expected return of the securities $i$
 - $r_f$: return of the risk free asset
@@ -81,9 +81,9 @@ Academic research has proven the market risk premium for equities in the US has 
 
 Investors want to be able to compare stocks in terms of risk-return performance. They wiil be interested in investing in the ones that will provide the highest return for a given amount of risk.
 
-```latex
+```math
 \text{Sharpe Ratio} = \frac{r_i-r_f}{\sigma_i}
-```latex
+```
 
 - $r_f$: risk free rate
 - $r_i$: rate of return of the stock $i$
@@ -96,9 +96,9 @@ Alpha is a measure of how good or poor the performance of a fund manager has bee
 
 The standard CAPM setting assumes an alpha equal to 0.
 
-```latex
+```math
 r_i = \alpha + r_f + \beta_{im}(r_m - r_f)
-```latex
+```
 
 Alpha show how much return we get without bearing extra risk.
 

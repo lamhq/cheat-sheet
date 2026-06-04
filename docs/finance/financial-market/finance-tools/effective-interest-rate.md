@@ -20,9 +20,9 @@ The effective interest rate is important because it allows for a fair comparison
 
 ## Formula
 
-```latex
+```math
 AER = (1+\frac{i}{n})^n - 1
-```latex
+```
 
 - $i$: Nominal interest rate
 - $n$: number of periods
@@ -42,33 +42,33 @@ What is the effective annual rate on 1–year CD with a stated annual rate of $8
 
 **Finding the effective rate involves first finding the rate per compounding period and then figuring out how many times the rate will get compounded over the period under consideration.**
 
-```latex
+```math
 AER = (1+\frac{8\%}{4})^4 - 1 = 8.243\%
-```latex
+```
 
 ### Example 3
 
 What is the effective six-month rate if the stated annual rate is $8\%$ compounded quarterly?
 
-```latex
+```math
 \text{6 Month Rate} = (1+\frac{8\%}{4})^2 - 1 = 4.04\%
-```latex
+```
 
 ### Example 4
 
 What is the effective six-month rate if the stated annual rate is $8\%$ compounded monthly? Round off your final answer to three digits after the decimal point. 
 
-```latex
+```math
 \text{6 Month Rate} = (1+\frac{8\%}{12})^6 - 1 = 4.067\%
-```latex
+```
 
 ### Example 5
 
 What is the five-year effective rate if the stated annual rate is $6\%$ compounded semi- annually?
 
-```latex
+```math
 \text{5 Year Rate} = (1+\frac{6\%}{2})^10 - 1 = 34.392\%
-```latex
+```
 
 
 ### Example 6
@@ -94,18 +94,18 @@ Let's say you have $1000, after 3 years, it becomes $1400. What is the average a
 
 The interest rate of 3 years period is: 
 
-```latex
+```math
 r = \frac{1400 - 1000}{100} = 0.4
-```latex
+```
 
 The average annual interest rate is:
 
-```latex
+```math
 (1+0.4)^{1/3} - 1 = 0.11868894208
-```latex
+```
 
 Let's check if it's the right value, by calculating the amount you have after 3 years with that interest rate:
 
-```latex
+```math
 F_3 = 1000 \times (1+0.11868894208)^3 \approx 1400
-```latex
+```

@@ -68,9 +68,9 @@ In both cases, the ultimate goal is to earn a profit from the investment, but th
 
 According to the Fama-French three-factor model, the expected return on an asset is calculated by adding the risk-free rate to the market beta times the market risk premium, plus the asset's exposure to the size factor times the return on the SMB, plus the exposure of the asset to the value factor times the return on the HML factor.
 
-```latex
+```math
 r = r_f + \beta_m(r_m-r_f) + \beta_{SMB}(SMB) + \beta_{HML}(HML)
-```latex
+```
 
 - SMB (Small Minus Big) = Historic excess returns of small-cap companies over large-cap companies
 - HML (High Minus Low) = Historic excess returns of value stocks (high book-to-price ratio) over growth stocks (low book-to-price ratio)

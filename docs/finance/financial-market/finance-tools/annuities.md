@@ -8,13 +8,13 @@ Example of annuities: mortgage payment, car loan payments, bonds payments
 
 Annuity Compound Factor, $ACF(r, n)$, sum up the compounding factors for $n$ payments at a constant interest rate $r$.
 
-```latex
+```math
 ACF(r, n) = \frac{(1 + r)^n - 1}{r}
-```latex
+```
 
-```latex
+```math
 FV_{n} = C \times ACF(r, n)
-```latex
+```
 
 - $FV$: future value of annuity
 - $C$: cash flow per period
@@ -23,7 +23,7 @@ FV_{n} = C \times ACF(r, n)
 
 Excel formula:
 
-```
+```math
 = FV(rate, nper, pmt) = FV(r, n, C)
 ```
 
@@ -31,7 +31,7 @@ Excel formula:
 
 Suppose you want to have $1 million when you retire in 35 years. What annual payment would you have to make to get to your goal if you can earn 6% per year?
 
-```latex
+```math
 \begin{align*}
 
 FV_{35} &= 1,000,000 \\
@@ -39,11 +39,11 @@ r &= 6\% \\
 C &= \frac{FV_{35}}{ACF(0.06, 35)} = \frac{1,000,000 \times 0.06}{(1 + 0.06)^{35}-1} = 8,973.86
 
 \end{align*}
-```latex
+```
 
 Excel formula:
 
-```
+```math
 C = PMT(rate, nper, pv) = PMT(r, n, FV)
 ```
 
@@ -53,22 +53,22 @@ Suppose you will get a fixed payment $C$ every year for $n$ years. The opportuni
 
 To do that, we need to discount each cash flow back to time zero and then add them.
 
-```latex
+```math
 \begin{align*}
 PV &= \frac{C}{1+r} + \frac{C}{(1+r)^2} + .. + \frac{C}{(1+r)^n} \\
   &= C \times ADF(r, n)
 \end{align*}
-```latex
+```
 
 ### Formula
 
-```latex
+```math
 ADF(r, n) = \frac{1 - (1+r)^{-n}}{r}
-```latex
+```
 
-```latex
+```math
 PV = C \times ADF(r, n)
-```latex
+```
 
 - $PV$: present value
 - $C$: the cash flow you receive each period
@@ -79,7 +79,7 @@ PV = C \times ADF(r, n)
 
 Suppose you borrow $\$37,150$ with a maturity of 60 months. The interest rate is $4\%$ per year, compounded monthly. What are the monthly payments? (what is the equivalent cashflow you have to pay?)
 
-```latex
+```math
 \begin{align*}
 
 PV &= 37,150 \\
@@ -88,7 +88,7 @@ n &= 60 \\
 C &= \frac{V_0}{ADF(0.04 / 12, 60)} = \frac{37150}{54.2990689} = 684
 
 \end{align*}
-```latex
+```
 
 ## Examples
 
@@ -105,13 +105,13 @@ You want to compare the present value of $1,000 yearly for 13 years with $10,000
 
 So you need to calculate the present value of an annuity.
 
-```latex
+```math
 \begin{align*}
 PV &= C \times ADF(r, n) \\
   &= 1000 \times \frac{1 - (1+0.04)^{-13}}{0.04} \\
   &= 9985.65
 \end{align*}
-```latex
+```
 
 Hence you prefer to have $10000 now.
 
@@ -124,13 +124,13 @@ How much would you have saved in twenty years if you save $5000 every year and c
 
 We need to compute the future value of an annuity.
 
-```latex
+```math
 \begin{align*}
 FV_{n} &= C \times ACF(r, n) \\
   &= 5000 \times \frac{(1 + 0.06)^{20} - 1}{20} \\
   &= 183,927.956
 \end{align*}
-```latex
+```
 
 ### Example 3
 
@@ -144,9 +144,9 @@ You are buying a new car. The car dealer gives you three financing options. If y
 
 We need to compare the present value of each of these payment plans using the present value of an annuity.
 
-```latex
+```math
 PV = C \times ADF(r, n)
-```latex
+```
 
 - The present value for option 1 is 16,435.51
 - The present value for option 2 is 13,537.720
@@ -166,9 +166,9 @@ You are buying a new house for $450,000. Reviewing different financing options, 
 
 We need to solve for the fixed monthly mortgage payments using the present value formula of annuities.
 
-```latex
+```math
 C = \frac{PV}{ADF(r, n)}
-```latex
+```
 
 - Option 1, C = 2020.70
 - Option 2, C = 2495.69
@@ -183,18 +183,18 @@ An annuity is a series of payments increasing at a constant growth rate for a sp
 
 ## Formula
 
-```latex
+```math
 ADF(r, n, g) = \frac{1 - \frac{(1+g)^n}{(1+r)^n}}{r - g}
-```latex
+```
 
-```latex
+```math
 ACF(r, n, g) = \frac{(1+r)^n-(1+g)^n}{r - g}
-```latex
+```
 
 ## Example
 
 Suppose you estimated your salary will start at $90K and will grow at 5% per year for the next five years. What is the present value of your future salary if the interest rate is 8% per year?
 
-```latex
+```math
 V_0 = 90000 \times ADF(r=8\%, n=5\%, g=5\%)
-```latex
+```

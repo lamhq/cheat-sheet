@@ -1,127 +1,250 @@
-# Writing tests
+# Write tests
 
-## Overview
-
-A Playwright test includes steps that:
-- perform actions on a web page
-- assert the state against expectations
-
-There is no need to wait to performing an action.
-
-Tests are isolated. Each test runs in a clean, independent environment.
-
-:::info
-By receiving a [page fixture](https://playwright.dev/docs/test-fixtures#built-in-fixtures), pages are isolated between tests due to the [Browser Context](https://playwright.dev/docs/browser-contexts), which is equivalent to a brand new browser profile.
-:::
-Example test:
-
-```ts
-import { test, expect } from '@playwright/test';
-
-test.describe('SauceDemo login flow', () => {
-  test('should login successfully and show products page', async ({ page }) => {
-    // Step 1: Navigate to the site
-    await page.goto('https://www.saucedemo.com/');
-
-    // Step 2: Fill in login form
-    await page.fill('#user-name', 'standard_user');
-    await page.fill('#password', 'secret_sauce');
-
-    // Step 3: Submit the form
-    await page.click('#login-button');
-
-    // Step 4: Assert that we are on the products page
-    await expect(page).toHaveURL(/inventory.html/);
-
-    // Step 5: Assert that a product is visible
-    const firstProduct = page.locator('.inventory_item_name').first();
-    await expect(firstProduct).toHaveText('Sauce Labs Backpack');
-  });
-
-  test('should show error with invalid credentials', async ({ page }) => {
-    await page.goto('https://www.saucedemo.com/');
-
-    await page.fill('#user-name', 'wrong_user');
-    await page.fill('#password', 'wrong_password');
-    await page.click('#login-button');
-
-    // Assert error message
-    const errorMessage = page.locator('[data-test="error"]');
-    await expect(errorMessage).toContainText('Username and password do not match');
-  });
-});
-```
-
+Code snippets for writing browser automation tests.
 
 ## Finding elements
 
-[Locators](https://playwright.dev/docs/locators) represent a way to find element(s) on the page.
+[Locators](https://playwright.dev/docs/locators) are used to find elements on the page.
 
-- `getByRole()` – locate elements by ARIA role and accessible name  
-- `getByText()` – match visible text content  
-- `getByLabel()` – target form controls by label text  
-- `getByPlaceholder()` – locate inputs by placeholder text  
-- `getByAltText()` – find images by alt attribute  
-- `getByTitle()` – match elements by title attribute  
-- `getByTestId()` – use custom `data-testid` attributes  
-- `frameLocator()` - access `iframe` HTML tag to perform interactions inside the frame
-- `locator()` – use CSS or XPath selectors directly (not recommended)
-
-```ts
-await page.getByLabel('Password').fill('secret-password');
-
-await page.getByRole('button', { name: 'Sign in' }).click();
-```
-
-
-## Interactons
-
-Check [here](https://playwright.dev/docs/input) for all available actions.
-
-### Page actions
-
-- `page.goto(url)` – navigate to a specific URL  
-- `page.screenshot()` – take a screenshot of the page  
-- `page.pdf()` – generate a PDF (Chromium only)  
-- `page.evaluate(fn)` – run custom JavaScript in the page context  
-- `page.addInitScript()` – inject scripts before any page loads  
-- `page.context().storageState()` – capture cookies and localStorage  
+| Locator | Description | When to Use |
+| --- | --- | --- |
+| `getByRole()` | Locate by explicit and implicit accessibility attributes. | For buttons, links, menus. |
+| `getByText()` | Locate by text content. | For headings, paragraphs. |
+| `getByLabel()` | Locate a form control by associated label's text. | For inputs, checkboxes. |
+| `getByPlaceholder()` | Locate an input by placeholder. | For unlabeled text fields. |
+| `getByAltText()` | Locate an element, usually image, by its text alternative. | For images/media. |
+| `getByTitle()` | Locate an element by its title attribute. | For tooltip info. |
+| `getByTestId()` | Locate an element based on its `data-testid` attribute. | When no semantic locator available. |
+| `locator()` | Use CSS or XPath selectors directly (last resort). | The last option when no other locator works. |
 
 ```ts
-await page.goto('https://playwright.dev/');
+// Locate a button by role and accessible name
+/* <button type="submit">Save changes</button> */
+await page.getByRole('button', { name: 'Save changes' }).click();
+
+// Locate a heading by role and name
+/* <h1>Dashboard</h1> */
+await page.getByRole('heading', { name: 'Dashboard' }).click();
+
+// Locate a link by role and accessible name
+/* <a href="/learn-more">Learn more</a> */
+await page.getByRole('link', { name: 'Learn more' }).click();
+
+// Locate a checkbox by role and label
+/* <label><input type="checkbox"> Accept terms</label> */
+await page.getByRole('checkbox', { name: 'Accept terms' }).check();
+
+// Locate a radio button by role and label
+/* <label><input type="radio" name="option"> Option A</label> */
+await page.getByRole('radio', { name: 'Option A' }).check();
+
+// Locate a textbox (input) by role and label
+/* <label for="username">Username</label>
+   <input id="username" type="text"> */
+await page.getByRole('textbox', { name: 'Username' }).fill('lac');
+
+// Locate a combobox (dropdown) by role and label
+/* <label for="country">Country</label>
+   <select id="country"><option value="VN">Vietnam</option></select> */
+await page.getByRole('combobox', { name: 'Country' }).selectOption('VN');
+
+// Locate a tab by role and name
+/* <button role="tab">Settings</button> */
+await page.getByRole('tab', { name: 'Settings' }).click();
+
+// Locate a menuitem inside a popup menu
+/* <ul role="menu">
+     <li><button role="menuitem">Delete</button></li>
+   </ul> */
+await page.getByRole('menuitem', { name: 'Delete' }).click();
+
+// Match visible text content
+await page.getByText('Welcome back!').click();
+
+// Target form controls by label text
+await page.getByLabel('Email').fill('user@example.com');
+
+// Locate inputs by placeholder text
+await page.getByPlaceholder('Enter your password').fill('secret123');
+
+// Find images by alt attribute
+await page.getByAltText('Company logo').click();
+
+// Match elements by title attribute
+await page.getByTitle('Close').click();
+
+// Use custom data-testid attributes
+await page.getByTestId('login-button').click();
+
+// Use CSS or XPath selectors directly (not recommended)
+await page.locator('div.card > button.action').click();
 ```
+
+### Filtering locators
+
+Locators can be filtered to narrow down the matched elements using `locator.filter()`.
+
+Filtering options:
+
+- `hasText`: element contains a string or regex
+- `hasNotText`: element does not contain a string
+- `has`: element has a matching descendant locator
+- `hasNot`: element does not have a matching descendant locator
+
+```ts
+// Filter by text
+await page
+  .getByRole('listitem')
+  .filter({ hasText: 'Product 2' })
+  .getByRole('button', { name: 'Add to cart' })
+  .click();
+
+// Filter by text using regex
+await page
+  .getByRole('listitem')
+  .filter({ hasText: /Product 2/ })
+  .getByRole('button', { name: 'Add to cart' })
+  .click();
+
+// Filter by not having text
+await page
+  .getByRole('listitem')
+  .filter({ hasNotText: 'Out of stock' })
+  .click();
+
+// Filter by child/descendant and click the nested button
+await page
+  .getByRole('listitem')
+  .filter({
+    has: page.getByRole('heading', { name: 'Product 2' })
+  })
+  .getByRole('button', { name: 'Add to cart' })
+  .click();
+
+// Verify there is only one matching card
+await page
+  .getByRole('listitem')
+  .filter({
+    has: page.getByRole('heading', { name: 'Product 2' })
+  })
+  .click();
+
+// Filter by not having a child/descendant with specific text
+await page
+  .getByRole('listitem')
+  .filter({ hasNot: page.getByText('Product 2') })
+  .click();
+
+// Matching only visible elements
+await page
+  .locator('button')
+  .filter({ visible: true })
+  .click();
+
+// Chain multiple filters to narrow down the selection
+await page.getByRole('listitem')
+  .filter({ hasText: 'Mary' })
+  .filter({ has: page.getByRole('button', { name: 'Say goodbye' }) })
+  .screenshot({ path: 'screenshot.png' });
+```
+
+### Combining locators
+
+Matching two locators simultaneously (AND logic):
+
+```ts
+// <button title="Subscribe">Subscribe Now</button>
+const button = page.getByRole('button').and(page.getByTitle('Subscribe'));
+```
+
+Matching one of two locators (OR logic):
+
+```ts
+const newEmail = page.getByRole('button', { name: 'New' });
+const dialog = page.getByText('Confirm security settings');
+await expect(newEmail.or(dialog).first()).toBeVisible();
+```
+
+### Nested locators
+
+Locators can be chained to to narrow down to a particular part of the search.
+
+```ts
+// Within a dialog, finds a button with the accessible name "OK" and click it
+await page
+  .getByRole('dialog')
+  .getByRole('button', { name: 'OK' })
+  .click();
+```
+
+## Actions
 
 ### Element actions
 
-- `locator.click()` – click on an element  
-- `locator.fill()` – enter text into input fields  
-- `locator.type()` – simulate typing character-by-character  
-- `locator.press()` – press keyboard keys (e.g. Enter, Tab)  
-- `locator.check()` / `locator.uncheck()` – toggle checkboxes  
-- `locator.selectOption()` – choose from dropdown menus  
-- `locator.hover()` – simulate mouse hover over an element  
-- `locator.setInputFiles()` – upload files to input fields  
-- `locator.focus()` – set focus on an element  
-- `locator.clear()` – clear input field content  
-- `locator.scrollIntoViewIfNeeded()` – scroll element into view  
-- `locator.screenshot()` – capture screenshot of the element  
-- `locator.evaluate()` – run custom JavaScript on the element  
-- `locator.isVisible()` – check if the element is visible  
-- `locator.count()` – count number of matching elements
-
 ```ts
-await page.getByLabel('Password').fill('secret-password');
+// Check the input checkbox
+await page.getByLabel('Accept terms').check();
+
+// Click the element
+await page.getByRole('button', { name: 'Submit order' }).click();
+
+// Uncheck the input checkbox
+await page.getByLabel('Subscribe to newsletter').uncheck();
+
+// Hover mouse over the element
+await page.getByRole('link', { name: 'More options' }).hover();
+
+// Fill the form field, input text
+await page.getByLabel('Username').fill('lac');
+
+// Focus the element
+await page.getByPlaceholder('Enter your email').focus();
+
+// Press single key
+await page.getByPlaceholder('Search products').press('Enter');
+
+// Pick files to upload
+await page.getByLabel('Upload resume').setInputFiles('resume.pdf');
+
+// Select option in the drop down
+await page.getByLabel('Country').selectOption('VN');
 ```
 
+For the complete list, check the [Input API](https://playwright.dev/docs/input) section.
+
+
+### Page actions
+
+```ts
+// Navigate to a specific URL
+await page.goto('https://example.com');
+
+// Take a screenshot of the page
+await page.screenshot({ path: 'homepage.png' });
+
+// Generate a PDF (Chromium only)
+await page.pdf({ path: 'report.pdf', format: 'A4' });
+
+// Run custom JavaScript in the page context
+const title = await page.evaluate(() => document.title);
+console.log(title);
+
+// Inject scripts before any page loads
+await page.addInitScript({ path: './preload.js' });
+
+// Capture cookies and localStorage
+const storage = await page.context().storageState({ path: 'storage.json' });
+console.log(storage);
+```
 
 ## Assertions
 
-Check [here](https://playwright.dev/docs/test-assertions) for a list of available assertions.
-
 ### Page-Level Assertions
 
-- `toHaveURL()` – page has expected URL  
-- `toHaveScreenshot()` – page matches screenshot  
+- `toHaveTitle()` – page has expected title  
+- `toHaveURL()` – page has expected URL
+- `toHaveScreenshot()` – page has a screenshot  
+- `toMatchAriaSnapshot()` – page matches ARIA snapshot
 
 ```ts
 await expect(page).toHaveURL(/inventory.html/);
@@ -129,62 +252,247 @@ await expect(page).toHaveURL(/inventory.html/);
 
 ### Element State Assertions
 
-- `toBeVisible()` – element is visible  
-- `toBeHidden()` – element is hidden or not in DOM  
-- `toBeEnabled()` – element is enabled  
-- `toBeDisabled()` – element is disabled  
-- `toBeChecked()` – checkbox or radio is checked  
-- `toBeEditable()` – input is editable  
-- `toBeEmpty()` – element has no text content  
-- `toBeFocused()` – element is focused 
-- `toHaveTitle()` – page has expected title  
-
 ```ts
-await expect(page.getByText('Welcome, John!')).toBeVisible();
+// Element is visible
+await expect(page.getByRole('button', { name: 'Submit' })).toBeVisible();
+
+// Element is hidden or not in DOM
+await expect(page.getByText('Loading...')).toBeHidden();
+
+// Element is enabled
+await expect(page.getByRole('button', { name: 'Save changes' })).toBeEnabled();
+
+// Element is disabled
+await expect(page.getByRole('button', { name: 'Delete' })).toBeDisabled();
+
+// Checkbox or radio is checked
+await expect(page.getByLabel('Accept terms')).toBeChecked();
+
+// Input is editable
+await expect(page.getByLabel('Username')).toBeEditable();
+
+// Element has no text content
+await expect(page.getByRole('heading', { name: '' })).toBeEmpty();
+
+// Element is focused
+await expect(page.getByPlaceholder('Enter your email')).toBeFocused();
+
+// Element intersects viewport
+await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeInViewport();
+
+// Element is attached
+await expect(page.getByTestId('product-card')).toBeAttached();
 ```
 
 ### Content & Attribute Assertions
 
-- `toHaveText()` – element has exact text  
-- `toContainText()` – element contains partial text  
-- `toHaveAttribute()` – element has specific attribute  
-- `toHaveClass()` – element has specific class  
-- `toHaveValue()` – input has a specific value  
-- `toHaveCount()` – locator matches expected number of elements  
-- `toHaveCSS()` – element has specific CSS property  
-
 ```ts
-await expect(page.getByTitle('Issues count')).toHaveText('25 issues');
+// Locator matches expected number of elements
+await expect(page.getByRole('listitem')).toHaveCount(3);
+
+// Element has exact text
+await expect(page.getByRole('heading', { level: 1 })).toHaveText('Dashboard');
+
+// Element contains partial text
+await expect(page.getByText('Welcome')).toContainText('Welcome back');
+
+// Element has specific attribute
+await expect(page.getByRole('link', { name: 'Learn more' }))
+  .toHaveAttribute('href', '/learn-more');
+
+// Element has specified CSS classes
+await expect(page.getByTestId('alert')).toContainClass(['error', 'visible']);
+
+// Element has specified CSS class property
+await expect(page.getByTestId('alert')).toHaveClass('error');
+
+// Input has a specific value
+await expect(page.getByLabel('Username')).toHaveValue('lac');
+
+// Select has options selected
+await expect(page.getByLabel('Country')).toHaveValues(['VN', 'US']);
+
+// Element has a specific ARIA role
+await expect(page.getByRole('button', { name: 'Save changes' })).toHaveRole('button');
+
+// Element has an ID
+await expect(page.getByRole('heading', { name: 'Dashboard' })).toHaveId('main-title');
+
+// Element has specific CSS property
+await expect(page.getByRole('button', { name: 'Submit' }))
+  .toHaveCSS('background-color', 'rgb(0, 123, 255)');
+
+// Element has a matching accessible description
+await expect(page.getByRole('button', { name: 'Info' }))
+  .toHaveAccessibleDescription('More information');
+
+// Element has a matching accessible name
+await expect(page.getByRole('button', { name: 'Save changes' }))
+  .toHaveAccessibleName('Save changes');
+
+// Element matches the Aria snapshot
+await expect(page.getByRole('form')).toMatchAriaSnapshot(`
+  - role: form
+    name: Registration
+    children:
+      - role: textbox
+        name: Username
+      - role: button
+        name: Submit
+`);
 ```
 
 ### Response Assertions
 
-- `toBeOK()` – response status is OK (200–299)  
-- `toBe(statusCode)` – response has specific status code
-- `toMatchObject`: checks if an object matches a subset of properties. Allows extra properties to be present in the value
+```ts
+// Response status is OK (200–299)
+const response = await page.goto('https://example.com');
+await expect(response).toBeOK();
+
+// Response has specific status code
+const apiResponse = await page.request.get('https://api.example.com/data');
+await expect(apiResponse).toBe(200);
+```
+
+### Value Assertions
+
+:::warning
+These assertions do not auto-retry. Prefer [auto-retrying assertions](https://playwright.dev/docs/test-assertions#auto-retrying-assertions) whenever possible.
+:::
 
 ```ts
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 
-test('API returns OK response', async ({ request }) => {
-  const response = await request.get('https://jsonplaceholder.typicode.com/posts/1');
-  await expect(response).toBeOK(); // ✅ passes if status is 200–299
+// Value is the same
+const count = 5;
+expect(count).toBe(5);
+
+// Value is similar - deep equality and pattern matching
+const obj = { a: 1, b: { c: 2 } };
+expect(obj).toEqual({ a: 1, b: { c: 2 } });
+
+// Value is truthy
+const isActive = 'hello';
+expect(isActive).toBeTruthy();
+
+// Value is falsy
+const isDisabled = 0;
+expect(isDisabled).toBeFalsy();
+
+// Array or string has length
+const fruits = ['apple', 'banana', 'cherry'];
+expect(fruits).toHaveLength(3);
+expect('Playwright').toHaveLength(10);
+
+// String contains a substring / Array contains element
+expect('Playwright is awesome').toContain('awesome');
+expect(fruits).toContain('banana');
+
+// Array or set contains a similar element
+const users = [{ id: 1 }, { id: 2 }];
+expect(users).toContainEqual({ id: 2 });
+
+// String matches a regular expression
+expect('user@example.com').toMatch(/.+@example\.com/);
+
+// Object contains specified properties
+const user = { id: 1, name: 'Alice', role: 'admin' };
+expect(user).toMatchObject({ name: 'Alice' });
+
+// Object is an instance of a class
+class Person {}
+const person = new Person();
+expect(person).toBeInstanceOf(Person);
+
+// Function throws an error
+const throwError = () => { throw new Error('Oops!'); };
+expect(throwError).toThrow('Oops!');
+```
+
+### Asymmetric matchers
+
+These expressions can be nested in other assertions to allow more relaxed matching against a given condition.
+
+```ts
+import { expect } from '@playwright/test';
+
+// Matches any instance of a class/primitive
+const str = 'hello';
+expect(str).toEqual(expect.any(String));
+
+const num = 42;
+expect(num).toEqual(expect.any(Number));
+
+// Matches anything
+const value = undefined;
+expect(value).toEqual(expect.anything());
+
+// Array contains specific elements
+const fruits = ['apple', 'banana', 'cherry'];
+expect(fruits).toEqual(expect.arrayContaining(['banana', 'cherry']));
+
+// Array contains elements of specific type
+const numbers = [1, 2, 3];
+expect(numbers).toEqual(expect.arrayOf(expect.any(Number)));
+
+// Number is approximately equal
+const pi = 3.14159;
+expect(pi).toBeCloseTo(3.14, 2);
+
+// Object contains specific properties
+const user = { id: 1, name: 'Alice', role: 'admin' };
+expect(user).toEqual(expect.objectContaining({ name: 'Alice' }));
+
+// String contains a substring
+const message = 'Playwright is awesome!';
+expect(message).toEqual(expect.stringContaining('awesome'));
+
+// String matches a regular expression
+const email = 'user@example.com';
+expect(email).toEqual(expect.stringMatching(/.+@example\.com/));
+```
+
+For the complete list, see [assertions guide](https://playwright.dev/docs/test-assertions).
+
+### Custom expect message
+
+```ts
+import { expect } from '@playwright/test';
+
+const value = 42;
+expect(value, 'Value should be 42').toBe(42);
+```
+
+### Polling assertions
+
+Poll a function until it returns the expected value, with configurable intervals and timeout:
+
+```ts
+// Keep calling a function until it returns the expected value
+await expect.poll(async () => {
+  // Example: fetch status code from an API or page
+  const response = await page.request.get('/health');
+  return response.status();
+}, {
+  // Probe, wait 1s, probe, wait 2s, probe, wait 10s, probe...
+  intervals: [1_000, 2_000, 10_000],
+  timeout: 60_000
+}).toBe(200);
+```
+
+Retry test until it passes:
+
+```ts
+await expect(async () => {
+  const response = await page.request.get('https://api.example.com');
+  expect(response.status()).toBe(200);
+}).toPass({
+  // Probe, wait 1s, probe, wait 2s, probe, wait 10s, probe, wait 10s, probe
+  // ... Defaults to [100, 250, 500, 1000].
+  intervals: [1_000, 2_000, 10_000],
+  timeout: 60_000
 });
 ```
-
-
-```ts
-const value = {
-  a: 1,
-  b: 2,
-  c: true,
-};
-expect(value).toMatchObject({ a: 1, c: true });
-expect(value).toMatchObject({ b: 2, c: true });
-
-expect([{ a: 1, b: 2 }]).toMatchObject([{ a: 1 }]);
-```
-
 
 ## Test Hooks
 
@@ -200,8 +508,7 @@ test.afterAll(() => console.log('🌍 Global afterAll'));
 
 test('Outside test #1', async ({ page }) => {
   console.log('➡️ Outside test #1');
-  await page.goto('https://example.com');
-  await expect(page).toHaveTitle(/Example/);
+  // ...
 });
 
 test.describe('Inside describe block', () => {
@@ -211,31 +518,320 @@ test.describe('Inside describe block', () => {
 
   test('Inside test #1', async ({ page }) => {
     console.log('➡️ Inside test #1');
-    await page.goto('https://example.com');
-    await expect(page.locator('h1')).toHaveText('Example Domain');
+    // ...
   });
 
   test('Inside test #2', async ({ page }) => {
     console.log('➡️ Inside test #2');
-    await page.goto('https://example.com');
-    await expect(page).toHaveTitle(/Example/);
+    // ...
   });
 });
 ```
 
+Output:
+
+```
+🌍 Global beforeAll
+➡️ Outside test #1
+📦 Local beforeAll
+➡️ Inside test #1
+➡️ Inside test #2
+📦 Local afterAll
+🌍 Global afterAll
+```
 
 ## Annotations
 
-- `test.skip()`: Marks test as irrelevant; Playwright skips it. Use when not applicable in some configurations.
-- `test.fail()`: Marks test as expected to fail; runs and verifies failure. Complains if it passes.
-- `test.fixme()`: Marks test as failing; skips execution. Use when running is slow or crashes.
-- `test.slow()`: Marks test as slow; triples the timeout.
-- `test.only()`: Runs only this test; skips all others. Useful for focused debugging.
-
-Conditionally skip a test (or a group of tests):
-
 ```ts
+import { test, expect } from '@playwright/test';
+
+// Marks test as irrelevant; skips it
+test.skip('skip this test example', async ({ page }) => {
+  // ...
+});
+
+// Marks test as expected to fail; runs and verifies failure
+test.fail('expected failure example', async ({ page }) => {
+  // ...
+});
+
+// Marks test as failing; skips execution
+test.fixme('fixme test example', async ({ page }) => {
+  // ...
+});
+
+// Marks test as slow; triples the timeout
+test.slow('slow test example', async ({ page }) => {
+  // ...
+});
+
+// Runs only this test; skips all others
+test.only('focused debugging example', async ({ page }) => {
+  // ...
+});
+
+// Conditionally skip a test (or a group of tests):
 test('skip this test', async ({ page, browserName }) => {
   test.skip(browserName === 'firefox', 'Still working on it');
+  // ...
 });
+```
+
+
+## Page Object Model
+
+Page Object Model (POM) is a **design pattern** in test automation that organizes web pages as objects, improving code readability, reusability, and maintainability by separating UI structure from test logic.
+
+:::info
+For example, an e-commerce web application might have a home page, a listings page and a checkout page. Each of them can be represented by page object models.
+:::
+
+Define a base page class to handle common operations:
+
+```ts title="base.page.ts"
+import { Locator, Page } from '@playwright/test';
+
+/**
+ * Base Page Object Model
+ * Contains common methods shared across all page objects
+ */
+export abstract class BasePage {
+  constructor(protected readonly page: Page) {}
+
+  public abstract getUrl(): string;
+
+  public navigate() {
+    return this.page.goto(this.getUrl());
+  }
+}
+```
+
+Then, create a page object class for each page of your application:
+
+```ts title="new-post.page.ts"
+import { Locator, Page } from '@playwright/test';
+import { BasePage } from './base.page';
+
+export class NewPostPage extends BasePage {
+  constructor(page: Page) {
+    super(page);
+  }
+
+  public getUrl(): string {
+    return '/new-post';
+  }
+
+  public getResultMessage(): Locator {
+    return this.page.getByRole('alert');
+  }
+
+  public fillTitle(title: string): Promise<void> {
+    return this.page.getByRole('textbox', { name: 'Title' }).fill(title);
+  }
+
+  public fillContent(content: string): Promise<void> {
+    return this.page.getByRole('textbox', { name: 'Content' }).fill(content);
+  }
+
+  public submitForm(): Promise<void> {
+    return this.page.locator('button:has-text("Submit")').click();
+  }
+}
+```
+
+Using the page object in tests:
+
+```ts
+import { expect, test } from '@playwright/test';
+import { NewPostPage } from '../../pages/new-post.page';
+
+test('should submit the form and show Success', async ({ page }) => {
+  const examplePage = new NewPostPage(page);
+
+  await examplePage.navigate();
+  await examplePage.fillTitle('Post Title');
+  await examplePage.fillContent('This is the content of the post.');
+  await examplePage.submitForm();
+
+  await expect(examplePage.getResultMessage()).toHaveText('Success');
+});
+```
+
+
+## Anti-patterns
+
+### No explicit waits
+
+Never use explicit waits in tests. Playwright's auto-waiting and retrying assertions will handle waiting for elements to be ready.
+
+```ts
+// ❌ Bad: fixed timeout — brittle and slows tests
+await page.waitForTimeout(2000);
+
+// ❌ Bad: manual wait for selector
+await page.waitForSelector('button#checkout');
+
+// ❌ Bad: waiting for element state explicitly
+await page.waitForFunction(() => document.querySelector('#checkout') !== null);
+
+// ❌ Bad: waiting for navigation manually
+await page.waitForNavigation();
+
+// ❌ Bad: waiting for load state manually
+await page.waitForLoadState('networkidle');
+
+// ❌ Bad: waiting for response manually
+await page.waitForResponse('**/api/checkout');
+
+// ❌ Bad: waiting for event manually
+await page.waitForEvent('console');
+
+// ❌ Bad: waiting for URL manually
+await page.waitForURL('/checkout');
+```
+
+### No assertions in conditional blocks
+
+Never perform assertions inside conditional blocks (e.g., `if`, `else`, `switch`):
+
+```ts
+test('login form should show error on empty submit', async ({ page }) => {
+  // ❌ Bad: assertion inside conditional
+  if (await page.locator('.error').isVisible()) {
+    await expect(page.locator('.error')).toHaveText('Invalid Username or password');
+  }
+});
+```
+
+### Avoid CSS selectors
+
+Don’t rely on styling classes or deep DOM paths.  
+
+```ts
+// ❌
+page.locator('div.content > ul > li:nth-child(1)')
+```
+
+### Avoid attribute and content retrieval
+
+Do not retrieve element's content or attribute value and perform manual assertions on them:
+
+```ts
+// ❌ Bad: getting element's content
+const descriptionText = await page.getByText('welcome').textContent();
+
+// ❌ Bad: perform assertion without auto-waiting
+expect(descriptionText).toMatch(
+  /[A-Z][a-z]{2},\s+\d{1,2}\s+[A-Z][a-z]{2},\s+\d{4}/
+);
+
+// ❌ Bad: getting element's attribute value
+expect(await page.getByText('welcome').isVisible()).toBe(true);
+
+// ❌ Bad: getting page URL and performing manual assertion
+expect(page.url()).toContain('/dashboard');
+```
+
+### Never return element's properties
+
+Never return element's properties (like text content, attribute values, counts, or visibility) in Page object methods:
+
+Don't:
+
+```ts
+export class LoginPage {
+  constructor(private page) {}
+
+  async getResultMessage() {
+    // ❌ Bad: returning element property
+    return this.page.getByRole('alert').innerText();
+  }
+}
+
+test('invalid credentials should show error', async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  // ❌ Bad: get element property and perform non-retryable assertion
+  const errorMessage = await loginPage.getResultMessage();
+  expect(errorMessage).toBe('Invalid Username or password');
+});
+```
+
+Do:
+
+```ts
+export class LoginPage {
+  constructor(private page) {}
+
+  async getResultMessage() {
+    // ✅ Good: returning element directly
+    return this.page.getByRole('alert');
+  }
+}
+
+test('invalid credentials should show error', async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  // ✅ Good: perform retryable assertion on the element
+  await expect(loginPage.getResultMessage()).toHaveText('Invalid Username or password');
+});
+```
+
+### Never perform assertions in methods
+
+Never perform assertions inside methods of Page object.
+
+Don't:
+
+```ts
+export class CheckoutPage {
+  constructor(private page) {}
+
+  async fillContent(content: string) {
+    const emailField = this.page.getByLabel('Email');
+    // ❌ Bad: assertion inside page object
+    await expect(emailField).toBeVisible();
+    await emailField.fill(content);
+  }
+}
+```
+
+Do:
+
+```ts
+export class CheckoutPage {
+  constructor(private page) {}
+
+  async fillContent(content: string) {
+    // ✅ Correct: directly perform interactions without assertions in page object
+    await this.page.getByLabel('Email').fill(content);
+  }
+}
+```
+
+### Do not define variable for single-use locator
+
+Chain locator actions directly instead of storing them in temporary variables when they're only used once. This keeps tests shorter, clearer, and avoids unnecessary indirection.
+
+```ts
+// ❌ Don't: Creates an extra variable for a one‑time action
+const menuButton = page.getByRole('button').last();
+await menuButton.click();
+
+// ✅ Do: Direct, expressive, and easier to read
+await page.getByRole('button').last().click();
+```
+
+### No async for simple methods
+
+If a page object method has only one line, return the promise directly instead of using `async/await`.
+
+```ts
+// ❌ Don't: Awaits inside the method, adding extra indirection
+public async enterContent(content: string): Promise<void> {
+  await page.getByRole('textbox', { name: 'Content' }).fill(content);
+}
+
+// ✅ Do: Return the promise directly, letting the caller await
+public enterContent(content: string): Promise<void> {
+  return page.getByRole('textbox', { name: 'Content' }).fill(content);
+}
 ```

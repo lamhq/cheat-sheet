@@ -1,155 +1,156 @@
-# Development Workflows
 
-This project uses **Trunk-Based Development**, which emphasizes small, frequent commits to the `main` branch. This approach promotes continuous integration and reduces merge conflicts.
+# Development Workflow
 
-## Feature Implementation
+This document outlines step-by-step process for developing features, fixing bugs, and reviewing code safely and efficiently.
 
-**Steps:**  
-1. Create new branch from `main` with format `feature/<name>`.  
-2. Implement the feature according to specifications.  
-3. Push branch to remote and draft a pull request with descriptive title and details.  
-4. Implement unit tests, end-to-end tests, and ensure all tests pass locally before pushing.  
-5. Update documentation as needed.  
-6. Ensure CI pipeline passes before requesting reviews.  
-7. Change PR status to "Ready for Review" and request reviews from team members.  
-8. Merge PR after approval.  
-9. Ensure CD pipeline passes.  
-10. Verify code is deployed to **dev** environment.  
+## Process
 
-**Example commands:**  
+Before writing any code for a feature or a bug fix, developers must complete the following steps:
+
+### Step 1: Identify your task
+
+1. **Find a task:** Identify the specific task ID in project management system (e.g., Jira, Trello, GitHub Issues) and assign it to yourself.
+2. **Review Requirements:** Carefully read the requirements or bug description along with the **Acceptance Criteria**.
+
+### Step 2: Update Local Source Code
+
+1. **Switch to the `main` branch and pull the latest changes:**
+  ```bash
+  git checkout main
+  git pull origin main
+  ```
+2. **Update project dependencies:**
+  ```bash
+  npm install # or yarn install, pip install, etc.
+  ```
+
+### Step 3: Create a New Branch
+
+1. **Create a short-lived Branch:** Name your branch following the [Branch Naming Conventions](#branch-naming-conventions).
+2. **Commit your code:** We enforce [Conventional Commits](#commit-message-conventions).
+
+### Step 4: Pull Request & Code Review
+
+1. **Push your branch to remote and create Pull Request:** Provide a descriptive title and detailed description linking the task ID.
+2. **Request reviews:** Follow the [Code Review](#code-review) guidelines for both authors and reviewers.
+3. **Review on staging:** Verify on the **staging** environment after deployed.
+
+**Author Checklist:**
+- PRs must be under 200 lines of code where possible.
+- Link the Jira ticket in the description.
+
+
+### Step 5: Update Task Status
+
+1. **Verify deployment:** Ensure code is deployed to **dev** environment.
+2. **Feature flag verification:** If applicable, verify the feature flag is working as expected in staging.
+3. **Close the task:** Move the tracking ticket to "Closed" once the feature is verified in staging.
+
+
+## Branching Strategy: Trunk-Based
+
+We build on the `main` branch. Long-lived feature branches are a risk to delivery velocity. 
+
+- Direct commits to `main` are blocked by branch protection rules.
+- Create a temporary branch from `main`, following the [Branch Naming Conventions](#branch-naming-conventions).
+
+
+### Branch Naming Conventions
+
+Branch names must always start with the **task type**, followed by the **ticket ID**, and a **short description** (separated by hyphens `-`, using lowercase letters).
+
+| Task Type | Purpose | Example Branch Name |
+| :--- | :--- | :--- |
+| `feature/` | Developing a new feature | `feature/PROJ-123-login-with-google` |
+| `bugfix/` | Fixing a bug from staging/develop | `bugfix/PROJ-456-fix-header-overflow` |
+| `hotfix/` | Fixing a critical bug directly on production | `hotfix/PROJ-999-fix-payment-crash` |
+| `refactor/` | Code optimization/structuring (no logic changes) | `refactor/clean-auth-middleware` |
+
+**Command to create a new branch:**
 ```bash
-# Create feature branch
-git checkout -b feature/<name>
+git checkout -b feature/PROJ-123-login-with-google
 
-# Start local development server for testing
-npm run dev
-
-# Stage changes
-git add .
-
-# Commit changes
-git commit -m "feat: <description>"
-
-# Run tests
-npm test
-
-# Push branch to remote
-git push origin feature/<name>
-
-# Create pull request
-gh pr create --title "feat: <description>" --body "Feature implementation details"
 ```
 
-## Bug Fix
 
-**Steps:**  
-1. Create new branch from `main` with format `bugfix/<name>`.  
-2. Apply fix and add regression test.  
-3. Push branch to remote and draft a pull request with descriptive title and details.  
-4. Ensure all tests pass locally before pushing.  
-5. Verify CI pipeline passes.  
-6. Request reviews and merge PR after approval.  
-7. Ensure CD pipeline passes.  
-8. Verify fix is deployed to **dev** environment.  
+## Commit Message Conventions
 
-**Example commands:**  
-```bash
-# Create bugfix branch
-git checkout -b bugfix/<name>
+To keep the Git history clean and easy to audit, we follow the **Conventional Commits** specification:
 
-# Start local development server for testing
-npm run dev
+**Structure:** `<type>(<scope>): <description>`
 
-# Stage changes
-git add .
+- **`feat`**: A new feature.
+- **`fix`**: A bug fix.
+- **`docs`**: Documentation changes only (e.g., README, internal wikis).
+- **`style`**: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc.).
+- **`refactor`**: A code change that neither fixes a bug nor adds a feature.
+- **`test`**: Adding missing tests or correcting existing automated tests (Unit Tests, Integration Tests).
 
-# Commit changes
-git commit -m "fix: <description>"
+**Examples:**
 
-# Run tests
-npm test
+- `feat(auth): add Google OAuth2 login flow`
+- `fix(ui): resolve button misalignment on mobile view`
 
-# Push branch to remote
-git push origin bugfix/<name>
 
-# Create pull request
-gh pr create --title "fix: <description>" --body "Bug fix details"
-```
+## Code Review
+
+### For the Author (PR Creator)
+
+* **Size:** Keep PRs highly focused. Large PRs will be asked to be broken down.
+- **Self-review:** Review your own code on the PR interface first to remove any redundant code, leftover `console.log` statements, or unnecessary comments before tagging others.
+- **Assign Reviewers:** Tag at least **1 or 2** team members in the **Reviewers** section.
+- **Notification Channel:** Drop the PR link in the team's shared communication channel (e.g., Slack, Discord, Telegram) and tag the reviewers to give them a heads-up. Example: *"Hey @John and @Jane, could you please review my login PR when you get a chance? [link]"*.
+
+### For the Reviewer
+
+- **Response Time (SLA):** Reviewers are responsible for checking assigned PRs within **4 hours** of being tagged (unless tied up with urgent/critical incidents).
+- **Review Criteria:**
+  * Is the code logically sound? Does it cover edge cases?
+  * Are there accompanying Unit Tests? Is the test coverage up to par?
+  * Does the code align with the team's Coding Conventions and Clean Code standards?
+- **How to Give Feedback:** Use constructive and collaborative language. Explain *why* a change is recommended rather than just handing down a directive.
+
+### Merge Criteria
+
+- The PR must receive at least **1 or 2** approval(s) from the assigned reviewers.
+- All comment threads and discussions on the PR must be resolved (**"Resolve conversation"**).
+- All automated CI checks (linting, build, test) must pass before merging
+- Once all conditions are met, the Author (or Team Lead) can execute the **Merge** (We use **Squash Merge** to keep a linear history) and delete the local and remote feature branches.
+
+
+## Definition of Done (DoD)
+
+A task is only considered complete ("Done") when:
+1. Code is merged into `main`.
+2. All checks in the CI/CD pipeline pass successfully.
+3. The feature or fix is working as expected in the staging environment.
+4. The tracking ticket is moved to "Closed".
+
 
 ## Release
 
-**Steps:**  
-1. Ensure `main` is stable and all CI/CD checks pass.  
-2. Tag release using semantic versioning (`vX.Y.Z`).  
-3. Push tag to remote.  
-4. CI/CD pipeline builds and deploys tagged release.  
-5. Verify deployment in staging and production environments.  
+Merge the PR created by release automation tool (e.g., GitHub Actions, Jenkins) to trigger the release process. This will:
+- Create a new release tag (e.g., `v1.2.0`) in Git.
+- Deploy the release to production.
 
-**Example commands:**  
-```bash
-# Create release tag
-git tag vX.Y.Z
-
-# Push release tag to remote
-git push origin vX.Y.Z
-```
-
-## Hot Fix
-
-**Steps:**  
-1. Start from the bugged release tag (`vX.Y.Z`).  
-2. Create new branch with format `hotfix/<name>`.  
-3. Apply urgent fix and test thoroughly.  
-4. Push branch to remote and draft a pull request with descriptive title and details.  
-5. Ensure all tests pass locally before merging.  
-6. Merge PR quickly after approval.  
-7. Deploy immediately to production.  
-8. Verify fix is live.  
-
-**Example commands:**  
-```bash
-# Checkout bugged release tag
-git checkout vX.Y.Z
-
-# Create hotfix branch
-git checkout -b hotfix/<name>
-
-# Start local development server for testing
-npm run dev
-
-# Stage changes
-git add .
-
-# Commit changes
-git commit -m "hotfix: <description>"
-
-# Run tests
-npm test
-
-# Push branch to remote
-git push origin hotfix/<name>
-
-# Create pull request
-gh pr create --title "hotfix: <description>" --body "Urgent fix details"
-```
 
 ## Rollback
 
-**Steps:**  
-1. Identify failed release or commit.  
-2. Roll back by reverting commit or redeploying previous tag.  
-3. Document reason for rollback.  
-4. Create follow-up issue to address root cause.  
+Since the system only deploys based on Release Tags, rollback is performed by **re-triggering the deployment pipeline for an older, stable tag** (e.g., `v1.1.0`). 
 
-**Example commands:**  
-```bash
-# Revert commit
-git revert <commit-hash>
+**Advantage:** No code changes or new tags are required. GitHub Actions fetches the exact artifacts/source code from that specific old tag and overwrites Production immediately.
 
-# Push reverted commit to remote
-git push origin main
+**Important Considerations**:
+- **Database Migrations:** If the buggy release executed a database schema migration, rolling back will fail if the database layout is mismatched. Ensure your pipeline includes down-migration scripts, or prioritize an immediate **Hotfix** over a Rollback if structural database changes cannot be safely reversed.
+- **Immutable Artifacts:** Ensure pipeline builds versioned artifacts (like Docker images tagged with `vX.Y.Z`). When rolling back, it should pull the existing, pre-built image rather than rebuilding the code to guarantee that no unexpected dependencies have changed in the meantime.
 
-# Or redeploy previous tag
-git checkout vX.Y.Z
-git push origin vX.Y.Z
-```
+
+## Hotfix
+
+When a critical bug hits Production and you need to deploy a fix immediately, follow these steps:
+
+1. Create a hotfix branch directly from the current release tag in production
+2. Apply your code fixes on the hotfix branch
+3. Verify on staging environment
+4. Merge the release PR created by release automation tool to the hotfix branch to trigger the release process.
+5. Merge the fix back into the `main` branch so the bug doesn't reappear in future releases.

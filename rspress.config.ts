@@ -25,4 +25,8 @@ export default defineConfig({
   },
   // enable math syntax
   plugins: [katex(), mermaid()],
+  // exclude data engineering and finance for fast development startup for now
+  route: {
+    exclude: ['de/**/*', 'finance/**/*', ],
+  },
 });

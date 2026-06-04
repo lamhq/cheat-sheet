@@ -20,7 +20,6 @@
     "collapsible": true,
     "collapsed": true
   },
-  "vercel",
   {
     "name": "supabase",
     "label": "Supabase",
@@ -50,16 +49,7 @@
     "collapsed": true
   },
   {
-    "name": "serverless",
-    "label": "Serverless",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  },
-  "bitbucket-pipelines",
-  {
-    "name": "azure-pipeline",
-    "label": "Azure Pipeline",
+    "name": "k8s",
     "type": "dir",
     "collapsible": true,
     "collapsed": true
@@ -72,17 +62,18 @@
     "collapsed": true
   },
   {
-    "name": "heroku",
-    "label": "Heroku",
+    "name": "github-actions",
     "type": "dir",
     "collapsible": true,
     "collapsed": true
   },
   {
-    "name": "jenkins",
-    "label": "Jenkins",
+    "name": "gitlab",
     "type": "dir",
+    "label": "GitLab",
     "collapsible": true,
     "collapsed": true
-  }
+  },
+  "bitbucket-pipelines",
+  "github-pages"
 ]

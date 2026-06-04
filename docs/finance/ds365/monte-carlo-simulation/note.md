@@ -12,24 +12,24 @@ Monte Carlo would allow us to forecast:
 
 ## Forecasting Stock Prices
 
-```latex
+```math
 \text{Price Today} = \text{Price Yesterday} \times \epsilon^r
-```latex
+```
 
 - $r$: log return of the share
 
 Explanation:
 
-```latex
+```math
 \epsilon^{ln(x)} = x \rightarrow
 \epsilon^r = \epsilon^{ln(\frac{Price Today}{Price Yesterday})}
-```latex
+```
 
 We can use Brownian motion to model $r$:
 
-```latex
+```math
 r = (\mu -\frac{1}{2}\sigma^2) + \sigma\text{Z}[Rand(0; 1)]
-```latex
+```
 
 - $\text{Z}[Rand(0; 1)]$: Z of a random number between 0 and 1
 

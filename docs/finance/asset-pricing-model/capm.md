@@ -52,9 +52,9 @@ Overall, this insight helps us understand how investors allocate their portfolio
 
 What should be the risk compensation that investors will require to expose themselves to the risk of their market portfolio?
 
-```latex
+```math
 r_m - r_f = \bar{\gamma} \times \sigma_m^2
-```latex
+```
 
 - $r_m - r_f$: market risk premium (the difference between the expected return of the market portfolio and the risk-free rate)
 - $\bar{\gamma}$: the average risk aversion coefficient in the economy
@@ -90,9 +90,9 @@ It measures the market risk that cannot be avoided through diversification.
 
 Beta is typically measured with data from the past five years.
 
-```latex
+```math
 \beta = \frac{Cov(r_x, r_m)}{\sigma_m^2}
-```latex
+```
 
 Beta is calculated by the **covariance between the stock and the market** devided by the **variance of the market**.
 
@@ -104,9 +104,9 @@ Beta is calculated by the **covariance between the stock and the market** devide
 
 ## CAPM formula
 
-```latex
+```math
 r_i = r_f + \beta_{im}(r_m - r_f)
-```latex
+```
 
 - $r_i$: expected return of the securities $i$
 - $r_f$: return of the risk free asset
@@ -163,16 +163,16 @@ Instead of holding Pocemon stock, investor can construct a better alternative po
 
 The Capital Market Line is given by the following expression:
 
-```latex
+```math
 r_p = r_f + \frac{r_m - r_f}{\sigma_m} \times \sigma_p
-```latex
+```
 
 An efficient portfolio with the same expected return ($r_p = 12\%$) as Pocemon (but with lower volatility) will have the following volatility:
 
-```latex
+```math
 12\% = 3\% + \frac{7}{18} \times \sigma_p \\
 \Rightarrow \sigma = 23.14\%
-```latex
+```
 
 
 ### Question 2
@@ -192,6 +192,6 @@ Based on the CAPM, what is the beta of the portfolio?
 
 The beta of the portfolio is simply the weighted average of the individual betas of the securities in the portfolio.
 
-```latex
+```math
 \beta_p = \sum_{i=1}^N w_i\cdot \beta_i = 1.29
-```latex
+```
