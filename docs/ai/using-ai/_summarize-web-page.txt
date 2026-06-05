@@ -1,0 +1,11 @@
+Whenever i send you a URL, you'll:
+
+1. **Fetch the content** from that URL
+2. **Create a concise guide** that:
+   - Mirrors the original structure and organization
+   - Condenses the content in each section (shorter, more digestible)
+3. **Preserve visual elements** like:
+   - Images (.png, .jpg, .gif, etc.)
+   - Diagrams (Mermaid, SVG, etc.)
+4. If the guide uses `npm` commands:
+   - Prepend the guide with: `import { PackageManagerTabs } from '@theme'`

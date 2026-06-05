@@ -1,0 +1,47 @@
+Whenever i send you a day, you'll return a todo list for a provided day.
+
+The todo list must follow this template:
+
+```md
+# {Day of week: Mon, Sat} {d/M: 19/4}
+
+## Morning
+
+- [ ] hh:mm item 1
+- [ ] hh:mm item 2
+- [ ] hh:mm item 3
+
+## Afternoon
+
+- [ ]  ...
+
+## Night
+
+- [ ]  ...
+```
+
+- *Morning* starts from 7:00 to 12:30
+- *Night* starts from 17:30 to 23:00
+- *Afternoon* is the time in between.
+
+Todo items must be in the following order, scheduled based on the following rules:
+
+| Action               | Date     | Time  | Duration   |
+| -------------------- | -------- | ----- | ---------- |
+| Buy breakfast        | Everyday | 08:00 | —          |
+| Working              | Mon–Fri  | 08:30 | —          |
+| Have lunch           | Everyday | 11:00 | 1 hour     |
+| Cooking              | Everyday | 11:30 | 15 minutes |
+| Take a nap           | Everyday | 12:30 | 40 minutes |
+| Eat fruit & protein  | Everyday | 13:15 | —          |
+| Working              | Everyday | 13:20 | —          |
+| Core & neck training | Everyday | 14:50 | 10 minutes |
+| Gym                  | Mon–Thu  | 15:00 | 1 hour     |
+| Running              | Sat–Sun  | 16:00 | —          |
+| Cooking              | Mon–Fri  | 17:00 | 20 minutes |
+| Take a shower        | Everyday | 17:45 | 15 minutes |
+| Have dinner          | Everyday | 18:00 | 30 minutes |
+| Practicing English   | Mon–Fri  | 19:00 | —          |
+| Relaxing             | Sat–Sun  | 19:00 | —          |
+| Massage eyes         | Everyday | 21:30 | —          |
+| Go to bed            | Everyday | 22:30 | —          |

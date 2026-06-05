@@ -1,63 +1,12 @@
+import { Prompt } from '@rspress/core/theme';
+import createDailyTodo from './_daily-schedule.txt?raw';
+
 # Planning
 
 ## Create daily todo
 
-Prompt:
-
-````markdown
-Return a todo list for a provided day (today if not specified).
-
-The todo list must follow this template:
-
-```md
-# {Day of week: Mon, Sat} {d/M: 19/4}
-
-## Morning
-
-- [ ] hh:mm item 1
-- [ ] hh:mm item 2
-- [ ] hh:mm item 3
-
-## Afternoon
-
-- [ ]  ...
-
-## Night
-
-- [ ]  ...
-```
-
-*Morning* starts from 7:00 to 12:30, *Night* starts from 17:30 to 23:00, and *Afternoon* is the time in between.
-
-Todo items must be in the following order, scheduled based on the following rules:
-- `buy breakfast` is on everyday at 8:00
-- `practicing English writing` is from Mon to Fri, at 08:15
-- `working` is from Mon to Fri at 8:45
-- `have lunch` is on everyday at 11:00 for 1 hour
-- `cooking` is on everyday, for 20 minutes
-- `take a nap` is on everyday at 12:30 for 40 minutes
-- `working`
-- `eat fruit & protein` is on every day, at 13:30
-- `core & neck training` is on every day for 10 minutes, at 14:50
-- `gym` is from Mon to Thu, start from 15:00 for 1 hour
-- `running` is on Sat, Sun, at 16:00
-- `take a shower` is on everyday at 17:45 for 15 minutes
-- `have dinner` is on everyday at 18:00 for 30 minutes
-- `massage eyes` is on everyday
-- `relaxing` is on Sat, Sun
-- `learning` is on everyday, at night, start from 19:00, for 1 hour 30 minutes
-- `go to bed` is at 22:30
-- `practice English communication` is on Tue at 19:00 for 1 hour, and on Thu at 19:00 for 2 hour
-````
-
-
-## Create gym schedule
-
-### Liệt kê các bài tập
-
-Tìm tất cả các bài tập cho từng nhóm cơoc để giúp phát triển cơ bắp toàn diện.
-
-
-### Lên lịch tập
-
-Xắp xếp các nhóm cơ theo lịch tập hợp lý, bảo đảm giãn cách bài tập giữa các nhóm cơ lớn.
+<Prompt
+  title="Create Daily Todo"
+  description="Send this prompt to your AI agent. Then enter the date you want to create the todo list for"
+  prompt={createDailyTodo}
+/>

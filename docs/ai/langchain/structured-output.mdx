@@ -1,0 +1,58 @@
+# Structured output
+
+Here is the shortened, tl;dr version of the guide, focusing entirely on the native approach and omitting the Tool Strategy section:
+
+## Introduction
+
+Structured output allows agents to return data in specific, predictable formats (JSON objects, Pydantic models, or dataclasses) instead of raw natural language. The data is validated and returned inside the `structured_response` key of the agent's state.
+
+
+## Specifying Response Format
+
+```python
+def create_agent(
+    ...
+    response_format: Union[
+        ToolStrategy[StructuredResponseT],
+        ProviderStrategy[StructuredResponseT],
+        type[StructuredResponseT],
+        None,
+    ]
+)
+```
+
+You can pass your Pydantic schema directly into the `response_format` argument of `create_agent()`. Under the hood, this configures the model's native capability.
+
+When a schema type is provided directly, LangChain automatically chooses:
+
+- `ProviderStrategy` if the model and provider chosen supports native structured output (e.g. OpenAI, Anthropic (Claude), or xAI (Grok)).
+- `ToolStrategy` for all other models.
+
+
+## Provider Strategy
+
+```python
+from dotenv import load_dotenv
+from pydantic import BaseModel, Field
+from langchain.agents import create_agent
+from langchain_openrouter import ChatOpenRouter
+
+load_dotenv()
+
+class ContactInfo(BaseModel):
+    """Contact information for a person."""
+    name: str = Field(description="The name of the person")
+    email: str = Field(description="The email address of the person")
+    phone: str = Field(description="The phone number of the person")
+
+model = ChatOpenRouter(model="openai/gpt-oss-20b", temperature=0.7)
+
+agent = create_agent(model, response_format=ContactInfo)  # Auto-selects ProviderStrategy
+
+result = agent.invoke({
+    "messages": [{"role": "user", "content": "Extract contact info from: John Doe, john@example.com, (555) 123-4567"}]
+})
+
+print(result["structured_response"])
+# ContactInfo(name='John Doe', email='john@example.com', phone='(555) 123-4567')
+```
