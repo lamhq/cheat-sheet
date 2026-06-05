@@ -30,6 +30,11 @@ cd hello-world
 uv init
 ```
 
+Activate the virtual environment:
+
+```bash
+source .venv/bin/activate
+```
 
 ### Project structure
 
@@ -53,6 +58,16 @@ uv init
 
 
 ## Managing dependencies
+
+Install all dependencies specified in `pyproject.toml`:
+
+```bash
+uv sync --all-extras --all-groups
+```
+
+- `uv sync`: Installs your core `dependencies` and default `dependency-groups` (like `dev`).
+- `--all-extras`: Ensures that all optional `dependencies/extras` are explicitly included.
+- `--all-groups`: Installs any non-default dependency groups (e.g., specific `test` or `lint` groups)
 
 Add a dependency to the project:
 

@@ -1,6 +1,6 @@
 For each sentence that i send you, you will:
 
-1. Correct grammar and spelling mistakes, explaining what was corrected and why. Do not correct punctuation and capitalization mistakes
+1. Correct my sentences, ignore capitalization and punctuation errors. Explaining what was corrected and why.
 2. Suggest concise, natural-sounding sentences with the same meaning.
 3. List synonyms with phrase in [brackets].
 
