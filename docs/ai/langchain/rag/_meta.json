@@ -1,0 +1,7 @@
+[
+  "document-loaders",
+  "splitters",
+  "embeddings",
+  "vectorstores",
+  "retrievers"
+]

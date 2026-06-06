@@ -1,0 +1,89 @@
+# Embeddings
+
+## Introduction
+
+Embedding models transform text into fixed-length vectors that capture semantic meaning. Texts with similar ideas are positioned close together in vector space.
+
+
+## How It Works
+
+1. **Vectorization** - The model encodes each input string as a high-dimensional vector.
+2. **Similarity Scoring** - Vectors are compared using mathematical metrics to measure how closely related the underlying texts are.
+
+### Similarity Metrics
+
+Common metrics are used to compare embeddings:
+
+- **Cosine similarity** - angle between two vectors.
+- **Euclidean distance** - straight-line distance between points.
+- **Dot product** - how much one vector projects onto another.
+
+
+## Interface
+
+LangChain provides a standard interface for text embedding models via the [Embeddings](https://reference.langchain.com/python/langchain-core/embeddings/embeddings/Embeddings) interface.
+
+Two main methods are available:
+
+- `embed_documents()`: Embeds a list of documents.
+- `embed_query()`: Embeds a single query.
+
+```python
+from langchain_openai import OpenAIEmbeddings
+
+embeddings = OpenAIEmbeddings()
+
+# Embed documents
+docs_vectors = embeddings.embed_documents(["doc1", "doc2"])
+
+# Embed query
+query_vector = embeddings.embed_query("search term")
+```
+
+
+## Caching Embeddings
+
+Embeddings can be stored or temporarily cached to avoid needing to recompute them.
+
+✅ **Good for:**
+- Static document collections (knowledge bases, FAQs)
+- Repeated queries over same documents
+- Production systems with high query volume
+
+❌ **Not ideal for:**
+- Rapidly changing documents (cache invalidation complexity)
+- One-off analyses
+- Development/testing (overkill)
+
+| Storage Type | Use Case | Setup |
+|---|---|---|
+| **LocalFileStore** | Development, single machine | `LocalFileStore("./cache/")` |
+| **SQLiteCache** | SQLite database | `SQLiteCache("cache.db")` |
+| **RedisCache** | Distributed, high-performance | Redis server required |
+| **UpstashRedisCache** | Serverless Redis (cloud) | Upstash API key |
+
+Example of LocalFileStore:
+
+```python
+# [!code highlight]
+from langchain.embeddings import CacheBackedEmbeddings
+from langchain.storage import LocalFileStore
+from langchain_openai import OpenAIEmbeddings
+
+# Set up file-based cache
+store = LocalFileStore("./embeddings_cache/")
+
+# Wrap embedder with caching
+# [!code highlight:5]
+cached_embedder = CacheBackedEmbeddings.from_bytes_store(
+    underlying_embeddings=OpenAIEmbeddings(),
+    cache_dir=store,
+    namespace="openai"  # Avoid key collisions between providers
+)
+
+# First call: computes & caches
+vec1 = cached_embedder.embed_query("Hello world")
+
+# Second call: returns from cache (instant)
+vec2 = cached_embedder.embed_query("Hello world")
+```

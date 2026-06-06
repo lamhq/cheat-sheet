@@ -8,14 +8,12 @@
   },
   {
     "name": "ai-agents",
-    "label": "AI Agents",
     "type": "dir",
     "collapsible": true,
     "collapsed": true
   },
   {
     "name": "github-copilot",
-    "label": "GitHub Copilot",
     "type": "dir",
     "collapsible": true,
     "collapsed": true

@@ -4,5 +4,10 @@
   "lcel",
   "agent",
   "structured-output",
-  "rag"
+  {
+    "name": "rag",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
 ]
