@@ -1,0 +1,34 @@
+# Few-Shot Prompting
+
+## Introduction
+
+**Few-shot prompting** works by presenting the AI model with a small number of examples (called "shots") of a task or concept, along with the instruction. The model then uses these examples to generate or classify new data similar to the provided examples.
+
+Few-shot prompting is particularly useful when:
+- Limited data is available for a given task
+- Working with new languages or domains where data is scarce
+- You need to quickly adapt models to new tasks without large amounts of new training data
+- You want more control over the model's output format and style
+
+Key insight: **The more examples you provide, the more the model adjusts and fine-tunes its output to your preferences.**
+
+## Example
+
+```md
+**Task:** Classify customer reviews as Positive, Negative, or Neutral
+
+**Examples**:
+1. "Love this product!" → Positive
+2. "Terrible quality, broke immediately." → Negative
+3. "It's okay, does the job." → Neutral
+
+Now classify: "Good price but slow shipping."
+```
+
+## Benefits
+
+- Less artistic freedom for the model
+- More precise, predictable results
+- Output becomes more tailored to your specific needs and likings
+- Reduces guessing; increases consistency
+- Fine-tune results without retraining the entire model

@@ -1,0 +1,83 @@
+# Context Engineering
+
+## Introduction
+
+Context engineering is the art and science of filling an LLM's context window with just the right information at each agent step.
+
+Think of the context window as RAM—finite capacity that needs careful curation.
+
+
+## Why It Matters
+
+Long-running agents accumulate tool feedback, quickly exceeding context limits. This causes:
+- **Context Poisoning** – Hallucinations in context
+- **Context Distraction** – Too much irrelevant info overwhelms the model
+- **Context Confusion** – Superfluous content influences responses
+- **Context Clash** – Conflicting information
+
+
+## Common Strategies
+
+Common strategies for context engineering.
+
+![General categories of context engineering](https://cdn.prod.website-files.com/65c81e88c254bb0f97633a71/69cbaaa8d3aab32815f859f4_image-4.png)
+
+### Write Context
+
+Writing context means saving it outside the context window to help an agent perform a task.
+
+- **Scratchpads** – Agent writes notes/plans to file or state during execution
+- **Memories** – Long-term storage across sessions that persists learning from past interactions
+
+### Select Context
+
+Selecting context means pulling it into the context window to help an agent perform a task.
+
+- **From Scratchpads** – Agents read via tool calls or developers expose specific state fields to the LLM at each turn for fine-grained control.
+- **From Memories** – Embeddings and knowledge graphs index memories; only relevant ones are retrieved. Challenge: unexpected retrieval can confuse users.
+- **From Tools** – Apply RAG to tool descriptions to fetch only relevant tools.
+- **From Knowledge** – Code agents combine grep/file search, knowledge graphs, and reranking to handle large codebases reliably.
+
+
+### Compress Context
+
+Compressing context involves retaining only the tokens required to perform a task.
+
+- **Summarization** – Auto-compact after 95% context threshold
+  - Can use various strategies such as recursive or hierarchical summarization
+  - Post-process specific tool calls
+  - Summarize at agent-agent handoffs
+- **Trimming** – Filter context using hard-coded heuristics (remove old messages, drop redundant info) without LLM calls. Lighter-weight than summarization but risks losing important context.
+
+
+### Isolate Context
+
+Isolating context means splitting it up to help an agent perform a task.
+
+- **Multi-agent** – Split work across subagents, each with its own context window and focused tools. Trade-off: 15× more tokens but better performance because each subagent handles narrower tasks.
+- **Sandboxes** – Store token-heavy objects (images, audio) in execution environment, not context. HuggingFace Deep Researcher runs code in sandbox; selected results return to LLM. Agents assign variables in sandbox and reuse without token cost.
+- **State Objects** – Define state schema with multiple fields; expose only selected fields to LLM while keeping others isolated. Example: `messages` field goes to LLM, `intermediate_results` stays hidden.
+
+
+## Real-World Examples
+
+| Pattern | Example | Impact |
+|---|---|---|
+| **Scratchpads** | Anthropic's LeadResearcher | Strategy survives context resets |
+| **Memories** | ChatGPT, Cursor, Windsurf | Agent learns preferences, maintains consistency |
+| **Tool Selection** | Semantic search on tool descriptions | 3× improvement in selection accuracy |
+| **Code RAG** | Windsurf (AST + grep + knowledge graphs) | Handles large codebases reliably |
+| **Summarization** | Claude Code auto-compact | Handles 100+ turn conversations |
+| **Multi-agent** | OpenAI Swarm, Anthropic researcher | Better performance despite higher token cost |
+| **Sandboxes** | HuggingFace Deep Researcher | Images/data store without context bloat |
+| **State Schema** | LangGraph isolated fields | Clean separation of LLM input vs internal state |
+
+
+## Implementation with LangGraph
+
+| Strategy | Support | How |
+|---|---|---|
+| **Write** | Short-term & long-term memory | Checkpointing for sessions; files/collections for multi-session storage |
+| **Select** | Fine-grained state control | Access state at each step; embedding-based memory retrieval via LangMem |
+| **Compress** | Built-in utilities | Message trimming/summarization; custom logic for tool output post-processing |
+| **Isolate** | Multiple approaches | State schema fields; E2B/Pyodide sandboxes; supervisor/swarm multi-agent libraries |

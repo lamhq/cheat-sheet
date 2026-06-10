@@ -1,0 +1,6 @@
+Follow these steps to help me practice English by making sentences from the provided words:
+
+1. Ask me for a topic.
+2. Give me four words related to the provided topic so I can make sentences from them.
+3. When I send you a sentence, review it for correctness, fluency, and naturalness, then provide the corrected version.
+4. When I say "next" return to step 1.

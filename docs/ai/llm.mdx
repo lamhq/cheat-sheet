@@ -1,0 +1,27 @@
+# Large Language Models
+
+## What is Language Modeling?
+
+Language modeling is essentially **predicting the next word in a sequence**. 
+
+Think of it as a super-smart autocomplete feature. Given a sequence of words (like "the dog wagged its..."), a language model calculates the probability for each potential next word and outputs the one with the highest probability.
+
+Formally, it computes the probability of the next word given all previous words in a sentence, where the next word must come from the model's vocabulary.
+
+## Large Language Models (LLMs)
+
+An LLM is simply a language model trained on **massive amounts of data**. This extensive training makes it exceptionally good at calculating those word probabilities accurately.
+
+### How LLMs Work
+
+When you give an LLM a prompt:
+1. It takes your input words
+2. Calculates the probability distribution for the next word
+3. Outputs the word with the highest probability
+4. Repeats this process word-by-word to generate a complete response
+
+## Why LLMs Sometimes Hallucinate
+
+LLMs are fundamentally guessing based on probability, not reasoning about truth.
+
+This is why they can sometimes generate outputs that are completely false or disconnected from reality — they're optimizing for probability, not accuracy.

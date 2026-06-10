@@ -1,0 +1,47 @@
+# ReAct Prompting
+
+## Introduction
+
+Simple prompting, Chain of Thought, and Act-only approaches often fail when questions require **real-world information**.
+
+**ReAct** (Reasoning + Acting) combines the model's ability to reason (like Chain of Thought) with the ability to **take actions and access external information**.
+
+## How ReAct Works
+
+Humans naturally:
+1. **Reason** about what steps are needed
+2. **Act** on those steps
+3. **Observe** the results
+4. **Adjust** the plan based on observations
+5. Repeat until the task is complete
+
+ReAct automates this cycle for LLMs.
+
+## Example
+
+Question: "Besides the Apple Remote, what other device can control the program the Apple Remote was originally designed to interact with?"
+
+1. **Thought** → "I need to search for the Apple Remote and find what program it controlled"
+2. **Act** → Execute search command for "Apple Remote"
+3. **Observation** → "Apple Remote controls Front Row media center"
+4. **Thought** → "Now I need to search for Front Row"
+5. **Act** → Search for "Front Row software"
+6. **Observation** → "Front Row is controlled by Apple Remote or keyboard function keys"
+7. **Final Answer** → Keyboard Function Keys ✓
+
+## Why ReAct is Powerful
+
+✓ **Combines reasoning with external data access**
+✓ **Simulates human problem-solving**
+✓ **Can correct itself based on observations**
+✓ **Handles complex, multi-step questions**
+✓ **More factual than standard LLM responses**
+
+## How It's Implemented
+
+Behind the scenes:
+1. Model generates reasoning steps + actions
+2. Code parses keywords (like "search") from the output
+3. Executes the action (calls external APIs, searches databases)
+4. Returns observations to the model
+5. Model continues the loop until solution is found

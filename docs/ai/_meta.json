@@ -6,6 +6,13 @@
     "collapsible": true,
     "collapsed": true
   },
+  "llm",
+  {
+    "name": "prompt",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
   {
     "name": "ai-agents",
     "type": "dir",

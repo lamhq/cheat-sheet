@@ -19,3 +19,137 @@
 ### e2e Tests
 
 ### Integration Tests
+
+
+## Prompt Examples
+
+### Analyzing text
+
+These are instruction for Gemini to shorten a documentation link:
+
+```markdown
+Every time I give you a link to a web page, shorten the web page, base on the following rules:
+- Keep the structure of the original content (number of sections, headings).
+- For instructions that contain many steps in the UI, replace them with a short summary of as a link, clicking the link should lead to the section in the original page
+- Only return markdown, do not include filler text.
+- Do not use markdown table
+- Do not use `*` as bullet points for unordered list
+- Do not add more than one space between bullet points and text.
+```
+
+````markdown
+Follow this structure when shorten the content:
+
+```markdown
+# Title
+
+[description about the content, no filler text]
+
+
+## [Section title]
+
+[shortened section content]
+
+
+## [Other section title]
+
+[...]
+
+
+## References
+
+- [Page title](https://link-to-the-original-page)
+```
+````
+
+
+### Learning Programming
+
+- What is NEW-LANGUAGE best suited for? I am an experienced Python programmer, but I don't know anything about NEW-LANGUAGE.
+- What are the main ways in which NEW-LANGUAGE differs from other languages? Explain the most essential things I need to know as an experienced programmer who wants to learn to code in NEW-LANGUAGE.
+- As an experienced programmer learning NEW-LANGUAGE, what are the things I should focus on first?
+- What are the biggest mistakes newcomers to NEW-LANGUAGE typically make with this language?
+- What are the most essential libraries or frameworks I should know about for NEW-LANGUAGE?
+- How can I install NEW-LANGUAGE?
+- How do you manage dependencies and packages in NEW-LANGUAGE?
+- What testing frameworks does the NEW-LANGUAGE community typically use?
+- How does error handling work in NEW-LANGUAGE?
+- What are the best practices for error handling in NEW-LANGUAGE?
+
+
+### Creating diagrams
+
+- Create a mermaid gantt diagram that covers the period August 1st 2025 until January 31st, 2025. Include 5 phases, each taking 6 weeks, and overlapping equally.
+
+
+### Task Planning
+
+Evaluate different approaches to implement a feature to see whether they fit with your needs and constraints.
+
+```text
+Given the feature specification below, list options for implementation and tradeoffs for each option.
+
+## Feature Description
+Users have requested a "Recent Items" section on their dashboard to quickly access the most recently viewed documents, projects, or files. This section should display the ten most recent items, sorted by the last access time.
+
+## Requirements
+* Display up to ten items that the user has accessed recently.
+* Items must be sorted by the time they were last accessed.
+* The solution should minimize database load.
+* Data should reflect updates in near real-time.
+* The solution should prioritize performance, especially for large datasets of items.
+
+## Acceptance Criteria
+* Dashboard loads the "Recent Items" section within 200ms under normal load.
+* The solution must not degrade performance for users with thousands of items.
+```
+
+
+### Feature implementation
+
+- Create a user registration system with email verification
+- Add real-time notifications using WebSockets
+- Implement a shopping cart with local storage persistence
+
+
+### Code Analysis
+
+- Based on the code in this repository, give me an overview of the architecture of the codebase. Provide evidence.
+- Analyze the code in this repository and tell me about the entry points for this application.
+- Where is authentication handled in this codebase?
+- Explain the authentication flow in this application
+- Describe the data flow in this application.
+- Which languages are used in this repo? Show the percentages for each language.
+- What are the core algorithms implemented in this repo?
+- What design patterns are used in this repository? Give a brief explanation of each pattern that you find, and an example of code from this repository that uses the pattern, with a link to the file.
+- I'm a Python developer. Help me better understand this code. Please provide analogies.
+- Analyze this code for potential security vulnerabilities and suggest fixes.
+
+
+### Debugging and troubleshooting
+
+- Why is this component re-rendering unnecessarily?
+- Find and fix the memory leak in this data processing pipeline
+
+
+### Testing
+
+- Generate comprehensive unit tests for this service class
+- Create integration tests for the API endpoints
+- Add property-based tests for this data validation function
+
+
+### Code Refactoring
+
+- Optimize this database query for better performance
+- Optimize this code for performance
+- Refactor this code to improve its environmental sustainability by reducing memory usage and computational overhead.
+- Refactor this code using the module pattern
+- Separate the UI code from the Counter component in this code.
+
+
+### Documentation
+
+- Document this API endpoint with proper JSDoc comments
+- Create a README template for a new open-source project that includes sections for project description, installation instructions, usage examples, and contribution guidelines. Make it clear and easy to follow.
+- Update the existing documentation for the getByCategoryName function to reflect the current implementation.
