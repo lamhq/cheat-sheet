@@ -7,6 +7,7 @@
     "collapsed": true
   },
   "llm",
+  "llm-apps",
   {
     "name": "prompt",
     "type": "dir",
@@ -14,7 +15,7 @@
     "collapsed": true
   },
   {
-    "name": "ai-agents",
+    "name": "agents",
     "type": "dir",
     "collapsible": true,
     "collapsed": true
