@@ -1,0 +1,95 @@
+# AI Agents
+
+## Introduction
+
+**AI agents** are autonomous programs designed to assist developers by handling tasks that traditionally require manual effort.
+
+Think of them as **digital teammates**, not just tools, but active participants in the software development process.  
+
+
+## Use Cases
+
+- **Code Generation & Completion**: AI agents can write boilerplate code, suggest improvements, and auto-complete functions.
+- **Debugging & Testing**: They detect errors, propose fixes, and even generate unit tests to improve reliability.
+- **Planning & Project Management**: Agents can track issues, manage tickets, and prioritize tasks based on project goals.
+- **DevOps Automation**: They handle deployment pipelines, monitor system health, and trigger alerts or fixes automatically.
+- **Collaboration Support**: AI agents integrate with platforms like GitHub or Jira to assist teams in communication and workflow management.
+
+
+## When NOT to use agents?
+
+If you have a **deterministic sequence** of steps that you can define clearly, don't use agents.
+
+
+## Challenges
+
+Challenges of Integrating Agents into Production
+
+### Multiple Sequential LLM Calls
+
+**The Problem:**
+Agents use the LLM as a reasoning engine, making multiple sequential calls where each step waits for the previous one to complete.
+
+**Impact:**
+- Long-running applications
+- Slow performance
+- Increased latency
+
+**Solutions:**
+- Semantic caching
+- LLM caching
+
+
+### Context Window Limitations
+
+**The Problem:**
+- Most LLMs handle ~32k tokens
+- Large prompts sent at each reasoning step quickly exceed limits
+- Restricts the number of steps an agent can take
+
+
+### Hallucinations
+
+**The Problem:** LLM generates irrelevant responses (because it's guessing token-by-token).
+
+**Solution:**
+- Retrieval Augmented Generation (RAG) grounds LLM with real information
+- Fine-tuning LLMs for better tool selection
+
+
+### Cost and Pricing
+
+**The Problem:**
+- You pay per token sent and received
+- Agents send huge prompts at each step
+- At scale (millions of calls), billing becomes very expensive
+
+**Solutions:**
+- Use semantic caching to avoid redundant calls
+- Use retrieval augmentation for tool selection (reduces LLM calls)
+
+
+### Response Validation
+
+**The Problem:**
+- Must validate LLM responses before using them
+- Testing is complicated and lacks robust solutions
+
+
+### Security Risks
+
+**The Dangers:**
+Agents have capabilities to:
+- Query databases
+- Make API calls
+- Access third-party services
+
+**Threats:**
+- Prompt injection attacks from malicious users
+- Compromised API keys expose all tools
+- Unauthorized access to proprietary data
+
+**Solutions:**
+- Follow **Principle of Least Privilege**: Give agents only minimum required permissions
+- Use guardrails on prompts (allow/block certain inputs)
+- Implement LLM Guard (open-source security tool)

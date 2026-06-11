@@ -6,8 +6,16 @@
     "collapsible": true,
     "collapsed": true
   },
+  "llm",
+  "llm-apps",
   {
-    "name": "ai-agents",
+    "name": "prompt",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "agents",
     "type": "dir",
     "collapsible": true,
     "collapsed": true
@@ -19,13 +27,14 @@
     "collapsed": true
   },
   {
-    "name": "using-ai",
+    "name": "langchain",
     "type": "dir",
     "collapsible": true,
     "collapsed": true
   },
+  "langgraph",
   {
-    "name": "langchain",
+    "name": "using-ai",
     "type": "dir",
     "collapsible": true,
     "collapsed": true

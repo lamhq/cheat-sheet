@@ -1,0 +1,74 @@
+# LangGraph
+
+Advanced Agent Framework.
+
+## The Problem
+
+### No cycles supported
+
+LangChain only supports DAGs (Directed Acyclic Graphs): data and logic can only flow forward in a predetermined sequence; it cannot natively loop back or iterate.
+
+Predictable and reliable, but rigid and inflexible.
+
+### Too Much Freedom
+
+Too much freedom causes problems:
+- Agent gets stuck in loops (same tool called repeatedly)
+- Agent hallucinates tools that don't exist
+- Agent uses wrong arguments
+- LLM is non-deterministic
+
+Flexible but unreliable, not production-ready.
+
+## LangGraph Solution
+
+LangGraph takes a different approach: **Give the LLM freedom, but within a defined structure.**
+
+**How it works:**
+- Developers define the possible choices (graph structure)
+- LLM decides which path to take within that structure
+
+**Benefits:**
+- More predictable behavior
+- Better error handling
+- Easier debugging
+- Production-ready systems
+- Still intelligent and adaptive
+
+| Aspect           | Autonomous Agents | LangGraph | Chains        |
+| ---------------- | ----------------- | --------- | ------------- |
+| Flexibility      | Maximum ✓✓✓       | High ✓✓   | Low ✓         |
+| Reliability      | Low ✗             | High ✓✓✓  | Very High ✓✓✓ |
+| Production Ready | No                | Yes       | Yes           |
+| Complexity       | Very High         | Medium    | Low           |
+
+
+## LangGraph Core Concepts
+
+### State Machine Architecture
+
+- Represents the agent as a graph with nodes and edges
+- Nodes = actions/steps
+- Edges = transitions
+- State = shared information across all nodes
+
+### Cycles Enable Iteration
+
+- Unlike chains, graphs can loop back
+- Enables retries, refinement, iterative processes
+- Still controlled by the developer
+
+### Function Calling
+
+Modern LLMs support function calling:
+- Developers describe available tools (functions)
+- LLM chooses which tool to call and with what arguments
+- Backend executes the tool
+- Results fed back to LLM
+
+
+## Flow Engineering
+
+**Flow Engineering** is a structural approach where:
+- Developers define the overall application flow
+- Allow the LLM to dynamically choose where to navigate next (moving forward, switching to a different branch, or cycling back to retry a step).
