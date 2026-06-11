@@ -27,13 +27,14 @@
     "collapsed": true
   },
   {
-    "name": "using-ai",
+    "name": "langchain",
     "type": "dir",
     "collapsible": true,
     "collapsed": true
   },
+  "langgraph",
   {
-    "name": "langchain",
+    "name": "using-ai",
     "type": "dir",
     "collapsible": true,
     "collapsed": true
