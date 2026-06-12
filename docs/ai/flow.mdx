@@ -1,0 +1,43 @@
+# Flow Engineering
+
+## Introduction
+
+**Flow Engineering** is a systematic approach to developing AI software where:
+- Developers define the structure and flow of the system (the graph)
+- LLMs make decisions within that structure.
+
+In Flow Engineering, LLMs can:
+- Perform a task inside a step (e.g., call a tool, generate content)
+- Decide which step to take next.
+
+
+## Comparison
+
+### Autonomous Agents (Too Free)
+- AI creates goals and tasks
+- Unpredictable paths
+- Often fails or gets stuck
+- Hard to debug or control
+
+### Traditional Code (Too Rigid)
+- Everything predetermined
+- No flexibility
+- Reliable but inflexible
+- Can't handle novel situations
+
+### Flow Engineering (The Balance)
+- Developer defines states and transitions
+- LLM chooses between options
+- Predictable and flexible
+- Production-ready
+
+## LangGraph + Flow Engineering
+
+[LangGraph](./langgraph.mdx) is the implementation of flow engineering principles:
+
+- **Graph structure** = State machine (nodes = states, edges = transitions)
+- **Cycles** = Ability to loop back and refine
+- **Conditional logic** = LLM decides which edge to take
+- **Developer control** = All possibilities are pre-defined
+
+LangGraph lets you build complex AI systems while maintaining control over the flow.
