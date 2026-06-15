@@ -86,10 +86,32 @@ LANGSMITH_PROJECT="demo"
 
 ```toml title="pyproject.toml"
 [project]
-name = "project_name"
-version = "0.1.0"
-description = "Add your description here"
-readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "dotenv>=0.9.9",
+    "langchain>=1.3.4",
+    "langchain-openai>=1.2.1",
+    "langgraph>=1.2.4",
+]
+```
+
+
+### Reflection
+
+```py file="./langgraph/reflection.py"
+```
+
+
+```bash title=".env"
+OPENAI_API_KEY=sk-proj-...
+LANGSMITH_TRACING=true
+LANGSMITH_ENDPOINT=https://...
+LANGSMITH_API_KEY=lsv2_...
+LANGSMITH_PROJECT="demo"
+```
+
+```toml title="pyproject.toml"
+[project]
 requires-python = ">=3.11"
 dependencies = [
     "dotenv>=0.9.9",

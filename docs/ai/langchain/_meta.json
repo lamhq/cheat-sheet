@@ -2,6 +2,7 @@
   "trace",
   "prompt-template",
   "lcel",
+  "tools",
   "agent",
   "structured-output",
   {
