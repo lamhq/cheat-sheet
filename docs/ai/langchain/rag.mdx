@@ -1,116 +1,10 @@
-# Retrieval-Augmented Generation
+# RAG
 
-## Overview
+LangChain code snippets for Retrieval-Augmented Generation (RAG) applications.
 
-Large Language Models (LLMs) have two key limitations:
-- **Finite context**: they can’t ingest entire corpora at once.
-- **Static knowledge**: their training data is frozen at a point in time.
+## Agentic RAG
 
-**Retrieval** solves this by fetching relevant external knowledge at query time, forming the foundation of **Retrieval-Augmented Generation (RAG)**.
-
-## Building a Knowledge Base
-
-A **knowledge base** is a repository of documents or structured data used during retrieval.
-
-If you need a custom knowledge base, you can use LangChain’s document loaders and vector stores to build one from your own data.
-
-If you already have a knowledge base (e.g., a SQL database, CRM, or internal documentation system), you can connect it as a tool for an agent in Agentic RAG.
-
-### Retrieval Pipeline
-
-Retrieval allows LLMs to access relevant context at runtime.
-
-The retrieval pipeline becomes a foundation for a broader system that combines search with generation.
-
-A typical retrieval workflow looks like this:
-
-```mermaid theme={"theme":{"light":"catppuccin-latte","dark":"catppuccin-mocha"}}
-flowchart TB
-  S(["Sources<br>(Google Drive, Slack, Notion, etc.)"]) --> L[Document Loaders]
-  L --> A([Documents])
-  A --> B[Split into chunks]
-  B --> C[Turn into embeddings]
-  C --> D[(Vector Store)]
-  Q([User Query]) --> E[Query embedding]
-  E --> D
-  D --> F[Retriever]
-  F --> G[LLM uses retrieved info]
-  G --> H([Answer])
-
-  classDef trigger fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#14532D
-  classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1E3A8A
-  classDef output fill:#F3E8FF,stroke:#9333EA,stroke-width:2px,color:#581C87
-  classDef neutral fill:#F3F4F6,stroke:#9CA3AF,stroke-width:2px,color:#374151
-
-  class S,Q trigger
-  class L,B,C,E,F,G process
-  class D output
-  class A,H neutral
-```
-
-### Building Blocks
-
-- **Document Loaders**: Ingest data from external sources (Google Drive, Slack, Notion)
-- **Text Splitters**: Break documents into retrievable chunks
-- **Embedding Models**: Convert text into vectors with similar semantics near each other
-- **Vector Stores**: Specialized databases for storing and searching embeddings
-- **Retrievers**: Interfaces that return documents given a query
-
-
-## RAG Architectures
-
-RAG can be implemented in multiple ways:
-
-| Architecture    | Description                      | Control   | Flexibility | Latency     |
-| --------------- | -------------------------------- | --------- | ----------- | ----------- |
-| **2-Step RAG**  | Retrieve before generating       | ✅ High   | ❌ Low      | ⚡ Fast     |
-| **Agentic RAG** | LLM decides when/how to retrieve | ❌ Low    | ✅ High     | ⏳ Variable |
-| **Hybrid**      | Combines both with validation    | ⚖️ Medium | ⚖️ Medium   | ⏳ Variable |
-
-
-### 2-Step RAG
-
-Retrieval always happens before generation. Straightforward, predictable, and suitable for FAQs and documentation bots.
-
-```mermaid theme={"theme":{"light":"catppuccin-latte","dark":"catppuccin-mocha"}}
-graph LR
-    A[User Question] --> B["Retrieve Relevant Documents"]
-    B --> C["Generate Answer"]
-    C --> D[Return Answer to User]
-
-    classDef startend fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#14532D
-    classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:1.5px,color:#1E3A8A
-
-    class A,D startend
-    class B,C process
-```
-
-
-### Agentic RAG
-
-An agent decides **when** and **how** to retrieve information instead of retrieving documents before answering.
-
-The agent uses tools (documentation loaders, web APIs, databases) to fetch external knowledge.
-
-```mermaid theme={"theme":{"light":"catppuccin-latte","dark":"catppuccin-mocha"}}
-graph TB
-    A[User Input / Question] --> B["Agent (LLM)"]
-    B --> C{Need external info?}
-    C -- Yes --> D["Search using tool(s)"]
-    D --> H{Enough to answer?}
-    H -- No --> B
-    H -- Yes --> I[Generate final answer]
-    C -- No --> I
-    I --> J[Return to user]
-
-    classDef startend fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#14532D
-    classDef decision fill:#FEF3C7,stroke:#F59E0B,stroke-width:2px,color:#78350F
-    classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:1.5px,color:#1E3A8A
-
-    class A,J startend
-    class B,D,I process
-    class C,H decision
-```
+Create a simple RAG agent that uses a tool to fetch relevant documents before answering user queries.
 
 ```python
 import requests
@@ -137,50 +31,7 @@ agent = create_agent(
 ```
 
 
-### Hybrid RAG
-
-Combines both approaches with intermediate steps such as query preprocessing, retrieval validation, and post-generation checks.
-
-These systems offer more flexibility (than fixed pipelines) while maintaining some control over execution.
-
-Typical components include:
-- **Query Enhancement**: Rewrite/expand query for better retrieval
-- **Retrieval Validation**: Check if docs are sufficient; refine if needed
-- **Answer Validation**: Check if answer is grounded and complete; regenerate if needed
-
-```mermaid theme={"theme":{"light":"catppuccin-latte","dark":"catppuccin-mocha"}}
-graph TB
-    A[User Question] --> B[Query Enhancement]
-    B --> C[Retrieve Documents]
-    C --> D{Sufficient Info?}
-    D -- No --> E[Refine Query]
-    E --> C
-    D -- Yes --> F[Generate Answer]
-    F --> G{Answer Quality OK?}
-    G -- No --> H{Try Different Approach?}
-    H -- Yes --> E
-    H -- No --> I[Return Best Answer]
-    G -- Yes --> I
-    I --> J[Return to User]
-
-    classDef startend fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#14532D
-    classDef decision fill:#FEF3C7,stroke:#F59E0B,stroke-width:2px,color:#78350F
-    classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:1.5px,color:#1E3A8A
-
-    class A,J startend
-    class B,C,E,F,I process
-    class D,G,H decision
-```
-
-Best for:
-- Applications with ambiguous/underspecified queries
-- Systems needing quality control
-- Workflows with multiple sources and iterative refinement
-
-
-## Implementation
-
-### Project setup
+## Project setup
 
 Follow these steps to set up a RAG project:
 
@@ -205,9 +56,6 @@ PINECONE_INDEX=rag-index
 ```toml title="pyproject.toml"
 [project]
 name = "rag-demo"
-version = "0.1.0"
-description = "A demo project for RAG with LangChain"
-readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "dotenv>=0.9.9",
@@ -222,7 +70,7 @@ dependencies = [
 uv sync
 ```
 
-### Ingestion
+## Ingestion
 
 Follow these steps to ingest documents into a vector store:
 
@@ -239,8 +87,8 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_pinecone import PineconeVectorStore
 from langchain_text_splitters import CharacterTextSplitter
 
-# Force-reload .env to overwrite any existing or cached environment variables
-load_dotenv(override=True)
+# Load environment variables from .env file
+load_dotenv()
 
 print("Ingesting...")
 loader = TextLoader("resources/document.txt")
@@ -264,7 +112,7 @@ print("finish")
 uv run ingest.py
 ```
 
-### Retrieval (2-Step RAG)
+## Retrieval (2-Step RAG)
 
 Follow these steps to perform retrieval:
 1. Create a Python script named `main.py`.
@@ -346,7 +194,7 @@ uv run main.py
 ```
 
 
-### Retrieval (Agentic RAG)
+## Retrieval (Agentic RAG)
 
 ```py title="main.py"
 import os
