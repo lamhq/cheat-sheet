@@ -7,7 +7,6 @@
     "collapsed": true
   },
   "llm",
-  "llm-apps",
   {
     "name": "prompt",
     "type": "dir",
@@ -15,12 +14,26 @@
     "collapsed": true
   },
   {
+    "name": "rag",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "mcp",
+    "type": "dir",
+    "collapsed": true,
+    "label": "MCP",
+    "collapsible": true
+  },
+  "flow",
+  "llm-apps",
+  {
     "name": "agents",
     "type": "dir",
     "collapsible": true,
     "collapsed": true
   },
-  "flow",
   {
     "name": "github-copilot",
     "type": "dir",

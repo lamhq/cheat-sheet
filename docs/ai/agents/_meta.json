@@ -1,16 +1,3 @@
 [
-  "agent-skills",
-  {
-    "name": "mcp",
-    "type": "dir",
-    "collapsed": true,
-    "label": "MCP",
-    "collapsible": true
-  },
-  {
-    "name": "rag",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  }
+  "agent-skills"
 ]
