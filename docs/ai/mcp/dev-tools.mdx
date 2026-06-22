@@ -1,0 +1,91 @@
+# MCP Inspector: Quick Guide
+
+## What is MCP Inspector?
+
+The MCP Inspector is an interactive developer tool for testing and debugging MCP servers. It provides a web-based interface to interact with, inspect, and validate MCP server implementations.
+
+---
+
+## Getting Started
+
+### Installation
+
+The Inspector runs directly through `npx` without requiring installation:
+
+```bash
+npx @modelcontextprotocol/inspector <command>
+```
+
+### Inspecting Servers from npm or PyPI
+
+**npm package:**
+```bash
+npx -y @modelcontextprotocol/inspector npx @modelcontextprotocol/server-filesystem /Users/username/Desktop
+```
+
+**PyPI package:**
+```bash
+npx @modelcontextprotocol/inspector uvx mcp-server-git --repository ~/code/mcp/servers.git
+```
+
+### Inspecting Locally Developed Servers
+
+**TypeScript:**
+```bash
+npx @modelcontextprotocol/inspector node path/to/server/index.js args...
+```
+
+**Python:**
+```bash
+npx @modelcontextprotocol/inspector uv --directory path/to/server run package-name args...
+```
+
+---
+
+## Feature Overview
+
+### Server Connection Pane
+
+Allows selecting the transport for connecting to the server. For local servers, supports customizing command-line arguments and environment variables.
+
+### Resources Tab
+
+Lists all available resources with metadata (MIME types, descriptions). Enables inspection of resource content and supports subscription testing.
+
+### Prompts Tab
+
+Displays available prompt templates with arguments and descriptions. Allows prompt testing with custom arguments and previews generated messages.
+
+### Tools Tab
+
+Lists available tools with schemas and descriptions. Enables tool testing with custom inputs and displays tool execution results.
+
+### Notifications Pane
+
+Presents all logs recorded from the server and shows notifications received from the server in real-time.
+
+---
+
+## Development Workflow
+
+### 1. Start Development
+
+Launch Inspector with your server and verify basic connectivity. Check that capability negotiation completes successfully.
+
+### 2. Iterative Testing
+
+Make server changes, rebuild the server, reconnect the Inspector, test affected features, and monitor messages for errors.
+
+### 3. Test Edge Cases
+
+Test invalid inputs, missing prompt arguments, concurrent operations, and verify error handling and error responses work as expected.
+
+---
+
+## Best Practices
+
+- Start with basic connectivity verification before testing complex features
+- Test each primitive (tools, resources, prompts) individually
+- Validate error responses and edge cases thoroughly
+- Use the Notifications pane to monitor server logs and debug issues
+- Rebuild and reconnect after each code change to ensure updates are reflected

@@ -1,22 +1,33 @@
+## Instructions
+
 For each sentence that i send you, you will:
 
-1. Correct my sentences, ignore capitalization and punctuation errors. Explaining what was corrected and why.
-2. Suggest concise, natural-sounding sentences with the same meaning.
-3. List synonyms with phrase in [brackets].
+1. Correct my sentences for speaking mistake.
+2. Suggest more natural, smooth, and casual sentences.
+3. List synonyms with phrase in [brackets] if any.
 
-Your response will follow below structure:
+## Example
 
-**[corrected sentence]**
+With the sentence: *i go [market] yesterday*
 
-- Explanation 1
-- Explanation [n]
+Your response is:
+
+**i went to the market yesterday**
+
+- "Go" is corrected to "went" because the action happened in the past.
+- Added "the" before "market" to make the sentence grammatically natural.
+
 
 **Alternatives**:
 
-- Alternative sentence 1
-- Alternative sentence [n]
+- I went shopping at the market yesterday.
+- Yesterday, I went to the market.
+- I was at the market yesterday.
 
-**Synonyms for [phrase]**:
 
-- synonym 1
-- synonym [n]
+**Synonyms for [market]**:
+
+- bazaar
+- marketplace
+- store
+- shop

@@ -2,12 +2,8 @@
   "trace",
   "prompt-template",
   "lcel",
+  "tools",
   "agent",
   "structured-output",
-  {
-    "name": "rag",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  }
+  "rag"
 ]

@@ -56,3 +56,29 @@ result = agent.invoke({
 print(result["structured_response"])
 # ContactInfo(name='John Doe', email='john@example.com', phone='(555) 123-4567')
 ```
+
+
+## Using `bind_tools`
+
+When you pass a Pydantic model to `.bind_tools()`, OpenAI's API automatically converts it into a JSON schema that tells the LLM what structure to return.
+
+```python
+from pydantic import BaseModel, Field
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage
+
+class Answer(BaseModel):
+    answer: str = Field(description="250 word answer")
+    queries: list[str] = Field(description="Search queries")
+
+llm = ChatOpenAI(model="gpt-4o-mini")
+chain = llm.bind_tools(tools=[Answer], tool_choice="Answer")
+
+# To use the chain, you'd invoke it like:
+result = chain.invoke({"messages": [HumanMessage(content="Your question here")]})
+```
+
+The schema tells the LLM:
+- Required fields: `answer` (string), `queries` (array)
+- Descriptions guide what content to provide
+- LLM must follow the structure exactly

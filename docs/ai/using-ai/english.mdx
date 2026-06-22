@@ -1,6 +1,6 @@
 import { Prompt } from '@rspress/core/theme';
 import correctPrompt from './_proofread.txt?raw';
-import practiceInterviewPrompt from './_practice-interview.txt?raw';
+import practiceInterviewPrompt from './_for-interviewee.txt?raw';
 import fourWordExercisePrompt from './_four-word-ex.txt?raw';
 
 # Practicing English
@@ -18,6 +18,15 @@ import fourWordExercisePrompt from './_four-word-ex.txt?raw';
 
 <Prompt
   title="Practice Job Interview"
+  description="Send this prompt to AI and then start the interview."
+  prompt={practiceInterviewPrompt}
+/>
+
+
+## As an Interviewer
+
+<Prompt
+  title="Practice Interview as an Interviewer"
   description="Send this prompt to AI and then start the interview."
   prompt={practiceInterviewPrompt}
 />

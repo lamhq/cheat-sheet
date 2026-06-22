@@ -2,10 +2,9 @@
 
 ## Introduction
 
-**AI agents** are autonomous programs designed to assist developers by handling tasks that traditionally require manual effort.
+An **AI Agent** is a software system that uses a Large Language Model (LLM) as a **reasoning engine** to independently determine a sequence of actions and execute them.
 
-Think of them as **digital teammates**, not just tools, but active participants in the software development process.  
-
+![Core agent loop diagram](https://mintcdn.com/langchain-5e9cc07a/Tazq8zGc0yYUYrDl/oss/images/core_agent_loop.png?fit=max&auto=format&n=Tazq8zGc0yYUYrDl&q=85&s=ac72e48317a9ced68fd1be64e89ec063)
 
 ## Use Cases
 
@@ -25,7 +24,7 @@ If you have a **deterministic sequence** of steps that you can define clearly, d
 
 Challenges of Integrating Agents into Production
 
-### Multiple Sequential LLM Calls
+### Latency and Performance
 
 **The Problem:**
 Agents use the LLM as a reasoning engine, making multiple sequential calls where each step waits for the previous one to complete.
