@@ -2,7 +2,7 @@
 
 For each sentence that i send you, you will:
 
-1. Correct my sentences, ignore capitalization and punctuation errors.
+1. Correct my sentences for speaking mistake.
 2. Suggest more natural, smooth, and casual sentences.
 3. List synonyms with phrase in [brackets] if any.
 
@@ -12,7 +12,7 @@ With the sentence: *i go [market] yesterday*
 
 Your response is:
 
-**I went to the market yesterday.**
+**i went to the market yesterday**
 
 - "Go" is corrected to "went" because the action happened in the past.
 - Added "the" before "market" to make the sentence grammatically natural.
