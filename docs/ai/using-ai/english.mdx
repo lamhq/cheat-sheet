@@ -2,6 +2,7 @@ import { Prompt } from '@rspress/core/theme';
 import correctPrompt from './_proofread.txt?raw';
 import practiceInterviewPrompt from './_for-interviewee.txt?raw';
 import fourWordExercisePrompt from './_four-word-ex.txt?raw';
+import practicePhrasePrompt from './_practice-phrase.txt?raw';
 
 # Practicing English
 
@@ -13,6 +14,21 @@ import fourWordExercisePrompt from './_four-word-ex.txt?raw';
   prompt={correctPrompt}
 />
 
+## Using phrases
+
+<Prompt
+  title="Practice Phrases"
+  description="Send this prompt to AI and enter your sentence."
+  prompt={practicePhrasePrompt}
+/>
+
+## Making sentences
+
+<Prompt
+  title="4-word exercise"
+  description="Send this prompt to AI and start making sentences from provided words."
+  prompt={fourWordExercisePrompt}
+/>
 
 ## Practice Interview
 
@@ -29,13 +45,4 @@ import fourWordExercisePrompt from './_four-word-ex.txt?raw';
   title="Practice Interview as an Interviewer"
   description="Send this prompt to AI and then start the interview."
   prompt={practiceInterviewPrompt}
-/>
-
-
-## 4-word exercise
-
-<Prompt
-  title="4-word exercise"
-  description="Send this prompt to AI and start making sentences from provided words."
-  prompt={fourWordExercisePrompt}
 />

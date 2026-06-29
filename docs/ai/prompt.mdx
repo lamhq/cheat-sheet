@@ -8,24 +8,103 @@ Think of it as a guide that helps the model understand the context, process info
 
 ## Components
 
-Four Components of a Prompt
+Four components of a prompt:
 
-### Instruction
-- Tells the AI model what task to perform
-- Examples: summarization, translation, classification
-- Sets the stage for the AI's entire response
+### Action
+
+**Tells AI what task to perform**. Be specific about what you want done, don't leave it open to interpretation.
+
+- ❌ **Weak:** "Tell me about our competitors."
+- ✅ **Strong:** "Create a comparison table of our top 3 competitors covering pricing, key features, target market, and main weakness."
+
+:::tip
+Say "If you're unsure, ask me before guessing" to reduce hallucinations.
+:::
 
 ### Context
-- Provides additional information to help the AI better understand the task
-- Improves accuracy and performance
-- May or may not be necessary depending on the task
 
-### Input Data
-- The actual information the AI will process
-- Can be text, images, or any relevant data
-- What the model works with to complete the assigned task
+**Give background info.**
+- What's the situation?
+- Who's involved?
+- What do you already know?
+- Tone (professional, casual, persuasive, empathetic)?
 
-### Output Indicator
-- Signals to the AI model that a response is expected
-- Can be **implicit** (built into the instruction) or **explicit** (clearly stated)
-- Tells the model when to generate its output
+Examples:
+- ❌ **Weak:** "Write me an email about the project."
+- ✅ **Strong:** "I'm a product manager at a B2B SaaS company. We just delayed our launch by 3 weeks due to a QA issue. I need to email my VP of Engineering. Write in a warm but direct tone. Think 'friendly manager,' not 'corporate memo.' Avoid jargon and buzzwords"
+
+### Role
+
+**Tell AI who to be.** A role shapes the vocabulary, depth, and perspective of the answer.
+
+- ❌ **Weak:** "Help me with this contract."
+- ✅ **Strong:** "Act as an experienced corporate attorney reviewing a vendor agreement. Flag anything that's unusual or risky."
+
+### Output Format
+
+**Tell AI how to structure the output.** Length, layout, sections, bullet vs prose.
+
+- ❌ **Weak:** "Give me a summary."
+- ✅ **Strong:** "Summarize in exactly 3 bullet points, each under 20 words. No intro, no conclusion. Just the bullets."
+
+
+## Best Practices
+
+Best practices in prompt engineering to craft the perfect prompt that gives you exactly what you want.
+
+### Structure your prompt
+
+Divide your prompt into [components](#components).
+
+You don't need all four every time. Start with **Action** + **Context**.
+
+### Start General, Then Specific
+
+Start your prompt with a task summary, then list specific requirements or steps.
+
+Example:
+
+```md
+Implement end-to-end test for the search feature of the project.
+
+1. Read the requirement specification of the search feature
+2. Design test cases
+3. Implement the test cases
+4. Run the tests and report the results
+```
+
+### Give Examples
+
+Use examples of input data, expected outputs, or implementation styles to help AI understand exactly what you want.
+
+```md
+Write a Go function that finds all dates in a string and returns them in an array. Dates can be formatted like:
+
+* 05/02/24
+* 05/02/2024
+* 5/2/24
+* 5/2/2024
+* 05-02-24
+* 05-02-2024
+* 5-2-24
+* 5-2-2024
+
+Example:
+
+findDates("I have a dentist appointment on 11/14/2023 and book club on 12-1-23")
+
+Returns: ["11/14/2023", "12-1-23"]
+```
+
+### Iterate and Refine
+
+**The Iteration Cycle:**
+1. Write a prompt
+2. Test and evaluate the output
+3. Refine based on results
+4. Repeat until you get the perfect prompt
+
+**Benefits:**
+- Each iteration improves the previous one
+- Results become more aligned with your goals
+- Eventually you have an optimized prompt that delivers exactly what you need
