@@ -1,0 +1,68 @@
+# Consumers
+
+## Introduction
+
+Consumers subscribe to Kafka topics and read messages sequentially from partitions.
+
+Consumers use a **pull model**, brokers doesn't push data to consumers.
+
+
+### Consumer Groups
+
+A consumer group is a group of consumers that work together to read from a topic.
+
+**Partition Assignment:**
+- Each consumer in the group reads from exclusive (non-overlapping) partitions, allowing the group to collectively process all partitions of a topic.
+- Each partition is assigned to only one consumer within a group.
+- If you have more consumers than partitions, extra consumers stay on standby without reading from any partition
+
+**Multiple Consumer Groups on One Topic:**
+- Multiple consumer groups can read from the same topic simultaneously.
+- Each group maintains its own offset position
+
+
+### Consumer Offsets
+
+- Kafka stores the offset position of each consumer group in an internal topic called `__consumer_offsets`
+- After processing messages, consumers **commit offsets** to record their progress
+- If a consumer crashes and restarts, it resumes reading from the last committed offset, enabling recovery
+
+How offsets are committed:
+- **At Least Once:** Commit offset *after* processing. Risk: messages may be reprocessed if the consumer fails during processing (requires idempotent processing)
+- **At Most Once:** Commit offset *before* processing. Risk: messages may be lost if processing fails
+- **Exactly Once:** Process messages without duplication (use transactional API for Kafka-to-Kafka, or idempotent consumers for external systems)
+
+
+### Message Deserialization
+
+Kafka delivers data as binary (bytes) for both key and value
+
+Consumers use **Deserializers** to convert bytes back into objects (integers, strings, JSON, Avro, Protobuf, etc.)
+
+The consumer must know the expected data format in advance
+
+
+### Message Delivery
+
+When multiple consumer groups subscribe to the same topic, each receives a copy of the message, enabling each group to process the message base on its own purpose.
+
+Within a consumer group, each message is processed by only one consumer, enabling load balancing by distributing the workload across consumers.
+
+
+### Partition assignment
+
+Each partition in a topic is consumed by exactly one consumer in the group (partitions can't be shared across consumers).
+
+A consumer can consume messages from multiple partitions. This allow for parallel processing across the consumer group.
+
+For example, let's say you have:
+- 4 partitions
+- 2 consumers in a group
+
+Kafka might assign:
+- Consumer 1 → Partitions 0 and 1
+- Consumer 1 → Partitions 2 and 3
+
+![](./consumer-groups.drawio.svg)
+
+If you have more consumers than partitions, some consumers won't receive any messages. It's important to balance the number of partitions and consumers to ensure efficient message processing.

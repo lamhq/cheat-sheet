@@ -1,0 +1,46 @@
+# Topics
+
+## Introduction
+
+A topic is a stream of messages. Similar to a table in a database but without constraints and data verification.
+
+You can have multiple topics (e.g., `logs`, `purchases`, `locations`).
+
+Topics are **not queryable**; instead, you use **Producers** to write data and **Consumers** to read data.
+
+
+## Partitions
+
+Topics are divided into partitions to distribute data.
+
+A topic is split into partitions.
+
+More partitions can increase throughput but also may increase the latency of the queue.
+
+
+## Message Organization
+
+Messages written to each partition are **ordered sequentially** and identified by their index (called as offset).
+
+Each message in a partition gets a unique offset (starting at 0 and incrementing), identify the position of messages within a partition.
+
+Messages cannot be changed or deleted once written; you can only append new messages.
+
+Messages are stored for a configurable retention period (e.g., 7 days) before being deleted.
+
+Messages are ordered **within a partition only**, not across partitions.
+
+Messages go to random partitions unless you provide a key.
+
+
+## Partition Assignment
+
+- **No key**: Messages are distributed round-robin across partitions, providing load balancing
+- **With a key**: All messages sharing the same key go to the same partition.
+
+
+## Data Type Consistency
+
+Once a topic is created, **you cannot change the data type** of messages being sent without breaking consumers.
+
+If you need to change the data format, create a **new topic** with the desired format and reprogram consumers to read from it.

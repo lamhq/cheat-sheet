@@ -1,0 +1,20 @@
+# Messages
+
+## Introduction
+
+A message in Kafka is a record that consists of:
+
+- **Key**: (optional, binary format), used to determine partition assignment.
+- **Value**: the message content/payload
+- **Timestamp**: time the message was produced.
+- **Headers**: optional key-value pairs
+- **Partition & Offset**: automatically assigned by Kafka
+
+
+## Message Serialization
+
+Kafka only accepts bytes, so producers use **Serializers** to convert objects into binary format.
+
+Different serializers can be used for keys and values.  Example: Integer key (123) → bytes; String value ("hello world") → bytes
+
+Deserialization converts these bytes back into objects for consumption.

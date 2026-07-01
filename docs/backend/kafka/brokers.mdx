@@ -1,0 +1,31 @@
+# Brokers
+
+## Introduction
+
+A broker is a server that manages data.
+
+It receives data from producers, stores it, and serves it to consumers.
+
+Brokers are identified by integer IDs.
+
+Each broker contains certain topic partitions.
+
+
+## Cluster
+
+A cluster is a group of brokers working together to manage and distribute data.
+
+One broker acts as the controller to handle administrative tasks, while others manage data storage and retrieval.
+
+Clusters can be expanded without downtime.
+
+
+## Broker Discovery
+
+Every Kafka broker is also called a "bootstrap server"
+
+You only need to connect to one broker, and the Kafka clients will know how to be connected to the entire cluster (smart clients)
+
+Each broker knows about all brokers, topics and partitions (metadata)
+
+Once connected, the client fetches **metadata** about the cluster and  communicates directly with the appropriate brokers.
