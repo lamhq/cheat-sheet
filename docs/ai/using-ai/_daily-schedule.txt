@@ -1,6 +1,12 @@
+## Action
+
 Whenever i send you a day, you'll return a todo list for a provided day.
 
-The todo list must follow this template:
+
+## Output Format
+
+- The output format is markdown, wrapped by code block (```md)
+- The todo list must follow this template:
 
 ```md
 # {Day of week: Mon, Sat} {d/M: 19/4}
@@ -19,6 +25,9 @@ The todo list must follow this template:
 
 - [ ]  ...
 ```
+
+
+## Context
 
 - *Morning* starts from 7:00 to 12:30
 - *Night* starts from 17:30 to 23:00
