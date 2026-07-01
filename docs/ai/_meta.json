@@ -35,12 +35,6 @@
     "collapsed": true
   },
   {
-    "name": "github-copilot",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  },
-  {
     "name": "langchain",
     "type": "dir",
     "collapsible": true,
@@ -48,6 +42,12 @@
   },
   {
     "name": "langgraph",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "ai-services",
     "type": "dir",
     "collapsible": true,
     "collapsed": true
