@@ -1,0 +1,28 @@
+# KRaft
+
+## Introduction
+
+KRaft (Kafka Raft) is a mode that removes Apache Kafka's dependency on Zookeeper, replacing it with a built-in consensus mechanism.
+
+Kafka 3.X now implements the Raft protocol (KRaft) in order to replace Zookeeper
+- Production ready since Kafka 3.3.1 (KIP-833)
+- Kafka 4.0 will be released only with KRaft (no Zookeeper)
+
+
+## Why Remove Zookeeper?
+
+Issues with Zookeeper:
+- Scaling limitations with over 100,000 partitions
+- Complex setup and maintenance (two separate systems)
+- Separate security model needed for Zookeeper
+- Slower controller shutdown and recovery
+
+
+## KRaft's Advantages
+
+- **Massive scalability:** Can now handle millions of partitions
+- **Simpler architecture:** Single Kafka process to manage (no external Zookeeper)
+- **Better stability:** Improved system reliability
+- **Unified security:** One security model for the entire system
+- **Faster recovery:** Substantially faster controller shutdown and recovery times
+- **Easier operations:** Simpler to monitor, support, and administer
