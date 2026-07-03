@@ -1,0 +1,51 @@
+# Replication
+
+## Replication Factor
+
+Each partition is replicated across brokers.
+
+The **replication factor** determines how many copies exist.
+
+In production, it's typically 2–3 (most commonly 3). With a replication factor of 1 (development only), data loss occurs if a broker fails.
+
+
+## Partition Leader
+
+Only one broker is the leader for a given partition. Producers send data only to the leader; consumers read from the leader by default. Other brokers replicate the data.
+
+An **ISR (In-Sync Replica)** is a replica that is synchronized with the leader; if replication is fast enough, all replicas are ISRs
+
+
+## Producer Acknowledgement
+
+Producers can choose to receive acknowledgment of data writes:
+
+- **acks=0**: No wait (fastest, possible data loss)
+- **acks=1**: Wait for leader only (moderate speed, limited data loss)
+- **acks=all**: Wait for leader + replicas (slowest, no data loss)
+
+
+## Topic Durability
+
+With a replication factor of **N**, you can permanently lose up to **N-1 brokers** and still retain a complete copy of your data.
+
+**Examples:**
+- Replication factor of 3 → can lose 2 brokers and still serve all data
+- Replication factor of 1 → cannot lose any broker (no redundancy)
+
+
+## Choosing Replication Factor
+
+**Benefits of Higher Replication:**
+- Better durability (N-1 brokers can fail)
+- Better availability for consumers
+
+**Drawbacks of Higher Replication:**
+- Higher latency when using `acks=all` (must wait for all replicas to acknowledge)
+- More disk space (50% more for replication factor 3 vs. 2)
+- More replication traffic
+
+**Production Guidelines:**
+- **Minimum:** 2 (required for failover)
+- **Recommendation:** Set to 3 for production. Never use 1 in production.
+- **Maximum:** Sometimes 4

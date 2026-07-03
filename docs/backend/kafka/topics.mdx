@@ -1,0 +1,77 @@
+# Topics
+
+## Introduction
+
+A topic is a stream of messages (similar to a table in a database but without constraints).
+
+Topics are **not queryable**; instead, you use **Producers** to write data and **Consumers** to read data.
+
+
+## Partitions
+
+Topics are divided into partitions to distribute data across the system.
+
+More partitions increase throughput but may increase latency.
+
+
+## Message Organization
+
+Messages in a partition are **ordered sequentially** and get unique offsets (0, 1, 2...), identifying their position.
+
+Messages cannot be changed or deleted, only appended; they're stored for a configurable retention period before deletion.
+
+Messages go to random partitions by default (round-robin load balancing). Use a key to route all messages with the same key to the same partition.
+
+
+## Data Type Consistency
+
+Once created, you cannot change a topic's message data type without breaking consumers. Create a new topic with the desired format instead.
+
+
+## Choosing Partition Count
+
+Each partition can handle a throughput of a few MB/s (measure it for your setup!).
+
+It's best to get partition count right the first time. Increasing partitions count during a topic lifecycle will break your keys ordering guarantees.
+
+More partitions implies:
+- Better parallelism, better throughput
+- Ability to run more consumers in a group to scale (max as many consumers per group as partitions)
+- Ability to leverage more brokers if you have a large cluster
+- BUT more elections to perform for Zookeeper (if using Zookeeper)
+- BUT more files opened on Kafka
+
+**Guidelines**:
+- **Small cluster (\< 6 brokers):** 3x number of brokers
+- **Large cluster (\> 12 brokers):** 2x number of brokers
+- Adjust upward if expecting **many consumers** in a group or **high producer throughput** growth
+- Always test! Every Kafka cluster will have different performance.
+- Don't just create topics with 1000 partitions!
+
+
+## Naming Topics
+
+You're free to name topics as you wish.
+
+Adopting a consistent [naming convention](https://cnr.sh/posts/2017-08-29-how-paint-bike-shed-kafka-topic-naming-conventions/) makes your Kafka cluster more maintainable and professional, especially as it scales.
+
+**Recommended Naming Format:**
+`<message_type>.<dataset_name>.<data_name>.<data_format>`
+
+1. **Message Type:** Describes the purpose/category of the topic
+   - Examples: `logging`, `queuing`, `tracking`, `etl_db`, `streaming`
+
+2. **Dataset Name:** Groups related topics together (similar to a database in traditional RDBMS)
+   - Examples: `user`, `push`, `payment`
+   - Acts as a category to organize topics hierarchically
+
+3. **Data Name:** The specific entity (similar to a table in a database)
+   - Can use dot notation for additional hierarchy if needed
+
+4. **Data Format:** The serialization format of the data (optional but recommended)
+   - Examples: `.avro`, `.json`, `.text`, `.protobuf`, `.csv`, `.log`
+   - Helpful for understanding what format consumers need to handle
+
+**Naming Style:**
+- Use **snake_case** for readability
+- Example: `logging_user_activity.avro` or `etl_db.customer.orders.json`

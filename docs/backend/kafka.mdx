@@ -1,6 +1,6 @@
 # Apacha Kafka
 
-## Overview
+## Introduction
 
 Apache Kafka is a distributed publish-subscribe messaging system and a robust queue.
 
@@ -12,35 +12,35 @@ Messages are stored for a period of time before deleted.
 
 Messages are replicated within the cluster to prevent data loss.
 
+![](https://dezyre.gumlet.io/images/blog/apache-kafka-architecture-/apache_kafka_architecture.webp?w=720&dpr=2.0)
+
 
 ## Advantages
 
-**Performance**. Kafka can handle a lot of data quickly (can process 100+ events / sec). It maintains stable performance even many TB of messages are stored.
-
-**Reliability**. Kafka is distributed, partitioned, replicated and fault tolerance.
-
-**Scalability**. Kafka messaging system scales easily without down time..
-
-**Durability**. Kafka uses Distributed commit log which means messages persists on disk as fast as possible, hence it is durable..
+- **Performance**. Kafka can handle a lot of data quickly (can process 100+ events / sec). It maintains stable performance even many TB of messages are stored.
+- **Reliability**. Kafka is distributed, partitioned, replicated and fault tolerance.
+- **Scalability**. Kafka messaging system scales easily without down time..
+- **Durability**. Kafka uses Distributed commit log which means messages persists on disk as fast as possible, hence it is durable..
 
 
-## Use Cases
+## Kafka APIs
 
-**Real-time Data Processing**. Kafka can stream data to analytics platforms, enabling real-time insights and dashboards.
+**Data Ingestion (Source → Kafka):**
+- **Kafka Connect Source:** Use when data already exists in a source system (database, etc.) and you want to ingest it into Kafka
+- **Kafka Producer:** Use when data originates directly from your application (e.g., truck GPS data) and you want to send it straight to Kafka as the source of truth
 
-**Log Aggregation**. Kafka can collect logs from multiple services and make them available in a standard format to multiple con-sumers.
+**Data Transformation (Kafka → Kafka):**
+- **Kafka Streams:** A library for processing and transforming data within Kafka topics in real-time
+- **KSQL DB:** A database layer that allows SQL queries on Kafka topics (internally uses Kafka Streams)
 
-**Event Sourcing**. Kafka can capture and store events from various systems, providing a reliable source of truth for monitoring and auditing purposes.
+**Data Export (Kafka → Target System):**
+- **Kafka Connect Sink:** Use when you want to store processed data in external systems (databases, data warehouses) for storage and analysis
+- **Kafka Consumer:** Use for lightweight, one-off tasks (e.g., sending emails) where data doesn't need to be persisted
 
-**Monitoring**. Kafka can aggregate statistics from distributed applications, creating centralized feeds of operational data
-
-
-![](https://dezyre.gumlet.io/images/blog/apache-kafka-architecture-/apache_kafka_architecture.webp?w=720&dpr=2.0)
-
+**Data Validation:**
+- **Schema Registry:** Ensure data types and schemas remain consistent and accurate across all pipelines
 
 
 ## References
 
 - [TutorialsPoint](https://www.tutorialspoint.com/apache_kafka/index.htm)
-- [axel-sirota - getting-started-kafka GitHub repo](https://github.com/axel-sirota/getting-started-kafka)
-- [Getting Started with Apache Kafka](https://app.pluralsight.com/library/courses/getting-started-apache-kafka)

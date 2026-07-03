@@ -1,0 +1,124 @@
+# Commands
+
+## Getting Kafka version
+
+```sh
+kafka-configs --version
+```
+
+## Topic
+
+**Create a topic**:
+
+```sh
+kafka-topics --bootstrap-server localhost:9092 --create --topic test-topic --partitions 2 --replication-factor 1
+```
+- `--partitions 2`: split topic to 2 partitions
+- `--replication-factor`: must less than or equal number of registered brokers, 1 for local development
+
+
+**List topics**:
+
+```sh
+kafka-topics --bootstrap-server localhost:9092 --list
+```
+
+**Describe a topic**:
+
+```sh
+kafka-topics --bootstrap-server localhost:9092 --describe --topic test-topic
+```
+
+:::details
+Output of the above command will look like this:
+
+```
+Topic: test-topic       TopicId: 22RWpT0NRZW9hzUgn_XP1w PartitionCount: 2       ReplicationFactor: 1    Configs: 
+        Topic: test-topic       Partition: 0    Leader: 1       Replicas: 1     Isr: 1  Elr:    LastKnownElr: 
+        Topic: test-topic       Partition: 1    Leader: 1       Replicas: 1     Isr: 1  Elr:    LastKnownElr: 
+```
+
+- **Topic**: The name of the topic (`test-topic`).  
+- **TopicId**: A unique identifier assigned internally by Kafka (`22RWpT0NRZW9hzUgn_XP1w`).  
+- **PartitionCount**: The topic has **2 partitions**.  
+- **ReplicationFactor**: Each partition has **1 replica** (no redundancy).  
+- **Configs**: Any custom configuration for the topic (empty here, so defaults are used).
+
+For each partition (0 and 1):
+
+- **Partition**: The partition ID (`0` and `1`).  
+- **Leader**: Broker ID `1` is the leader for both partitions.  
+- **Replicas**: Broker ID `1` is the only replica.  
+- **ISR (In-Sync Replicas)**: replicas that are fully caught up with the leader. Broker `1` is in sync. 
+- **ELR (Eligible Leader Replicas)**: replicas eligible to become leaders; with only one replica, it’s blank.  
+- **LastKnownElr**: the last known eligible leader replicas if there were more.
+
+:::
+
+
+## Sending messages
+
+**Sending messages without key**:
+
+```sh
+kafka-console-producer --bootstrap-server localhost:9092 --topic test-topic
+```
+
+After entering some text, press `Ctrl+C` to exit.
+
+**Sending messages with key**:
+
+```sh
+kafka-console-producer \
+  --bootstrap-server localhost:9092 \
+  --topic test-topic \
+  --property "parse.key=true" \
+  --property "key.separator=:"
+```
+
+Then, enter messages like:
+```
+key1:Hello from partition X
+key2:Another message
+```
+
+Kafka will use the hash of the key to determine the partition.
+
+**Distribute messages evenly** across partitions in round-robin order (useful for testing):
+
+```sh
+kafka-console-producer \
+  --bootstrap-server localhost:9092 \
+  --topic test-topic \
+  --producer-property partitioner.class=org.apache.kafka.clients.producer.RoundRobinPartitioner
+```
+
+
+## Consuming messages
+
+Consume messages from the beginning of the topic:
+
+```sh
+kafka-console-consumer --bootstrap-server localhost:9092 --topic test-topic --group group-1 --from-beginning
+```
+- `--group group-1`: specify the consumer group to `group-1`
+- `--from-beginning`: consume messages from the beginning (offset does not reset)
+
+:::note
+Consumers in the same group don't process the same message
+:::
+
+
+## Consumer group
+
+List consumer groups:
+
+```sh
+kafka-consumer-groups --bootstrap-server localhost:9092 --list
+```
+
+Describe a consumer group:
+
+```sh
+kafka-consumer-groups --bootstrap-server localhost:9092 --describe --group group-1
+```
