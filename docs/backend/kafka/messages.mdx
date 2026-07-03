@@ -15,6 +15,8 @@ A message in Kafka is a record that consists of:
 
 Kafka only accepts bytes, so producers use **Serializers** to convert objects into binary format.
 
-Different serializers can be used for keys and values.  Example: Integer key (123) → bytes; String value ("hello world") → bytes
+Different serializers can be used for keys and values. Example:
+- Integer key (123) → bytes
+- String value ("hello world") → bytes
 
 Deserialization converts these bytes back into objects for consumption.

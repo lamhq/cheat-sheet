@@ -2,58 +2,53 @@
 
 ## Introduction
 
-Consumers subscribe to Kafka topics and read messages sequentially from partitions.
-
-Consumers use a **pull model**, brokers doesn't push data to consumers.
+Consumers subscribe to Kafka topics and read messages sequentially from partitions using a **pull model** (brokers don't push data to consumers).
 
 
 ### Consumer Groups
 
-A consumer group is a group of consumers that work together to read from a topic.
+A consumer group is a collection of consumers that work together to read from a topic.
 
-**Partition Assignment:**
-- Each consumer in the group reads from exclusive (non-overlapping) partitions, allowing the group to collectively process all partitions of a topic.
-- Each partition is assigned to only one consumer within a group.
-- If you have more consumers than partitions, extra consumers stay on standby without reading from any partition
+Each partition is assigned to only one consumer in the group, allowing the group to collectively process all partitions. 
 
-**Multiple Consumer Groups on One Topic:**
-- Multiple consumer groups can read from the same topic simultaneously.
-- Each group maintains its own offset position
+If you have more consumers than partitions, extra consumers remain on standby.
+
+Multiple consumer groups can read from the same topic simultaneously, each maintaining its own offset position.
 
 
 ### Consumer Offsets
 
-- Kafka stores the offset position of each consumer group in an internal topic called `__consumer_offsets`
-- After processing messages, consumers **commit offsets** to record their progress
-- If a consumer crashes and restarts, it resumes reading from the last committed offset, enabling recovery
+Kafka stores the offset position of each consumer group in an internal topic (`__consumer_offsets`).
 
-How offsets are committed:
-- **At Least Once:** Commit offset *after* processing. Risk: messages may be reprocessed if the consumer fails during processing (requires idempotent processing)
-- **At Most Once:** Commit offset *before* processing. Risk: messages may be lost if processing fails
-- **Exactly Once:** Process messages without duplication (use transactional API for Kafka-to-Kafka, or idempotent consumers for external systems)
+After processing messages, consumers commit offsets to record progress.
+
+If a consumer crashes, it resumes from the last committed offset.
+
+**Commit strategies:**
+- **At Least Once**: Commit after processing (risk: reprocessing if consumer fails, requires idempotent processing)
+- **At Most Once**: Commit before processing (risk: message loss if processing fails)
+- **Exactly Once**: Process without duplication (use transactional API for Kafka-to-Kafka, or idempotent consumers for external systems)
 
 
 ### Message Deserialization
 
-Kafka delivers data as binary (bytes) for both key and value
+Kafka delivers data as binary bytes (both key and value).
 
-Consumers use **Deserializers** to convert bytes back into objects (integers, strings, JSON, Avro, Protobuf, etc.)
+Consumers use **Deserializers** to convert bytes into objects (JSON, Avro, Protobuf, etc.).
 
-The consumer must know the expected data format in advance
+That means consumers must know the expected format in advance.
 
 
-### Message Delivery
+### Message Processing
 
-When multiple consumer groups subscribe to the same topic, each receives a copy of the message, enabling each group to process the message base on its own purpose.
+Within a consumer group, each message is processed by only one consumer (workload distributed across consumers).
 
-Within a consumer group, each message is processed by only one consumer, enabling load balancing by distributing the workload across consumers.
+When multiple consumer groups subscribe to the same topic, each group receives a copy of every message.
 
 
 ### Partition assignment
 
-Each partition in a topic is consumed by exactly one consumer in the group (partitions can't be shared across consumers).
-
-A consumer can consume messages from multiple partitions. This allow for parallel processing across the consumer group.
+Each partition is consumed by exactly one consumer, but a consumer can consume multiple partitions, enabling parallel processing.
 
 For example, let's say you have:
 - 4 partitions
@@ -64,5 +59,3 @@ Kafka might assign:
 - Consumer 1 → Partitions 2 and 3
 
 ![](./consumer-groups.drawio.svg)
-
-If you have more consumers than partitions, some consumers won't receive any messages. It's important to balance the number of partitions and consumers to ensure efficient message processing.
