@@ -17,11 +17,13 @@ key exhibits the following traits:
 - **Low frequency**: a value does not appear in many documents. This ensures that no single shard holds the majority of documents with a specific value, enabling even distribution of data across the shards and allowing the cluster to scale horizontally more effectively.
 - **Non-monotonically changing values**: the shard key should not steadily increasing or decreasing, its values should change in a non-monotonic way (e.g., they vary up and down unpredictably),
 
-> [!CAUTION]
-> **High frequency** example: If your shard key is `product_category` and the dataset contains many documents with `product_category = 'electronics'`, this value occurs at a **high frequency**. All documents with `product_category = 'electronics'` would be concentrated in the same chunk(s), which can grow excessively large, causing bottlenecks.
+:::danger
+**High frequency** example: If your shard key is `product_category` and the dataset contains many documents with `product_category = 'electronics'`, this value occurs at a **high frequency**. All documents with `product_category = 'electronics'` would be concentrated in the same chunk(s), which can grow excessively large, causing bottlenecks.
+:::
 
-> [!CAUTION]
-> **Monotonic shard keys are problematic**: When a shard key’s value always increases (e.g., timestamps) or decreases, new insertions are directed to a single chunk—the one at the edge of the current range. This creates a "hotspot," where one shard handles a disproportionate number of operations, causing an imbalance in workload.
+:::danger
+**Monotonic shard keys are problematic**: When a shard key’s value always increases (e.g., timestamps) or decreases, new insertions are directed to a single chunk—the one at the edge of the current range. This creates a "hotspot," where one shard handles a disproportionate number of operations, causing an imbalance in workload.
+:::
 
 
 ## Hashed sharding

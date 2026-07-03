@@ -7,8 +7,10 @@
   "effect",
   {
     "name": "state",
+    "label": "State",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   "context",
   "ref",

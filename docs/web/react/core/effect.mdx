@@ -74,9 +74,9 @@ useEffect(() => {
 }, [a, b]);
 ```
 
-> [!NOTE]
-> You will get a lint error if the dependencies you specified don't match what React expects based on the code inside your Effect.   
-
+:::note
+You will get a lint error if the dependencies you specified don't match what React expects based on the code inside your Effect.   
+:::
 If you don't want some code to re-run, edit the Effect code itself to not "need" that dependency.
 
 **Avoid relying on objects and functions as dependencies**. If you create objects and functions during rendering and then read them from an Effect, they will be different on every render. This will cause your Effect to re-synchronize every time.
@@ -150,9 +150,9 @@ If there is no external system involved, you shouldn't need an Effect.
 
 ## Removing Non-Reactive Values from Effect Dependencies
 
-> [!CAUTION]
-> This guide uses an experimental API that has not yet been released in a stable version of React. However, the problem is common enough to be worth mentioning.
-
+:::danger
+This guide uses an experimental API that has not yet been released in a stable version of React. However, the problem is common enough to be worth mentioning.
+:::
 Sometimes your effect dependencies include values that you don't want to trigger a re-run when they change.
 
 For example:

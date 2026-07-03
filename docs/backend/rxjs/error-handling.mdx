@@ -56,8 +56,9 @@ throwError(() => new Error('Something went wrong'))
 // Fallback value
 ```
 
-> [!NOTE]
-> we can use `catchError` multiple times at different points in the Observable chain if needed, and adopt different error strategies at each point in the chain.
+:::note
+we can use `catchError` multiple times at different points in the Observable chain if needed, and adopt different error strategies at each point in the chain.
+:::
 
 
 ## Returning Errors
@@ -123,8 +124,9 @@ source$.subscribe({
 // Stream terminated (complete or unsubscribe)
 ```
 
-> [!NOTE]
-> We can add multiple `finalize` calls at different places in the Observable chain if needed, in order to make sure that the multiple resources are correctly released:
+:::note
+We can add multiple `finalize` calls at different places in the Observable chain if needed, in order to make sure that the multiple resources are correctly released:
+:::
 
 
 ## Retrying

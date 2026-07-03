@@ -1,0 +1,46 @@
+# Retrievers
+
+## Introduction
+
+A retriever is an interface that returns documents given an unstructured query. It doesn't store documents, just retrieve them.
+
+Retrievers accept a string query as input and return a list of `Document` objects as output.
+
+```python
+retriever.invoke("query") → [Document, Document, ...]
+```
+
+
+## Vector Store
+
+| Aspect | Vector Store | Retriever |
+|---|---|---|
+| **Purpose** | Store & search vectors | Return documents from query |
+| **Input** | Documents + embeddings | Unstructured query string |
+| **Output** | Similarity scores or docs | List of Document objects |
+| **Conversion** | All vector stores convert to retrievers | Broader interface |
+
+All vector stores can be cast as retrievers, but not all retrievers use vector stores (e.g., Wikipedia, Arxiv, Elasticsearch).
+
+
+
+## Bring-Your-Own Documents
+
+The below retrievers allow you to index and search a custom corpus of documents.
+
+| Retriever | Self-host | Cloud offering | Package |
+| --- | --- | --- | --- |
+| AmazonKnowledgeBasesRetriever | ❌ | ✅ | langchain-aws |
+| ElasticsearchRetriever | ✅ | ✅ | langchain-elasticsearch |
+| NVIDIARAGRetriever | ✅ | ❌ | langchain-nvidia-ai-endpoints |
+| VertexAISearchRetriever | ❌ | ✅ | langchain-google-community |
+
+## External Index
+
+The below retrievers will search over an external index (e.g., constructed from Internet data or similar).
+
+| Retriever | Source | Package |
+| --- | --- | --- |
+| ParallelSearchRetriever | Internet search via Parallel Search API | langchain-parallel |
+| PerplexitySearchRetriever | Internet search via Perplexity Search API | langchain-perplexity |
+| YouRetriever | Internet search | langchain-youdotcom |

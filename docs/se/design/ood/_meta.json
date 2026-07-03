@@ -1,0 +1,23 @@
+[
+  {
+    "name": "oop",
+    "label": "OOP",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "design-principles",
+    "label": "Design Principles",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "design-patterns",
+    "label": "Design Patterns",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
+]

@@ -1,0 +1,41 @@
+import { Prompt } from '@rspress/core/theme';
+import correctPrompt from './_proofread.txt?raw';
+import interview from './_interview.txt?raw';
+import fourWordExercisePrompt from './_four-word-ex.txt?raw';
+import practicePhrasePrompt from './_practice-phrase.txt?raw';
+
+# English
+
+Prompts used for learning English.
+
+## Correct sentences
+
+<Prompt
+  title="Correct your sentences"
+  description="Send this prompt to AI and enter your sentence."
+  prompt={correctPrompt}
+/>
+
+## Using phrases
+
+<Prompt
+  title="Practice Phrases"
+  description="Send this prompt to AI and enter your sentence."
+  prompt={practicePhrasePrompt}
+/>
+
+## Making sentences
+
+<Prompt
+  title="4-word exercise"
+  description="Send this prompt to AI and start making sentences from provided words."
+  prompt={fourWordExercisePrompt}
+/>
+
+## Practice Interview
+
+<Prompt
+  title="Practice Job Interview"
+  description="Send this prompt to AI and then start the interview."
+  prompt={interview}
+/>

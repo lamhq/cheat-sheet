@@ -1,0 +1,52 @@
+[
+  {
+    "name": "index",
+    "label": "Finance",
+    "type": "file",
+    "collapsible": true,
+    "collapsed": true
+  },
+  "glossary",
+  {
+    "name": "financial-market",
+    "label": "Financial Market",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "portfolio-risk-return",
+    "label": "Portfolio Risk Return",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "portfolio-optimization",
+    "label": "Portfolio Optimization",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "asset-pricing-model",
+    "label": "Asset Pricing Model",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "portfolio-selection",
+    "label": "Portfolio Selection",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "ds365",
+    "label": "DS365",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
+]

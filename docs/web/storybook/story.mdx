@@ -17,7 +17,7 @@ There're three levels of args:
 - [Component args](https://storybook.js.org/docs/writing-stories/args#component-args)
 - [Global args](https://storybook.js.org/docs/writing-stories/args#global-args)
 
-```tsx {14-17}
+```tsx
 // Replace your-framework with the framework you are using, e.g. react-vite, nextjs, nextjs-vite, etc.
 import type { Meta, StoryObj } from '@storybook/your-framework';
 
@@ -31,20 +31,20 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
-  args: {
-    primary: true,
-    label: 'Button',
-  },
+  args: { // [!code highlight]
+    primary: true, // [!code highlight]
+    label: 'Button', // [!code highlight]
+  }, // [!code highlight]
 };
 ```
 
 
 ### Setting args from within a story
 
-```tsx {3,25-29}
+```tsx
 // Replace your-framework with the framework you are using, e.g. react-vite, nextjs, nextjs-vite, etc.
 import type { Meta, StoryObj } from '@storybook/your-framework';
-import { useArgs } from 'storybook/preview-api';
+import { useArgs } from 'storybook/preview-api'; // [!code highlight]
 
 import { Checkbox } from './checkbox';
 
@@ -66,11 +66,11 @@ export const Example = {
    * If you are not concerned with linting, you may use an arrow function.
    */
   render: function Render(args) {
-    const [{ isChecked }, updateArgs] = useArgs();
-
-    function onChange() {
-      updateArgs({ isChecked: !isChecked });
-    }
+    const [{ isChecked }, updateArgs] = useArgs(); // [!code highlight]
+// [!code highlight]
+    function onChange() { // [!code highlight]
+      updateArgs({ isChecked: !isChecked }); // [!code highlight]
+    } // [!code highlight]
 
     return <Checkbox {...args} onChange={onChange} isChecked={isChecked} />;
   },
@@ -84,7 +84,7 @@ Actions are used to display data received by event handler (callback) arguments 
 
 If your component calls an arg which is an Action, the event will show up in the action panel:
 
-```tsx {11}
+```tsx
 // Replace your-framework with the framework you are using, e.g. react-vite, nextjs, vue3-vite, etc.
 import type { Meta } from '@storybook/your-framework';
 
@@ -95,7 +95,7 @@ import { Button } from './Button';
 const meta = {
   component: Button,
   // 👇 Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked
-  args: { onClick: fn() },
+  args: { onClick: fn() }, // [!code highlight]
 } satisfies Meta<typeof Button>;
 
 export default meta;
@@ -111,18 +111,18 @@ There're three levels of parameters:
 - [Component parameters](https://storybook.js.org/docs/writing-stories/parameters#component-parameters)
 - [Global parameters](https://storybook.js.org/docs/writing-stories/parameters#global-parameters)
 
-```tsx title=".storybook/preview.ts" {6-11}
+```tsx title=".storybook/preview.ts"
 // Replace your-framework with the framework you are using, e.g. react-vite, nextjs, vue3-vite, etc.
 import type { Preview } from '@storybook/your-framework';
 
 const preview: Preview = {
   parameters: {
-    backgrounds: {
-      options: {
-        light: { name: 'Light', value: '#fff' },
-        dark: { name: 'Dark', value: '#333' },
-      },
-    },
+    backgrounds: { // [!code highlight]
+      options: { // [!code highlight]
+        light: { name: 'Light', value: '#fff' }, // [!code highlight]
+        dark: { name: 'Dark', value: '#333' }, // [!code highlight]
+      }, // [!code highlight]
+    }, // [!code highlight]
   },
 };
 
@@ -142,7 +142,7 @@ There're two levels of decorators:
 - [Component decorators](https://storybook.js.org/docs/writing-stories/decorators#component-decorators)
 - [Global decorators](https://storybook.js.org/docs/writing-stories/decorators#global-decorators)
 
-```tsx title=".storybook/preview.ts" {9-15}
+```tsx title=".storybook/preview.ts"
 import React from 'react';
 
 // Replace your-framework with the framework you are using, e.g. react-vite, nextjs, nextjs-vite, etc.
@@ -151,13 +151,13 @@ import type { Preview } from '@storybook/your-framework';
 const preview: Preview = {
   decorators: [
     // 👇 Defining the decorator in the preview file applies it to all stories
-    (Story, { args, argTypes, globals, hooks, parameters, viewMode }) => {
-      return (
-        <div className="page-layout">
-          <Story />
-        </div>
-      );
-    },
+    (Story, { args, argTypes, globals, hooks, parameters, viewMode }) => { // [!code highlight]
+      return ( // [!code highlight]
+        <div className="page-layout"> // [!code highlight]
+          <Story /> // [!code highlight]
+        </div> // [!code highlight]
+      ); // [!code highlight]
+    }, // [!code highlight]
   ],
 };
 
@@ -293,14 +293,14 @@ tags: ['!dev', 'docs-only']
 
 You can explicitly use the `title` parameter to define the story's position in the sidebar:
 
-```tsx {7}
+```tsx
 // Replace your-framework with the framework you are using, e.g. react-vite, nextjs, vue3-vite, etc.
 import type { Meta } from '@storybook/your-framework';
 
 import { Button } from './Button';
 
 const meta = {
-  title: 'Design System/Atoms/Button',
+  title: 'Design System/Atoms/Button', // [!code highlight]
   component: Button,
 } satisfies Meta<typeof Button>;
 

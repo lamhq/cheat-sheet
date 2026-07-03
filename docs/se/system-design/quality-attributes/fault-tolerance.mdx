@@ -25,11 +25,12 @@ Fault Tolerance revolves around 3 major tactics:
 
 To prevent the system from going down, we need to eliminate any Single Point of Failure (SPoF) in the system
 
-> [!INFO]
-> 
-> SPoF can be:
-> - Running our application on one server
-> - Storing all data of database on a single computer
+:::info
+
+SPoF can be:
+- Running our application on one server
+- Storing all data of database on a single computer
+:::
 
 The best way to eliminate SPoF is through **Replication** and **Redundancy**:
 - **Database Replication**: Running replicas of database containing the same data on multiple servers. Losing any of those replicas will not cause losing data.

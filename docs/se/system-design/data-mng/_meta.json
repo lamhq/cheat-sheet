@@ -1,25 +1,49 @@
 [
   {
     "name": "sql",
+    "label": "SQL",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   {
     "name": "no-sql",
+    "label": "NoSQL",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   "choosing-db",
   "transaction",
   "concurrency",
-  "indexing",
-  "replication",
   {
-    "name": "partitioning",
+    "name": "indexing",
+    "label": "Indexing",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
+  {
+    "name": "replication",
+    "label": "Replication",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "partitioning",
+    "label": "Partitioning",
+    "type": "dir",
+    "collapsed": true,
+    "collapsible": true
+  },
   "eventual-consistency",
-  "cap-theorem",
+  {
+    "name": "cap-theorem",
+    "label": "CAP Theorem",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
   "base-model"
 ]

@@ -1,0 +1,51 @@
+[
+  {
+    "name": "rate-of-return",
+    "label": "Rate Of Return",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "risk",
+    "label": "Risk",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "portfolio-optimization",
+    "label": "Portfolio Optimization",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "capm",
+    "label": "CAPM",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "monte-carlo-simulation",
+    "label": "Monte Carlo Simulation",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "black-scholes-formula",
+    "label": "Black Scholes Formula",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "regression",
+    "label": "Regression",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
+]

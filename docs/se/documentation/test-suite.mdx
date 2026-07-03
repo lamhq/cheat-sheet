@@ -1,0 +1,154 @@
+# Test Suite
+
+Guide for writing Test Suite documents.
+
+## Introduction
+
+A Test Suite document describes the collection of test cases for a specific feature.
+
+
+## Document Structure
+
+A Test Suite document may include the following sections:
+
+### Introduction
+
+This section provides context so anyone opening the document immediately knows what it covers and who is responsible for it.
+
+- **Feature:** The feature of the software being tested.
+- **Author:** The person who created the document.
+
+After this section is a list of test cases, each include:
+
+### Test Name
+
+Test case name follows format: `<Test Case ID> - <Name>`. Where:
+- `<Test Case ID>`: Unique identifier (e.g., `TC_Login_01`).
+- `<Name>`: The scenario being tested, should be concise, action-oriented (e.g., "Login with valid credentials").
+
+#### Description
+
+What the test is verifying.
+
+Follow pattern: `Verify [feature] with [condition]`.
+
+#### Pre-conditions
+
+What state the system must be in (e.g., user account exists).
+
+#### Test Data
+
+Specific input values used (e.g., account, files, input parameters).
+
+#### Test Steps
+
+Write a logical sequence of user actions.
+
+Do:
+- Use imperative language (e.g., "Click," "Enter," "Navigate").
+- Focus on actions, not observations (verification happens in the next section).
+
+#### Expected Result
+
+Defines the specific, observable outcome of a test case execution (what the tester should see or verify when the test runs).
+
+Do: Be precise. Instead of "It should log in," use "The dashboard page loads, and the welcome message 'Welcome, Admin' is displayed."
+
+#### Postconditions
+
+Defines the expected state of the system, application, or database after a specific test case has been successfully executed.
+
+It ensures that not only did the test pass its immediate assertions, but it also left the system in a known, stable, and correct state.
+
+
+## Examples
+
+### Login Test Suite
+
+```md
+# Login Test Suite
+
+## Introduction
+
+- **Feature:** User Authentication - Login functionality
+- **Author:** QA Team
+
+---
+
+## TC_Login_01 - Login with valid credentials
+
+### Description
+
+Verify that a user can successfully log in with valid credentials.
+
+### Pre-conditions
+
+- Application is accessible
+- User account exists with username "testuser" and password "SecurePass123"
+- User is on the login page
+
+### Test Data
+
+- Username: testuser
+- Password: SecurePass123
+
+### Test Steps
+
+1. Navigate to the login page
+2. Enter "testuser" in the username field
+3. Enter "SecurePass123" in the password field
+4. Click the "Login" button
+5. Wait for page to load
+
+### Expected Result
+
+- User is authenticated.
+- Dashboard/home page is displayed.
+- Welcome message or profile info appears.
+
+### Postconditions
+
+- A valid session or authentication token is created.
+- User has access rights to the system.
+- Login attempt is logged as successful.
+
+---
+
+## TC_Login_02 - Login with invalid password
+
+### Description
+
+Verify that the system rejects login attempts with incorrect password and displays appropriate error message.
+
+### Pre-conditions
+
+- Application is accessible
+- User account exists with username "testuser"
+- User is on the login page
+- User has not exceeded maximum login attempts
+
+### Test Data
+
+- Username: testuser
+- Password: WrongPassword123
+
+### Test Steps
+
+1. Navigate to the login page
+2. Enter "testuser" in the username field
+3. Enter "WrongPassword123" in the password field
+4. Click the "Login" button
+5. Wait for response
+
+### Expected Result
+
+- System denies access.
+- Error message shown (e.g., "Invalid username or password").
+- Login page remains visible for retry.
+
+### Postconditions
+
+- User remains unauthenticated.
+- No session or token is created.
+- Failed login attempt is logged.
+```

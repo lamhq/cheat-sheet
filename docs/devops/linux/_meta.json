@@ -1,0 +1,20 @@
+[
+  "distributions",
+  "commands",
+  "file-dir",
+  "permission",
+  "environment",
+  "redirection",
+  "pipelines",
+  "search",
+  "ssh",
+  "pkg-mgmt",
+  "heredoc",
+  "network",
+  "process",
+  "system",
+  "disk",
+  "cronjob",
+  "ssl",
+  "shell-script"
+]

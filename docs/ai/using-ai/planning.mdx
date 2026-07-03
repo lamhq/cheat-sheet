@@ -1,0 +1,12 @@
+import { Prompt } from '@rspress/core/theme';
+import createDailyTodo from './_daily-schedule.txt?raw';
+
+# Planning
+
+## Create daily todo
+
+<Prompt
+  title="Create Daily Todo"
+  description="Send this prompt to AI, enter a weekday, and get the todo list"
+  prompt={createDailyTodo}
+/>

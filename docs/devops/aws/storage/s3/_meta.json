@@ -1,0 +1,14 @@
+[
+  "storage-classes",
+  "replication",
+  "versioning",
+  "lifecycle",
+  "object-lock",
+  "event",
+  "encryption",
+  "access-control",
+  "monitoring",
+  "logging",
+  "pricing",
+  "optimizing-perf"
+]

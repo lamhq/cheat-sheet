@@ -1,0 +1,54 @@
+# Vector store
+
+## Introduction
+
+Store embedded vectors and perform similarity search. Two phases:
+- **Indexing:** Documents → Embeddings → Vector Store
+- **Retrieval:** Query → Query Embedding → Similarity Search → Top-k Results
+
+```mermaid theme={"theme":{"light":"catppuccin-latte","dark":"catppuccin-mocha"}}
+flowchart LR
+    A["📄 Documents"] --> B["🔢 Embedding Model"]
+    B --> C["🔘 Vectors"]
+    C --> D["[(Vector Store)]"]
+    E["❓ Query"] --> F["🔢 Embedding Model"]
+    F --> G["🔘 Query Vector"]
+    G --> H["🔍 Similarity Search"]
+    H --> D
+    D --> I["📄 Top-k Results"]
+
+    classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1E3A8A
+    class A,B,C,D,E,F,G,H,I process
+```
+
+## Interface
+
+**Core methods:**
+
+- `add_documents()`
+- `delete()`
+- `similarity_search()`
+
+```python
+from langchain_core.vectorstores import InMemoryVectorStore
+
+vector_store = InMemoryVectorStore(embedding=SomeEmbeddingModel())
+
+# Add documents
+vector_store.add_documents(documents=[doc1, doc2], ids=["id1", "id2"])
+
+# Delete by ID
+vector_store.delete(ids=["id1"])
+
+# Similarity search
+similar_docs = vector_store.similarity_search("query", k=3, filter={"source": "tweets"})
+```
+
+
+## Similarity Metrics
+
+Embedding similarity may be computed using:
+
+- **Cosine similarity** – Angle between vectors
+- **Euclidean distance** – Straight-line distance
+- **Dot product** – Projection magnitude

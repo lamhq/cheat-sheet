@@ -23,8 +23,9 @@ Create an empty Nx workspace and install the necessary dependencies using PNPM:
 npx create-nx-workspace@latest nx-demo --ci=skip --packageManager=pnpm --workspaces
 ```
 
-> [!TIP]
-> Migrating your project code to a new Nx workspace is easier than manually adding Nx to an existing codebase and setting it up yourself.
+:::tip
+Migrating your project code to a new Nx workspace is easier than manually adding Nx to an existing codebase and setting it up yourself.
+:::
 
 
 ## Adding project
@@ -33,8 +34,9 @@ npx create-nx-workspace@latest nx-demo --ci=skip --packageManager=pnpm --workspa
 2. Use [generators](./gen-code.mdx) to scaffold a new project from existing templates.
 3. Migrate code & tooling configurations  (e.g., TypeScript, ESLint, Prettier) from your existing project if you have one.
 
-> [!TIP]
-> If you're migrating your project to use Nx, you can run `nx import` to [import your repository](https://nx.dev/recipes/adopting-nx/import-project) to a test repository. Nx will automatically detect and install the required plugins.
+:::tip
+If you're migrating your project to use Nx, you can run `nx import` to [import your repository](https://nx.dev/recipes/adopting-nx/import-project) to a test repository. Nx will automatically detect and install the required plugins.
+:::
 
 Nx will handle for you:
 - ESLint config

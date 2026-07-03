@@ -1,0 +1,58 @@
+# Text Splitters
+
+## Introduction
+
+Text splitters break large documents into smaller, retrievable chunks that fit within model context windows.
+
+## Splitting Strategies
+
+### Text Structure-Based (Recommended)
+
+Text is naturally organized into hierarchical units such as paragraphs, sentences, and words.
+
+```python
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+splitter = RecursiveCharacterTextSplitter(chunk_size=100, chunk_overlap=0)
+chunks = splitter.split_text(document)
+```
+
+**Best for:** General use, maintains semantic coherence.
+
+You should only consider adjusting it if you need to fine-tune performance for your specific application.
+
+
+### Length-Based
+
+Split by token count or character count.
+
+```python
+from langchain_text_splitters import CharacterTextSplitter
+
+splitter = CharacterTextSplitter.from_tiktoken_encoder(
+    encoding_name="cl100k_base", chunk_size=100, chunk_overlap=0
+)
+chunks = splitter.split_text(document)
+```
+
+**Best for:** Consistent chunk sizes, model-specific token limits.
+
+
+### Document Structure-Based
+
+Split by document structure: Markdown headers, HTML tags, JSON objects, code blocks.
+
+Examples of structure-based splitting:
+
+- Markdown: Split by `#`, `##`, `###`
+- HTML: Split by tags
+- JSON: Split by objects/arrays
+- Code: Split by functions/classes
+
+**Best for:** Structured documents, maintaining logical organization.
+
+
+## Key Parameters
+
+- **`chunk_size`** - Max characters/tokens per chunk
+- **`chunk_overlap`** - Overlap between chunks (preserves context)

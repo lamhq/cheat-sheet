@@ -35,8 +35,9 @@ Create a workload table with your application's queries:
 |---|---|---|---|---|
 | The action that a user takes to trigger the query. | The type of query (read or write). | The document fields that are either written or returned by the query. | How frequently your application runs the query. | How critical the query is to your application. |
 
-> [!NOTE]
-> Queries that are run frequently benefit from indexes and should be optimized to avoid lookup operations.
+:::note
+Queries that are run frequently benefit from indexes and should be optimized to avoid lookup operations.
+:::
 
 The following example shows a workload table for a blog application:
 
@@ -81,8 +82,9 @@ To decide whether to embed related data or use references, consider your applica
 - **Improve data returned from different entities**. embed the data of related entities in a single collection.
 - **Improve update performance**. Store related data in its own collection and using a reference to access it.
 
-> [!NOTE]
-> When you use a reference, you reduce your application's write workload by only needing to update the data in a single place.
+:::note
+When you use a reference, you reduce your application's write workload by only needing to update the data in a single place.
+:::
 
 
 ### Steps
@@ -170,8 +172,9 @@ Schema design patterns are ways to optimize your data model for your application
 
 Each schema design pattern has different use cases and tradeoffs for data consistency, performance, and complexity. *For example, some schema design patterns improve write performance, while others improve read performance.*
 
-> [!CAUTION]
-> Implementing a pattern without understanding your application and the data it needs can degrade application performance and cause unnecessary complications to your schema design.
+:::danger
+Implementing a pattern without understanding your application and the data it needs can degrade application performance and cause unnecessary complications to your schema design.
+:::
 
 
 ## Create Indexes

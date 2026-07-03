@@ -1,0 +1,9 @@
+[
+  {
+    "name": "microfrontend",
+    "label": "Microfrontend",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
+]

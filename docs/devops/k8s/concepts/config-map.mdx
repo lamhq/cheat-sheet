@@ -51,8 +51,9 @@ Create a ConfigMap from a file:
 kubectl create configmap my-config --from-file=config.txt
 ```
 
-> [!NOTE]
-> The file name becomes the key, and the file contents become the value.
+:::note
+The file name becomes the key, and the file contents become the value.
+:::
 
 
 ### From an Environment File
@@ -68,8 +69,9 @@ root.password=secret
 kubectl create configmap my-config --from-env-file=.env
 ```
 
-> [!NOTE]
-> The file name is not included as a key.
+:::note
+The file name is not included as a key.
+:::
 
 
 ## Using a ConfigMap
@@ -90,19 +92,19 @@ kubectl get cm config-name -o yaml
 
 ConfigMap manifest:
 
-```yml title="file.configmap.yml" {4,6}
+```yml title="file.configmap.yml"
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: app-settings
+  name: app-settings # [!code highlight]
 data:
-  enemies: aliens
+  enemies: aliens # [!code highlight]
   enemies.cheat: "true"
   enemies.cheat.level: noGoodRotten
 ```
 
 **Access a ConfigMap value in Pods as an environment variable**:
-```yml {8,11,12}
+```yml
 apiVersion: apps/v1
 ...
 spec:
@@ -110,11 +112,11 @@ spec:
   spec:
     containers: ...
     env:
-    - name: ENEMIES
+    - name: ENEMIES # [!code highlight]
       valueFrom:
         configMapKeyRef:
-          name: app-settings
-          key: enemies
+          name: app-settings # [!code highlight]
+          key: enemies # [!code highlight]
 ```
 - `ENEMIES` environment variable will be created (value=`aliens`)
 

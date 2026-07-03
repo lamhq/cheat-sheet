@@ -1,7 +1,9 @@
 [
   {
     "name": "typeorm",
+    "label": "TypeORM",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   }
 ]

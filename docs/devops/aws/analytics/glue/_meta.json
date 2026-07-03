@@ -1,0 +1,20 @@
+[
+  "components",
+  "tables",
+  "crawlers",
+  "dpu",
+  "jobs",
+  "triggers",
+  {
+    "name": "monitoring",
+    "label": "Monitoring",
+    "type": "dir",
+    "collapsed": true,
+    "collapsible": true
+  },
+  "bookmarks",
+  "int-sessions",
+  "workflows",
+  "blueprints",
+  "data-shuffling"
+]

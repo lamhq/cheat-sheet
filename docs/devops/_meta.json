@@ -1,27 +1,79 @@
 [
   {
-    "name": "index",
-    "label": "DevOps"
-  },
-  "ci",
-  "cd",
-  "progressive-delivery",
-  "gitops",
-  {
-    "name": "docker",
+    "name": "cloud-computing",
+    "label": "Cloud Computing",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
-  "podman",
+  {
+    "name": "aws",
+    "label": "AWS",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "gcp",
+    "label": "GCP",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "supabase",
+    "label": "Supabase",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "linux",
+    "label": "Linux",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "docker",
+    "label": "Docker",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "terraform",
+    "label": "Terraform",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
   {
     "name": "k8s",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
   },
-  "github-pages",
+  {
+    "name": "cicd",
+    "label": "CI/CD",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
   {
     "name": "github-actions",
     "type": "dir",
+    "collapsible": true,
     "collapsed": true
-  }
+  },
+  {
+    "name": "gitlab",
+    "type": "dir",
+    "label": "GitLab",
+    "collapsible": true,
+    "collapsed": true
+  },
+  "bitbucket-pipelines",
+  "github-pages"
 ]

@@ -1,0 +1,26 @@
+# Tools
+
+## Forcing Tool Calls
+
+The `tool_choice` parameter controls whether and which tools the LLM can use:
+
+- `tool_choice="auto"` (Default): LLM decides when to use tools.
+- `tool_choice="none"`: LLM will never use tools, only respond with text.
+- `tool_choice="<tool_name>"`: Forces the LLM to always use a specific tool
+
+```python
+from pydantic import BaseModel, Field
+
+class AnswerQuestion(BaseModel):
+    """Answer the question."""
+    answer: str = Field(description="The answer to the question")
+    confidence: float = Field(description="Confidence score 0-1")
+
+llm = ChatOpenAI(model="gpt-4o-mini")
+
+# Force the LLM to ALWAYS use AnswerQuestion tool
+chain = llm.bind_tools(
+    tools=[AnswerQuestion], 
+    tool_choice="AnswerQuestion"  # Must match the tool name
+)
+```

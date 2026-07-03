@@ -1,14 +1,21 @@
 [
-  "overview",
-  "writing-tests",
+  "getting-started",
+  {
+    "name": "write-tests",
+    "label": "Write Tests",
+    "type": "dir",
+    "collapsed": true,
+    "collapsible": true
+  },
   "generate-tests",
-  "global-setup",
+  "run-tests",
   "debug-tests",
-  "api-testing",
+  "project-structure",
+  "ai",
   "configuration",
   "projects",
-  "monitoring",
-  "mock-api",
-  "tracing",
-  "storage"
+  "auth",
+  "api-testing",
+  "screenshot-cmp",
+  "ci"
 ]

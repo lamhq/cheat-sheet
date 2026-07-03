@@ -1,6 +1,0 @@
-{
-  "ecs": "Amazon ECS",
-  "eks": "Amazon EKS",
-  "ecr": "Amazon ECR",
-  "app-runner": "AWS App Runner"
-}

@@ -1,0 +1,11 @@
+[
+  "single-asset",
+  "portfolio",
+  {
+    "name": "exercises",
+    "label": "Exercises",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
+]

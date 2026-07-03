@@ -1,0 +1,127 @@
+# LLM Applications
+
+Four main categories of LLM Applications.
+
+## Simple LLM Calls
+
+It's the most basic pattern: application sends input to LLM, gets response, and displays it to the user.
+
+**Characteristics:**
+- Not sophisticated
+- Simple implementation
+- Often delivers significant value
+
+**Example:** Children's story generator
+- Takes subjects/topics as input
+- Sends to LLM
+- Generates stories with cartoons and pictures
+- Simple but effective
+
+## RAG with Vector Stores
+
+Uses semantic search in vector stores to find relevant data before querying the LLM.
+
+**How it works:**
+1. Store documents/data in vector store
+2. Use semantic search to find relevant chunks
+3. Send those chunks to LLM with the query
+4. Get domain-specific answers
+
+**Example:** Quiver (aka "Second Brain")
+- Dump all your information (PDFs, databases, videos, chat history)
+- System indexes them in a vector store
+- Chat with your data using RAG + semantic search
+- Access your knowledge base conversationally
+
+**Use Case:** Answers domain-specific questions accurately without hallucinations.
+
+
+## Agents with LLM Reasoning
+
+Uses LLM as a reasoning engine to decide which tools to use and execute non-deterministic code.
+
+**Characteristics:**
+- LLM decides which tool to use
+- Flexible, adaptive behavior
+- Can handle complex multi-step tasks
+
+**Example:** Torq's Socrates (Cybersecurity)
+- Reads security alert information
+- Decides how to remediate using LLM reasoning
+- Executes appropriate security tools
+- Automates complex incident response
+
+**Use Case:** Real-world problems requiring intelligent decision-making.
+
+
+## Autonomous Agents
+
+Autonomous agents are **self-directed AI systems** that combine multiple advanced techniques to operate independently with minimal human intervention.
+
+### Core Components
+
+**Agent (LLM Reasoning Engine)** - Makes decisions about which tools to use, plans multi-step sequences, and adapts based on results
+
+**Vector Stores (Long-Term Memory)** - Stores information for retrieval, enables learning from past interactions, and provides context for decision-making
+
+**Semantic Search** - Finds relevant information quickly, provides context to the reasoning engine, and improves decision quality
+
+**Tool Access** - Can execute actions, access external APIs, and interact with databases
+
+
+### Characteristics
+
+**Self-Directed Decision Making** - Decides what to do next based on goals without step-by-step instructions, adapts strategy as circumstances change
+
+**Long-Term Memory** - Remembers past interactions via vector stores, uses previous experiences to inform decisions, continuously learns
+
+**Multi-Agent Collaboration** - Agents communicate and work together on complex problems, dividing tasks intelligently
+
+**Complex Problem Solving** - Handles multi-step tasks, reasons through ambiguity, finds creative solutions
+
+### How They Work
+
+```
+1. Define Goal
+   ↓
+2. Agent Reasons About Goal
+   ↓
+3. Semantic Search Retrieves Relevant Context
+   ↓
+4. Agent Decides Next Action
+   ↓
+5. Execute Tool/Action
+   ↓
+6. Store Result in Memory
+   ↓
+7. Agent Evaluates Progress
+   ↓
+8. Repeat Until Goal Achieved
+```
+
+### Examples
+
+**AutoGPT** - Breaks down goals into sub-tasks, executes tasks autonomously, uses memory to track progress, and can work on coding, research, and planning tasks
+
+**GPT Engineer** - Generates code autonomously, uses semantic search to understand requirements, iterates and improves code, and can build entire projects with minimal prompts
+
+**Baby AGI** - Task-driven autonomous system that creates and prioritizes tasks, executes tasks using available tools, and learns from results
+
+### Current State
+
+These projects are **very early stage** and still experimental.
+
+**Challenges They Face**:
+- ❌ Long execution times (many sequential LLM calls)
+- ❌ High costs (expensive at scale)
+- ❌ Hallucinations (LLM guessing)
+- ❌ Context window limitations
+- ❌ Reliability issues (errors cascade)
+- ❌ Security concerns
+- ❌ Validation problems
+
+**What They're Proving**:
+- ✅ Autonomous reasoning is possible
+- ✅ Multi-step task execution works
+- ✅ Agent collaboration is feasible
+- ✅ Long-term memory enhances capability

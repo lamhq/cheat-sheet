@@ -17,8 +17,9 @@ This guide is for version `9.32.0` (2025), using [flat config format](https://es
 
 For configuration of specific languages and tools (React, Jest, Storybook ...), refer to below sections.
 
-> [!TIPS]
-> To share common config, create a separate ESLint config package and import it into each package’s config file.  
+:::tip
+To share common config, create a separate ESLint config package and import it into each package’s config file.  
+:::
 
 
 ## Usage
@@ -65,8 +66,9 @@ export default defineConfig([
 
 - [`eslint-config-prettier`](https://github.com/prettier/eslint-config-prettier) export an ESLint config that turn off rules that conflict or are unnecessary with Prettier, makes sure to put it after other configs.
 
-> [!NOTE]
-> `eslint-plugin-prettier` wasn't installed due to separation of concerns between linters and formatters
+:::note
+`eslint-plugin-prettier` wasn't installed due to separation of concerns between linters and formatters
+:::
 
 Reference: https://prettier.io/docs/integrating-with-linters
 
@@ -148,8 +150,9 @@ export default defineConfig(
 - `stylisticTypeChecked`: includes additional rules that enforce consistent styling, with typed linting enable
 - `projectService: true`: ask TypeScript's type checking service for each source file's type information
 
-> [!NOTE]
-> `typescript-eslint` does not check **type errors**, because doing so would slow down the lint run, and duplicate the errors that TypeScript already outputs for you.
+:::note
+`typescript-eslint` does not check **type errors**, because doing so would slow down the lint run, and duplicate the errors that TypeScript already outputs for you.
+:::
 
 Reference: [typescript-eslint](https://typescript-eslint.io/getting-started/)
 

@@ -23,9 +23,9 @@ The Percentage `%` unit is relative to the parent element's dimensions (for most
 
 `vw` is commonly used to make elements span the full width of the screen, or to create typography that scales fluidly as the viewport changes size.
 
-> [!WARNING]
-> `100vw` can sometimes cause a horizontal scrollbar because it includes the width of the vertical scrollbar in the calculation.
-
+:::warning
+`100vw` can sometimes cause a horizontal scrollbar because it includes the width of the vertical scrollbar in the calculation.
+:::
 
 ## `rem`
 
@@ -68,9 +68,9 @@ Use `rem`.
 
 Because `rem` units adapt to the user's browser settings. If a user has changed their default font size, `rem` will adjust accordingly.
 
-> [!NOTE]
-> `px` will lock the font size in place, potentially overriding the user's accessibility preferences.
-
+:::note
+`px` will lock the font size in place, potentially overriding the user's accessibility preferences.
+:::
 
 ### Width
 
@@ -85,12 +85,12 @@ Percentages is good starting point, often used in combination with a `max-width`
 
 You can use percentages, `rem`, or `vh` (viewport height).
 
-> [!WARNING]
-> Before setting a fixed `height`, consider using `min-height` instead. This ensures that if the content requires more vertical space, it will be accommodated without causing layout problems
-
-> [!CAUTION]
-> Be cautious with `vh` on mobile devices, as it can be inconsistent due to things like the on-screen keyboard.
-
+:::warning
+Before setting a fixed `height`, consider using `min-height` instead. This ensures that if the content requires more vertical space, it will be accommodated without causing layout problems
+:::
+:::danger
+Be cautious with `vh` on mobile devices, as it can be inconsistent due to things like the on-screen keyboard.
+:::
 
 ### Padding & Margin
 

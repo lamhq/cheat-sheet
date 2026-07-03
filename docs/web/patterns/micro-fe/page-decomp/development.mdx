@@ -44,9 +44,9 @@ if (process.env.NODE_ENV === 'development') {
 }
 ```
 
-> [!CAUTION]
-> It's required to call `import('./bootstrap')` in the entry point script to ensure that shared dependencies are available when the `bootstrap` module is loaded in the browser.
-
+:::danger
+It's required to call `import('./bootstrap')` in the entry point script to ensure that shared dependencies are available when the `bootstrap` module is loaded in the browser.
+:::
 
 ## Shell App
 

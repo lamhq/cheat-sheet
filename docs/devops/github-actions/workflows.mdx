@@ -56,33 +56,6 @@ on:
 You can use filters to include/exclude specific [branches, tags, paths](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow#using-filters-to-target-specific-branches-for-pull-request-events).
 
 
-### Using conditionals
-
-You can use conditionals to further control whether jobs or steps in your workflow will run.
-
-Job level:
-```yml
-jobs:
-  run_if_label_matches:
-    if: github.event.label.name == 'bug'
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo 'The label was bug'
-```
-
-Step level:
-```yml
-jobs:
-  state_event_type:
-    runs-on: ubuntu-latest
-    steps:
-    - name: if is issue
-      if: github.event.issue
-      run: |
-        echo An issue was closed
-```
-
-
 ### Triggering from another workflow
 
 Events triggered by the `GITHUB_TOKEN` (except `workflow_dispatch` and `repository_dispatch`) will not create a new workflow run.
@@ -114,7 +87,7 @@ If you want to manually trigger a specific job in a workflow, you can create an 
 
 ## Workflows and jobs concurrency
 
-By default, workflows execute concurrently.
+By default, workflows and jobs execute concurrently.
 
 You can use the `concurrency` keyword to limit the number of concurrent workflow or job runs.
 

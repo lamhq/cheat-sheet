@@ -1,7 +1,9 @@
 [
   {
     "name": "fastapi",
+    "label": "FastAPI",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   }
 ]

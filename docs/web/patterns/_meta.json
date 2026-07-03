@@ -3,7 +3,9 @@
   "mono-fe",
   {
     "name": "micro-fe",
+    "label": "Micro FE",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   }
 ]

@@ -4,8 +4,9 @@
 
 Microservices are **independently releasable services** that are modeled around a business domain 
 
-> [!NOTE]
-> A **service** here means a completely separate operating system process.
+:::note
+A **service** here means a completely separate operating system process.
+:::
 
 Each microservice has its own database, **avoid the use of shared databases** in most circumstances.
 
@@ -33,8 +34,9 @@ Well-defined and stable service contracts are necessary for loose coupling.
 
 Independent deployability guides the identification of **microservice boundaries**.
 
-> [!CAUTION]
-> Sharing databases can make achieving independent deployability difficult.
+:::danger
+Sharing databases can make achieving independent deployability difficult.
+:::
 
 
 ### Modeled Around a Business Domain
@@ -74,8 +76,9 @@ Microservices provide flexibility in the following aspects:
 - **Scalability**: you can scale specific parts of an application independently.
 - **Robustness**: If one service fails, it doesn't necessarily bring down the entire system.
 
-> [!NOTE]
-> Incremental adoption of microservices is recommended to gradually assess the impact and make adjustments as needed.
+:::note
+Incremental adoption of microservices is recommended to gradually assess the impact and make adjustments as needed.
+:::
 
 
 ### Alignment of Architecture and Organization
@@ -111,15 +114,17 @@ Implementing a log aggregation system is strongly recommended for adopting micro
 
 Log aggregation systems collect and aggregate logs from all services, providing a central place for analysis and alerting.
 
-> [!TIP]
-> **Humio** is a recommended log aggregation tool, but simple logging services provided by public cloud vendors can also be used
+:::tip
+**Humio** is a recommended log aggregation tool, but simple logging services provided by public cloud vendors can also be used
+:::
 
 Implementing **correlation IDs** can help isolate logs associated with a specific flow of service calls, making troubleshooting easier.
 
 As the system grows in complexity, tools for exploring system behavior become essential, such as **analyzing traces** across multiple services and **detecting bottlenecks**.
 
-> [!TIP]
-> **Jaeger** focus on distributed tracing. **Lightstep** and **Honeycomb** provide advanced capabilities for exploring the state of a running system.
+:::tip
+**Jaeger** focus on distributed tracing. **Lightstep** and **Honeycomb** provide advanced capabilities for exploring the state of a running system.
+:::
 
 
 ### Containers and Kubernetes
@@ -139,12 +144,14 @@ Microservices require ways to share data between them.
 
 Tools and technologies that allow for easy streaming and processing of large volumes are essential in microservice architectures.
 
-> [!TIP]
-> **Apache Kafka** is a popular choice for streaming data in a microservice environment, offering features like message permanence, compaction, and scalability.
-> Kafka has added stream-processing capabilities with KSQLDB and can be used with dedicated solutions like Apache Flink.
+:::tip
+**Apache Kafka** is a popular choice for streaming data in a microservice environment, offering features like message permanence, compaction, and scalability.
+Kafka has added stream-processing capabilities with KSQLDB and can be used with dedicated solutions like Apache Flink.
+:::
 
-> [!TIP]
-> **Debezium** is an open source tool that helps stream data from existing datasources over Kafka, enabling traditional datasources to be part of a stream-based architecture.
+:::tip
+**Debezium** is an open source tool that helps stream data from existing datasources over Kafka, enabling traditional datasources to be part of a stream-based architecture.
+:::
 
 
 ## Benefits
@@ -164,16 +171,18 @@ Upgrading technologies can be easier as the implementation details are hidden fr
 
 By isolating failures within service boundaries, the rest of the system can continue functioning.
 
-> [!CAUTION]
-> Distributed systems also introduce new sources of failure, such as network and machine failures, which need to be understood and handled properly. Failure to address these concerns seriously can result in a less robust system after migrating to microservices.
+:::danger
+Distributed systems also introduce new sources of failure, such as network and machine failures, which need to be understood and handled properly. Failure to address these concerns seriously can result in a less robust system after migrating to microservices.
+:::
 
 
 ### Scaling
 
 Smaller services in a microservices architecture allow for scaling only the services that need it, enabling other parts of the system to run on smaller hardware.
 
-> [!TIP]
-> Microservices, combined with on-demand provisioning systems like AWS, enable cost-effective scaling based on demand.
+:::tip
+Microservices, combined with on-demand provisioning systems like AWS, enable cost-effective scaling based on demand.
+:::
 
 
 ### Ease of Deployment
@@ -280,8 +289,9 @@ It can be difficult to measure the impact of latency during the design or coding
 
 Understanding acceptable latency helps ensure efficiency, as slower operations might still be adequate.
 
-> [!TIP]
-> Using distributed tracing tools like Jaeger can help measure end-to-end latency for the operations that matter.
+:::tip
+Using distributed tracing tools like Jaeger can help measure end-to-end latency for the operations that matter.
+:::
 
 
 ### Data Consistency

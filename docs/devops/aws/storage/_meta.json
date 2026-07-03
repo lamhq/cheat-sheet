@@ -1,0 +1,9 @@
+[
+  {
+    "name": "s3",
+    "type": "dir",
+    "collapsed": true
+  },
+  "storage-gateway",
+  "backup"
+]

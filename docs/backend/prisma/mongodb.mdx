@@ -22,8 +22,9 @@ MongoDB is a popular NoSQL document database that offers flexibility and scalabi
 - **`@prisma/client`** - The Prisma Client library for querying your database
 - **`dotenv`** - Loads environment variables from your `.env` file
 
-> [!NOTE]
-> Prisma v6.19 is the latest stable version of Prisma ORM v6 that fully supports MongoDB. MongoDB support for Prisma ORM v7 is coming in the near future. 
+:::note
+Prisma v6.19 is the latest stable version of Prisma ORM v6 that fully supports MongoDB. MongoDB support for Prisma ORM v7 is coming in the near future. 
+:::
 
 Initialize Prisma with MongoDB as the datasource:
 
@@ -56,7 +57,7 @@ export default defineConfig({
 
 Add your MongoDB connection URL to `.env`:
 
-```env title=".env"
+```sh title=".env"
 DATABASE_URL="mongodb+srv://..."
 ```
 

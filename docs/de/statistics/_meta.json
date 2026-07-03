@@ -1,0 +1,18 @@
+[
+  "distribution-16",
+  "glossary",
+  {
+    "name": "descriptive-statistics",
+    "label": "Descriptive Statistics",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "inferential-statistics",
+    "label": "Inferential Statistics",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
+]

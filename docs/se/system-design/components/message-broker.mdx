@@ -18,8 +18,9 @@ Message brokers provide capabilities that can be useful for asynchronous communi
 4. **Read Transactionality**: prevents message loss in case the consumer fail to process it.
 5. **Exactly-Once Delivery**: Guarantees that messages are delivered only once without duplication.
 
-> [!CAUTION]
-> While brokers may guarantee exactly once delivery, it is still recommended to design consumers to gracefully handle potential duplicate messages.
+:::danger
+While brokers may guarantee exactly once delivery, it is still recommended to design consumers to gracefully handle potential duplicate messages.
+:::
 
 
 ## Consumers
@@ -57,8 +58,9 @@ If multiple consumer groups subscribe to a topic, within each consumer group, on
 
 ![](./message-broker/topic.drawio.svg)
 
-> [!NOTE]
-> Unlike queues, topics allow broadcasting messages to all subscribers rather than delivering messages to just one consumer.
+:::note
+Unlike queues, topics allow broadcasting messages to all subscribers rather than delivering messages to just one consumer.
+:::
 
 
 ## Benefits

@@ -29,8 +29,9 @@ The three most common asynchronous communication styles in microservice:
 2. **Request-driven**. A microservice requests another to perform an operation. Once completed, the upstream microservice receive the response, regardless of success or failure.
 3. **Event-driven interaction**. A microservice broadcasts an event. Other microservices listen for the events they are interested in and react accordingly.
 
-> [!NOTE]
-> With `Async/Await`, the caller code is still blocked until the awaited promise is resolved. So even if the underlying technology we are using could be considered asynchronous, this is still inherently a synchronous, blocking interaction.
+:::note
+With `Async/Await`, the caller code is still blocked until the awaited promise is resolved. So even if the underlying technology we are using could be considered asynchronous, this is still inherently a synchronous, blocking interaction.
+:::
 
 **Advantages**: 
 - Microservices are decoupled temporarily. the downstream microservice do not need to be reachable at the same time the call is made

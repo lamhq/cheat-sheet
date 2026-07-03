@@ -1,0 +1,137 @@
+# Component Design Document
+
+Guide for writing Component Design documents.
+
+## Introduction
+
+A Component Design Document provides detailed specifications of a single service or module's internal architecture, detailing how it is structured, what it does, and how it interfaces with other components.
+
+It serves as the technical reference for engineers working within or integrating with this specific service, enabling them to understand internal architecture and make localized design decisions.
+
+
+## Document Structure
+
+A Component Design Document typically includes the following sections:
+
+### Overview
+
+Provides readers with a concise understanding of the component's purpose and scope within the broader system.
+
+- **Core Purpose:** What business or technical capability does this module isolate?
+- **Design Scope:** Briefly define the boundaries of what code logic is owned by this module versus what is explicitly delegated to other modules.
+
+### Structural Architecture (C4 Level 3)
+
+Visualizes the internal structural components that make up this module and how they interact internally and across boundaries.
+
+Use a **Component Diagram** (C4 Level 3) to show internal layers such as interface/handler layers, core domain/business logic, and infrastructure adapters.
+
+Include **Component Catalog & Responsibilities**: A table defining each component's explicit responsibility and structural constraints.
+
+### Interfaces & Boundaries
+
+Defines how this module exposes its capabilities and interacts with adjacent layers.
+
+**Provided Interfaces (Inbound):**
+- How do other components or containers interact with this module?
+- What interaction models are used? (e.g., Synchronous in-process calls, gRPC, event-driven)
+- Which internal component acts as the entry point?
+
+**Required Interfaces (Outbound Dependencies):**
+- What upstream or downstream systems/modules does this component depend on?
+- Is the coupling loose (asynchronous) or tight (synchronous)?
+
+### Key Design Decisions & Internal Patterns
+
+Explains the structural patterns and strategies used inside the module for maintainability and clarity.
+
+- **Architectural Pattern:** (e.g., Hexagonal/Ports-and-Adapters, Clean Architecture, Onion Layout)
+- **State & Execution Management:** (e.g., Stateless execution, worker pools, saga coordinators)
+- **Dependency Injection Strategy:** How are internal components wired together at runtime?
+
+
+## Best Practices
+
+- **Single Responsibility:** Each component layer should have one reason to change.
+- **Clear Boundaries:** Use visual diagrams to make module boundaries obvious.
+- **Decoupling:** Infrastructure concerns should not leak into domain logic.
+- **Consistency:** Follow the same structural patterns across all components in the system.
+- **Documentation:** Keep this document in sync with code changes.
+
+
+## Example
+
+````markdown
+# Payment Service Component Design
+
+Internal architecture of the Payment Service module.
+
+## Overview
+
+**Core Purpose:** The Payment Service isolates all payment processing logic, including transaction validation, provider integration, and settlement operations.
+
+**Design Scope:**
+- **In-scope:** Payment method validation, transaction processing, provider communication, refund handling, and transaction history storage.
+- **Out-of-scope:** Fraud detection, subscription management, financial reporting, and currency conversion strategies (delegated to upstream services).
+
+## Structural Architecture (C4 Level 3)
+
+Visualizes how the Payment Service is internally organized.
+
+```mermaid
+graph TR
+    %% Example C4 Level 3 Structural Flow
+    subgraph External [External Boundaries]
+        OrderService([Order Service])
+        StripeAPI[(Stripe Provider)]
+    end
+
+    subgraph PaymentBoundary [Payment Service Internal Boundary]
+        PaymentHandler[1. Payment Handler / Interface Layer]
+        PaymentProcessor[2. Payment Processor / Core Logic]
+        ProviderAdapter[3. Provider Adapter / Infrastructure]
+    end
+
+    %% Interactions
+    OrderService -->|Request Payment| PaymentHandler
+    PaymentHandler -->|Delegates| PaymentProcessor
+    PaymentProcessor -->|Uses| ProviderAdapter
+    ProviderAdapter -->|Calls| StripeAPI
+
+    %% Styling
+    style PaymentBoundary fill:#f9f9f9,stroke:#333,stroke-width:2px
+```
+
+### Component Catalog & Responsibilities
+
+| Component | Responsibility | Constraints |
+| --- | --- | --- |
+| **Payment Handler** | Receives payment requests, validates input DTOs, maps to domain models. | Cannot contain payment logic; purely a gateway. |
+| **Payment Processor** | Executes transaction workflows, coordinates validation, applies business rules, manages state transitions. | Must remain independent of provider-specific APIs. |
+| **Provider Adapter** | Abstracts communication with external payment providers (Stripe, PayPal, etc.). | Implements provider-agnostic interface defined by Payment Processor. |
+
+## Interfaces & Boundaries
+
+### Provided Interfaces (Inbound)
+
+**Interaction Model:** Synchronous gRPC method calls from Order Service.
+
+**Entry Component:** PaymentHandler intercepts all inbound payment requests.
+
+### Required Interfaces (Outbound Dependencies)
+
+**Dependencies:**
+- Stripe SDK (tight coupling for provider communication)
+- PostgreSQL via Repository abstraction (tight coupling for transaction persistence)
+- Event Bus (loose coupling for publishing payment completion events)
+
+**Coupling Nature:** The Stripe integration is tightly coupled, while event publishing is loosely coupled.
+
+## Key Design Decisions & Internal Patterns
+
+**Architectural Pattern:** Hexagonal Architecture (Ports & Adapters) to keep provider-specific logic isolated.
+
+**State & Execution Management:** Each payment transaction is processed as a discrete, stateless handler invocation. Complex workflows use the Saga pattern for distributed transactions.
+
+**Dependency Injection Strategy:** Constructor-based injection using Spring's IoC container; all dependencies are injected at instantiation time.
+````

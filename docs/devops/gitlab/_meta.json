@@ -1,0 +1,15 @@
+[
+  {
+    "name": "cicd",
+    "type": "dir",
+    "collapsed": true,
+    "collapsible": true
+  },
+  {
+    "name": "deploy-release",
+    "type": "dir",
+    "label": "Deploy & Release",
+    "collapsed": true,
+    "collapsible": true
+  }
+]

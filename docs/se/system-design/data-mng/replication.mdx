@@ -17,9 +17,10 @@ When one of the database servers goes offline:
   - Otherwise, read operations are redirected to other healthy secondary databases.
 - If the primary database goes offline, a secondary database will be promoted to be the new primary.
 
-> [!CAUTION]
-> In production systems, promoting a new primary is more complicated as the data in a secondary database might not be up to date. The missing data needs to be updated by running data recovery scripts.\
-> Although some other replication methods like multi-primarys and circular replication could help, those setups are more complicated;
+:::danger
+In production systems, promoting a new primary is more complicated as the data in a secondary database might not be up to date. The missing data needs to be updated by running data recovery scripts.\
+Although some other replication methods like multi-primarys and circular replication could help, those setups are more complicated;
+:::
 
 
 ## Benefits

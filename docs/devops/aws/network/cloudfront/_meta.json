@@ -1,0 +1,29 @@
+[
+  "distributions",
+  "origins",
+  {
+    "name": "cache-behavior",
+    "type": "dir",
+    "collapsed": true
+  },
+  "invalidations",
+  {
+    "name": "access-control",
+    "type": "dir",
+    "collapsed": true
+  },
+  "security",
+  {
+    "name": "monitoring",
+    "type": "dir",
+    "collapsed": true
+  },
+  "pricing",
+  "custom-domain-name",
+  "functions",
+  {
+    "name": "scenarios",
+    "type": "dir",
+    "collapsed": true
+  }
+]

@@ -1,0 +1,16 @@
+[
+  {
+    "name": "discrete-random-variable",
+    "label": "Discrete Random Variable",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "continuous-random-variable",
+    "label": "Continuous Random Variable",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
+]

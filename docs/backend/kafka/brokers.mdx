@@ -1,0 +1,23 @@
+# Brokers
+
+A broker is a server that receives data from producers, stores it, and serves it to consumers.
+
+Each broker is identified by an integer ID and contains certain topic partitions.
+
+
+## Cluster
+
+A cluster is a group of brokers working together to manage and distribute data.
+
+One broker acts as the controller for administrative tasks; others manage data storage and retrieval.
+
+Clusters can be expanded without downtime.
+
+
+## Broker Discovery
+
+Every broker is a "bootstrap server"—you only need to connect to one.
+
+Kafka clients are smart: they fetch metadata about the cluster and communicate directly with appropriate brokers.
+
+Each broker knows about all other brokers, topics, and partitions in the cluster.

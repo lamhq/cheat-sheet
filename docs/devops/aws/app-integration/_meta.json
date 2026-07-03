@@ -1,0 +1,26 @@
+[
+  {
+    "name": "api-gateway",
+    "type": "dir",
+    "collapsed": true
+  },
+  "app-flow",
+  {
+    "name": "app-sync",
+    "type": "dir",
+    "collapsed": true
+  },
+  "event-bridge",
+  "sns",
+  "mq",
+  {
+    "name": "sqs",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "step-function",
+    "type": "dir",
+    "collapsed": true
+  }
+]

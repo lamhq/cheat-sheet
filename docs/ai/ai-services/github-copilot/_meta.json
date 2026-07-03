@@ -1,0 +1,19 @@
+[
+  "getting-started",
+  "inline-suggestions",
+  "chat",
+  "smart-actions",
+  {
+    "name": "customization",
+    "label": "Customization",
+    "type": "dir",
+    "collapsed": true,
+    "collapsible": true
+  },
+  "context",
+  "code-review",
+  "pull-requests",
+  "coding-agent",
+  "copilot-spaces",
+  "best-practices"
+]

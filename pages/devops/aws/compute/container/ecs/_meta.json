@@ -1,8 +1,0 @@
-{
-  "concepts": "Concepts",
-  "integration": "Integration",
-  "scaling": "Auto Scaling",
-  "security": "Security",
-  "fargate": "AWS Fargate",
-  "ecs-anywhere": "Amazon ECS Anywhere"
-}

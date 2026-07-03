@@ -1,6 +1,13 @@
 [
   "getting-started",
-  "concepts",
+  "cli",
+  "topics",
+  "messages",
+  "brokers",
+  "producers",
+  "consumers",
+  "replication",
+  "kraft",
   "workflows",
   "schema"
 ]

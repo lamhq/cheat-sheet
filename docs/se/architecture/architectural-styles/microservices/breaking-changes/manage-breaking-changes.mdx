@@ -16,8 +16,9 @@ Suitable where:
 - same team manages both the microservice and its consumers
 - teams can coordinate deployments effectively and ensure synchronized updates
 
-> [!CAUTION]
-> Overusing lockstep deployments can lead to a distributed monolith, so it should be used sparingly.
+:::danger
+Overusing lockstep deployments can lead to a distributed monolith, so it should be used sparingly.
+:::
 
 
 ## Coexist microservice versions
@@ -35,8 +36,9 @@ Useful in scenarios where:
 - Complex routing logic to the appropriate microservice, making system behavior harder to understand.
 - Managing persistent state across service versions add complexity.
 
-> [!NOTE]
-> If the transition of consumers to the new version and its release takes longer, it's more practical to coexist different endpoints within the same microservice, rather than maintaining entirely separate versions.
+:::note
+If the transition of consumers to the new version and its release takes longer, it's more practical to coexist different endpoints within the same microservice, rather than maintaining entirely separate versions.
+:::
 
 
 ## Emulate the old interface
@@ -47,8 +49,9 @@ Once all the consumers are no longer using the old endpoint, remove it along wit
 
 **Emulation of old endpoints is the preferred approach**, as the challenges of implementing emulation are generally easier to deal with than coexisting microservice versions.
 
-> [!TIP]
-> For systems making use of **HTTP**, choose between version numbers in URI (for example, `/v1/customer` or `/v2/customer`) or request headers for routing, based on your project's needs and client behavior preferences. For **RPC**, methods are put in different namespaces (for example, `v1.createCustomer` and `v2.createCustomer`).
+:::tip
+For systems making use of **HTTP**, choose between version numbers in URI (for example, `/v1/customer` or `/v2/customer`) or request headers for routing, based on your project's needs and client behavior preferences. For **RPC**, methods are put in different namespaces (for example, `v1.createCustomer` and `v2.createCustomer`).
+:::
 
 
 ## The social contract

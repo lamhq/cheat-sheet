@@ -1,7 +1,5 @@
 [
-  {
-    "name": "processing-strategies",
-    "label": "Processing Strategies"
-  },
-  "lambda-arch"
+  "processing-strategies",
+  "lambda-arch",
+  "hadoop"
 ]

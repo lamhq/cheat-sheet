@@ -15,8 +15,9 @@ Defines the **use cases** (how business rules are applied to achieve goals).
 
 The Interface layer converts external input into Command/Query objects and delegates them to Application Services, which execute the use case using the Domain layer.
 
-> [!INFO]
-> A use case is a list of actions/steps defining the interactions between an actor (UML) and a system to achieve a goal.
+:::info
+A use case is a list of actions/steps defining the interactions between an actor (UML) and a system to achieve a goal.
+:::
 
 
 ### Commands
@@ -173,11 +174,13 @@ export class FindUsersQueryHandler implements IQueryHandler {
 }
 ```
 
-> [!NOTE]
-> Command and Query objects should only contain primitive types and types that don't belong to the Domain layer.
+:::note
+Command and Query objects should only contain primitive types and types that don't belong to the Domain layer.
+:::
 
-> [!INFO]
-> This guide uses [NestJS CQRS](https://docs.nestjs.com/recipes/cqrs) package that provides a command/query bus.
+:::info
+This guide uses [NestJS CQRS](https://docs.nestjs.com/recipes/cqrs) package that provides a command/query bus.
+:::
 
 ### Application Services
 
@@ -568,11 +571,13 @@ export class Email extends ValueObject<string> {
 - Ensures property invariants and improves security.
 - Simplifies code with ubiquitous language.
 
-> [!CAUTION]
-> Serialize **Value Objects** to primitives before sending them to other processes (e.g., DTOs, events).
+:::danger
+Serialize **Value Objects** to primitives before sending them to other processes (e.g., DTOs, events).
+:::
 
-> [!INFO]
-> Libraries like [Runtypes](https://www.npmjs.com/package/runtypes) simplify creating **Value Objects** in Node.js.
+:::info
+Libraries like [Runtypes](https://www.npmjs.com/package/runtypes) simplify creating **Value Objects** in Node.js.
+:::
 
 If creating classes for all primitives feels excessive:
 1. Use classes only for primitives that have specific rules or behavior.

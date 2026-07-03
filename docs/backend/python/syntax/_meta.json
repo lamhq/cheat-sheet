@@ -11,8 +11,10 @@
   "decorators",
   {
     "name": "oop",
+    "label": "OOP",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   "async",
   "context-manager",

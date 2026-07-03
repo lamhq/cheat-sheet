@@ -1,0 +1,13 @@
+[
+  "intro",
+  "aria",
+  "content-structure",
+  "testing",
+  {
+    "name": "guidelines",
+    "label": "Guidelines",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
+]

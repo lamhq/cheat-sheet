@@ -32,8 +32,9 @@ Challenges:
 - Inflexible. TTL does not react to real-time data changes.
 - Stale data can exists if the origin updates right after a TTL refresh, the cache remains outdated until the next cycle.
 
-> [!NOTE]
-> HTTP provides the ability to specify `Cache-Control` (how long clients should consider data fresh) and `Expires headers` (an explicit expiration timestamp for cached responses) on responses to enable smarter client-side caching.
+:::note
+HTTP provides the ability to specify `Cache-Control` (how long clients should consider data fresh) and `Expires headers` (an explicit expiration timestamp for cached responses) on responses to enable smarter client-side caching.
+:::
 
 
 ## Conditional GETs (HTTP)

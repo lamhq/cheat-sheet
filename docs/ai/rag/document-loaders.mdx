@@ -1,0 +1,45 @@
+# Document Loaders
+
+## Introduction
+
+Document loaders provide a standard interface to read data from different sources (Slack, Notion, Google Drive, PDFs, etc.) into LangChain's `Document` format. All implement the `BaseLoader` interface.
+
+
+## Common API
+
+```python
+from langchain_docling.loader import DoclingLoader
+
+loader = DoclingLoader(file_path="https://arxiv.org/pdf/2408.09869")
+
+# Load all at once
+// [!code highlight]
+documents = loader.load()
+
+# Lazy load (for large datasets)
+// [!code highlight]
+for document in loader.lazy_load():
+    print(document)
+```
+
+
+## Loader by Categories
+
+### Productivity Tools
+- **AgentMail** - Email data
+
+### Webpages
+- **Unstructured**, **Docling** - Parse web pages
+- **Apify**, **Hyperbrowser**, **Browserbase**, **AgentQL** - Web scraping/crawling
+
+### PDFs
+- **Unstructured**, **Docling**, **Upstage**, **UnDatasIO**, **OpenDataLoader**
+
+### Cloud Providers
+- **Google Cloud Storage** (GCS directory/file)
+- **Google Drive** (Docs only)
+
+### Common File Types
+- **Unstructured** - Many formats (docs, sheets, images, etc.)
+- **Docling** - Various file types
+- **PolarisAIDataInsight** - Multiple formats

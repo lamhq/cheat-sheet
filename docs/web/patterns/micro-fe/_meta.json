@@ -7,8 +7,10 @@
   "team-topologies",
   {
     "name": "page-decomp",
+    "label": "Page Decomposition",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   "widget-decomp"
 ]

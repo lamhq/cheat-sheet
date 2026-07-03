@@ -4,5 +4,11 @@
   "config",
   "history",
   "undo-changes",
-  "remote"
+  "remote",
+  "setting-up-repo",
+  "cherry-pick",
+  "stash",
+  "gitignore",
+  "tag",
+  "ref"
 ]

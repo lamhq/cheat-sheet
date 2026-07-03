@@ -45,10 +45,11 @@ Game state are defined in two objects: `G` and `ctx`.
 }
 ```
 
-> [!CAUTION]
-> Because state can be sent between client and server,
+:::caution
+Because state can be sent between client and server,
 `G` must be a JSON-serializable object; in particular, it must
 not contain classes or functions.
+:::
 
 
 ## Moves
@@ -100,8 +101,9 @@ The game can transition between different **phases**, and **turns** occur inside
 
 A turn is a period of the game that is associated with an individual player. It typically consists of one or more moves made by that player before it passes on to another player.
 
-> [!NOTE]
-> You can also allow other players to play during your turn if needed.
+:::note
+You can also allow other players to play during your turn if needed.
+:::
 
 
 ## Stage

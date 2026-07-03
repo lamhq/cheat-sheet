@@ -1,22 +1,19 @@
 [
-  "documentation-structure",
   "project-overview",
-  {
-    "type": "dir",
-    "name": "requirement-analysis",
-    "label": "Requirement Analysis",
-    "collapsed": true
-  },
+  "ucd",
   {
     "type": "dir",
     "name": "design",
     "label": "Design",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   {
     "type": "dir",
     "name": "implementation",
     "label": "Implementation",
-    "collapsed": true
-  }
+    "collapsed": true,
+    "collapsible": true
+  },
+  "test-suite"
 ]

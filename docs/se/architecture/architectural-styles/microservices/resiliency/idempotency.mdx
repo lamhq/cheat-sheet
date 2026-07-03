@@ -31,4 +31,6 @@ This ensures that the points are only applied once for each unique order.
 
 Due to asynchronous processing, there is a small chance that the same message may be processed more than once. By handling events idempotently, duplicate effects are prevented, enhancing system reliability.
 
-> [!CAUTION] For REST API, some HTTP verbs (e.g., GET, PUT) are expected to be idempotent, but this depends on the implementation in the underlying service.
+:::danger
+For REST API, some HTTP verbs (e.g., GET, PUT) are expected to be idempotent, but this depends on the implementation in the underlying service.
+:::

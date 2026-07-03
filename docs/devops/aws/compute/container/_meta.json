@@ -1,0 +1,14 @@
+[
+  {
+    "name": "ecs",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "eks",
+    "type": "dir",
+    "collapsed": true
+  },
+  "ecr",
+  "app-runner"
+]

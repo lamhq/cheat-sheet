@@ -1,0 +1,18 @@
+[
+  "getting-started",
+  {
+    "name": "tutorials",
+    "label": "Tutorials",
+    "type": "dir",
+    "collapsed": true,
+    "collapsible": true
+  },
+  {
+    "name": "permission",
+    "label": "Permission",
+    "type": "dir",
+    "collapsed": true,
+    "collapsible": true
+  },
+  "sharing-data"
+]

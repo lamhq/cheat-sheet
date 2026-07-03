@@ -1,4 +1,16 @@
 [
-  "sharding",
-  "consistent-hashing"
+  {
+    "name": "sharding",
+    "label": "Sharding",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "consistent-hashing",
+    "label": "Consistent Hashing",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
 ]

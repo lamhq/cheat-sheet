@@ -179,8 +179,9 @@ export default defineConfig([
 ]);
 ```
 
-> [!NOTE]
-> Patterns specified in files and ignores use [minimatch](https://www.npmjs.com/package/minimatch) syntax and are evaluated relative to the location of the `eslint.config.js` file
+:::note
+Patterns specified in files and ignores use [minimatch](https://www.npmjs.com/package/minimatch) syntax and are evaluated relative to the location of the `eslint.config.js` file
+:::
 
 More about this, see [Ignore Files](https://eslint.org/docs/latest/use/configure/ignore).
 
@@ -194,8 +195,9 @@ To print the final configuration for a file:
 npx eslint --print-config file.js > es-config.json
 ```
 
-> [!NOTE]
-> You won’t see any entries for `files`, `ignores`, or `name`, because those are only used in calculating the final configuration and so do not appear in the result.
+:::note
+You won’t see any entries for `files`, `ignores`, or `name`, because those are only used in calculating the final configuration and so do not appear in the result.
+:::
 
 
 ### Use the Config Inspector

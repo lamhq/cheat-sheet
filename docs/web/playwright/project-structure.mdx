@@ -1,0 +1,114 @@
+# Project Structure
+
+How to organize test files and structure test cases for maintainability and readability.
+
+## Directory Layout
+
+```
+playwright-project/
+├── pages/                  # Page Object Model (POM) classes
+│   ├── base.page.ts        # Common methods across all pages
+│   ├── login.page.ts
+│   └── dashboard.page.ts
+├── tests/                  # Test specification files
+│   ├── global-setup.ts     # Global setup script
+│   ├── auth/               # Authentication-related tests
+│   │   └── login.spec.ts
+│   └── order/              # Order-related tests
+│       └── checkout.spec.ts
+├── utils/                  # Helper functions and utilities
+│   └── db.ts
+├── playwright.config.ts    # Global framework configuration
+├── package.json            # Node.js dependencies and scripts
+├── playwright-report/      # Generated HTML reports (gitignored)
+└── .env                    # Environment variables (gitignored)
+```
+
+Where:
+- `pages/`: Contains Page Object Model (POM) classes. Each class encapsulates interactions and locators for a specific page.
+- `tests/`: Contains all test specification files, organized by components (e.g., `auth`, `order`).
+- `utils/`: Contains helper functions, global setup/teardown logic, and any shared utilities.
+
+
+## Test File Naming
+
+Each test file is named to reflect the feature to be tested.
+
+Examples:
+- `login.spec.ts`
+- `register.spec.ts`
+- `logout.spec.ts`
+
+
+## Test File Structure
+
+Each test file contain all test cases of a specific feature.
+
+Name test cases using the pattern: `[action/condition] should [expected outcome]`.
+
+Add test case IDs as comments above the test case definition.
+
+Example:
+
+```typescript title="login.spec.ts"
+import { test, expect } from "@playwright/test";
+
+// TC-01 (test case ID for traceability)
+test("Login with valid credentials should redirect to dashboard", async ({ page }) => {
+  // ... (Implementation)
+});
+
+// TC-02
+test("Login with invalid credentials should display error message", async ({ page }) => {
+  // ... (Implementation)
+});
+
+// TC-03
+test("Submit empty form should show validation error", async ({ page }) => {
+  // ... (Implementation)
+});
+```
+
+Group related test cases together using `test.describe()`. Each `describe` block should contain more than one test case:
+
+```typescript title="login.spec.ts"
+import { test } from "@playwright/test";
+
+test.describe("Login via Email", () => {
+  // Test cases for email login...
+});
+
+
+test.describe("Login via Social Media", () => {
+  // Test cases for social media login...
+});
+```
+
+## Test case structure
+
+Do not define a variable if it is only used once.
+
+Group related actions together using `test.step()`. Each `step` block should contain more than one action:
+
+```typescript
+import { test, expect } from '@playwright/test';
+
+test('Checkout with a ATM card should create a card transaction', async ({ page }) => {
+
+  await test.step('Create test data', async () => {
+    // ... (Implementation)
+  });
+
+  await test.step('Initiate payment', async () => {
+    // ... (Implementation)
+  });
+
+  await test.step('Pay', async () => {
+    // ... (Implementation)
+  });
+
+  await test.step('Verify payment result', async () => {
+    // ... (Implementation)
+  });
+});
+```

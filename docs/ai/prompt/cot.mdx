@@ -1,0 +1,34 @@
+# Chain of Thought Prompting
+
+## Introduction
+
+Large language models struggle with **multi-step reasoning tasks** like math word problems and common sense reasoning—tasks that are easy for humans but difficult for models.
+
+**Chain of Thought** is a prompting technique that breaks down complex problems into **intermediate reasoning steps**, allowing models to solve problems they otherwise couldn't.
+
+**Key idea:** Guide the model to solve problems the way humans do—step by step.
+
+## Example
+
+```md
+**Example**:
+Q: Sean has 5 toys. He gets 2 from mom and 2 from dad. Total?
+A: Sean starts with 5. Gets 2 from mom = 7. Gets 2 from dad = 9.
+Answer: 9
+
+**Now solve**:
+Q: John takes care of 10 dogs. Each needs 5 hours/day. 
+How many hours/week?
+```
+
+**Result:** Model learns the reasoning pattern and applies it correctly:
+- 10 dogs × 5 hours/day = 50 hours/day
+- 50 hours/day × 7 days = **350 hours/week**
+
+## Why Chain of Thought Matters
+
+- Models approach problems like humans do
+- Complex reasoning becomes manageable
+- More accurate answers on multi-step problems
+- Model shows its work (transparency)
+- Enables solving previously unsolvable problems

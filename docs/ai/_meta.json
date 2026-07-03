@@ -1,0 +1,61 @@
+[
+  {
+    "name": "index",
+    "label": "AI",
+    "type": "file",
+    "collapsible": true,
+    "collapsed": true
+  },
+  "llm",
+  {
+    "name": "prompt",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "rag",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "mcp",
+    "type": "dir",
+    "collapsed": true,
+    "label": "MCP",
+    "collapsible": true
+  },
+  "flow",
+  "llm-apps",
+  {
+    "name": "agents",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "langchain",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "langgraph",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "ai-services",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "using-ai",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
+]

@@ -141,14 +141,14 @@ Moves that manipulate secret state often cannot run on the client because the cl
 
 These can be marked as server-only by setting `client: false` on move:
 
-```ts {7}
+```ts
 moves: {
   moveThatUsesSecret: {
     move: ({ G, random }) => {
       G.secret.value = random.Number();
     },
 
-    client: false,
+    client: false, // [!code highlight]
   }
 }
 ```

@@ -1,0 +1,11 @@
+[
+  {
+    "name": "cloudwatch",
+    "type": "dir",
+    "collapsed": true
+  },
+  "cloudtrail",
+  "grafana",
+  "prometheus",
+  "health"
+]

@@ -1,0 +1,15 @@
+[
+  "configuration",
+  "providers",
+  "resources",
+  "data-source",
+  "input-vars",
+  "local-val",
+  "output-val",
+  "expressions",
+  "modules",
+  "functions",
+  "backend",
+  "state",
+  "workspaces"
+]

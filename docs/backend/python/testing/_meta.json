@@ -1,8 +1,10 @@
 [
   {
     "name": "pytest",
+    "label": "Pytest",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   "faker"
 ]

@@ -1,0 +1,11 @@
+[
+  "subnet",
+  "network-basic",
+  "routing",
+  "security",
+  {
+    "name": "connectivity",
+    "type": "dir",
+    "collapsed": true
+  }
+]

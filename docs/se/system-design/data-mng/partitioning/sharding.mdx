@@ -148,11 +148,11 @@ Hotspot occurs when a particular shard receives a disproportionately high amount
 
 This can lead to performance bottlenecks and uneven load distribution.
 
-> [!DETAILS]  
-> 
-> For example, imagine a social media platform where data for Katy Perry, Justin Bieber, and Lady Gaga all ends up on the same shard.   
-> That shard becomes overwhelmed with read operations.  
-> To solve this, we may need to allocate a separate shard for each celebrity. And depending on traffic, each shard might even need further partitioning.
+:::details
+For example, imagine a social media platform where data for Katy Perry, Justin Bieber, and Lady Gaga all ends up on the same shard.
+That shard becomes overwhelmed with read operations.
+To solve this, we may need to allocate a separate shard for each celebrity. And depending on traffic, each shard might even need further partitioning.
+:::
 
 
 ## Resharding data

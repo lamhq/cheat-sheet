@@ -117,7 +117,7 @@ If you are testing a move that uses the Random API, these strategies can be used
 
 Set a value for the `seed` option to the game client and you'll see a predictable sequence of results from calls to random API methods:
 
-```ts {14}
+```ts
 import { Client } from 'boardgame.io/client';
 
 const TicTacToeGame = {
@@ -131,7 +131,7 @@ const TicTacToeGame = {
 it('updates G.roll with a random number', () => {
   const client = Client({
       // Set seed so PRNG always starts in same state
-    game: { ...TicTacToeGame, seed: 'fixed-seed' },
+    game: { ...TicTacToeGame, seed: 'fixed-seed' }, // [!code highlight]
   });
   client.moves.rollDice();
   const { G } = client.getState();
@@ -144,12 +144,12 @@ it('updates G.roll with a random number', () => {
 
 You can override the Random API entirely to allow complete control of the results of API methods:
 
-```ts {15}
+```ts
 import { Client } from 'boardgame.io/client';
 import { MockRandom } from 'boardgame.io/testing';
 
 // Create a mock of the random plugin, where the D6 method always returns 6.
-// Any methods you don’t provide an implementation for will behave as usual.
+// Any methods you don't provide an implementation for will behave as usual.
 const randomPlugin = MockRandom({
   D6: () => 6,
 });
@@ -158,8 +158,8 @@ it ('rolls a six', () => {
   const client = Client({
     game: {
       ...TicTacToeGame,
-      // Add the random plugin mock to the game’s plugins.
-      plugins: [...(TicTacToeGame.plugins || []), randomPlugin]
+      // Add the random plugin mock to the game's plugins.
+      plugins: [...(TicTacToeGame.plugins || []), randomPlugin] // [!code highlight]
     },
   });
   client.moves.rollDice();

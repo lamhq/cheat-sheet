@@ -75,11 +75,13 @@ If using **ES Modules**, specify below options in `tsconfig.json`:
 }
 ```
 
-> [!CAUTION]
-> When using ES Modules, a file extension must be provided when using the `import` keyword to resolve relative or absolute specifiers. Directory indexes (e.g. `./startup/index.js`) must also be fully specified.
+:::danger
+When using ES Modules, a file extension must be provided when using the `import` keyword to resolve relative or absolute specifiers. Directory indexes (e.g. `./startup/index.js`) must also be fully specified.
+:::
 
-> [!INFO]
-> If your TypeScript code doesn't include file extensions, you may get `ERR_MODULE_NOT_FOUND` error when running the compiled JavaScript with Node. In that case, you need to bundle your code to make it run.
+:::info
+If your TypeScript code doesn't include file extensions, you may get `ERR_MODULE_NOT_FOUND` error when running the compiled JavaScript with Node. In that case, you need to bundle your code to make it run.
+:::
 
 If using **CommonJS**, specify below options in `tsconfig.json`:
 

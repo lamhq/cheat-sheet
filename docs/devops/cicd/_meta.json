@@ -1,0 +1,11 @@
+[
+  "cicd",
+  "ci",
+  "cd",
+  "build-stage",
+  "quality-check",
+  "testing",
+  "packaging",
+  "gitops",
+  "progressive-delivery"
+]

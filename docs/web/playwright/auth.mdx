@@ -1,0 +1,180 @@
+# Authentication
+
+## Key concepts
+
+Tests can load existing authenticated state. This eliminates the need to authenticate in every test and speeds up test execution.
+
+You can reuse authenticated state across tests by saving it to a directory like `playwright/.auth` using `page.context().storageState()`. Then configure Playwright to use that state.
+
+Auth state directory may contain sensitive cookies/headers, so add it to `.gitignore`.
+
+
+## Shared account in all tests
+
+This is the recommended approach for tests without server-side state.
+
+How it works:
+
+- Create a setup test that logs in once and saves the auth state to a file.
+- Define a separate `setup` project in `playwright.config.ts` that runs the setup test.
+- Configure other projects to depend on the `setup` project and use the saved auth state.
+
+Example setup test:
+
+```ts title="tests/auth.setup.ts"
+import { test as setup, expect } from '@playwright/test';
+import path from 'path';
+
+const authFile = path.join(__dirname, '../playwright/.auth/user.json');
+setup('authenticate', async ({ page }) => {
+  await page.goto('https://github.com/login');
+  await page.getByLabel('Username or email address').fill('username');
+  await page.getByLabel('Password').fill('password');
+  await page.getByRole('button', { name: 'Sign in' }).click();
+  await page.waitForURL('https://github.com/');
+  await page.context().storageState({ path: authFile });
+});
+```
+
+Playwright config with a setup project and two browser projects that depend on it:
+
+```ts title="playwright.config.ts"
+import { defineConfig, devices } from '@playwright/test';
+
+export default defineConfig({
+  projects: [
+    { name: 'setup', testMatch: /.*\.setup\.ts/ },
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'], storageState: 'playwright/.auth/user.json' },
+      dependencies: ['setup'],
+    },
+    {
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'], storageState: 'playwright/.auth/user.json' },
+      dependencies: ['setup'],
+    },
+  ],
+});
+```
+
+Tests start already authenticated because we specified `storageState` in the config:
+
+```ts
+import { test } from '@playwright/test';
+
+test('test', async ({ page }) => {
+  // page is authenticated
+});
+```
+
+:::note
+UI mode will not run the `setup` project. You must manually run the `auth.setup.ts` whenever existing authentication expires.
+:::
+## One account per parallel worker
+
+This is the recommended approach for tests that modify server-side state. 
+
+How it works:
+
+- Create a custom fixture that authenticate once per worker and return the auth state.
+- Override `storageState` fixture with the custom fixture.
+- Refactor test to import `test` from the custom fixture file.
+
+Custom fixture:
+
+```ts title="playwright/fixtures.ts"
+import { test as baseTest, expect } from '@playwright/test';
+import fs from 'fs';
+import path from 'path';
+
+export * from '@playwright/test';
+export const test = baseTest.extend<{}, { workerStorageState: string }>({
+  // Use the same storage state for all tests in this worker.
+  storageState: ({ workerStorageState }, use) => use(workerStorageState),
+
+  // Authenticate once per worker with a worker-scoped fixture.
+  workerStorageState: [async ({ browser }, use) => {
+    // Use parallelIndex as a unique identifier for each worker.
+    const id = test.info().parallelIndex;
+    const fileName = path.resolve(test.info().project.outputDir, `.auth/${id}.json`);
+
+    if (fs.existsSync(fileName)) {
+      // Reuse existing authentication state if any.
+      await use(fileName);
+      return;
+    }
+
+    // Important: make sure we authenticate in a clean environment by unsetting storage state.
+    const page = await browser.newPage({ storageState: undefined });
+
+    // Acquire a unique account, for example create a new one.
+    // Alternatively, you can have a list of precreated accounts for testing.
+    // Make sure that accounts are unique, so that multiple team members
+    // can run tests at the same time without interference.
+    const account = await acquireAccount(id);
+
+    // Perform authentication steps. Replace these actions with your own.
+    await page.goto('https://github.com/login');
+    await page.getByLabel('Username or email address').fill(account.username);
+    await page.getByLabel('Password').fill(account.password);
+    await page.getByRole('button', { name: 'Sign in' }).click();
+    // Wait until the page receives the cookies.
+    //
+    // Sometimes login flow sets cookies in the process of several redirects.
+    // Wait for the final URL to ensure that the cookies are actually set.
+    await page.waitForURL('https://github.com/');
+    // Alternatively, you can wait until the page reaches a state where all cookies are set.
+    await expect(page.getByRole('button', { name: 'View profile and more' })).toBeVisible();
+
+    // End of authentication steps.
+
+    await page.context().storageState({ path: fileName });
+    await page.close();
+    await use(fileName);
+  }, { scope: 'worker' }],
+});
+```
+
+Each test file should import `test` from our fixtures file instead of `@playwright/test`:
+
+```ts title="tests/example.spec.ts"
+// Important: import our fixtures.
+import { test, expect } from '../playwright/fixtures';
+
+test('test', async ({ page }) => {
+  // page is authenticated
+});
+```
+
+## Authenticate with API
+
+This approach can be used when your application supports authenticating via API.
+
+How it works:
+- Execute the login request to the API server using `APIRequestContext`
+- The API returns the authentication cookie.
+- The test calls `storageState()` to save auth state.
+
+Example:
+```ts
+import { test as setup } from '@playwright/test';
+const authFile = 'playwright/.auth/user.json';
+
+setup('authenticate', async ({ request }) => {
+  await request.post('https://github.com/login', {
+    form: { user: 'user', password: 'password' },
+  });
+  await request.storageState({ path: authFile });
+});
+```
+
+
+## Advanced Topics
+
+- [Authenticate with API](https://playwright.dev/docs/auth#authenticate-with-api-request): login via API request other than UI interactions
+- [Multiple signed in roles](https://playwright.dev/docs/auth#multiple-signed-in-roles): create separate auth files for different roles
+- [Testing multiple roles together](https://playwright.dev/docs/auth#testing-multiple-roles-together): open multiple contexts with different `storageState` in one test
+- [Testing multiple roles with POM fixtures](https://playwright.dev/docs/auth#testing-multiple-roles-with-pom-fixtures): build role-specific fixtures using saved auth files
+- [Session storage](https://playwright.dev/docs/auth#session-storage): persist `sessionStorage` manually with `addInitScript`
+- [Avoid authentication in some tests](https://playwright.dev/docs/auth#avoid-authentication-in-some-tests): reset `storageState` to run unauthenticated tests

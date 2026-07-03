@@ -1,0 +1,9 @@
+[
+  "claude",
+  {
+    "name": "github-copilot",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
+]

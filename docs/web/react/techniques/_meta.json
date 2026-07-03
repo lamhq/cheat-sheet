@@ -6,8 +6,10 @@
   "debouncing",
   {
     "name": "bg-rendering",
+    "label": "Background Rendering",
     "type": "dir",
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   },
   "code-splitting",
   "web-workers",

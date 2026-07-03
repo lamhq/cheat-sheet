@@ -1,0 +1,29 @@
+[
+  {
+    "name": "ec2",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "ec2-auto-scaling",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "aws-batch",
+    "type": "dir",
+    "collapsed": true
+  },
+  "beanstalk",
+  "wavelength",
+  {
+    "name": "container",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "serverless",
+    "type": "dir",
+    "collapsed": true
+  }
+]

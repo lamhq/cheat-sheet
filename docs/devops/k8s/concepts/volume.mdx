@@ -121,11 +121,11 @@ spec:
 
 ### Defining a Persistent VolumeClaim
 
-```yml {4}
+```yml
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: my-pvc
+  name: my-pvc # [!code highlight]
 spec:
   accessModes:
     - ReadWriteOnce
@@ -137,7 +137,7 @@ spec:
 
 ### Using a PersistentVolumeClaim
 
-```yml {11,13,15}
+```yml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -148,11 +148,11 @@ spec:
       image: nginx
       volumeMounts:
         - mountPath: /usr/share/nginx/html
-          name: my-storage
+          name: my-storage # [!code highlight]
   volumes:
-    - name: my-storage
+    - name: my-storage # [!code highlight]
       persistentVolumeClaim:
-        claimName: my-pvc
+        claimName: my-pvc # [!code highlight]
 ```
 
 

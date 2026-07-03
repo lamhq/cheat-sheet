@@ -1,0 +1,16 @@
+[
+  "strategy",
+  "observer",
+  "decorator",
+  "simple-factory",
+  "factory-method",
+  {
+    "name": "abstract-factory",
+    "label": "Abstract Factory",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  "builder",
+  "cor"
+]

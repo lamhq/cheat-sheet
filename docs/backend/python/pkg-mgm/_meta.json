@@ -1,5 +1,6 @@
 [
-  "virtual-env",
+  "uv",
   "pip",
-  "poetry"
+  "poetry",
+  "virtual-env"
 ]

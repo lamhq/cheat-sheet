@@ -47,12 +47,13 @@ datasource db {
 
 Specifiy the `DATABASE_URL` in the `.env` file:
 
-```env title=".env"
+```sh title=".env"
 DATABASE_URL="file:./dev.db"
 ```
 
-> [!NOTE]
-> Make sure you have a `ConfigModule` configured, otherwise the `DATABASE_URL` variable will not be picked up from `.env`
+:::note
+Make sure you have a `ConfigModule` configured, otherwise the `DATABASE_URL` variable will not be picked up from `.env`
+:::
 
 
 ## Specify database tables

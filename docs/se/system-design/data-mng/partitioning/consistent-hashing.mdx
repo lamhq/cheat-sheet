@@ -27,8 +27,9 @@ Both the nodes (servers) and the data (keys) are hashed using the hash function.
 
 ![](./consistent-hashing/nodes.drawio.svg)
 
-> [!NOTE]
-> In above figure, we have nodes $n_0$, $n_1$, $n_2$, $n_3$ and keys $k_0$, $k_1$, $k_2$, $k_3$ are hashed and mapped to the hash ring.
+:::note
+In above figure, we have nodes $n_0$, $n_1$, $n_2$, $n_3$ and keys $k_0$, $k_1$, $k_2$, $k_3$ are hashed and mapped to the hash ring.
+:::
 
 ### Data distribution
 
@@ -38,8 +39,9 @@ The data item is then assigned to the first node that appears clockwise from its
 
 ![](./consistent-hashing/item-location.drawio.svg)
 
-> [!NOTE]
-> In above figure, $k_0$ belong to $n_0$, $k_1$ belong to $n_1$, $k_2$ belong to $n_2$, $k_3$ belong to $n_3$.
+:::note
+In above figure, $k_0$ belong to $n_0$, $k_1$ belong to $n_1$, $k_2$ belong to $n_2$, $k_3$ belong to $n_3$.
+:::
 
 ### Adding Node
 
@@ -49,8 +51,9 @@ Only the data between the new node and the preceding node needs to be redistribu
 
 ![](./consistent-hashing/add-node.drawio.svg)
 
-> [!NOTE]
-> In above figure, when $n_4$ is inserted between $n_3$ and $n_0$, only keys between $n_3$ and $n_4$ are redistributed: $k_0$ is now belong to $n_4$, not $n_0$.
+:::note
+In above figure, when $n_4$ is inserted between $n_3$ and $n_0$, only keys between $n_3$ and $n_4$ are redistributed: $k_0$ is now belong to $n_4$, not $n_0$.
+:::
 
 ### Removing Node
 
@@ -58,8 +61,9 @@ When a node is removed, items belong to that node are redistributed to the next 
 
 ![](./consistent-hashing/remove-node.drawio.svg)
 
-> [!NOTE]
-> In above figure, when $n_1$ is removed, $k_1$ is redistributed to $n_2$.
+:::note
+In above figure, when $n_1$ is removed, $k_1$ is redistributed to $n_2$.
+:::
 
 
 ## Virtual nodes

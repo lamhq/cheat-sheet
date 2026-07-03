@@ -1,0 +1,8 @@
+[
+  "fixtures",
+  "global-setup",
+  "mock-req",
+  "monitoring",
+  "storage",
+  "profile"
+]

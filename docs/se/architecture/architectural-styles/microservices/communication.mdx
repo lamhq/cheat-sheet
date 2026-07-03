@@ -25,11 +25,13 @@ In microservice communication, the service exposing an interface and the service
 
 For backward-incompatible changes to a microservice interface, either perform a lockstep deployment with consumers to ensure they adopt the new interface, or phase the rollout of the updated contract to maintain compatibility during the transition.
 
-> [!NOTE]
-> **Lockstep Deployment**: Deployment the updated microservice and all its consumers simultaneously to adopt the new interface, ensuring compatibility right away.
+:::note
+**Lockstep Deployment**: Deployment the updated microservice and all its consumers simultaneously to adopt the new interface, ensuring compatibility right away.
+:::
 
-> [!NOTE]
-> **Phased Rollout**: Gradually introduce the changes, maintain backward compatibility during the transition period (support both the old and new interface)
+:::note
+**Phased Rollout**: Gradually introduce the changes, maintain backward compatibility during the transition period (support both the old and new interface)
+:::
 
 ### Error Handling
 
