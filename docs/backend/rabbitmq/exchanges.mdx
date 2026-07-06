@@ -1,0 +1,38 @@
+# Exchanges
+
+Exchange is a router that receives messages from producers and puts them in the correct queues based on specific rules.
+
+![](https://www.rabbitmq.com/assets/images/hello-world-example-routing-cbe9a872b37956a4072a5e13f9d76e7b.png)
+
+
+## Exchange Types
+
+### Direct Exchange
+
+Routes messages to queues based on an exact match between the routing key and the queue binding key. 
+
+![](https://www.tutlane.com/images/rabbitmq/rabbitmq_direct_exchange_process_flow_diagram.PNG)
+
+### Default Exchange
+
+Routes messages by matching the routing key to the queue name; feels like direct queue publishing
+
+### Fanout Exchange
+
+Broadcasts messages to all queues bound to it, ignoring routing keys.
+
+![](https://www.tutlane.com/images/rabbitmq/rabbitmq_fanout_exchange_process_flow_diagram.PNG)
+
+
+### Topic Exchange
+
+Routes messages to queues based on pattern matching between the routing key and the queue binding key.
+
+![](https://www.tutlane.com/images/rabbitmq/rabbitmq_topic_exchange_process_flow_diagram.PNG)
+
+
+### Headers Exchange
+
+Similar to Topic Exchange, but uses message header attributes for routing instead of routing keys.
+
+![](https://www.tutlane.com/images/rabbitmq/rabbitmq_headers_exchange_process_flow_diagram.PNG)

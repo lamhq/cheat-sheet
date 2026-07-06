@@ -1,4 +1,9 @@
 [
-  "concepts",
+  "workflows",
+  "exchanges",
+  "queues",
+  "messages",
+  "channels",
+  "patterns",
   "amqp"
 ]

@@ -1,0 +1,9 @@
+# Channels
+
+Consumers use TCP connections to connect to queues.
+
+Channels are virtual connections inside a single TCP connection. They allow multiple logical connections to share a single physical connection, which helps in efficient resource usage.
+
+Commonly, a new channel is opened per thread or process in applications that use multiple threads/processes.
+
+Channels allow multiple consumers to read from the same queue concurrently, improving the throughput and performance of your messaging system.
