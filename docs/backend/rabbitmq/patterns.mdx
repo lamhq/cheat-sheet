@@ -23,13 +23,7 @@ flowchart LR
 - **Batch processing** — RabbitMQ may send multiple messages to a consumer; each requires separate acknowledgement
 
 
-## Publish/Subscribe (fanout)
-
-**Use Cases:**
-- Sending news to mobile applications
-- Broadcasting geo-tracking data to multiple downstream systems
-- Transmitting logs to different outputs
-- News feed systems where all clients receive the same updates
+## Pub-sub (fanout)
 
 **Set up:** 
 1. Create **multiple queues**, one queue per consumer
@@ -46,4 +40,82 @@ flowchart LR
     Q1 --> C1((Consumer 1))
     Q2 --> C2((Consumer 2))
     Q3 --> C3((Consumer 3))
+```
+
+## Pub-sub (direct)
+
+**Set up:**
+1. Create **multiple queues**, one queue per consumer or consumer group
+2. Create a **direct exchange** that routes messages based on routing key matching
+3. Create **bindings** between exchange and queues, specifying binding keys that match routing keys
+4. Publish messages to the exchange with a routing key; only queues with matching binding keys receive the message
+
+```mermaid
+flowchart LR
+    P((Producer)) --> X{Direct Exchange}
+    X -->|routing_key: error| Q1[Error Queue]
+    X -->|routing_key: warning| Q2[Warning Queue]
+    X -->|routing_key: info| Q3[Info Queue]
+    Q1 --> C1((Error Handler))
+    Q2 --> C2((Warning Handler))
+    Q3 --> C3((Info Handler))
+```
+
+
+## Pub-sub (topic)
+
+**Set up:**
+1. Create **multiple queues**, one queue per consumer or consumer group
+2. Create a **topic exchange** that routes messages based on pattern matching
+3. Create **bindings** between exchange and queues, specifying binding keys as patterns using wildcards
+4. Publish messages to the exchange with a routing key following the defined patterns
+
+```mermaid
+flowchart LR
+    P((Producer)) --> X{Topic Exchange}
+    X -->|order.*| Q1[Order Queue]
+    X -->|product.*| Q2[Product Queue]
+    Q1 --> C1((Order Handler))
+    Q2 --> C2((Product Handler))
+```
+
+
+## Pub-sub (headers)
+
+```mermaid
+graph LR
+    P["Publisher"]
+    E["Exchange"]
+    Q1["Queue"]
+    Q2["Queue"]
+    C1["Consumer"]
+    C2["Consumer"]
+    
+    P -->|type=header| E
+    E -->|x-match: any<br/>severity: error<br/>application: app2| Q1
+    E -->|x-match: all<br/>severity: error<br/>application: app2| Q2
+    Q1 --> C1
+    Q2 --> C2
+    
+    style P fill:#a3c9ff,stroke:#333,stroke-width:2px
+    style E fill:#f5d9a3,stroke:#333,stroke-width:2px
+    style Q1 fill:#ffb8b8,stroke:#333,stroke-width:2px
+    style Q2 fill:#ffb8b8,stroke:#333,stroke-width:2px
+    style C1 fill:#b8ddb8,stroke:#333,stroke-width:2px
+    style C2 fill:#b8ddb8,stroke:#333,stroke-width:2px
+```
+
+**Set up:**
+1. Create **multiple queues**, one queue per consumer or consumer group
+2. Create a **headers exchange** that routes messages based on header attribute matching
+3. Create **bindings** between exchange and queues, specifying header attributes and match logic via `x-match`
+4. Publish messages to the exchange with headers containing the routing criteria (routing key is ignored)
+
+```mermaid
+flowchart LR
+    P((Producer)) --> X{Headers Exchange}
+    X -->|category=sport<br/>x-match=all| Q1[Sport Queue]
+    X -->|source=CNN<br/>x-match=any| Q2[CNN Queue]
+    Q1 --> C1((Sport Handler))
+    Q2 --> C2((News Handler))
 ```

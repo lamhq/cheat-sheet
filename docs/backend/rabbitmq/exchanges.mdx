@@ -1,38 +1,98 @@
 # Exchanges
 
+## Introduction
+
 Exchange is a router that receives messages from producers and puts them in the correct queues based on specific rules.
 
 ![](https://www.rabbitmq.com/assets/images/hello-world-example-routing-cbe9a872b37956a4072a5e13f9d76e7b.png)
 
 
-## Exchange Types
+## Default Exchange
 
-### Direct Exchange
+Routes messages by matching the routing key to the queue name; feels like direct queue publishing.
+
+
+## Direct Exchange
 
 Routes messages to queues based on an exact match between the routing key and the queue binding key. 
 
 ![](https://www.tutlane.com/images/rabbitmq/rabbitmq_direct_exchange_process_flow_diagram.PNG)
 
-### Default Exchange
+### Use Cases
 
-Routes messages by matching the routing key to the queue name; feels like direct queue publishing
+- Selective message delivery based on message type or category
+- Processing different message types by specialized consumers
+- Routing log messages to different handlers based on severity level
+- Filtering events to specific subscribers based on routing criteria
 
-### Fanout Exchange
+### Characteristics
+
+- **Selective routing**: Direct exchange routes messages to specific queues based on routing key
+- **Routing key matching**: Producer specifies routing key; exchange compares against binding keys
+- **Unrouted messages behavior**: If no matching binding exists, message is rejected and publisher receives an error
+- **Complex administration**: Many categories of messages cause a lot of bindings, complicating administration of RabbitMQ
+
+
+## Fanout Exchange
 
 Broadcasts messages to all queues bound to it, ignoring routing keys.
 
 ![](https://www.tutlane.com/images/rabbitmq/rabbitmq_fanout_exchange_process_flow_diagram.PNG)
 
+### Use Cases
 
-### Topic Exchange
+- Sending news to mobile applications
+- Broadcasting geo-tracking data to multiple downstream systems
+- Transmitting logs to different outputs
+- News feed systems where all clients receive the same updates
+
+
+## Topic Exchange
 
 Routes messages to queues based on pattern matching between the routing key and the queue binding key.
 
 ![](https://www.tutlane.com/images/rabbitmq/rabbitmq_topic_exchange_process_flow_diagram.PNG)
 
+### Use Cases
 
-### Headers Exchange
+- Categorizing messages into many categories with selective subscription
+- Reducing number of bindings when message categories are high
+- Implementing hierarchical message routing (e.g., weather by region, sport by discipline)
+- Flexible message filtering based on patterns rather than exact matches
 
-Similar to Topic Exchange, but uses message header attributes for routing instead of routing keys.
+### Wildcard Patterns
+
+Wildcard patterns in binding keys to match routing keys:
+- `*` (asterisk) — substitutes exactly one word
+- `#` (hash) — substitutes zero or more words
+
+### Characteristics
+
+- **Reduced bindings**: One binding can match multiple routing keys, requiring fewer bindings than direct exchange
+- **Topic length limit**: Maximum 255 characters per topic
+- **Unrouted messages behavior**: Messages that do not match any binding pattern are not routed and publisher receives an error
+
+## Headers Exchange
+
+Similar to Topic Exchange, but uses message header attributes for routing instead of routing keys, allowing routing decisions based on multiple attributes simultaneously.
 
 ![](https://www.tutlane.com/images/rabbitmq/rabbitmq_headers_exchange_process_flow_diagram.PNG)
+
+### Use Cases
+
+- Routing based on multiple message attributes simultaneously
+- Selective subscription based on combinations of header values (e.g., category AND source)
+- Complex filtering scenarios requiring AND/OR logic across multiple criteria
+
+### x-match header
+
+The exchange needs one critical piece of information via the `x-match` binding argument:
+
+- **x-match = "any"** — Message routed if **ANY** of the specified headers match (OR logic)
+- **x-match = "all"** — Message routed only if **ALL** specified headers match (AND logic)
+
+### Characteristics
+
+- Headers beginning with `x-` (like `x-match`) are NOT used for matching evaluation
+- RabbitMQ matches exact header values; no pattern substitution allowed (unlike topic exchange)
+- Publisher controls routing through message headers, not routing keys
