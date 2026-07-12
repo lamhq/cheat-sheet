@@ -96,3 +96,29 @@ The exchange needs one critical piece of information via the `x-match` binding a
 - Headers beginning with `x-` (like `x-match`) are NOT used for matching evaluation
 - RabbitMQ matches exact header values; no pattern substitution allowed (unlike topic exchange)
 - Publisher controls routing through message headers, not routing keys
+
+
+## Consistent Hash Exchange
+
+Consistent Hash Exchange distributes messages across multiple queues based on hash calculations.
+
+It provides dynamic queue scaling. You can add or remove queues without requiring predefined bindings for every routing scenario.
+
+![](https://tutexchange.com/wp-content/uploads/2023/12/image-11.png)
+
+### Use Cases
+
+- **Queue Splitting** — Replace single long queue with multiple shorter queues to reduce latency and bottlenecks
+- **Handling Corrupted Messages** — If one queue receives a problematic message that causes consumer to requeue infinitely, other queues continue processing independently
+- **Priority Distribution** — Distribute high-priority messages separately without performance impact of prioritized queues
+- **Failure Isolation** — System remains operational if one queue/consumer fails
+
+### Characteristics
+
+- **Not available by default** - requires enabling the `rabbitmq_consistent_hash_exchange` plugin.
+- **Dynamic Scaling** — Add/remove queues without reconfiguring all bindings
+- **Integer Binding Keys** — Must provide numeric weights (not string values like direct exchange). Weights can be adjusted dynamically without stopping the service
+- **No Pattern Matching** — Unlike topic or headers exchange
+- **Automatic Distribution** — Consistent hashing algorithm ensures predictable distribution
+- **Performance Benefit** — Better than prioritized queues when needing message separation
+- **Isolation** — Failures in one queue don't block other queues

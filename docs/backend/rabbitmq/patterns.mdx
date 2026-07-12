@@ -82,6 +82,12 @@ flowchart LR
 
 ## Pub-sub (headers)
 
+**Set up:**
+1. Create **multiple queues**, one queue per consumer or consumer group
+2. Create a **headers exchange** that routes messages based on header attribute matching
+3. Create **bindings** between exchange and queues, specifying header attributes and match logic via `x-match`
+4. Publish messages to the exchange with headers containing the routing criteria (routing key is ignored)
+
 ```mermaid
 graph LR
     P["Publisher"]
@@ -105,17 +111,27 @@ graph LR
     style C2 fill:#b8ddb8,stroke:#333,stroke-width:2px
 ```
 
-**Set up:**
-1. Create **multiple queues**, one queue per consumer or consumer group
-2. Create a **headers exchange** that routes messages based on header attribute matching
-3. Create **bindings** between exchange and queues, specifying header attributes and match logic via `x-match`
-4. Publish messages to the exchange with headers containing the routing criteria (routing key is ignored)
 
-```mermaid
-flowchart LR
-    P((Producer)) --> X{Headers Exchange}
-    X -->|category=sport<br/>x-match=all| Q1[Sport Queue]
-    X -->|source=CNN<br/>x-match=any| Q2[CNN Queue]
-    Q1 --> C1((Sport Handler))
-    Q2 --> C2((News Handler))
-```
+## Delay and Retry
+
+**Use Cases:**
+- **Scheduled Publishing**. Messages must not be processed immediately (e.g., sending a reminder email 24 hours after a user signs up).
+- **Retry Mechanism**. Dead-lettered messages should be retried after a certain delay (e.g., retrying a failed payment transaction after 5 minutes).
+- **Batch Processing**. Group messages into larger batches for faster processing (e.g., aggregating logs and processing them every hour).
+
+**Set up:**
+1. Create a publishing queue (`q.messages`) with `x-dead-letter-exchange` set to the DLX
+2. Create a Dead Letter Exchange (`ex.dlx.messages`) routing expired messages to a consumption queue
+3. Create a consumption queue (`q.dlx.messages`)
+4. Publish messages to the publishing queue’s exchange with TTL (`x-message-ttl`); they stay until TTL expires, then move to the consumption queue
+
+![](./deplay.drawio.svg)
+
+**Characteristics:**
+- **Flexible Delays** — Each message can have different TTL
+- **Automatic Processing** — No manual retry logic needed
+- **Message Ordering** — Different delays mean messages may arrive out of sequence.
+
+:::warning
+Prefer simple solutions over installing additional plugins like `rabbitmq-delayed-message-exchange`. Such plugins are not designed to store high volume of the data
+:::
