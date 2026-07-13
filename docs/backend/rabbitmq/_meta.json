@@ -6,5 +6,6 @@
   "channels",
   "patterns",
   "dlx",
+  "data-safety",
   "amqp"
 ]
