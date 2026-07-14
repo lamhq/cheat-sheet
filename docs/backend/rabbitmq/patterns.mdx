@@ -1,0 +1,137 @@
+# Patterns
+
+## Work Queue
+
+**Use Cases:**
+- Distributing time-consuming tasks among multiple workers/consumers
+- Scaling infrastructure to handle variable loads
+
+**Set up:** create multiple consumers read from the same queue simultaneously, enabling parallel processing and faster message consumption.
+
+```mermaid
+flowchart LR
+    P((Producer)) --> Q[Queue]
+    Q --> C1((Consumer 1))
+    Q --> C2((Consumer 2))
+```
+
+**Characteristics:**
+- **Round-robin dispatching**: RabbitMQ sends messages sequentially to consumers by default
+- **Single consumer guarantee**: Each message goes to only one consumer
+- **Indefinite retry**: If clients die or negatively acknowledge with requeue=true, RabbitMQ keeps sending to other consumers (unless TTL or Dead Letter Exchange configured)
+- **Monitor queue size**: If all workers are busy, queues fill up and slow down RabbitMQ
+- **Batch processing** — RabbitMQ may send multiple messages to a consumer; each requires separate acknowledgement
+
+
+## Pub-sub (fanout)
+
+**Set up:** 
+1. Create **multiple queues**, one queue per consumer
+2. Create a **fanout exchange** that broadcasts messages to all bound queues
+3. Create **bindings** to connect exchange to each queue
+4. Send messages to exchange, which will distribute them to all queues
+
+```mermaid
+flowchart LR
+    P((Producer)) --> X{Fanout Exchange}
+    X --> Q1[Queue 1]
+    X --> Q2[Queue 2]
+    X --> Q3[Queue 3]
+    Q1 --> C1((Consumer 1))
+    Q2 --> C2((Consumer 2))
+    Q3 --> C3((Consumer 3))
+```
+
+## Pub-sub (direct)
+
+**Set up:**
+1. Create **multiple queues**, one queue per consumer or consumer group
+2. Create a **direct exchange** that routes messages based on routing key matching
+3. Create **bindings** between exchange and queues, specifying binding keys that match routing keys
+4. Publish messages to the exchange with a routing key; only queues with matching binding keys receive the message
+
+```mermaid
+flowchart LR
+    P((Producer)) --> X{Direct Exchange}
+    X -->|routing_key: error| Q1[Error Queue]
+    X -->|routing_key: warning| Q2[Warning Queue]
+    X -->|routing_key: info| Q3[Info Queue]
+    Q1 --> C1((Error Handler))
+    Q2 --> C2((Warning Handler))
+    Q3 --> C3((Info Handler))
+```
+
+
+## Pub-sub (topic)
+
+**Set up:**
+1. Create **multiple queues**, one queue per consumer or consumer group
+2. Create a **topic exchange** that routes messages based on pattern matching
+3. Create **bindings** between exchange and queues, specifying binding keys as patterns using wildcards
+4. Publish messages to the exchange with a routing key following the defined patterns
+
+```mermaid
+flowchart LR
+    P((Producer)) --> X{Topic Exchange}
+    X -->|order.*| Q1[Order Queue]
+    X -->|product.*| Q2[Product Queue]
+    Q1 --> C1((Order Handler))
+    Q2 --> C2((Product Handler))
+```
+
+
+## Pub-sub (headers)
+
+**Set up:**
+1. Create **multiple queues**, one queue per consumer or consumer group
+2. Create a **headers exchange** that routes messages based on header attribute matching
+3. Create **bindings** between exchange and queues, specifying header attributes and match logic via `x-match`
+4. Publish messages to the exchange with headers containing the routing criteria (routing key is ignored)
+
+```mermaid
+graph LR
+    P["Publisher"]
+    E["Exchange"]
+    Q1["Queue"]
+    Q2["Queue"]
+    C1["Consumer"]
+    C2["Consumer"]
+    
+    P -->|type=header| E
+    E -->|x-match: any<br/>severity: error<br/>application: app2| Q1
+    E -->|x-match: all<br/>severity: error<br/>application: app2| Q2
+    Q1 --> C1
+    Q2 --> C2
+    
+    style P fill:#a3c9ff,stroke:#333,stroke-width:2px
+    style E fill:#f5d9a3,stroke:#333,stroke-width:2px
+    style Q1 fill:#ffb8b8,stroke:#333,stroke-width:2px
+    style Q2 fill:#ffb8b8,stroke:#333,stroke-width:2px
+    style C1 fill:#b8ddb8,stroke:#333,stroke-width:2px
+    style C2 fill:#b8ddb8,stroke:#333,stroke-width:2px
+```
+
+
+## Delay and Retry
+
+**Use Cases:**
+- **Scheduled Publishing**. Messages must not be processed immediately (e.g., sending a reminder email 24 hours after a user signs up).
+- **Retry Mechanism**. Dead-lettered messages should be retried after a certain delay (e.g., retrying a failed payment transaction after 5 minutes).
+- **Batch Processing**. Group messages into larger batches for faster processing (e.g., aggregating logs and processing them every hour).
+
+**Set up:**
+1. Create a publishing queue (`q.messages`) with `x-dead-letter-exchange` set to the DLX
+2. Create a Dead Letter Exchange (`ex.dlx.messages`) routing expired messages to a consumption queue
+3. Create a consumption queue (`q.dlx.messages`)
+4. Publish messages to the publishing queue’s exchange with TTL (`x-message-ttl`); they stay until TTL expires, then move to the consumption queue
+
+![](./delay.drawio.svg)
+
+**Characteristics:**
+- **Flexible Delays** — Each message can have different TTL
+- **Automatic Processing** — No manual retry logic needed
+- **Message Ordering** — Different delays mean messages may arrive out of sequence.
+
+:::warning
+Prefer simple solutions over installing additional plugins like `rabbitmq-delayed-message-exchange`. Such plugins are not designed to store high volume of the data
+:::

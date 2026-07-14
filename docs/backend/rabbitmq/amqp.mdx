@@ -1,0 +1,59 @@
+# AMQP
+
+Overview of the AMQP protocol.
+
+## Introduction
+
+AMQP is an open standard protocol operating at the application layer of the OSI model.
+
+It's designed for asynchronous communication between applications.
+
+AMQP standardizes the behavior of the messaging publisher and consumer, systems supporting AMQP (like IBM MQ or Apache ActiveMQ) can theoretically be swapped with RabbitMQ.
+
+Platform and technology independent with SDKs available in virtually any programming language
+
+```mermaid
+graph TD
+    subgraph A[RabbitMQ]
+        subgraph B[AMQP Protocol]
+            subgraph C[AMQP Message]
+            end
+        end
+    end
+
+    %% RabbitMQ: light orange background, dark text
+    style A fill:#f9c49a,stroke:#333,stroke-width:2px,color:#000
+
+    %% AMQP Protocol: gray background, dark text
+    style B fill:#d3d3d3,stroke:#333,stroke-width:2px,color:#000
+
+    %% AMQP Message: green background, dark text
+    style C fill:#90ee90,stroke:#333,stroke-width:2px,color:#000
+```
+
+## AMQP Message
+
+```mermaid
+graph TB
+    subgraph M["Message"]
+        H["Header"]
+        P["Properties"]
+        B["Body"]
+    end
+
+    %% Styling
+    style M fill:#ffffff,stroke:#333,stroke-width:2px,stroke-dasharray:5 5,color:#000
+    style H fill:#add8e6,stroke:#333,stroke-width:1px,color:#000
+    style P fill:#d8bfd8,stroke:#333,stroke-width:1px,color:#000
+    style B fill:#ffb6c1,stroke:#333,stroke-width:1px,color:#000
+```
+
+AMQP messages consist of three components:
+- **Headers & Properties**: metadata as key-value pairs
+  - **headers** are AMQP-specified
+  - **properties** can contain application-specific information
+- **Body/Payload** — the actual message content as a sequence of bytes
+
+Maximum message size is **2GB**, though large messages should be avoided
+
+Message is sent per frames: ~**131KB** by default.

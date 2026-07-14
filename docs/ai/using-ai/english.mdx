@@ -1,41 +1,45 @@
 import { Prompt } from '@rspress/core/theme';
-import correctPrompt from './_proofread.txt?raw';
-import interview from './_interview.txt?raw';
+import refinePrompt from './_refine.txt?raw';
 import fourWordExercisePrompt from './_four-word-ex.txt?raw';
-import practicePhrasePrompt from './_practice-phrase.txt?raw';
+import sentenceVariationPrompt from './_sentc-var.txt?raw';
+import practiceComm from './_practice-comm.txt?raw';
 
 # English
 
 Prompts used for learning English.
 
-## Correct sentences
+
+## Correct & refine Sentences
 
 <Prompt
-  title="Correct your sentences"
-  description="Send this prompt to AI and enter your sentence."
-  prompt={correctPrompt}
+  title="Correct sentences"
+  description="Correct your sentence and suggest more natural alternatives."
+  prompt={refinePrompt}
 />
 
-## Using phrases
+
+## Expressing Ideas
 
 <Prompt
-  title="Practice Phrases"
-  description="Send this prompt to AI and enter your sentence."
-  prompt={practicePhrasePrompt}
+  title="Sentence Variation"
+  description="Practice expressing an idea in different ways."
+  prompt={sentenceVariationPrompt}
 />
+
 
 ## Making sentences
 
 <Prompt
   title="4-word exercise"
-  description="Send this prompt to AI and start making sentences from provided words."
+  description="Making sentence using words from a topic."
   prompt={fourWordExercisePrompt}
 />
 
-## Practice Interview
+
+## Communication
 
 <Prompt
-  title="Practice Job Interview"
-  description="Send this prompt to AI and then start the interview."
-  prompt={interview}
+  title="Practice communication"
+  description="Practice communication by responding to prompts or questions."
+  prompt={practiceComm}
 />

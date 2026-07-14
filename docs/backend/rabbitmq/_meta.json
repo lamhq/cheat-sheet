@@ -1,0 +1,16 @@
+[
+  "workflows",
+  "exchanges",
+  "queues",
+  "messages",
+  "channels",
+  "patterns",
+  "dlx",
+  "pq",
+  "qq",
+  "vhosts",
+  "policies",
+  "amqp",
+  "data-safety",
+  "security"
+]

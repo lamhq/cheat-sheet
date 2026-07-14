@@ -98,6 +98,13 @@
     "collapsible": true,
     "collapsed": true
   },
+  {
+    "name": "rabbitmq",
+    "label": "RabbitMQ",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
   "keycloak",
   "testcontainers",
   {
@@ -107,7 +114,6 @@
     "collapsible": true,
     "collapsed": true
   },
-  "rabbitmq",
   {
     "name": "go",
     "label": "Go",

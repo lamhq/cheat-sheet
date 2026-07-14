@@ -1,5 +1,6 @@
 import { Prompt } from '@rspress/core/theme';
 import summarizeWebPage from './_summarize-web-page.txt?raw';
+import toolDocumentation from './_tool-documentation.txt?raw';
 
 # Learning
 
@@ -22,4 +23,15 @@ Take notes from a video course's transcript.
   title="Summarize a Video Lecture"
   description="Send this prompt to AI and paste the video transcript."
   prompt="Give me the gist of the lecture based on the provided transcript"
+/>
+
+
+## Write Tool Documentation
+
+Write a structured documentation for a tool/library/software/feature based on its description.
+
+<Prompt
+  title="Write Tool Documentation"
+  description="Structure a tool's documentation to a standard format."
+  prompt={toolDocumentation}
 />

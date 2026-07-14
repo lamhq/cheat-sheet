@@ -1,0 +1,45 @@
+# Dead Letter Exchange
+
+## Introduction
+
+A Dead Letter Exchange (DLX) is a mechanism in RabbitMQ that automatically routes messages to a separate queue when they fail to be consumed under specific conditions.
+
+**Reasons for Dead Lettering:**
+1. Message is negatively acknowledged: when Nack or Reject with `requeue=false` by consumer
+2. TTL expired: when message expires due to per-message TTL
+3. Message is dropped: Queue exceeds length limit
+
+![](https://tutexchange.com/wp-content/uploads/2023/08/image.png)
+
+**Notes**:
+- Exchange type (direct, topic, fanout, headers) doesn't matter for DLX functionality
+- The `x-dead-letter-exchange` attribute can also be set dynamically using policies
+- Multiple queues can route to the same DLX for centralized monitoring
+- Dead-lettered messages can themselves have a TTL or routing rules applied
+
+
+## Why use DLX
+
+- **Manage queue capacity**. When message expires due to per-message TTL, or queue size exceeded length limit
+- **Manage rejected messages**. When Nack or Reject with requeue=false is called
+- **Delay publication**. Intentional latency increase between publisher and consumer.
+- **Debugging** — Developers can analyze rejected/expired messages to identify software issues
+
+
+## Setup
+
+1. Create a **dead letter exchange**
+2. Create a **dead letter queue**
+3. Bind the dead letter exchange to the dead letter queue
+4. Create the **main queue** with `x-dead-letter-exchange` attribute pointing to the **dead letter exchange**
+5. Optional: set `message-ttl` (ms) on the main queue to define how long messages live before dead-lettering
+
+
+## Message Properties
+
+When examining dead-lettered messages, you can view:
+- **payload**: the actual message content
+- **reason**: Why message was dead-lettered ("expired" or "rejected")
+- **exchange**: Original exchange used to publish
+- **queue**: Original queue it came from
+- **time**: Timestamp when message entered dead letter queue

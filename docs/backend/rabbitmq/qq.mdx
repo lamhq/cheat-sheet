@@ -1,0 +1,69 @@
+# Quorum queues
+
+## Introduction
+
+**Quorum queues** are a modern, replicated queue type introduced in RabbitMQ 3.8 to provide high availability and strong data safety. They are designed as a safer replacement for deprecated **Mirrored Classic Queues**.
+
+Unlike standard queues that live on a single node, a quorum queue replicates its data across multiple nodes in a cluster. It is now the default choice for any production architecture that cannot afford message loss.
+
+
+## How It Works
+
+Quorum queues rely heavily on the **Raft consensus algorithm**, an industry standard for distributed systems consistency.
+
+### Components
+
+- **Leader Node:** The primary copy of the queue. All consumer and producer interactions go through the leader.
+- **Follower Nodes:** Replicas that mirror the data stored by the leader.
+- **Quorum (Majority):** A strict majority of nodes must agree to accept a message. For example, a 3-node cluster requires 2 nodes for quorum.
+
+### Workflow
+
+1. A client application publishes a message to an exchange, which routes it to the leader node.
+2. The leader writes the message to its Write-Ahead Log on disk and broadcasts it to all followers.
+3. Followers append the message to their local disks and send an acknowledgment back to the leader.
+4. Once a majority of nodes write the message to disk, the leader sends a confirmation to the publisher.
+5. Consumers read messages exclusively from the leader.
+6. When a consumer acknowledges a message, that acknowledgment replicates via Raft across the followers before final eviction.
+
+### Failover Scenario
+
+If the leader node crashes, the remaining followers use Raft to elect a new leader automatically. Because the message was written to a majority of nodes, the new leader has the latest data.
+
+## Benefits
+
+- **Strong Data Safety:** Messages are always written to disk before being confirmed to the publisher, eliminating risk from single-node crashes.
+- **No Split-Brain Hazards:** Thanks to the Raft algorithm, it is mathematically impossible for network partitions to cause conflicting leader states.
+- **Non-Blocking Re-synchronization:** When a failed node rejoins, it catches up by reading data from the leader without blocking active queue operations.
+- **Poison Message Handling:** Quorum queues automatically track delivery attempts. You can configure an `x-delivery-limit` to drop or route repeatedly failing messages.
+
+
+## Disadvantages
+
+- **Performance Overhead:** Because every message must be written to disk across a majority of nodes, quorum queues have lower throughput and higher latency.
+- **Disk I/O Dependency:** They rely heavily on fast disk storage, making SSDs highly recommended.
+- **Write Amplification:** Routing one message to multiple quorum queues writes it multiple times across the cluster, consuming high storage bandwidth.
+- **Feature Constraints:** They focus purely on data safety, meaning they cannot be transient or configured as exclusive queues.
+
+
+## Use Cases
+
+**Use When**:
+
+- **Data integrity is critical:** Systems handling financial transactions, billing, or order processing where dropping a message means business logic failure.
+- **High Availability is mandatory:** Systems that must tolerate underlying infrastructure maintenance or unexpected node crashes without bringing down messaging.
+- **Queues are long-lived:** Topologies where queues are declared once at system startup and exist permanently.
+
+**Avoid When**:
+
+- **High-throughput transient data:** Use cases like IoT metrics collection or log collection where raw speed matters more than losing a few packets.
+- **Massive Fan-out patterns:** Routing a single message to hundreds of unique queues simultaneously creates severe write amplification that chokes disks.
+
+
+## Best Practices
+
+- **Cluster Sizing:** Always use an odd number of nodes (3, 5, or 7) to ensure a clear majority can be calculated.
+- **Keep Queues Short:** Quorum queues perform best when messages are consumed nearly as fast as they arrive to prevent storage backlogs.
+- **Use Faster Storage:** Avoid standard network-attached storage if possible. Use local NVMe or SSDs to mitigate Raft disk sync latencies.
+- **Set up Delivery Limits:** Always define the `x-delivery-limit` parameter to catch poison messages before they continuously eat CPU cycles.
+- **Explicit Declaration:** You must explicitly specify `x-queue-type: quorum` during declaration, as a standard queue cannot be migrated dynamically.

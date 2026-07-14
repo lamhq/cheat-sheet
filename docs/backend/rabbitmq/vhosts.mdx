@@ -1,0 +1,66 @@
+# Virtual Hosts
+
+## Introduction
+
+Virtual hosts are logical groups of RabbitMQ entities (queues, exchanges, users, policies, connections, bindings, permissions, etc.) that provide isolation and separation.
+
+Default Virtual Host is `/`.
+
+## Use cases
+
+1. **Environment Isolation** — Separate development, QA, and production in one cluster
+2. **Team Isolation** — Different teams manage their own vhosts
+3. **Application Isolation** — Different apps have their own vhosts
+4. **Resources Isolation** — Resources in one vhost cannot be accessed from another vhost
+
+
+## Benefits
+
+- **Logical isolation**: make monitoring better (Connections, channels, exchanges, queues are created inside particular Vhost)
+- **Security**: Resources can "talk each other" only when they exist in the same virtual host.
+- **Configurable limitations**: inside a virtual host, different limits can be applied for connections, queues, channels, etc.
+- **Simplified administration**: from the administrative standpoint, we administrate only one cluster for bigger audience instead of many smaller ones
+
+
+## Workflow
+
+Complete Virtual Host Workflow:
+1. **Create Virtual Host** — Define in Management UI or CLI
+2. **Create Users** — Add users that will access the vhost
+3. **Set Permissions** — Map users to vhost with specific permissions
+4. **Create Resources** — Build queues/exchanges within the vhost
+5. **Connect Applications** — Apps connect to specific vhost using credentials
+
+
+## How Entities Work in Virtual Hosts:
+
+**Exchanges:**
+- Each vhost has its own set of exchanges
+- Default exchanges created automatically in each vhost
+- Exchange in `/development` is separate from same-named exchange in `/qa`
+
+**Queues:**
+- Queue in one vhost is completely isolated from other vhosts
+- Cannot bind queue from `/development` to exchange in `/qa`
+
+**Users and Permissions:**
+- Users can have different permissions in each vhost
+- Same user can have full access in one vhost, read-only in another
+- Permissions are defined per user per vhost combination
+- User can only interact with resources in authorized vhosts
+
+**Connections:**
+- Connections explicitly open to specific vhost
+- `/qa` connections cannot access `/development` resources
+
+
+## Limitations
+
+**Resource Sharing:** Virtual hosts provide only functional/logical isolation, NOT physical isolation.
+
+**Performance Impact:**
+- If one queue/exchange in vhost causes performance issues, ALL vhosts in cluster affected
+- Noisy neighbor problem: One vhost's high load impacts other vhosts
+- No CPU/Memory/Bandwidth quotas per vhost
+
+**Solution:** For true resource isolation at scale, consider separate clusters instead.

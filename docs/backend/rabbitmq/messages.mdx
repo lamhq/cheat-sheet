@@ -1,0 +1,25 @@
+# Messages
+
+## Message Order
+
+Queues are FIFO in terms of **producer** (not consumer): messages are always held in the queue in publication order.
+
+Consuming order is guaranteed when:
+- messages published in one channel
+- passing through one exchange
+- stored in one queue
+- consumed by exactly one outgoing channel
+
+Order is NOT guaranteed for **prioritized queues** or when consumers reject with `requeue` enabled (consumer may reject messages).
+
+
+## Message Durability
+
+To ensure messages survive RabbitMQ restarts, you must:
+1. Send message as **persistent message** (**Delivery mode** is `2 - Persistent`)
+2. Publish to a **durable exchange** (**Durability** is `Durable`)
+3. Target queue is **durable** (**Durability** is `Durable`)
+
+:::note
+Persistent messages are removed from a durable queue once they are consumed (and acknowledged).
+:::

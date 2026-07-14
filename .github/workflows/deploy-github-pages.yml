@@ -1,7 +1,10 @@
-name: Deploy Rspress site to Github Pages
+name: Deploy to Github Pages
 
 on:
   push:
+    branches: main
+
+  pull_request:
     branches: main
 
   workflow_dispatch:
@@ -52,11 +55,12 @@ jobs:
 
   deploy:
     name: Deploy
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     needs: build
-    runs-on: ubuntu-latest
     steps:
       - name: Deploy to GitHub Pages
         id: deployment

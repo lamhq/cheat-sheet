@@ -1,0 +1,32 @@
+# Queue
+
+## Introduction
+
+A queue is an **ordered collection** of messages, published and consumed in a FIFO manner (except prioritized queues).
+
+Queues are located on a single node (Exchanges and Bindings exist on all nodes), referenced by unique name.
+
+One queue is a one Erlang process, has its own heap (security & reliability).
+
+Queues always keep part of messages in memory. When starting, up to 16,384 messages (smaller than 4k) are loaded into memory.
+
+Queues prefixed with `amq` are reserved for RabbitMQ internal purposes only.
+
+
+## Queue Properties
+
+Mandatory Properties:
+
+- **Name**: name can be provided or auto-generated
+- **Durability**: Durable queues survive broker restart
+
+Optional Properties:
+
+- **Auto expire**: Queue automatically deleted when all consumers disconnect
+- **Message TTL**: messages auto-deleted after specified time
+- **Classic or Quorum**:
+  - Quorum queues: new standard, highly available by default (recommended)
+  - Classic queues: need special mirroring policy to be high availability
+- **Exclusive**: used by only one connection; auto-deletes when connection closes
+- **Priority**: enable sorting messages by priority, additional CPU cost and increase latency, no guarantee of exact order
+- **Lazy queues**, **Dead letter queues**, and more

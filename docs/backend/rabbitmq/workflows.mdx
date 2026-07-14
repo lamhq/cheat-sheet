@@ -1,0 +1,49 @@
+# Workflows
+
+## Delivery
+
+### Routing Keys
+
+Each message has a key that represents the address of the destination queue.
+
+:::tip
+You can use semicolons `;` in routing keys to create namespaces.
+:::
+
+### Message Routing Flow
+
+1. Producers send messages with a **routing key** to an **exchange**
+2. Exchange compares the routing key against **binding keys** to determine which queue(s) receive the message
+3. If no matching binding exists, the publisher receives an error
+4. RabbitMQ then pushes messages to consumers
+
+![](https://www.cloudamqp.com/img/blog/exchanges-bidings-routing-keys.png)
+
+
+## Consume
+
+### Acknowledgements
+
+Acknowledgements are mechanisms used to confirm that a message has been successfully received and processed by a consumer, allowing RabbitMQ to decide whether to delete or requeue the message.
+
+There're four Acknowledgement Modes:
+
+**Automatic Acknowledgement**
+- Consumer receives message and RabbitMQ immediately removes it from queue
+- Risk: If the consumer fails mid-processing, the message is lost forever.
+- Use case: Non-critical workloads like logging or metrics.
+
+**Negative Acknowledgement with Requeue=True**
+- Consumer receives message but failed to process it.
+- Message is placed back in queue for another consumer to try
+- Useful for retry scenarios
+
+**Reject with Requeue=False**
+- Consumer explicitly rejects the message and doesn't want it retried
+- Message is discarded; other consumers skip it
+- Useful when message is permanently unprocessable
+
+**Reject with Requeue=True**
+- Consumer explicitly rejects the message but wants it retried
+- Message is placed back in queue for another consumer to try
+- Useful for retry scenarios

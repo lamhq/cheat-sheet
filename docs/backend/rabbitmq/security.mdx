@@ -1,0 +1,26 @@
+# Security
+
+Two core security mechanisms in RabbitMQ.
+
+## Permissions
+
+- Delete the default `guest` user or change its password
+- Create separate users per application (mobile app, web app, data aggregation system = 3 users)
+- Use good naming conventions for users
+- Apply **minimum permissions** principle (principle of least privilege)
+
+
+## Message Encryption
+
+RabbitMQ supports encryption at two levels:
+
+### At-Rest Encryption
+
+- Not natively supported by RabbitMQ
+- You must encrypt messages on producer side and decrypt on consumer side
+
+### In-Transit Encryption
+
+- Fully supported by RabbitMQ via SSL/TLS
+- Applicable to all RabbitMQ protocols (AMQP, MQTT, STOMP, HTTP, etc.)
+- Remember to disable unencrypted ports to make sure entire clusters use encrypted connections
