@@ -8,9 +8,9 @@
   "dlx",
   "pq",
   "qq",
-  "data-safety",
   "vhosts",
   "policies",
   "amqp",
+  "data-safety",
   "security"
 ]
