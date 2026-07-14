@@ -6,8 +6,10 @@
   "brokers",
   "producers",
   "consumers",
-  "replication",
-  "kraft",
   "workflows",
-  "schema"
+  "replication",
+  "schema",
+  "kraft",
+  "kc",
+  "ks"
 ]
