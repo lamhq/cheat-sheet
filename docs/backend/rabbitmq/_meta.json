@@ -6,6 +6,11 @@
   "channels",
   "patterns",
   "dlx",
+  "pq",
+  "qq",
   "data-safety",
-  "amqp"
+  "vhosts",
+  "policies",
+  "amqp",
+  "security"
 ]

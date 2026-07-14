@@ -6,9 +6,9 @@ A queue is an **ordered collection** of messages, published and consumed in a FI
 
 Queues are located on a single node (Exchanges and Bindings exist on all nodes), referenced by unique name.
 
-Both producers and consumers can create queues.
+One queue is a one Erlang process, has its own heap (security & reliability).
 
-One queue is a one Erlang process; up to 16,384 messages are loaded into RAM by default.
+Queues always keep part of messages in memory. When starting, up to 16,384 messages (smaller than 4k) are loaded into memory.
 
 Queues prefixed with `amq` are reserved for RabbitMQ internal purposes only.
 

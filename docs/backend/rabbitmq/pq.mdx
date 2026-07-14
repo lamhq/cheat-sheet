@@ -1,0 +1,82 @@
+# Priority Queues
+
+## Introduction
+
+Priority queues enable messages to be delivered based on assigned priority levels rather than publication order, allowing important messages to jump the queue.
+
+Messages with higher priority are delivered before messages with lower priority, breaking FIFO ordering.
+
+
+## How it Works
+
+To create a priority queue, you must declare the queue with the `x-max-priority` attribute at creation time.
+
+Valid range for `x-max-priority` is 1-255 (8-bit integer values). The recommended range is 1-10.
+
+Each priority level creates a separate internal queue. Messages stored in queue matching their priority. For example:
+- `x-max-priority: 10` → 10 internal queues created
+- messages with priority 1 stored in queue 1, priority 2 in queue 2, etc.
+
+`x-max-priority` cannot be applied/modified via policies (due to internal implementation). To change it, create a new queue (operational overhead).
+
+**Message Placement:**
+1. Publisher specifies priority with message (1-255 or 1-max-priority)
+2. RabbitMQ doesn't sort messages (too inefficient)
+3. Messages stored in separate internal queue per priority level
+
+**Delivery Model:**
+- RabbitMQ automatically checks highest priority first
+- When highest priority empty, moves to next level
+- That ensures high-priority messages are consumed first
+
+
+## Disadvantages
+
+- **Complex delivery order**. Message delivery order is not strictly FIFO; requeues, redeliveries, and consumer competition can cause unpredictable sequencing.  
+- **Performance overhead**. RabbitMQ maintains multiple internal sub-queues for different priority levels, which increases CPU and memory usage.  
+- **Limited guarantees**. Priority enforcement is best-effort; under heavy load, high-priority messages may still be delayed if consumers are busy or prefetch limits are reached.  
+- **Harder scaling**. Distributing messages across multiple consumers can dilute priority enforcement, making scaling less predictable.  
+- **Anti-pattern risk**. Using a single giant priority queue for all workloads reduces flexibility and can bottleneck throughput.  
+
+**Recommended Alternatives**:
+
+- **Multiple queues**. Create separate queues (e.g., `priority.low`, `priority.medium`, `priority.high`) to preserve FIFO behavior while avoiding head-of-line blocking.  
+- **Consumer priorities**. Assign priority to consumers instead of messages, simplifying reasoning and avoiding queue complexity.  
+- **Streams**. Use RabbitMQ streams for repeated consumption and to sidestep head-of-line blocking entirely.  
+
+
+## When to Use
+
+**Good Use Cases:**
+- Emergency alerts that must bypass regular messages
+- Administrative commands prioritized over data processing
+- Different SLA requirements (premium vs. standard customers)
+- Critical system notifications
+
+**Avoid Using For:**
+- High-throughput, latency-sensitive systems (4-5x performance hit)
+- Complex distributed scenarios
+- When message order within priority level is critical
+- When TTL or max-length needed
+
+
+## Best Practices
+
+✅ DO:
+
+- Use priorities sparingly (only when truly needed)
+- Keep priority range small (1-10, ideally 3-5 levels)
+- Clearly document priority semantics
+- Test performance impact with your specific workload
+- Monitor CPU and memory overhead carefully
+- Avoid combining with TTL or max-length constraints
+- Use distinct priority values (e.g., 1, 5, 10 vs. 1, 2, 3)
+
+❌ DON'T:
+
+- Don't use priority for performance optimization
+- Don't set `x-max-priority: 255` (unnecessary overhead)
+- Don't assume strict ordering within priority levels
+- Don't combine with TTL without careful testing
+- Don't use for high-throughput scenarios
+- Don't modify priority queues dynamically (delete/recreate required)

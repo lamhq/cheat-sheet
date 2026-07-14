@@ -1,0 +1,39 @@
+# Policies
+
+## Introduction
+
+Policies are RabbitMQ features that dynamically apply optional arguments and configuration to groups of queues or exchanges based on pattern matching.
+
+Policies can be changed at runtime without stopping RabbitMQ or recreating resources.
+
+## Benefits
+
+- Dynamically change optional arguments for groups of queues, exchanges or plugins. Without policies, you must delete and create every resource again to change its properties
+- Vhost scoped. Different set of policies for each virtual host
+- Protocol specific settings. Plugins extend list of protocols and features are extensible
+
+## How Policies Work
+
+- Policies use regular expressions to match queue/exchange names
+- Multiple policies can match same resource
+- Highest priority policy takes precedence
+- Applied at virtual host level (different policies per vhost)
+
+## Policy's properties
+
+1. **Virtual Host** — The vhost where the policy is defined
+2. **Name** — Unique identifier within virtual host
+3. **Pattern** — Regular expression matching queues/exchanges (e.g., `q\..*`, `ex\.prod\..*`)
+4. **Apply To** — Target type: exchanges, queues, or both
+5. **Priority** — Determines which policy wins if multiple match (higher number = higher priority)
+6. **Definition** — Configuration parameters to apply
+
+## Use Cases
+
+1. **TTL Configuration** — Set message time-to-live dynamically
+2. **Queue Length Limits** — Prevent queue overflow
+3. **Dead Letter Exchange** — Route failed messages without recreating queues
+4. **Federation** — Configure queue federation across clusters
+5. **Replication** — Set replication parameters for quorum queues
+6. **Plugin Configuration** — Configure plugin-specific features
+7. **Priority Levels** — Enable queue prioritization dynamically
