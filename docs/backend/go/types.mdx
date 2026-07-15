@@ -1,0 +1,100 @@
+# Types
+
+## Boolean types
+
+Boolean values represent truth values: `true` or `false`.
+
+```go
+var isActive bool = true
+```
+
+## Numeric types
+
+Go supports integers (`int`, `int8`, `int16`, `int32`, `int64`), unsigned integers (`uint` variants), floating-point (`float32`, `float64`), and complex numbers (`complex64`, `complex128`).
+
+```go
+var age int = 30
+var pi float64 = 3.14159
+var complexNum complex128 = complex(2, 3)
+```
+
+## String types
+
+Strings are immutable sequences of bytes, often representing UTF-8 text.
+
+```go
+var greeting string = "Hello, Go!"
+```
+
+## Array types
+
+Arrays have a fixed size and hold elements of the same type.
+
+```go
+var numbers [3]int = [3]int{1, 2, 3}
+```
+
+## Slice types
+
+Slices are dynamic, flexible views into arrays.
+
+```go
+var numbers []int = []int{1, 2, 3, 4}
+```
+
+## Struct types
+
+Structs group related data together.
+
+```go
+type Person struct {
+    Name string
+    Age  int
+}
+var p Person = Person{Name: "Alice", Age: 25}
+```
+
+## Pointer types
+
+Pointers store memory addresses of values.
+
+```go
+var x int = 10
+var p *int = &x
+```
+
+## Function types
+
+Functions are first-class citizens and can be assigned to variables.
+
+```go
+func add(a, b int) int { return a + b }
+var f func(int, int) int = add
+```
+
+## Interface types
+
+Interfaces define behavior through method sets.
+
+```go
+type Speaker interface { Speak() string }
+type Dog struct{}
+func (d Dog) Speak() string { return "Woof!" }
+var s Speaker = Dog{}
+```
+
+## Map types
+
+Maps are key-value stores.
+
+```go
+var capitals map[string]string = map[string]string{"France": "Paris", "Japan": "Tokyo"}
+```
+
+## Channel types
+
+Channels enable communication between goroutines.
+
+```go
+var ch chan string = make(chan string)
+```
