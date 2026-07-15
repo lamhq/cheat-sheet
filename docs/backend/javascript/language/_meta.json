@@ -1,0 +1,16 @@
+[
+  {
+    "name": "types",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Types",
+    "collapsible": true
+  },
+  {
+    "name": "syntax",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Syntax",
+    "collapsible": true
+  }
+]
