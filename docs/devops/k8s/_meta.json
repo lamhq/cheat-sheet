@@ -8,14 +8,14 @@
     "collapsed": true,
     "collapsible": true
   },
-  "cli",
   "architecture",
+  "cli",
+  "helm",
   {
     "name": "snippets",
     "label": "Snippets",
     "type": "dir",
     "collapsed": true,
     "collapsible": true
-  },
-  "helm"
+  }
 ]
