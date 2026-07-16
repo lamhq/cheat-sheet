@@ -1,0 +1,26 @@
+Create a cheat sheet using the content from this page: http://example.com
+
+Your response must match below documentation style:
+
+## Basic Function
+
+```go
+func add(a int, b int) int {
+    return a + b
+}
+```
+
+
+## Variadic Functions
+
+Functions that accept variable number of arguments.
+
+```go
+func sum(nums ...int) int {
+    total := 0
+    for _, n := range nums {
+        total += n
+    }
+    return total
+}
+```

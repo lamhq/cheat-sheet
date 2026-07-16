@@ -1,6 +1,15 @@
 [
   "getting-started",
   "basic",
-  "types",
-  "control-flow"
+  {
+    "name": "types",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  "control-flow",
+  "functions",
+  "error-handling",
+  "oop",
+  "random"
 ]

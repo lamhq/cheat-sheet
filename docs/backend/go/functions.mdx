@@ -1,0 +1,91 @@
+# Functions
+
+## Basic Function
+
+```go
+func add(a int, b int) int {
+    return a + b
+}
+```
+
+
+## Multiple Return Values
+
+```go
+func divide(a, b int) (int, int) {
+    return a / b, a % b
+}
+```
+
+
+## Named Return Values
+
+You can name return values and return them implicitly.
+
+```go
+func rectangle(w, h int) (area int, perimeter int) {
+    area = w * h
+    perimeter = 2 * (w + h)
+    return
+}
+```
+
+
+## Variadic Functions
+
+Functions that accept a variable number of arguments.
+
+```go
+func sum(nums ...int) int {
+    total := 0
+    for _, n := range nums {
+        total += n
+    }
+    return total
+}
+```
+
+
+## Anonymous Functions
+
+Functions without a name, often used inline.
+
+```go
+f := func(x int) int {
+    return x * x
+}
+fmt.Println(f(5)) // 25
+```
+
+
+## Functions as Values
+
+Functions can be passed around like variables.
+
+```go
+func apply(f func(int) int, x int) int {
+    return f(x)
+}
+
+square := func(x int) int { return x * x }
+fmt.Println(apply(square, 4)) // 16
+```
+
+
+## Closures
+
+Functions that capture and use variables from their surrounding scope.
+
+```go
+func counter() func() int {
+    count := 0
+    return func() int {
+        count++
+        return count
+    }
+}
+
+c := counter()
+fmt.Println(c()) // 1
+fmt.Println(c()) // 2
+```

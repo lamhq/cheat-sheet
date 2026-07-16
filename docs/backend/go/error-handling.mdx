@@ -1,0 +1,113 @@
+# Error Handling
+
+## Basic
+
+In Go, errors are not exceptions; instead, they are values that satisfy the built-in `error` interface.
+
+```go
+import "errors"
+
+func doSomething() error {
+    return errors.New("something went wrong")
+}
+
+err := doSomething()
+if err != nil {
+    fmt.Println("Error:", err)
+}
+```
+
+
+## Returning Errors
+
+Functions often return `(value, error)` pairs.
+
+```go
+func divide(a, b int) (int, error) {
+    if b == 0 {
+        return 0, errors.New("division by zero")
+    }
+    return a / b, nil
+}
+
+result, err := divide(10, 0)
+if err != nil {
+    fmt.Println("Error:", err)
+}
+```
+
+
+## Custom Error Types
+
+You can define your own error type by implementing the `Error()` method.
+
+```go
+// Custom struct to hold detailed error context
+type MyError struct {
+	Code int    // e.g., 404
+	Msg  string // e.g., "Not Found"
+}
+
+// Define a receiver `Error` method to implement the built-in error interface for *MyError
+func (e *MyError) Error() string {
+	return fmt.Sprintf("Code %d: %s", e.Code, e.Msg)
+}
+
+// function that returns the error
+func fail() error {
+	return &MyError{Code: 404, Msg: "Not Found"}
+}
+
+if err := fail(); err != nil {
+  fmt.Println(err)
+}
+```
+
+
+## Wrapping Errors
+
+Use `fmt.Errorf` with `%w` to wrap errors for later inspection.
+
+```go
+import "fmt"
+
+func readFile() error {
+    err := errors.New("file not found")
+    return fmt.Errorf("readFile failed: %w", err)
+}
+```
+
+
+## Checking Wrapped Errors
+
+Use `errors.Is` and `errors.As` to inspect wrapped errors.
+
+```go
+import "errors"
+
+err := readFile()
+if errors.Is(err, errors.New("file not found")) {
+    fmt.Println("File missing")
+}
+
+var myErr *MyError
+if errors.As(err, &myErr) {
+    fmt.Println("Custom error:", myErr.Code)
+}
+```
+
+
+## Panic and Recover
+
+`panic` stops execution; `recover` can catch it.
+
+```go
+func risky() {
+    defer func() {
+        if r := recover(); r != nil {
+            fmt.Println("Recovered:", r)
+        }
+    }()
+    panic("unexpected failure")
+}
+```

@@ -9,6 +9,7 @@ Use the official `.pkg` installer from [go.dev](https://go.dev/dl/).
 
 Install the Go extension from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=golang.go).
 
+Create a VS Code settings file:
 ```json title=".vscode/settings.json"
 {
   // Configure Go-specific editor behaviors
@@ -40,8 +41,25 @@ Install the Go extension from the [VS Code Marketplace](https://marketplace.visu
 }
 ```
 
+To launch & debug Go scripts, create a launch configuration:
 
-## Running Go
+```json title=".vscode/launch.json"
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch current Go script",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${file}"
+    }
+  ]
+}
+```
+
+
+## Running Go scripts
 
 Create a `main.go` file:
 
