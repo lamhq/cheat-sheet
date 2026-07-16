@@ -1,0 +1,50 @@
+# Pointers
+
+## Introduction
+
+A pointer holds the memory address of a value.
+
+```go
+var x int = 10
+var p *int = &x
+
+fmt.Println(*p) // dereference → 10
+```
+
+
+## Pointer Dereference
+
+Use `*` to access the value a pointer refers to.
+
+```go
+x := 42
+p := &x
+
+fmt.Println(*p) // 42
+*p = 100
+fmt.Println(x)  // 100
+```
+
+
+## Nil Pointers
+
+Uninitialized pointers are `nil`.
+
+```go
+var p *int
+if p == nil {
+    fmt.Println("Pointer is nil")
+}
+```
+
+
+## New Function
+
+`new` allocates memory and returns a pointer.
+
+```go
+p := new(int)
+fmt.Println(*p) // 0
+*p = 7
+fmt.Println(*p) // 7
+```

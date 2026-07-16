@@ -11,5 +11,6 @@
   "functions",
   "error-handling",
   "oop",
-  "random"
+  "random",
+  "testing"
 ]

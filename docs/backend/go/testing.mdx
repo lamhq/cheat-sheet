@@ -1,0 +1,99 @@
+# Testing
+
+## Basic Test Function
+
+Tests live in files ending with `_test.go` and functions must start with `Test`.
+
+```go title="example_test.go"
+import "testing"
+
+func Add(a, b int) int {
+    return a + b
+}
+
+func TestAdd(t *testing.T) {
+    result := Add(2, 3)
+    if result != 5 {
+        t.Errorf("Expected 5, got %d", result)
+    }
+}
+```
+
+
+## Table-Driven Tests
+
+A common Go pattern for testing multiple inputs.
+
+```go
+func TestAddCases(t *testing.T) {
+    cases := []struct {
+        a, b, expected int
+    }{
+        {1, 1, 2},
+        {2, 3, 5},
+        {10, -5, 5},
+    }
+
+    for _, c := range cases {
+        result := Add(c.a, c.b)
+        if result != c.expected {
+            t.Errorf("Add(%d,%d) = %d; want %d", c.a, c.b, result, c.expected)
+        }
+    }
+}
+```
+
+
+## Benchmark Tests
+
+Benchmark functions start with `Benchmark` and measure performance.
+
+```go
+func BenchmarkAdd(b *testing.B) {
+    for i := 0; i < b.N; i++ {
+        Add(2, 3)
+    }
+}
+```
+
+Run with:
+```bash
+go test -bench=.
+```
+- `go test`: Invokes Go's built-in testing tool.
+- `-bench=`: Tells Go to run benchmark functions.
+- `.`: run all benchmarks in the current directory.
+
+
+## Subtests
+
+Use `t.Run` to organize related tests.
+
+```go
+func TestMath(t *testing.T) {
+    t.Run("Add", func(t *testing.T) {
+        if Add(2, 3) != 5 {
+            t.Error("Add failed")
+        }
+    })
+    t.Run("Subtract", func(t *testing.T) {
+        if Subtract(5, 3) != 2 {
+            t.Error("Subtract failed")
+        }
+    })
+}
+```
+
+
+## Error vs Fatal
+
+- `t.Error` → logs error but continues test.  
+- `t.Fatal` → logs error and stops test immediately.
+
+```go
+func TestFatalExample(t *testing.T) {
+    if Add(2, 2) != 4 {
+        t.Fatal("Critical failure")
+    }
+}
+```
