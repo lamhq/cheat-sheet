@@ -1,26 +1,11 @@
-Create a cheat sheet using the content from this page: http://example.com
+Create a cheat sheet using the content from a web page
 
-Your response must match below documentation style:
+## Web page
 
-## Basic Function
-
-```go
-func add(a int, b int) int {
-    return a + b
-}
-```
+http://example.com
 
 
-## Variadic Functions
+## Response format
 
-Functions that accept variable number of arguments.
-
-```go
-func sum(nums ...int) int {
-    total := 0
-    for _, n := range nums {
-        total += n
-    }
-    return total
-}
-```
+- Sections are separated by three new lines, do not use `---`
+- Each sections start with heading level 2 (`##`)

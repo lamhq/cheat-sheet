@@ -175,3 +175,81 @@ data := map[string]int{"a": 1}
 updateMap(data)
 fmt.Println(data["a"]) // 99
 ```
+
+
+## Receivers
+
+A receiver binds a function to a type, turning it into a method.
+
+```go
+type Rectangle struct {
+    Width, Height float64
+}
+
+func (r Rectangle) Area() float64 {
+    return r.Width * r.Height
+}
+
+rect := Rectangle{3, 4}
+fmt.Println(rect.Area()) // 12
+```
+
+### Value Receiver
+
+With a value receiver, the method gets a copy of the value.   Changes inside the method do not affect the original.
+
+Use when you don't need to modify the original.
+
+```go
+func (r Rectangle) Scale(factor float64) {
+    // does not affect original
+    r.Width *= factor
+    r.Height *= factor
+}
+
+rect := Rectangle{3, 4}
+rect.Scale(2)
+fmt.Println(rect.Width, rect.Height)  // 3 4 (unchanged)
+```
+
+### Pointer Receiver
+
+With a pointer receiver, the method can modify the original value.
+
+Use when:
+- the method alters fields inside the struct
+- the struct is large and copying would be inefficient
+- the struct contains fields that shouldn't be copied (e.g., `sync.Mutex`)
+
+If you have a value and call a method with a pointer receiver, Go automatically takes the address:
+
+```go
+func (r *Rectangle) Scale(factor float64) {
+    r.Width *= factor
+    r.Height *= factor
+}
+
+rect := Rectangle{3, 4}
+rect.Scale(2)
+fmt.Println(rect.Width, rect.Height) // 6 8
+```
+
+### Automatic Syntactic Sugar
+
+Go handles pointer referencing and dereferencing automatically when you call a method. You don't need to explicitly type `&` or `*` to match the receiver type.
+
+```go
+func (r *Rectangle) Scale(factor float64) {
+    r.Width *= factor
+    r.Height *= factor
+}
+
+rect := Rectangle{3, 4}
+rect.Scale(2)
+fmt.Println(rect.Width, rect.Height) // 6 8
+
+// same as above
+rectPtr := &rect
+rectPtr.Scale(2)
+fmt.Println(rect.Width, rect.Height) // 12 16
+```
