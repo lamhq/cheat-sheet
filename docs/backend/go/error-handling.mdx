@@ -1,6 +1,6 @@
 # Error Handling
 
-## Basic
+## Introduction
 
 In Go, errors are not exceptions; instead, they are values that satisfy the built-in `error` interface.
 
@@ -20,9 +20,11 @@ if err != nil {
 
 ## Returning Errors
 
-Functions often return `(value, error)` pairs.
+Functions often return `(value, error)` pairs. Use `errors.New` to create a new error with a message:
 
 ```go
+import "errors"
+
 func divide(a, b int) (int, error) {
     if b == 0 {
         return 0, errors.New("division by zero")
@@ -37,7 +39,7 @@ if err != nil {
 ```
 
 
-## Custom Error Types
+## Custom Errors
 
 You can define your own error type by implementing the `Error()` method.
 
@@ -77,37 +79,73 @@ func readFile() error {
 }
 ```
 
+- `fmt.Errorf` returns a new error that formats according to a format specifier. 
+- The `%w` verb is used to indicate that the error being wrapped should be included in the new error's message.
 
-## Checking Wrapped Errors
 
-Use `errors.Is` and `errors.As` to inspect wrapped errors.
+## Inspecting Errors
 
+Use `errors.Is` to check if error matches sentinel:
 ```go
-import "errors"
+// 1. Define a shared error variable
+var ErrUserNotFound = errors.New("user not found")
 
-err := readFile()
-if errors.Is(err, errors.New("file not found")) {
-    fmt.Println("File missing")
+// 2. Wrap it with extra context
+err := fmt.Errorf("login failed: %w", ErrUserNotFound)
+
+// 3. Check if the root cause matches our variable
+if errors.Is(err, ErrUserNotFound) {
+    fmt.Println("Handle specific user-not-found logic here.")
+}
+```
+
+Use `errors.As` for type assertion on custom errors:
+```go
+// 1. Define a custom error struct with extra data fields
+type ConnectionError struct {
+	Timeout int
 }
 
-var myErr *MyError
-if errors.As(err, &myErr) {
-    fmt.Println("Custom error:", myErr.Code)
+func (e *ConnectionError) Error() string {
+	return fmt.Sprintf("timeout after %ds", e.Timeout)
+}
+
+// 2. Simulate a wrapped custom error
+err := fmt.Errorf("network layer failed: %w", &ConnectionError{Timeout: 30})
+
+// 3. Declare a pointer to target the specific TYPE
+var connErr *ConnectionError
+
+// 4. If the type matches, errors.As extracts it into connErr
+if errors.As(err, &connErr) {
+    fmt.Printf("Custom logic: Retrying because of %ds timeout.\n", connErr.Timeout)
 }
 ```
 
 
 ## Panic and Recover
 
-`panic` stops execution; `recover` can catch it.
+- `panic`: stops normal execution and unwinds the stack
+- `recover` regains control inside a deferred function, allowing you to gracefully handle unexpected runtime errors
 
 ```go
-func risky() {
+package main
+
+import "fmt"
+
+func main() {
     defer func() {
         if r := recover(); r != nil {
-            fmt.Println("Recovered:", r)
+            fmt.Println("Recovered from panic:", r)
         }
     }()
-    panic("unexpected failure")
+
+    fmt.Println("Starting program...")
+    panic("something went wrong")
+    fmt.Println("This line will not execute")
 }
 ```
+
+- `panic("something went wrong")` halts execution.  
+- The deferred function calls `recover()`, catches the panic, and prints the message.  
+- The program continues after recovery.

@@ -1,6 +1,6 @@
 [
   "getting-started",
-  "basic",
+  "syntax",
   {
     "name": "types",
     "type": "dir",
@@ -9,6 +9,8 @@
   },
   "control-flow",
   "functions",
+  "routines",
+  "packages",
   "error-handling",
   "random",
   "testing"
