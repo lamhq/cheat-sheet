@@ -212,9 +212,7 @@ const (
 
 Variables are named storage locations that hold values which can change during program execution.
 
-You declare variables using the `var` keyword.
-
-If no value is assigned, the variable gets a **zero value** (e.g., `0`, `false`, `""`, `nil`).
+You declare variables using the `var` keyword:
 
 ```go
 var age int = 25
@@ -235,7 +233,24 @@ var i, j, k = 1, 2, 3
 name, occupation := "John Doe", "gardener"
 ```
 
-**Rules for Naming Variables**:
+### Default Zero Values
+
+Every declared variable without an explicit initializer gets a zero value depending on its type:
+
+| Type       | Zero Value |
+|------------|------------|
+| `int`      | `0`        |
+| `float64`  | `0.0`      |
+| `string`   | `""`       |
+| `bool`     | `false`    |
+| pointers   | `nil`      |
+| slices     | `nil`      |
+| maps       | `nil`      |
+| interfaces | `nil`      |
+| struct     | each field gets its zero value |
+
+### Variable naming convention
+
 - Must start with a **letter or underscore**.
 - Can contain letters, digits, and underscores.
 - Cannot start with a digit.
