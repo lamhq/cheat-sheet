@@ -1,0 +1,45 @@
+# Getting Started
+
+Getting started with LangChain in Python.
+
+## Installation
+
+Install the LangChain package:
+
+```bash
+uv add langchain
+```
+
+Installing the OpenAI integration:
+
+```bash
+uv add langchain-openai
+```
+
+Installing the OpenRouter integration:
+
+```bash
+uv add langchain-openrouter
+```
+
+
+## Getting started
+
+Create a Python script that takes some information about a person and generates a summary and interesting facts about them.
+
+1. Create a Python project using [uv](../backend/python/pkg-mgm/uv.mdx#creating-projects).
+2. Create a `.env` file in the root of your project and add your OpenRouter API key:
+    ```bash title=".env"
+    OPENROUTER_API_KEY="your_api_key_here"
+    ```
+3. Create a Python file:
+    ```py title="main.py" file="./langchain/_getting-started.py"
+    ```
+4. Run the script:
+    ```bash
+    python main.py
+    ```
+
+## References
+
+- [LangChain official documentation](https://docs.langchain.com/oss/python/langchain/overview)

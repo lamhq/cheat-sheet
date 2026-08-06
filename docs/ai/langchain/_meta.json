@@ -1,9 +1,14 @@
 [
-  "trace",
-  "prompt-template",
-  "lcel",
-  "tools",
-  "agent",
-  "structured-output",
-  "rag"
+  {
+    "name": "python",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "js",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
 ]
