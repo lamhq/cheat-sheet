@@ -7,47 +7,60 @@ if command == "go east" {
   fmt.Println("You head further up the mountain.")
 } else if command == "go inside" {
   fmt.Println("You enter the cave where you live out the rest of your life.")
+} else if !haveTorch || !litTorch {
+  fmt.Println("Nothing to see here.")
 } else {
   fmt.Println("Didn't quite get that.")
-}
-```
-
-```go
-if !haveTorch || !litTorch {
-  fmt.Println("Nothing to see here.")
 }
 ```
 
 
 ## `switch`
 
+Matches a value against multiple cases:
 ```go
-switch command {
-  case "go east":
-    fmt.Println("You head further up the mountain.")
-
-  case "enter cave", "go inside":
-    fmt.Println("You find yourself in a dimly lit cavern.")
-
-  case "read sign":
-    fmt.Println("The sign reads 'No Minors'.")
-
-  default:
-    fmt.Println("Didn't quite get that.")
+switch x {
+case 1:
+    fmt.Println("One")
+case 2, 3:
+    fmt.Println("Two or Three")
+default:
+    fmt.Println("Other")
 }
 ```
 
+Use expressions in cases:
 ```go
 switch {
-  case room == "cave":
-    fmt.Println("You find yourself in a dimly lit cavern.")
+case x < 0:
+    fmt.Println("Negative")
+case x == 0:
+    fmt.Println("Zero")
+default:
+    fmt.Println("Positive")
+}
+```
 
-  case room == "lake":
-    fmt.Println("The ice seems solid enough.")
+Used with interfaces to check the dynamic type.
+```go
+switch v := i.(type) {
+case int:
+    fmt.Println("Integer:", v)
+case string:
+    fmt.Println("String:", v)
+default:
+    fmt.Println("Unknown type")
+}
+```
+
+Fallthrough (forces execution to continue to the next case):
+```go
+switch x {
+case 1:
+    fmt.Println("One")
     fallthrough
-
-  case room == "underwater":
-    fmt.Println("The water is freezing cold.")
+case 2:
+    fmt.Println("Two")
 }
 ```
 
@@ -75,4 +88,40 @@ for {
     }
   }
 }
+```
+
+
+## `go.mod` file
+
+The file `go.mod` is a module file. It defines the module, its dependencies, and other metadata that's used by the Go tooling to manage those dependencies, resolve conflicts between different modules, and enforce version compatibility.
+
+That `go.mod` file stays with your code, including in your source code repository.
+
+To create a `go.mod` file, run the `go mod init` [command](https://go.dev/ref/mod#go-mod-init), giving it the name of the module your code will be in. For more about naming a module with a module path, see [Managing dependencies](https://go.dev/doc/modules/managing-dependencies#naming_module).
+
+
+## Printing
+
+Passing arguments:
+
+```go
+fmt.Println("My weight on the surface of Mars is", 149.0*0.3783, "lbs, and I would be", 41*365.2425/687, "years old.")
+// My weight on the surface of Mars is 56.3667 lbs, and I would be 21.79758733624454 years old.
+```
+
+Insert values anywhere in the text:
+
+```go
+// My weight on the surface of Mars is 56.3667 lbs,
+fmt.Printf("My weight on the surface of Mars is %v lbs,", 149.0*0.3783)
+
+// and I would be 21 years old.
+fmt.Printf(" and I would be %v years old.\n", 41*365/687)
+```
+
+Align text, a positive number pads with spaces to the left, and a negative number pads with spaces to the right:
+
+```go
+// %4v to pad a value to a width of 4 characters.
+fmt.Printf("%-15v $%4v\n", "SpaceX", 94)
 ```

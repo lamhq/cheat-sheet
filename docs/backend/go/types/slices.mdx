@@ -1,0 +1,72 @@
+# Slices
+
+## Basic Slice
+
+Slices are dynamic, flexible views into arrays.
+
+```go
+numbers := []int{1, 2, 3, 4, 5}
+fmt.Println(numbers) // [1 2 3 4 5]
+```
+
+
+## Slicing an Array
+
+You can slice arrays or other slices.
+
+```go
+arr := [5]int{10, 20, 30, 40, 50}
+slice := arr[1:4] // [inclusiveIndex:exclusiveIndex]
+fmt.Println(slice) // [20 30 40]
+```
+
+
+## Appending to a Slice
+
+Add elements dynamically with `append`.
+
+```go
+nums := []int{1, 2}
+nums = append(nums, 3, 4)
+fmt.Println(nums) // [1 2 3 4]
+```
+
+
+## Copying Slices
+
+Use `copy` to duplicate elements between slices.
+
+```go
+src := []int{1, 2, 3}
+
+// Allocate a slice with a length equal to len(src)
+dst := make([]int, len(src)) 
+
+copy(dst, src)
+fmt.Println(dst) // Output: [1 2 3]
+```
+
+
+## Iterating Over a Slice
+
+Use `range` to loop through slices.
+
+```go
+nums := []int{10, 20, 30}
+for index, value := range nums {
+    fmt.Println(index, value)
+}
+```
+
+
+## Nil vs Empty Slice
+
+Nil slices have no underlying array; empty slices are initialized but contain no elements.
+
+```go
+var nilSlice []int
+emptySlice := []int{}
+
+fmt.Println(nilSlice == nil)   // true
+fmt.Println(emptySlice == nil) // false
+```

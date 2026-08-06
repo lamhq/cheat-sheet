@@ -1,0 +1,121 @@
+# Interfaces
+
+## Introduction
+
+Interfaces define behavior. 
+
+An interface definition lists the method signatures a concrete type must implement.
+
+```go
+type Shape interface {
+    Area() float64
+}
+```
+
+
+## Implementing an Interface
+
+A type implements an interface by defining its methods.
+
+```go
+// 1. Define the interface
+type Speaker interface {
+    Speak() string
+}
+
+// 2. Create a concrete type (struct)
+type Dog struct {
+    Name string
+}
+
+// 3. Implement the method implicitly (no "implements" keyword needed)
+func (d Dog) Speak() string {
+    return "Woof!"
+}
+```
+
+Because `Dog` has a `Speak()` method that matches the exact signature inside `Speaker`, a `Dog` can be assigned directly to a `Speaker` variable:
+
+```go
+var s Speaker = Dog{Name: "Buddy"}
+fmt.Println(s.Speak()) // "Woof!"
+```
+
+
+## Interface Embedding
+
+Interfaces can embed other interfaces. This encourages creating small, reusable components.
+
+```go
+type Reader interface {
+    Read() string
+}
+
+type Writer interface {
+    Write(s string)
+}
+
+type ReadWriter interface {
+    Reader
+    Writer
+}
+```
+
+
+## Empty Interface
+
+The empty interface can hold values of any type. It is defined as `interface{}` or `any`.
+
+```go
+// A function that can accept absolutely any data type
+func PrintAnything(val any) {
+    fmt.Println(val)
+}
+
+func main() {
+    PrintAnything("Hello") // string works
+    PrintAnything(42)      // int works
+    PrintAnything(true)    // bool works
+}
+```
+
+
+## Nil Interface
+
+An interface value is `nil` if both its type and value are unset.
+
+```go
+var s Shape
+fmt.Println(s == nil) // true
+```
+
+
+## Type Assertion
+
+Extract the concrete type from an interface.
+
+```go
+var i any = "golang"
+s, ok := i.(string)
+if ok {
+    fmt.Println("Found a string of length:", len(s))
+}
+```
+
+
+## Type Switch
+
+Allows you to branch your logic based on the concrete type hidden behind the interface.
+
+```go
+func describe(i interface{}) {
+    switch v := i.(type) {
+    case int:
+        fmt.Println("Integer:", v)
+    case string:
+        fmt.Println("String:", v)
+    default:
+        fmt.Println("Unknown type")
+    }
+}
+```

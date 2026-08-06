@@ -1,0 +1,76 @@
+# Random
+
+## Random Integer
+
+Use `rand.Intn` to generate a random integer within a range.
+
+```go
+import (
+    "fmt"
+    "math/rand"
+    "time"
+)
+
+func main() {
+    rand.Seed(time.Now().UnixNano()) // set seed
+    fmt.Println(rand.Intn(100)) // random int [0,100)
+}
+```
+
+Generate an integer between `min` and `max`:
+
+```go
+func randomInt(min, max int) int {
+    return rand.Intn(max-min+1) + min
+}
+
+fmt.Println(randomInt(10, 20)) // random int [10,20]
+```
+
+### Seed
+
+By default, Go’s `math/rand` uses a deterministic seed (`1`), which means it produces the same sequence of numbers every run.  
+
+To get different results each time, you must set a seed — usually with the current time:
+
+```go
+rand.Seed(time.Now().UnixNano())
+```
+
+If you want reproducible results (e.g., for testing), you can set a fixed seed:
+
+```go
+rand.Seed(42) // always generates the same sequence
+```
+
+
+## Random Float
+
+Generate a random float between 0.0 and 1.0.
+
+```go
+rand.Seed(time.Now().UnixNano())
+fmt.Println(rand.Float64()) // random float [0.0,1.0)
+```
+
+
+Random Float in Range:
+
+```go
+func randomFloat(min, max float64) float64 {
+    return min + rand.Float64()*(max-min)
+}
+
+fmt.Println(randomFloat(5.0, 10.0)) // random float [5.0,10.0)
+```
+
+
+## Random Element
+
+Pick a random element from a slice:
+
+```go
+items := []string{"apple", "banana", "cherry"}
+choice := items[rand.Intn(len(items))]
+fmt.Println(choice)
+```

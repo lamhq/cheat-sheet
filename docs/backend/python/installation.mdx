@@ -1,8 +1,10 @@
 # Installation
 
-We'll use Pyenv to easily install and switch between multiple versions of Python.
+## Pyenv
 
-## Install Pyenv
+We use Pyenv to easily install and switch between multiple versions of Python.
+
+### Install Pyenv
 
 ```sh
 brew update
@@ -14,10 +16,9 @@ For linux, use automatic installer:
 curl https://pyenv.run | bash
 ```
 
+### Set up shell environment
 
-### Set up shell environment (zsh)
-
-Run these commands:
+Run these commands (zsh):
 
 ```sh
 echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
@@ -31,13 +32,11 @@ Reload shell configuration:
 exec "$SHELL"
 ```
 
-
 ### Upgrading Pyenv
 
 ```sh
 brew upgrade pyenv
 ```
-
 
 ### Uninstall Pyenv
 
@@ -48,15 +47,18 @@ brew uninstall pyenv
 
 ## Install python
 
+Install Python with Pyenv:
 ```sh
 pyenv install 3.12.2
 ```
 
-## Switch between Python versions
+
+## Switch Python versions
 
 ```sh
 pyenv global 3.12.2
 ```
+
 
 ## Uninstall Python versions
 

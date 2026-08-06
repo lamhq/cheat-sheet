@@ -1,0 +1,347 @@
+# Syntax
+
+## Comments
+
+**Line Comments**:
+
+```go
+// This is a line comment
+// It stops at the end of the line
+```
+
+**Block Comments**:
+
+```go
+/* This is a block comment
+   spanning multiple lines
+   and ends with */ 
+```
+
+**Rules:**
+- Comments cannot start inside strings or other comments
+- General comments with no newlines act like a space
+- Any other comment acts like a newline
+
+
+## Identifiers
+
+Identifiers name program entities such as variables and types.
+
+An identifier is a sequence of letters and digits where the first character must be a letter.
+
+```go
+// Valid identifiers
+myVariable
+_private
+CamelCase
+snake_case
+α               // Unicode letters allowed
+中文             // Unicode identifier
+
+// Invalid identifiers
+2invalid        // starts with digit
+my-var          // contains hyphen
+```
+
+**Special identifiers:**
+- Blank identifier `_` - anonymous placeholder, cannot be redeclared
+- `init` - special function name in package block
+
+
+## Integer Literals
+
+**Decimal (Base 10)**:
+
+```go
+42
+1_000_000      // Underscores for readability (Go 1.13+)
+0              // Just zero
+```
+
+**Binary (Base 2)**:
+
+```go
+0b1010         // = 10
+0B1111_0000    // = 240
+```
+
+**Octal (Base 8)**:
+
+```go
+0777           // = 511
+0o755          // = 493
+0O644          // = 420
+```
+
+**Hexadecimal (Base 16)**:
+
+```go
+0xFF           // = 255
+0xDEAD_BEEF    // = 3735928559
+0x10           // = 16
+```
+
+**Rules:**
+- Underscores can appear after a base prefix or between digits
+- A single `0` is decimal zero
+- In hex literals: a-f and A-F represent 10-15
+- `_42` is an identifier, not an integer
+- `42_` is invalid (must separate digits)
+
+## Floating-Point Literals
+
+**Decimal Floating-Point**:
+
+```go
+3.14
+0.5
+1.0
+.25            // Fractional part only
+1.             // Integer part only
+1e10           // Exponent: 1 × 10^10
+3.14e-2        // 3.14 × 10^-2
+1.5_0e+0_2     // With underscores
+```
+
+**Hexadecimal Floating-Point (Go 1.13+)**:
+
+```go
+0x1p-2         // = 0.25 (0x1 × 2^-2)
+0x2.p10        // = 2048.0 (0x2 × 2^10)
+0x1.Fp+0       // = 1.9375 (0x1.F × 2^0)
+0X.8p-0        // = 0.5
+0X_1FFFP-16    // = 0.1249847412109375
+```
+
+**Rules:**
+- One of integer or fractional part may be omitted
+- For decimal: one of decimal point or exponent may be omitted
+- For hex: exponent (p/P) is required; radix point may be omitted
+- Underscores allowed after base prefix or between digits
+
+
+## String Literals
+
+### Raw String Literals (Backticks)
+
+```go
+`hello world`
+`line1
+line2`                // Can contain newlines
+`C:\Users\name`       // Backslashes are literal
+`This is a "quoted" string`
+```
+
+**Rules:**
+- No escape sequences processed
+- Any character may appear except backtick
+- Carriage returns (`\r`) are discarded
+
+### Interpreted String Literals (Double Quotes)
+
+```go
+"hello world"
+"line1\nline2"        // Newline escape
+"C:\\Users\\name"     // Backslash escaped
+"This is a \"quoted\" string"
+"Tab:\there"
+```
+
+**Escape sequences (same as rune):**
+```go
+"\n"                  // Newline
+"\t"                  // Tab
+"\\"                  // Backslash
+"\""                  // Double quote (NOT valid in raw strings)
+"\x48\x69"            // Hex escapes: "Hi"
+"\u4e2d\u6587"        // Unicode: "中文" (4 hex digits)
+"\U0001F600"          // Unicode: "😀" (8 hex digits)
+```
+
+**Rules:**
+- No unescaped newline or double quote
+- `\xFF` and `\xnn` represent bytes 0-255
+- `\uxxxx` and `\Uxxxxxxxx` represent Unicode characters
+- Three-octal and two-hex escapes represent bytes (e.g., `\123`, `\x7F`)
+
+
+
+## Constants
+
+Constants are fixed values that the program cannot alter during execution. They are determined at compile time.
+
+You declare constants using the `const` keyword. They can be character, string, boolean, or numeric values.
+
+```go
+const Pi = 3.14159
+const StatusOK = 200
+const Enabled = true
+```
+
+Constants in Go can be **typed** or **untyped**:
+
+```go
+// Untyped constant
+const Greeting = "Hello" 
+
+// Typed constant
+const SecureGreeting string = "Hello, Secure World" 
+```
+
+You can group multiple constant declarations together using parentheses:
+
+```go
+const (
+  UserAdmin = "admin"
+  UserGuest = "guest"
+)
+```
+
+The `iota` keyword simplifies definitions of incrementing numbers. It resets to zero in each `const` block.
+
+```go
+const (
+  A = iota // 0
+  B        // 1
+  C        // 2
+)
+```
+
+
+## Variables
+
+Variables are named storage locations that hold values which can change during program execution.
+
+You declare variables using the `var` keyword:
+
+```go
+var age int = 25
+var name string = "Temitope"
+```
+
+Shorthand declaration `:=`:
+
+```go
+age := 25
+name := "Temitope"
+```
+
+Declare several variables at once:
+
+```go
+var i, j, k = 1, 2, 3
+name, occupation := "John Doe", "gardener"
+```
+
+### Default Zero Values
+
+Every declared variable without an explicit initializer gets a zero value depending on its type:
+
+| Type       | Zero Value |
+|------------|------------|
+| `int`      | `0`        |
+| `float64`  | `0.0`      |
+| `string`   | `""`       |
+| `bool`     | `false`    |
+| pointers   | `nil`      |
+| slices     | `nil`      |
+| maps       | `nil`      |
+| interfaces | `nil`      |
+| struct     | each field gets its zero value |
+
+### Variable naming convention
+
+- Must start with a **letter or underscore**.
+- Can contain letters, digits, and underscores.
+- Cannot start with a digit.
+- **Case-sensitive** (`geeks` ≠ `Geeks`).
+- Cannot use Go **keywords** (e.g., `func`, `var`).
+
+
+## Operators & Punctuation
+
+### Arithmetic Operators
+
+```go
++    // Addition
+-    // Subtraction
+*    // Multiplication
+/    // Division
+%    // Modulo (remainder)
+```
+
+### Bitwise Operators
+
+```go
+&      // Bitwise AND
+|      // Bitwise OR
+^      // Bitwise XOR
+<<     // Left shift
+>>     // Right shift
+&^     // AND NOT
+```
+
+### Comparison Operators
+
+```go
+==     // Equal
+!=     // Not equal
+<      // Less than
+<=     // Less than or equal
+>      // Greater than
+>=     // Greater than or equal
+```
+
+### Logical Operators
+
+```go
+&&     // Logical AND
+||     // Logical OR
+!      // Logical NOT
+```
+
+### Assignment Operators
+
+```go
+=      // Assignment
++=     // Add and assign
+-=     // Subtract and assign
+*=     // Multiply and assign
+/=     // Divide and assign
+%=     // Modulo and assign
+&=     // AND and assign
+|=     // OR and assign
+^=     // XOR and assign
+<<=    // Left shift and assign
+>>=    // Right shift and assign
+&^=    // AND NOT and assign
+```
+
+### Unary Operators
+
+```go
++      // Unary positive
+-      // Unary negative
+!      // Logical NOT
+^      // Bitwise complement
+*      // Pointer dereference
+&      // Address of
+++     // Increment
+--     // Decrement
+<-     // Receive (channel)
+```
+
+### Punctuation
+
+```go
+(  )   // Parentheses
+[  ]   // Brackets
+{  }   // Braces
+,      // Comma
+;      // Semicolon
+:      // Colon
+.      // Period/Dot
+...    // Ellipsis
+<-     // Send/Receive (channel)
+:=     // Short variable declaration
+```

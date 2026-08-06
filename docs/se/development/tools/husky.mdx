@@ -37,7 +37,7 @@ const husky = (await import('husky')).default
 console.log(husky())
 ```
 
-Then, use it in `prepare`:
+Then, update `prepare` script in `package.json` to run the install script:
 ```json title="package.json"
 {
   "scripts": {
@@ -66,10 +66,9 @@ To test a hook without committing, add `exit 1` to the hook script to abort the 
 exit 1
 ```
 
-Then try to commit:
+Then try to commit (it will fail and prevent the commit):
 ```sh
 git commit -m "testing pre-commit code"
-# A commit will not be created
 ```
 
 

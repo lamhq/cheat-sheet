@@ -1,6 +1,17 @@
 [
-  "version",
   "getting-started",
-  "basic",
-  "control-flow"
+  "syntax",
+  {
+    "name": "types",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  "control-flow",
+  "functions",
+  "routines",
+  "packages",
+  "error-handling",
+  "random",
+  "testing"
 ]

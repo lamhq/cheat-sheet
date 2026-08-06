@@ -1,0 +1,255 @@
+# Functions
+
+## Basic Function
+
+```go
+func add(a int, b int) int {
+    return a + b
+}
+```
+
+
+## Multiple Return Values
+
+```go
+func divide(a, b int) (int, int) {
+    return a / b, a % b
+}
+```
+
+
+## Named Return Values
+
+You can name return values and return them implicitly.
+
+```go
+func rectangle(w, h int) (area int, perimeter int) {
+    area = w * h
+    perimeter = 2 * (w + h)
+    return
+}
+```
+
+
+## Variadic Functions
+
+Functions that accept a variable number of arguments.
+
+```go
+func sum(nums ...int) int {
+    total := 0
+    for _, n := range nums {
+        total += n
+    }
+    return total
+}
+```
+
+
+## Anonymous Functions
+
+Functions without a name, often used inline.
+
+```go
+f := func(x int) int {
+    return x * x
+}
+fmt.Println(f(5)) // 25
+```
+
+
+## Functions as Values
+
+Functions can be passed around like variables.
+
+```go
+func apply(f func(int) int, x int) int {
+    return f(x)
+}
+
+square := func(x int) int { return x * x }
+fmt.Println(apply(square, 4)) // 16
+```
+
+
+## Closures
+
+Functions that capture and use variables from their surrounding scope.
+
+```go
+func counter() func() int {
+    count := 0
+    return func() int {
+        count++
+        return count
+    }
+}
+
+c := counter()
+fmt.Println(c()) // 1
+fmt.Println(c()) // 2
+```
+
+
+## Value Types
+
+Value types are **copied** when passed to a function. Changes inside the function do not affect the original.
+
+Value types include: `int`, `float`, `bool`, `string`, `struct`, `array`.
+
+```go
+func modify(x int) {
+    x = 100
+}
+
+num := 10
+modify(num)
+fmt.Println(num) // 10 (unchanged)
+```
+
+Structs behave the same way:
+
+```go
+type Point struct {
+    X, Y int
+}
+
+func move(p Point) {
+    p.X = 99
+}
+
+pt := Point{X: 1, Y: 2}
+move(pt)
+fmt.Println(pt.X) // 1 (unchanged)
+```
+
+### Updating Value Types
+
+Passing a pointer allows functions to modify the original value.
+
+```go
+func modify(p *int) {
+    *p = 100
+}
+
+num := 10
+modify(&num)
+fmt.Println(num) // 100 (changed)
+```
+
+With structs:
+
+```go
+func move(p *Point) {
+    p.X = 99
+}
+
+pt := Point{X: 1, Y: 2}
+move(&pt)
+fmt.Println(pt.X) // 99 (changed)
+```
+
+
+## Reference Types
+
+Reference types **share the same underlying data**. Changes inside the function affect the original.
+
+Reference types include: `slice`, `map`, `channel`, `pointers`, `function`.
+
+```go
+func updateSlice(s []int) {
+    s[0] = 42
+}
+
+nums := []int{1, 2, 3}
+updateSlice(nums)
+fmt.Println(nums) // [42 2 3]
+```
+
+```go
+func updateMap(m map[string]int) {
+    m["a"] = 99
+}
+
+data := map[string]int{"a": 1}
+updateMap(data)
+fmt.Println(data["a"]) // 99
+```
+
+
+## Receivers
+
+A receiver binds a function to a type, turning it into a method.
+
+```go
+type Rectangle struct {
+    Width, Height float64
+}
+
+func (r Rectangle) Area() float64 {
+    return r.Width * r.Height
+}
+
+rect := Rectangle{3, 4}
+fmt.Println(rect.Area()) // 12
+```
+
+### Value Receiver
+
+With a value receiver, the method gets a copy of the value.   Changes inside the method do not affect the original.
+
+Use when you don't need to modify the original.
+
+```go
+func (r Rectangle) Scale(factor float64) {
+    // does not affect original
+    r.Width *= factor
+    r.Height *= factor
+}
+
+rect := Rectangle{3, 4}
+rect.Scale(2)
+fmt.Println(rect.Width, rect.Height)  // 3 4 (unchanged)
+```
+
+### Pointer Receiver
+
+With a pointer receiver, the method can modify the original value.
+
+Use when:
+- the method alters fields inside the struct
+- the struct is large and copying would be inefficient
+- the struct contains fields that shouldn't be copied (e.g., `sync.Mutex`)
+
+If you have a value and call a method with a pointer receiver, Go automatically takes the address:
+
+```go
+func (r *Rectangle) Scale(factor float64) {
+    r.Width *= factor
+    r.Height *= factor
+}
+
+rect := Rectangle{3, 4}
+rect.Scale(2)
+fmt.Println(rect.Width, rect.Height) // 6 8
+```
+
+### Automatic Syntactic Sugar
+
+Go handles pointer referencing and dereferencing automatically when you call a method. You don't need to explicitly type `&` or `*` to match the receiver type.
+
+```go
+func (r *Rectangle) Scale(factor float64) {
+    r.Width *= factor
+    r.Height *= factor
+}
+
+rect := Rectangle{3, 4}
+rect.Scale(2)
+fmt.Println(rect.Width, rect.Height) // 6 8
+
+// same as above
+rectPtr := &rect
+rectPtr.Scale(2)
+fmt.Println(rect.Width, rect.Height) // 12 16
+```

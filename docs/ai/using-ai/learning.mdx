@@ -1,10 +1,11 @@
 import { Prompt } from '@rspress/core/theme';
 import summarizeWebPage from './_summarize-web-page.txt?raw';
 import toolDocumentation from './_tool-documentation.txt?raw';
+import writeCheatSheet from './_cheatsheet.txt?raw';
 
 # Learning
 
-## Summarize Web Page
+## Summarize web page
 
 Summarize the key points from a web page.
 
@@ -15,18 +16,18 @@ Summarize the key points from a web page.
 />
 
 
-## Summarize Video
+## Write Cheat Sheet
 
-Take notes from a video course's transcript.
+Write a cheat sheet from different sources (web pages, video transcripts):
 
 <Prompt
-  title="Summarize a Video Lecture"
-  description="Send this prompt to AI and paste the video transcript."
-  prompt="Give me the gist of the lecture based on the provided transcript"
+  title="Write a Cheat Sheet"
+  description="Send this prompt to AI and provide the sources."
+  prompt={writeCheatSheet}
 />
 
 
-## Write Tool Documentation
+## Write documentation
 
 Write a structured documentation for a tool/library/software/feature based on its description.
 
@@ -35,3 +36,10 @@ Write a structured documentation for a tool/library/software/feature based on it
   description="Structure a tool's documentation to a standard format."
   prompt={toolDocumentation}
 />
+
+
+## Take notes from video
+
+Take notes from a video course's transcript.
+
+- *Give me the gist of the lecture based on the provided transcript.*

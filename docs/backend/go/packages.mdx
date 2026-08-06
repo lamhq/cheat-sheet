@@ -1,0 +1,97 @@
+# Packages
+
+## Introduction
+
+A **package** is a collection of Go source files in the same directory that are compiled together.
+
+Every Go source file must start with a `package` declaration. This determines the package name for that specific file.
+
+
+## The `main` Package
+
+The `main` package is special. It tells the compiler to build an executable instead of a shared library. 
+
+It must contain a `func main()` entry point.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Hello, World!")
+}
+```
+
+
+## Importing Packages
+
+Use the `import` keyword to include external or standard library packages.
+
+Group multiple imports in parentheses:
+```go
+import (
+    "fmt"
+    "math"
+)
+```
+
+Use aliases to rename imports:
+```go
+import m "math"
+```
+
+Use `_` to import a package only for its side effects (running its `init` function):
+```go
+import _ "net/http/pprof"
+```
+
+
+## Custom Packages
+
+Steps to create your own package:
+
+1. Create a directory with `.go` files.
+2. Start each file with `package <name>`.
+3. To export an identifier, start its name with uppercase (identifiers whose name starts with lowercase are private to the package).
+
+```go
+package utils
+
+func Hello(name string) string {
+    return "Hello, " + name
+}
+
+var ExportedVar = "Visible"
+var unexportedVar = "Hidden"
+```
+
+```go title="main.go"
+package main
+
+import (
+    "fmt"
+    "example.com/greetings"
+)
+
+func main() {
+    fmt.Println(greetings.Hello("Lac"))
+}
+```
+
+
+## The init Function
+
+Packages can define an **init function**:
+- executed automatically at program startup, after variable evaluation but before the `main` function. 
+- cannot be called explicitly.
+
+```go
+package config
+
+import "fmt"
+
+func init() {
+    fmt.Println("Package initialized")
+}
+```

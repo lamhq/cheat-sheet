@@ -1,0 +1,151 @@
+# Error Handling
+
+## Introduction
+
+In Go, errors are not exceptions; instead, they are values that satisfy the built-in `error` interface.
+
+```go
+import "errors"
+
+func doSomething() error {
+    return errors.New("something went wrong")
+}
+
+err := doSomething()
+if err != nil {
+    fmt.Println("Error:", err)
+}
+```
+
+
+## Returning Errors
+
+Functions often return `(value, error)` pairs. Use `errors.New` to create a new error with a message:
+
+```go
+import "errors"
+
+func divide(a, b int) (int, error) {
+    if b == 0 {
+        return 0, errors.New("division by zero")
+    }
+    return a / b, nil
+}
+
+result, err := divide(10, 0)
+if err != nil {
+    fmt.Println("Error:", err)
+}
+```
+
+
+## Custom Errors
+
+You can define your own error type by implementing the `Error()` method.
+
+```go
+// Custom struct to hold detailed error context
+type MyError struct {
+	Code int    // e.g., 404
+	Msg  string // e.g., "Not Found"
+}
+
+// Define a receiver `Error` method to implement the built-in error interface for *MyError
+func (e *MyError) Error() string {
+	return fmt.Sprintf("Code %d: %s", e.Code, e.Msg)
+}
+
+// function that returns the error
+func fail() error {
+	return &MyError{Code: 404, Msg: "Not Found"}
+}
+
+if err := fail(); err != nil {
+  fmt.Println(err)
+}
+```
+
+
+## Wrapping Errors
+
+Use `fmt.Errorf` with `%w` to wrap errors for later inspection.
+
+```go
+import "fmt"
+
+func readFile() error {
+    err := errors.New("file not found")
+    return fmt.Errorf("readFile failed: %w", err)
+}
+```
+
+- `fmt.Errorf` returns a new error that formats according to a format specifier. 
+- The `%w` verb is used to indicate that the error being wrapped should be included in the new error's message.
+
+
+## Inspecting Errors
+
+Use `errors.Is` to check if error matches sentinel:
+```go
+// 1. Define a shared error variable
+var ErrUserNotFound = errors.New("user not found")
+
+// 2. Wrap it with extra context
+err := fmt.Errorf("login failed: %w", ErrUserNotFound)
+
+// 3. Check if the root cause matches our variable
+if errors.Is(err, ErrUserNotFound) {
+    fmt.Println("Handle specific user-not-found logic here.")
+}
+```
+
+Use `errors.As` for type assertion on custom errors:
+```go
+// 1. Define a custom error struct with extra data fields
+type ConnectionError struct {
+	Timeout int
+}
+
+func (e *ConnectionError) Error() string {
+	return fmt.Sprintf("timeout after %ds", e.Timeout)
+}
+
+// 2. Simulate a wrapped custom error
+err := fmt.Errorf("network layer failed: %w", &ConnectionError{Timeout: 30})
+
+// 3. Declare a pointer to target the specific TYPE
+var connErr *ConnectionError
+
+// 4. If the type matches, errors.As extracts it into connErr
+if errors.As(err, &connErr) {
+    fmt.Printf("Custom logic: Retrying because of %ds timeout.\n", connErr.Timeout)
+}
+```
+
+
+## Panic and Recover
+
+- `panic`: stops normal execution and unwinds the stack
+- `recover` regains control inside a deferred function, allowing you to gracefully handle unexpected runtime errors
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    defer func() {
+        if r := recover(); r != nil {
+            fmt.Println("Recovered from panic:", r)
+        }
+    }()
+
+    fmt.Println("Starting program...")
+    panic("something went wrong")
+    fmt.Println("This line will not execute")
+}
+```
+
+- `panic("something went wrong")` halts execution.  
+- The deferred function calls `recover()`, catches the panic, and prints the message.  
+- The program continues after recovery.

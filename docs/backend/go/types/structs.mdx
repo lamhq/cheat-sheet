@@ -1,0 +1,112 @@
+# Structs
+
+## Basic Struct
+
+Structs group related fields together.
+
+```go
+type Person struct {
+    Name string
+    Age  int
+}
+
+p := Person{Name: "Alice", Age: 30}
+fmt.Println(p.Name, p.Age)
+```
+
+
+## Anonymous Struct
+
+You can create structs without defining a type.
+
+```go
+student := struct {
+    Name string
+    Grade int
+}{
+    Name: "Bob",
+    Grade: 90,
+}
+
+fmt.Println(student.Name, student.Grade)
+```
+
+
+## Struct with Methods
+
+Attach methods to structs using receivers.
+
+```go
+type Rectangle struct {
+    Width, Height float64
+}
+
+func (r Rectangle) Area() float64 {
+    return r.Width * r.Height
+}
+
+rect := Rectangle{3, 4}
+fmt.Println(rect.Area()) // 12
+```
+
+
+## Updating Struct Values
+
+Use pointer receivers to modify struct values.
+
+```go
+func (r *Rectangle) Scale(factor float64) {
+    r.Width *= factor
+    r.Height *= factor
+}
+
+rect := Rectangle{3, 4}
+rect.Scale(2)
+fmt.Println(rect.Width, rect.Height) // 6 8
+```
+
+
+## Struct Embedding
+
+Embed one struct inside another (composition).
+
+```go
+type Address struct {
+    City, Country string
+}
+
+type Employee struct {
+    Name string
+    Address
+}
+
+e := Employee{Name: "John", Address: Address{City: "Paris", Country: "France"}}
+fmt.Println(e.City) // Access embedded field directly
+```
+
+
+## Constructor Function
+
+Go doesn’t have constructors; use factory functions.
+
+```go
+func NewPerson(name string, age int) *Person {
+    return &Person{Name: name, Age: age}
+}
+
+p := NewPerson("Charlie", 25)
+```
+
+
+## Struct Tags
+
+Tags provide metadata, often used with encoding libraries.
+
+```go
+type User struct {
+    ID   int    `json:"id"`
+    Name string `json:"name"`
+}
+
+u := User{ID: 1, Name: "Alice"}
+```

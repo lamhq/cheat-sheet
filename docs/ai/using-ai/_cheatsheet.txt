@@ -1,0 +1,8 @@
+Create a cheat sheet about Package in Go
+
+## Response format
+
+- Sections are separated by three new lines, do not use `---`
+- Each sections start with heading level 2 (`##`)
+- Do not start sentences with heading (`**`)
+- Limit sentences to 20 words maximum. Use multiple sentences if needed.

@@ -1,0 +1,104 @@
+# Maps
+
+## Introduction
+
+Maps store key-value pairs.
+
+- **Keys** → must be comparable types (e.g., `int`, `string`, pointers, structs with comparable fields).  
+- **Values** → can be any type.  
+
+```go
+m := map[string]int{
+    "Alice": 30,
+    "Bob":   25,
+}
+
+fmt.Println(m["Alice"]) // 30
+```
+
+
+## Creating a Map
+
+Use `make()` to create an initialized, empty map:
+
+```go
+var ages = make(map[string]int)
+```
+
+Use a Map Literal to populate data immediately:
+```go
+var lookup = map[string]string{
+    "en": "English",
+    "fr": "French",
+}
+```
+
+
+## Nil Map
+
+Declaring a map variable without initializing it creates a `nil` map.
+
+Reading from a `nil` map is safe (returns zero value), but **writing to a `nil` map will cause a runtime panic**
+
+```go
+var m map[string]int
+fmt.Println(m == nil) // true
+
+m["key"] = 10        // 💥 PANIC!
+```
+
+
+## Checking Keys
+
+Accessing a missing key returns the zero value of the value type:
+```go
+m := map[string]int{
+    "Alice": 30,
+}
+fmt.Println(m["Bob"]) // 0 (zero value for int)
+```
+
+Use the "comma ok" idiom to check if a key exists:
+```go
+value, ok := m["Alice"]
+if ok {
+    fmt.Println("Found:", value)
+} else {
+    fmt.Println("Not found")
+}
+```
+
+
+## Updating Values
+
+Assigning to a key updates its value.
+
+```go
+m["Bob"] = 26
+fmt.Println(m["Bob"]) // 26
+```
+
+
+## Deleting Keys
+
+Use `delete` to remove a key-value pair.
+
+```go
+delete(m, "Alice")
+fmt.Println(m) // map[Bob:26]
+```
+
+
+## Iterating Over a Map
+
+Use `range` to loop through keys and values.
+
+```go
+for k, v := range m {
+    fmt.Println(k, v)
+}
+```
+
+:::warning
+Map iteration in Go is randomized; don’t expect insertion order or consistency between loops.
+:::
