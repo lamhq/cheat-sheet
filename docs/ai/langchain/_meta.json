@@ -5,10 +5,5 @@
     "collapsible": true,
     "collapsed": true
   },
-  {
-    "name": "js",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  }
+  "ts"
 ]
