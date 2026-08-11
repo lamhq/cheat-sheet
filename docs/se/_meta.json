@@ -8,21 +8,18 @@
   },
   {
     "name": "system-design",
-    "label": "System Design",
     "type": "dir",
     "collapsed": true,
     "collapsible": true
   },
   {
     "name": "architecture",
-    "label": "Architecture",
     "type": "dir",
     "collapsed": true,
     "collapsible": true
   },
   {
-    "name": "documentation",
-    "label": "Documentation",
+    "name": "process",
     "type": "dir",
     "collapsed": true,
     "collapsible": true
@@ -36,7 +33,6 @@
   },
   {
     "name": "modeling",
-    "label": "Modeling",
     "type": "dir",
     "collapsible": true,
     "collapsed": true
@@ -51,28 +47,24 @@
   "intro",
   {
     "name": "project-management",
-    "label": "Project Management",
     "type": "dir",
     "collapsible": true,
     "collapsed": true
   },
   {
     "name": "software-architecture",
-    "label": "Software Architecture",
     "type": "dir",
     "collapsible": true,
     "collapsed": true
   },
   {
     "name": "software-design",
-    "label": "Software Design",
     "type": "dir",
     "collapsible": true,
     "collapsed": true
   },
   {
     "name": "software-development",
-    "label": "Software Development",
     "type": "dir",
     "collapsible": true,
     "collapsed": true

@@ -1,0 +1,107 @@
+# Software Process
+
+Process used in software industry to design, develop, test, and deliver software.
+
+## Ideas Collection
+
+**How**:
+- For new projects, write down what problem it solves, who will use it, key features
+- For new features, specify its purpose, and how it is used
+
+**Outputs**:
+- Project Overview Note
+- Feature Specification Notes
+
+
+## Requirements Clarification
+
+**How**:
+- Create [Project Overview Document](./process/project-overview.mdx) from Project Overview Note
+- Create [Feature Specification Document](./process/fsd.mdx) from Feature Specification Notes
+- Update existing documents if requirements change
+
+**Outputs**:
+- Project Overview Document
+- Feature Specification Document (FSD)
+
+
+## Design
+
+Transform requirements of a feature into a clear technical blueprint that can be implemented by engineers.
+
+### UI
+
+**How**:
+1. List all screens required for the feature
+2. For each screen, determine:
+   1. Name
+   2. Purpose
+   3. Display elements (data fetching)
+   4. User actions (data submission)
+   5. Authentication & authorization
+   6. Error handling
+   7. Validation
+   8. Accessibility requirements
+   9. Responsiveness
+
+**Outputs**:
+- UI Design Document
+
+ 
+### API
+
+**How**:
+For each screen, list all required APIs, including:
+- Name
+- Responsibilities (what the API does)
+- Endpoint
+- Request format
+- Response format
+- Authentication
+
+**Outputs**:
+- API Documentation using OpenAPI Specification (YAML)
+
+### Data Model
+
+**How**:
+1. For each API, list all entities (data models) it uses, including:
+   - Name
+   - Description
+   - Attributes
+2. Determine the relationships between entities
+
+**Outputs**:
+- Data Design document
+
+### Architecture
+
+**Outputs**:
+- Software Architecture Document
+
+
+## Implementation
+
+**Outputs**:
+- Application's source code
+- Setup instructions for source code
+
+
+## Testing
+
+**Outputs**:
+- Test Suite document
+- Test code (Unit tests, Integration tests, End-to-end tests, etc.)
+
+
+## Deployment
+
+**Outputs**:
+- Runtime environments: staging, production, etc.
+- Deployment Guides
+- Infrastructure code (IaC) or Deployment scripts
+- CI/CD pipelines configuration
+
+## Monitoring & Troubleshooting
+
+TBC.
