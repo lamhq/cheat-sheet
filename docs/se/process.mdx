@@ -2,85 +2,112 @@
 
 Process used in software industry to design, develop, test, and deliver software.
 
-## Ideas Collection
-
-**How**:
-- For new projects, write down what problem it solves, who will use it, key features
-- For new features, specify its purpose, and how it is used
-
-**Outputs**:
-- Project Overview Note
-- Feature Specification Notes
-
-
 ## Requirements Clarification
 
-**How**:
-- Create [Project Overview Document](./process/project-overview.mdx) from Project Overview Note
-- Create [Feature Specification Document](./process/fsd.mdx) from Feature Specification Notes
-- Update existing documents if requirements change
+**Inputs**:
+- Meeting notes, stakeholder input documents (stakeholder interviews, user research)
+- Requirements specifications, backlog items (workshops, brainstorming)
+- Market research reports, customer insights (market research)
+- Prioritized backlog, feature breakdowns (backlog grooming)
+- ...
+
+**Process**:
+- Create a Project Overview Document to capture scope, objectives, and context 
+- For each proposed feature, create a detailed Feature Specification Document
 
 **Outputs**:
-- Project Overview Document
-- Feature Specification Document (FSD)
+- [Project Overview Document](./process/project-overview.mdx)
+- [Feature Specification Document](./process/fsd.mdx) (FSD)
+
+:::note
+Each FSD defines a single feature. FSDs are grouped into modules.
+:::
+
+:::info
+A **module** (e.g., user management, payment processing) represents a collection of related features.  
+A **feature** is the smallest unit of work that can be implemented and delivered independently.
+:::
 
 
 ## Design
 
-Transform requirements of a feature into a clear technical blueprint that can be implemented by engineers.
+Translate feature requirements into a precise technical blueprint that engineers can implement.
 
-### UI
+### User Interface
 
-**How**:
-1. List all screens required for the feature
-2. For each screen, determine:
-   1. Name
-   2. Purpose
-   3. Display elements (data fetching)
-   4. User actions (data submission)
-   5. Authentication & authorization
-   6. Error handling
-   7. Validation
-   8. Accessibility requirements
-   9. Responsiveness
+**Inputs**:
+- The feature to be implemented
+- The Feature Specification Document for that feature
+
+**Process**:
+1. Identify all required screens based on the Feature Specification Document
+2. For each screen, create a dedicated UI Design Document
 
 **Outputs**:
-- UI Design Document
+- UI Design Documents for all screens of the feature
 
- 
+:::note
+Each UI Design Document defines a single screen. Like FSDs, they are organized into modules.
+:::
+
 ### API
 
-**How**:
-For each screen, list all required APIs, including:
-- Name
-- Responsibilities (what the API does)
-- Endpoint
-- Request format
-- Response format
-- Authentication
+**Inputs**:
+- The feature to be implemented  
+- UI Design Documents for the feature  
+
+**Process**:
+1. From each UI Design Document, identify required APIs  
+2. For each API, create an API Design Document
 
 **Outputs**:
-- API Documentation using OpenAPI Specification (YAML)
+- API Design Documents for all APIs of the feature  
+
+:::note
+Each API Design Document defines a single API. Like FSDs, they are organized into modules.
+:::
 
 ### Data Model
 
-**How**:
-1. For each API, list all entities (data models) it uses, including:
-   - Name
-   - Description
-   - Attributes
-2. Determine the relationships between entities
+**Inputs**:
+- API Design Documents of the module
+
+**Process**:
+1. Identify all entities referenced in the module’s APIs  
+2. Define relationships between those entities 
 
 **Outputs**:
-- Data Design document
+- Data Design Document for the module
 
-### Architecture
+:::note
+Each module has one Data Design Document describing all its entities and their relationships.
+:::
+
+### System Architecture
+
+**Inputs**:
+- The feature to be implemented  
+- Feature Specification Document
+- API Design Documents for the feature
+
+**Process**: see [System Design Process](./system-design.mdx#system-design-process) section.
 
 **Outputs**:
-- Software Architecture Document
+- System Architecture Document
 
 
 ## Implementation
+
+**Inputs**:
+- The feature to implement
+- Feature Specification Document
+- UI Design Documents
+- API Design Documents
+- Data Design Document
+- System Architecture Document
+- Project Structure Document
+- Coding standards
+- Coding recipes
 
 **Outputs**:
 - Application's source code
