@@ -44,20 +44,20 @@ Translate feature requirements into a precise technical blueprint that engineers
 2. For each screen, create a dedicated UI Design Document
 
 **Outputs**:
-- UI Design Documents for all screens of the feature
+- UI Specification Documents for all screens of the feature
 
 :::note
-Each UI Design Document defines a single screen. Like FSDs, they are organized into modules.
+Each UI Specification Document defines a single screen. Like FSDs, they are organized into modules.
 :::
 
 ### API
 
 **Inputs**:
 - The feature to be implemented  
-- UI Design Documents for the feature  
+- UI Specification Documents for the feature
 
 **Process**:
-1. From each UI Design Document, identify required APIs  
+1. From each UI Specification Document, identify required APIs  
 2. For each API, create an API Design Document
 
 **Outputs**:
@@ -101,13 +101,11 @@ Each module has one Data Design Document describing all its entities and their r
 **Inputs**:
 - The feature to implement
 - Feature Specification Document
-- UI Design Documents
-- API Design Documents
-- Data Design Document
-- System Architecture Document
-- Project Structure Document
-- Coding standards
-- Coding recipes
+- UI Specification Documents (for frontend implementation)
+- API Design Documents, Data Design Document, System Architecture Document(for backend implementation)
+- Repository Structure Document (how the code base is organized)
+- Coding standards (rules for writing code)
+- Coding recipes (code snippets for common tasks)
 
 **Outputs**:
 - Application's source code
