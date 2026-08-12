@@ -2,7 +2,7 @@
 
 Process used in software industry to design, develop, test, and deliver software.
 
-## Requirements Clarification
+## Requirements Analysis
 
 **Inputs**:
 - Meeting notes, stakeholder input documents (stakeholder interviews, user research)
@@ -17,7 +17,7 @@ Process used in software industry to design, develop, test, and deliver software
 
 **Outputs**:
 - [Project Overview Document](./process/project-overview.mdx)
-- [Feature Specification Document](./process/fsd.mdx) (FSD)
+- [Feature Specification Document](./process/requirements/fsd.mdx) (FSD)
 
 :::note
 Each FSD defines a single feature. FSDs are grouped into modules.
@@ -44,7 +44,7 @@ Translate feature requirements into a precise technical blueprint that engineers
 2. For each screen, create a dedicated UI Design Document
 
 **Outputs**:
-- UI Specification Documents for all screens of the feature
+- [UI Specification Documents](./process/design/ui-spec.mdx) for all screens of the feature
 
 :::note
 Each UI Specification Document defines a single screen. Like FSDs, they are organized into modules.
@@ -58,29 +58,30 @@ Each UI Specification Document defines a single screen. Like FSDs, they are orga
 
 **Process**:
 1. From each UI Specification Document, identify required APIs  
-2. For each API, create an API Design Document
+2. For each API, create an API Specification Document
 
 **Outputs**:
-- API Design Documents for all APIs of the feature  
+- [API Specification Documents](./process/design/api-spec.mdx) for all APIs of the feature
 
 :::note
-Each API Design Document defines a single API. Like FSDs, they are organized into modules.
+Each API Specification Document defines a single API. Like FSDs, they are organized into modules.
 :::
 
 ### Data Model
 
 **Inputs**:
-- API Design Documents of the module
+- API Specification Documents of a module
 
 **Process**:
-1. Identify all entities referenced in the module’s APIs  
-2. Define relationships between those entities 
+1. Identify all entities referenced in the module's APIs
+2. Define attributes and their constraints for each entity
+3. Define relationships between those entities 
 
 **Outputs**:
-- Data Design Document for the module
+- [Data Model Document](./process/design/dmd.mdx)
 
 :::note
-Each module has one Data Design Document describing all its entities and their relationships.
+Each module has one Data Model Document describing all its entities and their relationships.
 :::
 
 ### System Architecture
@@ -88,12 +89,13 @@ Each module has one Data Design Document describing all its entities and their r
 **Inputs**:
 - The feature to be implemented  
 - Feature Specification Document
-- API Design Documents for the feature
+- API Specification Documents for the feature
 
 **Process**: see [System Design Process](./system-design.mdx#system-design-process) section.
 
 **Outputs**:
-- System Architecture Document
+- [Architecture Overview Document](./process/design/arch-overview.mdx)
+- [Component Design Documents](./process/design/comp-design.mdx)
 
 
 ## Implementation
@@ -102,7 +104,7 @@ Each module has one Data Design Document describing all its entities and their r
 - The feature to implement
 - Feature Specification Document
 - UI Specification Documents (for frontend implementation)
-- API Design Documents, Data Design Document, System Architecture Document(for backend implementation)
+- API Specification Documents, Data Model Document, System Architecture Document(for backend implementation)
 - Repository Structure Document (how the code base is organized)
 - Coding standards (rules for writing code)
 - Coding recipes (code snippets for common tasks)

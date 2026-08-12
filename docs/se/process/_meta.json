@@ -1,6 +1,12 @@
 [
   "project-overview",
-  "fsd",
+  {
+    "type": "dir",
+    "name": "requirements",
+    "label": "Requirements Analysis",
+    "collapsed": true,
+    "collapsible": true
+  },
   {
     "type": "dir",
     "name": "design",

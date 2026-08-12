@@ -1,0 +1,39 @@
+# Data Model Document
+
+Guide for writing Data Model Documents.
+
+## Introduction
+
+A Data Model Document is a formal specification that describes the data model of a system/module.
+
+Its purpose is to:
+- Define entities, attributes, and relationships clearly.
+- Support database design by providing a high-level view.
+- Facilitate communication between technical and non-technical teams by focusing on concepts rather than schema details.
+
+
+
+## Document Structure
+
+The document typically includes the following sections:
+
+### Introduction
+- Purpose of the document (to describe the data model of the system/module).
+- A high-level ER diagram (Mermaid syntax) showing entity names, relationships, and cardinality.
+
+### Entity Name
+- **Description:** Brief introduction to the entity
+- **Attributes:** Table listing attributes with name, type, and description
+- **Relationships:** Table of relationships with other entities, including type and cardinality
+
+### Changelog
+- Version history of the Data Model Document.
+- Notes on added, deprecated, or removed entities, attributes, or relationships.
+
+
+## Examples
+
+### User Management Data Model
+
+```md file="../examples/dmd.mdx"
+```
