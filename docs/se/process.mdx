@@ -67,21 +67,29 @@ Each UI Specification Document defines a single screen. Like FSDs, they are orga
 Each API Specification Document defines a single API. Like FSDs, they are organized into modules.
 :::
 
-### Data Model
+### Database
 
 **Inputs**:
 - API Specification Documents of a module
 
 **Process**:
-1. Identify all entities referenced in the module's APIs
-2. Define attributes and their constraints for each entity
-3. Define relationships between those entities 
+1. **Design the Logical Model**  
+   - Identify entities and relationships based on API contract.
+   - Define attributes, primary keys, foreign keys
+   - Apply normalization rules (e.g., 1NF, 2NF, 3NF) to reduce redundancy and ensure integrity.  
+
+2. **Define the Physical Schema**  
+   - Translate logical entities into physical structures (tables in SQL, collections in NoSQL).  
+   - Assign appropriate data types to each attribute based on DBMS capabilities.  
+   - Implement constraints (primary keys, foreign keys, unique, check).  
+   - Design indexes for query optimization and performance.  
+   - Specify storage details (partitioning, sharding, clustering) as needed.  
 
 **Outputs**:
-- [Data Model Document](./process/design/dmd.mdx)
+- [Database Design Document](./process/design/dbd.mdx)
 
 :::note
-Each module has one Data Model Document describing all its entities and their relationships.
+Each module has one Database Design Document describing all its entities and their relationships.
 :::
 
 ### System Architecture
@@ -103,11 +111,11 @@ Each module has one Data Model Document describing all its entities and their re
 **Inputs**:
 - The feature to implement
 - Feature Specification Document
-- UI Specification Documents (for frontend implementation)
-- API Specification Documents, Data Model Document, System Architecture Document(for backend implementation)
-- Repository Structure Document (how the code base is organized)
 - Coding standards (rules for writing code)
 - Coding recipes (code snippets for common tasks)
+- Project Structure Document (how the code base is organized)
+- Frontend: UI Specification Documents
+- Backend: API Specification Documents, Database Design Document, Architecture Overview Document, Component Design Documents
 
 **Outputs**:
 - Application's source code
