@@ -95,12 +95,22 @@ Maintaining a utility-first CSS project is a lot easier than maintaining a large
 
 Install [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss) extension.
 
-Features included:
-- Autocomplete. Intelligent suggestions for class names, as well as CSS functions and directives.
-- Linting. Highlights errors and potential bugs in both your CSS and your markup.
-- Hover Previews. See the complete CSS for a Tailwind class name by hovering over it.
-- Syntax Highlighting. Provides syntax definitions so that Tailwind features are highlighted correctly.
+Update VS Code Settings:
 
+```json title=".vscode/settings.json"
+{
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "editor.quickSuggestions": {
+    "strings": "on"
+  }
+}
+```
+
+The configuration tells VS Code to:
+- always open `.css` files in Tailwind CSS mode
+- trigger completions when editing class names
 
 ### Prettier
 

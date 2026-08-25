@@ -13,20 +13,19 @@ The document typically includes the following sections:
 ### Introduction
 
 - **Purpose**: to describe the data model of the system/module.
-- **Diagram**: include a high-level ER diagram showing entity names, relationships, and cardinality.
 
 ### Logical Model
 
+- **Diagram**: include a logical ER diagram showing entity names, relationships, and cardinality.
 - **Entities**: List all entities derived from APIs or business requirements.  
-- **Attributes:** Show a table of attributes with name, type, and description
+- **Attributes:** Show a table of attributes with name, type, constraints, and description
 - **Relationships:** Show a table of relationships with other entities, including type and cardinality
 - **Normalization**: Ensures data is structured to reduce redundancy and maintain integrity (e.g., 1NF, 2NF, 3NF).
 
 ### Physical Model
 
-- **Tables/collections**: Show how logical entities are implemented as tables (SQL) or collections (NoSQL).
-- **Data Types**: Columns/fields with DBMS‑specific data types
-- **Constraints**: Implement primary keys, foreign keys, unique, and check constraints.  
+- **Tables/collections**: list all database tables (SQL) or collections (NoSQL).
+- **Data Types**: show a table with column/field name, DBMS‑specific data types, constraints (PK, FK, unique, etc.)
 - **Indexes**: Define indexing strategies for performance optimization.  
 - **Storage Details**: Document partitioning, sharding, clustering, or other DBMS‑specific features.  
 - **Sample DDL**: Provide SQL or JSON schema snippets to illustrate implementation.  

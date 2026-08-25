@@ -55,6 +55,7 @@ Each UI Specification Document defines a single screen. Like FSDs, they are orga
 **Inputs**:
 - The feature to be implemented  
 - UI Specification Documents for the feature
+- API Design Standards
 
 **Process**:
 1. From each UI Specification Document, identify required APIs  
@@ -71,6 +72,7 @@ Each API Specification Document defines a single API. Like FSDs, they are organi
 
 **Inputs**:
 - API Specification Documents of a module
+- Database Design Standards
 
 **Process**:
 1. **Design the Logical Model**  
@@ -109,17 +111,20 @@ Each module has one Database Design Document describing all its entities and the
 ## Implementation
 
 **Inputs**:
-- The feature to implement
 - Feature Specification Document
+- Frontend: 
+  - UI Specification Documents
+- Backend:
+  - API Specification Documents
+  - Database Design Document
+  - Architecture Overview Document
+  - Component Design Documents
 - Coding standards (rules for writing code)
 - Coding recipes (code snippets for common tasks)
 - Project Structure Document (how the code base is organized)
-- Frontend: UI Specification Documents
-- Backend: API Specification Documents, Database Design Document, Architecture Overview Document, Component Design Documents
 
 **Outputs**:
 - Application's source code
-- Setup instructions for source code
 
 
 ## Testing

@@ -4,6 +4,8 @@
 
 This document describes the database design of the **User Management Module**.
 
+## Logical Model
+
 ```mermaid
 erDiagram
     User {
@@ -25,26 +27,24 @@ erDiagram
     Role ||--o{ Assignment : "defines"
 ```
 
-## Logical Model
-
 ### User
 
 Represents an individual registered in the system.
 
 **Attributes:**
 
-| Attribute Name | Type | Description |
-| --- | --- | --- |
-| UserId | String | Unique identifier for the user (Primary Key) |
-| Username | String | Login name chosen by the user (Unique) |
-| Email | String | User's email address |
-| Status | String (Active/Inactive) | Current account status |
+| Attribute Name | Type                     | Description                                  |
+| -------------- | ------------------------ | -------------------------------------------- |
+| UserId         | String                   | Unique identifier for the user (Primary Key) |
+| Username       | String                   | Login name chosen by the user (Unique)       |
+| Email          | String                   | User's email address                         |
+| Status         | String (Active/Inactive) | Current account status                       |
 
 **Relationships:**
 
-| Related Entity | Type | Cardinality | Description |
-| --- | --- | --- | --- |
-| Assignment | One-to-Many | 1..* | A user can have multiple role assignments |
+| Related Entity | Type        | Cardinality | Description                               |
+| -------------- | ----------- | ----------- | ----------------------------------------- |
+| Assignment     | One-to-Many | 1..\*       | A user can have multiple role assignments |
 
 ### Role
 
@@ -52,18 +52,18 @@ Defines a set of permissions or responsibilities.
 
 **Attributes:**
 
-| Attribute Name | Type | Description |
-| --- | --- | --- |
-| RoleId | String | Unique identifier for the role (Primary Key) |
-| Name | String | Name of the role (e.g., Admin, Editor) (Unique) |
-| Description | String | Explanation of the role's purpose |
-| CreatedAt | Timestamp | Role creation timestamp |
+| Attribute Name | Type      | Description                                     |
+| -------------- | --------- | ----------------------------------------------- |
+| RoleId         | String    | Unique identifier for the role (Primary Key)    |
+| Name           | String    | Name of the role (e.g., Admin, Editor) (Unique) |
+| Description    | String    | Explanation of the role's purpose               |
+| CreatedAt      | Timestamp | Role creation timestamp                         |
 
 **Relationships:**
 
-| Related Entity | Type | Cardinality | Description |
-| --- | --- | --- | --- |
-| Assignment | One-to-Many | 1..* | A role can be linked to multiple assignments |
+| Related Entity | Type        | Cardinality | Description                                  |
+| -------------- | ----------- | ----------- | -------------------------------------------- |
+| Assignment     | One-to-Many | 1..\*       | A role can be linked to multiple assignments |
 
 ### Assignment
 
@@ -71,18 +71,18 @@ Associative entity linking users and roles.
 
 **Attributes:**
 
-| Attribute Name | Type | Description |
-| --- | --- | --- |
-| UserId | String | Reference to User (Foreign Key, Primary Key) |
-| RoleId | String | Reference to Role (Foreign Key, Primary Key) |
-| AssignedAt | Timestamp | Timestamp when the role was assigned |
+| Attribute Name | Type      | Description                                  |
+| -------------- | --------- | -------------------------------------------- |
+| UserId         | String    | Reference to User (Foreign Key, Primary Key) |
+| RoleId         | String    | Reference to Role (Foreign Key, Primary Key) |
+| AssignedAt     | Timestamp | Timestamp when the role was assigned         |
 
 **Relationships:**
 
-| Related Entity | Type | Cardinality | Description |
-| --- | --- | --- | --- |
-| User | Many-to-One | *..1 | Each assignment belongs to one user |
-| Role | Many-to-One | *..1 | Each assignment belongs to one role |
+| Related Entity | Type        | Cardinality | Description                         |
+| -------------- | ----------- | ----------- | ----------------------------------- |
+| User           | Many-to-One | \*..1       | Each assignment belongs to one user |
+| Role           | Many-to-One | \*..1       | Each assignment belongs to one role |
 
 ## Physical Model
 
@@ -90,48 +90,48 @@ Associative entity linking users and roles.
 
 Stores user account documents.
 
-| Field | Data Type | Constraints | Description |
-| --- | --- | --- | --- |
-| _id | ObjectId | Primary key, auto-generated | Unique document identifier |
-| username | String | Unique, required | Login username |
-| email | String | Unique, required | User email address |
-| status | String | Allowed values: Active, Inactive; default: Active | Account status |
-| createdAt | Date | Required, default `new Date()` | Creation timestamp |
-| updatedAt | Date | Required, default `new Date()` | Last modification timestamp |
+| Field     | Data Type | Constraints                                       | Description                 |
+| --------- | --------- | ------------------------------------------------- | --------------------------- |
+| \_id      | ObjectId  | Primary key, auto-generated                       | Unique document identifier  |
+| username  | String    | Unique, required                                  | Login username              |
+| email     | String    | Unique, required                                  | User email address          |
+| status    | String    | Allowed values: Active, Inactive; default: Active | Account status              |
+| createdAt | Date      | Required, default `new Date()`                    | Creation timestamp          |
+| updatedAt | Date      | Required, default `new Date()`                    | Last modification timestamp |
 
 ### `roles` collection
 
 Stores role definitions.
 
-| Field | Data Type | Constraints | Description |
-| --- | --- | --- | --- |
-| _id | ObjectId | Primary key, auto-generated | Unique role identifier |
-| name | String | Unique, required | Role name |
-| description | String | Optional | Role purpose or permissions |
-| createdAt | Date | Required, default `new Date()` | Role creation timestamp |
+| Field       | Data Type | Constraints                    | Description                 |
+| ----------- | --------- | ------------------------------ | --------------------------- |
+| \_id        | ObjectId  | Primary key, auto-generated    | Unique role identifier      |
+| name        | String    | Unique, required               | Role name                   |
+| description | String    | Optional                       | Role purpose or permissions |
+| createdAt   | Date      | Required, default `new Date()` | Role creation timestamp     |
 
 ### `assignments` collection
 
 Stores user-to-role membership records.
 
-| Field | Data Type | Constraints | Description |
-| --- | --- | --- | --- |
-| _id | ObjectId | Primary key, auto-generated | Unique assignment identifier |
-| userId | ObjectId | Required, indexed | Reference to user document |
-| roleId | ObjectId | Required, indexed | Reference to role document |
-| assignedAt | Date | Required, default `new Date()` | Assignment timestamp |
+| Field      | Data Type | Constraints                    | Description                  |
+| ---------- | --------- | ------------------------------ | ---------------------------- |
+| \_id       | ObjectId  | Primary key, auto-generated    | Unique assignment identifier |
+| userId     | ObjectId  | Required, indexed              | Reference to user document   |
+| roleId     | ObjectId  | Required, indexed              | Reference to role document   |
+| assignedAt | Date      | Required, default `new Date()` | Assignment timestamp         |
 
 ### Indexes
 
 Performance optimization indexes:
 
-| Collection | Fields | Type | Purpose |
-| --- | --- | --- | --- |
-| users | email | UNIQUE | Fast lookup by email during authentication |
-| users | username | UNIQUE | Fast lookup by username |
-| assignments | userId | INDEX | Efficient queries for a user's role assignments |
-| assignments | roleId | INDEX | Efficient queries for a role's member list |
-| assignments | (userId, roleId) | UNIQUE INDEX | Prevent duplicate assignments |
+| Collection  | Fields           | Type         | Purpose                                         |
+| ----------- | ---------------- | ------------ | ----------------------------------------------- |
+| users       | email            | UNIQUE       | Fast lookup by email during authentication      |
+| users       | username         | UNIQUE       | Fast lookup by username                         |
+| assignments | userId           | INDEX        | Efficient queries for a user's role assignments |
+| assignments | roleId           | INDEX        | Efficient queries for a role's member list      |
+| assignments | (userId, roleId) | UNIQUE INDEX | Prevent duplicate assignments                   |
 
 ### Storage Details
 
@@ -156,13 +156,13 @@ db.createCollection("users", {
         email: { bsonType: "string", pattern: "^[^@]+@[^@]+\\.[^@]+$" },
         status: {
           bsonType: "string",
-          enum: ["Active", "Inactive"]
+          enum: ["Active", "Inactive"],
         },
         createdAt: { bsonType: "date" },
-        updatedAt: { bsonType: "date" }
-      }
-    }
-  }
+        updatedAt: { bsonType: "date" },
+      },
+    },
+  },
 });
 
 db.users.createIndex({ username: 1 }, { unique: true });
@@ -184,12 +184,12 @@ db.users.insertOne({
   email: "alice@example.com",
   status: "Active",
   createdAt: new Date(),
-  updatedAt: new Date()
+  updatedAt: new Date(),
 });
 ```
 
 ## Changelog
 
-| Version | Date | Changes |
-| --- | --- | --- |
-| 1.0 | 2026-08-12 | Initial conceptual draft with User, Role, and Assignment entities |
+| Version | Date       | Changes                                                           |
+| ------- | ---------- | ----------------------------------------------------------------- |
+| 1.0     | 2026-08-12 | Initial conceptual draft with User, Role, and Assignment entities |

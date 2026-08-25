@@ -1,7 +1,7 @@
 [
   "ui-spec",
   "api-spec",
-  "dmd",
+  "dbd",
   "arch-overview",
   "comp-design"
 ]

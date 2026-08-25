@@ -27,6 +27,11 @@
     "label": "Next.js"
   },
   {
+    "name": "shadcn-ui",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
     "name": "rspress",
     "type": "dir",
     "collapsible": true,
@@ -99,6 +104,13 @@
     "collapsed": true
   },
   {
+    "name": "svg",
+    "label": "SVG",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
     "name": "puppeteer",
     "label": "Puppeteer",
     "type": "dir",
@@ -115,13 +127,6 @@
   {
     "name": "styled-system",
     "label": "Styled System",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  },
-  {
-    "name": "svg",
-    "label": "SVG",
     "type": "dir",
     "collapsible": true,
     "collapsed": true

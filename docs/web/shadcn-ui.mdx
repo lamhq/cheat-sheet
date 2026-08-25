@@ -1,0 +1,334 @@
+import { PackageManagerTabs } from '@theme'
+
+# Shadcn UI
+
+## Introduction
+
+Shadcn UI is an open-source React component system that gives you the actual source code for UI components.
+
+You run a CLI to copy component source files directly into your project, instead of importing from npm.
+
+## Why Shadcn UI?
+
+- **Full Code Ownership** – You control the component code. No vendor lock-in.
+- **Tailwind-First Styling** – Utility-based styling scales have consistency and are easily themed.
+- **Accessibility by Default** – Based on Radix primitives, making use of keyboard navigation and ARIA support.
+- **Modern Architecture** – Compatible with Server Components, Client Components, and integrates smoothly with frameworks like Next.js, Vite and other latest React environments.
+- **Design System Friendly** – Suited to work on custom design systems by teams that do not need to recreate base components.
+
+## Installation
+
+Install and configure shadcn/ui for existing Vite projects:
+
+1. Create a new Vite project
+2. Add Tailwind CSS
+3. Configure path aliases
+4. Update Vite configuration
+5. Initialize shadcn/ui
+6. Add Components
+
+Reference: https://ui.shadcn.com/docs/installation/vite
+
+### Configure path aliases
+
+Vite splits TypeScript configuration across multiple files.
+
+First, add path aliases to your `tsconfig.json`:
+
+```json title="tsconfig.json"
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ],
+  "compilerOptions": {
+    // [!code highlight:3]
+    "paths": {
+      "@/*": ["./src/shadcn/*"]
+    }
+  }
+}
+```
+
+Do the same to `tsconfig.app.json` so your editor can resolve imports:
+
+```json title="tsconfig.app.json"
+{
+  "compilerOptions": {
+    // [!code highlight:3]
+    "paths": {
+      "@/*": ["./src/shadcn/*"]
+    }
+  }
+}
+```
+
+:::info
+`baseUrl` is deprecated in TypeScript 6, so you must define paths relative to TypeScript configuration file.
+:::
+
+:::note
+In the above setup, Shadcn-generated files will be under `src/shadcn` to ensure easier maintainability.
+:::
+
+### Update Vite configuration
+
+Update `vite.config.ts` so Vite can resolve the `@` alias:
+
+```ts title="vite.config.ts"
+// [!code highlight]
+import path from "path"
+import tailwindcss from "@tailwindcss/vite"
+import react from "@vitejs/plugin-react"
+import { defineConfig } from "vite"
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+  // [!code highlight:5]
+  resolve: {
+    alias: {
+      "@": path.resolve(import.meta.dirname, "./src/shadcn"),
+    },
+  },
+})
+```
+
+### Initialize shadcn/ui
+
+Initialize Shadcn UI:
+
+<PackageManagerTabs
+  command={{
+    pnpm: 'pnpm dlx shadcn@latest init',
+    npm: 'npx shadcn@latest init',
+    bun: 'bunx --bun shadcn@latest init',
+  }}
+/>
+
+Initialize from a preset:
+
+<PackageManagerTabs
+  command={{
+    pnpm: 'pnpm dlx shadcn@latest init --preset b5dLchQzg --template vite --pointer',
+    npm: 'npx shadcn@latest init --preset b5dLchQzg --template vite --pointer',
+    bun: 'bunx --bun shadcn@latest init --preset b5dLchQzg --template vite --pointer',
+  }}
+/>
+
+The CLI will:
+
+- Add utility helpers (like `cn()`)
+- Install dependencies
+- Create a `components/ui` folder
+
+### Add Components
+
+Add a component to your project:
+
+<PackageManagerTabs
+  command={{
+    pnpm: 'pnpm dlx shadcn@latest add button',
+    npm: 'npx shadcn@latest add button',
+    bun: 'bunx --bun shadcn@latest add button',
+  }}
+/>
+
+Add multiple components at once:
+
+<PackageManagerTabs
+  command={{
+    pnpm: 'pnpm dlx shadcn@latest add button input select',
+    npm: 'npx shadcn@latest add button input select',
+    bun: 'bunx --bun shadcn@latest add button input select',
+  }}
+/>
+
+Overwrite existing component:
+
+<PackageManagerTabs
+  command={{
+    pnpm: 'pnpm dlx shadcn@latest add button --overwrite',
+    npm: 'npx shadcn@latest add button --overwrite',
+    bun: 'bunx --bun shadcn@latest add button --overwrite',
+  }}
+/>
+
+Use the component:
+
+```tsx
+import { Button } from "@/components/ui/button"
+
+export default function App() {
+  return (
+    <div className="flex min-h-svh flex-col items-center justify-center">
+      <Button>Click me</Button>
+    </div>
+  )
+}
+```
+
+## Theming 
+
+### How it works
+
+Shadcn UI use CSS variables for theming.
+
+It gives you semantic theme tokens (like `background`, `foreground`, and `primary`). Tailwind maps these tokens into utilities (like `bg-background`, `text-foreground`, `border-border`).
+
+Override those tokens in your CSS to change the look of your app without rewriting component classes.
+
+Dark mode is handled by overriding the same tokens inside a `.dark` selector.
+
+### Prerequisites
+
+To use CSS variables for theming, set `tailwind.cssVariables` to `true`:
+
+```json title="components.json"
+{
+  "style": "base-nova",
+  "rsc": true,
+  "tailwind": {
+    "config": "",
+    "css": "app/globals.css",
+    "baseColor": "neutral",
+    // [!code highlight]
+    "cssVariables": true
+  }
+}
+```
+
+### Example
+
+Given the following CSS variables:
+
+```css
+--primary: oklch(0.205 0 0);
+--primary-foreground: oklch(0.985 0 0);
+```
+
+The `background` color of the following component will be `var(--primary)` and the `foreground` color will be `var(--primary-foreground)`.
+
+```tsx
+<div className="bg-primary text-primary-foreground">Hello</div>
+```
+
+### Theme Tokens Reference
+
+See https://ui.shadcn.com/docs/theming#theme-tokens.
+
+### Adding New Tokens
+
+To add a new token, define it under `:root` and `.dark`, then expose it to Tailwind with `@theme inline`.
+
+```css title="app/globals.css" showLineNumbers
+:root {
+  --warning: oklch(0.84 0.16 84);
+  --warning-foreground: oklch(0.28 0.07 46);
+}
+
+.dark {
+  --warning: oklch(0.41 0.11 46);
+  --warning-foreground: oklch(0.99 0.02 95);
+}
+
+@theme inline {
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+}
+```
+
+You can now use `bg-warning` and `text-warning-foreground` in your components.
+
+```tsx /bg-warning/ /text-warning-foreground/
+<div className="bg-warning text-warning-foreground" />
+```
+
+## AI Skill
+
+Install the AI Skill to let your AI assistant knows how to find, install, compose, and customize components using the correct APIs and patterns for your project.
+
+For example, you can ask your AI assistant to:
+
+- _"Add a login form with email and password fields."_
+- _"Create a settings page with a form for updating profile information."_
+- _"Build a dashboard with a sidebar, stats cards, and a data table."_
+- _"Switch to --preset [CODE]"_
+- _"Can you add a hero from @tailark?"_
+
+<PackageManagerTabs
+  command={{
+    pnpm: 'pnpm dlx skills add shadcn/ui',
+    npm: 'npx skills add shadcn/ui',
+    bun: 'bunx --bun skills add shadcn/ui',
+  }}
+/>
+
+
+## Configuration
+
+The `components.json` file is the central configuration file used by the CLI to generate and customize components in your project.
+
+It defines:
+- **Project configuration**: Guides the CLI on where to place files and how to structure imports.  
+- **Style**: Determines the visual style variant (e.g., `"new-york"`).  
+- **Tailwind integration**: Specifies Tailwind config, CSS file, base color, and whether to use CSS variables.  
+- **Language choice**: Choose between TypeScript or JavaScript components. 
+- **React Server Components (RSC)**: Whether or not to enable support for React Server Components.
+- **Aliases**: Maps directories like `@/components` or `@/lib/utils` for cleaner imports.
+
+If you're only copy-pasting components manually, you don't need this file.
+
+```json
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": false,
+  "tsx": true,
+  "tailwind": {
+    "config": "tailwind.config.js",
+    "css": "app/globals.css",
+    "baseColor": "zinc",
+    "cssVariables": true,
+    "prefix": "tw-"
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils"
+  }
+}
+```
+
+### Aliases
+
+Configure aliases using tsconfig paths:
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/components/*": ["components/*"],
+      "@/lib/utils": ["lib/utils"]
+    }
+  }
+}
+```
+
+The aliases in `components.json` are still required when using the CLI. They tell the CLI which import roots map to `components`, `ui`, `lib`, `hooks`, and `utils`.
+
+
+## Recommended folder structure
+
+```
+components/
+  ui/
+  shared/
+lib/
+  utils.ts
+```
+
+## References
+
+- Component Catalog: https://shadcnstore.com/docs/cheatsheet
