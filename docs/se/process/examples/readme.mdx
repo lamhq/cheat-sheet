@@ -1,0 +1,84 @@
+# FoodOrder API
+
+## Introduction
+
+API for FoodOrder application, providing endpoints for managing orders, customers, and menu items.
+
+## Prerequisites
+
+- Node.js 18 or later
+- npm 9 or later
+- MongoDB running locally or via Docker
+- Docker Desktop for local service management (optional)
+
+## Installation
+
+```bash
+git clone https://github.com/username/repo-name.git
+cd repo-name
+cp .env.example .env
+npm install
+```
+
+## Getting Started
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Initialize local data if required:
+
+```bash
+npm run db:seed
+```
+
+## Useful Commands
+
+Run automated tests:
+
+```bash
+npm test
+```
+
+Perform type checks:
+
+```bash
+npm run typecheck
+```
+
+Lint the codebase:
+
+```bash
+npm run lint
+```
+
+Build the project for production:
+
+```bash
+npm run build
+```
+
+Manage dependencies:
+
+```bash
+npm install
+npm install <package-name>
+npm uninstall <package-name>
+```
+
+## Repository Structure
+
+```
+repo-name/
+├── src/            # Main source code
+│   ├── index.js    # Entry point of the application
+│   └── utils/      # Helper functions and utilities
+├── tests/          # Unit and integration tests
+├── docs/           # Documentation files
+├── package.json    # Project metadata and dependencies
+├── .eslintrc.js    # Linting configuration
+├── .gitignore      # Files ignored by Git
+└── README.md       # Repository guide
+```

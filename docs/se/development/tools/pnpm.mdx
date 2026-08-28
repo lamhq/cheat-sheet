@@ -4,9 +4,6 @@
 
 pnpm (Performant Node Package Manager) is a package manager for JavaScript.
 
-It's particularly loved for its speed and reliability compared to npm and Yarn.
-
-
 ## Why pnpm
 
 - Saving disk space. It creates a single version of each package and hard-links them across projects.
@@ -16,22 +13,246 @@ It's particularly loved for its speed and reliability compared to npm and Yarn.
 
 ## Installation
 
-Install pnpm to your machince using standalone script. It allows you to install and manage multiple versions of Node.js.
-
 ```sh
 curl -fsSL https://get.pnpm.io/install.sh | sh -
 ```
 
-You can install a specific version:
+Install a specific version:
+
 ```sh
 curl -fsSL https://get.pnpm.io/install.sh | env PNPM_VERSION=<version> sh -
 ```
 
 ### Making alias
 
-`pnpm` might be hard to type, so you may use a shorter alias like `pn` instead.
+Create a shorter alias like `pn` for `pnpm` (macOS):
 
-For POSIX systems (like macOS), just put the following line to your `.bashrc`, `.zshrc`, or `config.fish`:
-```sh
+```sh title="~/.zshrc"
 alias pn=pnpm
+```
+
+
+## Manage dependencies
+
+**Install dependencies** in `package.json`:
+
+```sh
+pnpm i
+```
+
+:::info
+If `NODE_ENV=development` (or not set), both `dependencies` and `devDependencies` are installed.
+
+If `NODE_ENV=production`, only `dependencies` and `optionalDependencies` are installed (`devDependencies` won't be installed).
+:::
+
+**Install for production** (same when `NODE_ENV=production`):
+```sh
+pnpm i -P
+```
+
+**Install in CI environment** (`pnpm-lock.yaml` is not updated):
+```sh
+pnpm i --frozen-lockfile
+```
+
+:::info
+If `CI=true` is set, no need to specify `--frozen-lockfile`
+:::
+
+### Add packages
+
+Add to `dependencies`:
+```sh
+pnpm add <package>@<version>
+```
+
+Add to `devDependencies`:
+
+```sh
+pnpm add -D <package>
+```
+
+### Remove packages
+
+Remove a local package:
+```sh
+pnpm remove <package>
+```
+
+Remove packages not declared in `package.json` (and lockfile) from `node_modules`:
+```sh
+pnpm prune
+```
+
+### Find outdated packages
+
+```sh
+pnpm outdated
+```
+
+### Upgrade packages
+
+Update project's dependencies to their latest versions within semver ranges:
+
+```sh
+pnpm up
+```
+
+Upgrade to the absolute latest version (ignoring semver ranges):
+
+```sh
+pnpm up --latest
+```
+
+## Global packages
+
+List globally installed packages:
+
+```sh
+pnpm list -g --depth=0
+```
+
+Install package globally:
+
+```sh
+pnpm add -g <package>
+```
+
+Remove a globally installed package:
+
+```sh
+pnpm remove -g <package>
+```
+
+
+## Run scripts
+
+Execute a script defined in `package.json`:
+
+```sh
+pnpm run <command>
+```
+
+Examples:
+
+```sh
+# run the `test` script
+pnpm test
+```
+
+
+## Run package binaries
+
+Run a locally installed dependency from `node_modules`:
+
+```sh
+pnpm exec jest
+```
+
+Execute a remote package (not installed yet):
+
+```sh
+pnpm dlx create-react-app ./my-app
+
+# or using alias pnpx
+pnpx create-react-app ./my-app
+```
+
+
+## Migrate from other package manager
+
+Generate a lockfile from another package manager's lockfile:
+
+```sh
+pnpm import
+```
+
+Supported source files:
+- `package-lock.json`
+- `npm-shrinkwrap.json`
+- `yarn.lock`
+
+
+## Workspace
+
+Run commands in a PNPM Workspace.
+
+:::note
+The workspace package name is defined inside the `package.json` file of each individual sub-project (package or app), in the top-level `"name"` field.
+:::
+
+### Add packages
+
+Adds a dependency to a workspace package:
+
+```bash
+pnpm -F <package> add <dep>
+```
+
+Add a dependency to the workspace root (e.g., shared dev tools like ESLint, Prettier, or TypeScript):
+
+```bash
+pnpm add -w <dep>
+```
+
+Examples:
+
+```bash
+# Add `lodash` for `web` project
+pnpm -F web add lodash
+
+# Add TypeScript at the monorepo root
+pnpm add -D -w typescript
+```
+
+### Remove packages
+
+Remove a dependency from a workspace package:
+
+```bash
+pnpm -F <package> remove <dep>
+```
+
+
+### Running scripts
+
+Run a script/command in a workspace package:
+
+```bash
+pnpm -F <package> run <command>
+```
+
+Run a command across all workspace packages:
+
+```bash
+pnpm -r run <command>
+```
+
+Run `<command>` in `<package>` and all packages that depend on it:
+
+```bash
+pnpm -F ...<package> run <command>
+```
+
+
+### Running binaries
+
+Run a local installed binary from a workspace package:
+
+```bash
+pnpm -F <package> exec <command> [args...]
+```
+
+Examples:
+
+```bash
+# Run 'prisma migrate dev' inside the 'backend' package
+pnpm -F backend exec prisma migrate dev
+
+# run `playwright test` in the `web-e2e` package
+pnpm -F web-e2e exec playwright test
+
+# Run the `shadcn add button` command inside the `web` package
+pnpm -F web exec shadcn add button
 ```

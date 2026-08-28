@@ -12,12 +12,22 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
+  InputGroupTextarea,
+} from "@/components/ui/input-group"
 
 const formSchema = z.object({
-  content: z
+  title: z
     .string()
-    .min(5, "Content must be at least 5 characters.")
-    .max(32, "Content must be at most 32 characters.")
+    .min(5, "Bug title must be at least 5 characters.")
+    .max(32, "Bug title must be at most 32 characters."),
+  description: z
+    .string()
+    .min(5, "Description must be at least 5 characters.")
+    .max(32, "Description must be at most 32 characters.")
 })
 
 type FormData = z.infer<typeof formSchema>
@@ -27,7 +37,8 @@ export default function DemoForm() {
     resolver: zodResolver(formSchema),
     mode: "onChange", // Validation triggers on every change
     defaultValues: {
-      content: "",
+      title: "",
+      description: "",
     },
   })
 
@@ -47,27 +58,55 @@ export default function DemoForm() {
       <form id="basic-form" onSubmit={form.handleSubmit(onSubmit)}>
         <FieldGroup>
           <Controller
-            name="content"
+              name="title"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="basic-form-title">
+                    Title
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id="basic-form-title"
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Post title"
+                    autoComplete="off"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+          <Controller
+            name="description"
             control={form.control}
             render={({ field, fieldState }) => (
-              // [!code highlight]
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="basic-form-content">
-                  Content
+                <FieldLabel htmlFor="basic-form-description">
+                  Description
                 </FieldLabel>
-                <Input
-                  {...field}
-                  id="basic-form-content"
-                  // [!code highlight]
-                  aria-invalid={fieldState.invalid}
-                  placeholder="Some placeholder content"
-                  autoComplete="off"
-                />
+                <InputGroup>
+                  <InputGroupTextarea
+                    {...field}
+                    id="basic-form-description"
+                    placeholder="Enter description here."
+                    rows={6}
+                    className="min-h-24 resize-none"
+                    aria-invalid={fieldState.invalid}
+                  />
+                  <InputGroupAddon align="block-end">
+                    <InputGroupText className="tabular-nums">
+                      {field.value.length}/32 characters
+                    </InputGroupText>
+                  </InputGroupAddon>
+                </InputGroup>
                 <FieldDescription>
-                  Field description. What to enter to the input.
+                  Instruction for entering the description.
                 </FieldDescription>
-                // [!code highlight]
-                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
               </Field>
             )}
           />

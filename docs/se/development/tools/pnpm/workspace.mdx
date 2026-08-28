@@ -74,8 +74,8 @@ packages:
 }
 ```
 
-- The `web-app` project declares `shared-utils` as a dependency using the **`workspace:*`** protocol.  
-- `workspace:*`: always link to the local `shared-utils` project, regardless of version.  
+- The `web-app` project declares `shared-utils` as a dependency using the **`workspace:*`** protocol.
+- `workspace:*`: always link to the local `shared-utils` project, regardless of version.
 - If `shared-utils` didn't exist locally, installation would fail instead of fetching from npm.
 - On publish: pnpm converts `workspace:*` into the actual version (`"1.0.0"`) in the published `package.json`.
 
@@ -106,68 +106,4 @@ For example, to add a `web` project:
 ├── package.json
 ├── pnpm-lock.yaml
 └── pnpm-workspace.yaml
-```
-
-
-## Installing dependencies
-
-Install a package to a project in the workspace:
-
-```bash
-# install `lodash` for `web` project
-pnpm --filter web add lodash
-pnpm -F web add lodash
-```
-
-Remove a dependency from a project:
-
-```bash
-# remove `lodash` from `web` project
-pnpm -F web remove lodash
-```
-
-Install a dependency into the root of the monorepo (root `package.json`):
-
-```bash
-# install `eslint` to the root `package.json`
-pnpm add eslint -w
-```
-
-:::info
-The workspace project name is defined in project's `package.json` (`name` field).
-:::
-
-
-## Running scripts
-
-Run a script (defined in the `package.json`) of a project:
-
-```bash
-pnpm -F <project> run <script-name>
-```
-
-Run a script across **all projects** in the workspace:
-
-```bash
-pnpm -r run <script-name>
-```
-
-Run script in all projects whose name has prefix `@repo/`:
-```bash
-pnpm -F '@repo/**' run <script-name>
-```
-
-Run in projects that depend on `utils`:
-```bash
-pnpm -F '...utils' run <script-name>
-```
-
-
-## Running binaries
-
-Run a local installed binary from a specific project:
-
-```bash
-# run Playwright tests in the `web-e2e` project
-pnpm -F web-e2e exec playwright test
 ```
