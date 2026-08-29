@@ -90,13 +90,6 @@
     "collapsed": true
   },
   {
-    "name": "daisyui",
-    "label": "DaisyUI",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  },
-  {
     "name": "html",
     "label": "HTML",
     "type": "dir",

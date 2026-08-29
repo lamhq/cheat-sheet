@@ -1,10 +1,12 @@
 # Event Handlers
 
+## Introduction
+
 Event handlers are functions that will be triggered in response to user interactions (clicking, hovering, focusing on form inputs, etc.).
 
-## Adding event handlers
+## Naming event handler functions
 
-By convention, it is common to name event handlers as `handle` followed by the event name (`handleClick`, `handleMouseEnter`, etc.).
+By convention, event handlers are typically named `handle<EventName>`, such as `handleClick` or `handleMouseEnter`.
 
 ```jsx
 export default function Button() {
@@ -23,7 +25,7 @@ export default function Button() {
 
 ## Naming event handler props
 
-By convention, when a prop is an event handler, its name should start with `on`, followed by a capital letter.
+Event handler props are usually named with the `on` prefix, such as `onClick` or `onSmash`.
 
 ```jsx
 function Button({ onSmash, children }) {
@@ -56,12 +58,12 @@ export default function Toolbar() {
 }
 ```
 
-If you click on either button, its `onClick` will run first, followed by the parent `<div>`'s `onClick`. So two messages will appear. If you click the toolbar itself, only the parent `<div>`'s `onClick` will run.
-
+- Clicking a button runs its `onClick` before the parent's `onClick`, so two alerts appear. 
+- Clicking the toolbar itself triggers only the parent handler.
 
 ## Stopping propagation
 
-If you want to prevent an event from reaching parent components, you need to call `stopPropagation()` on the event object passed to the handler as an argument.
+Call `stopPropagation()` on the event object to stop it from reaching parent handlers.
 
 ```jsx
 function Button({ onClick, children }) {
