@@ -17,10 +17,10 @@ Process used in software industry to design, develop, test, and deliver software
 
 **Outputs**:
 - [Project Overview Document](./process/project-overview.mdx)
-- [Feature Specification Document](./process/requirements/fsd.mdx) (FSD)
+- [Feature Specification Document](./process/requirements/feature-spec.mdx)
 
 :::note
-Each FSD defines a single feature. FSDs are grouped into modules.
+Each Feature Specification Document defines a single feature. They are grouped into modules.
 :::
 
 :::info
@@ -38,6 +38,7 @@ Translate feature requirements into a precise technical blueprint that engineers
 **Inputs**:
 - The feature to be implemented
 - The Feature Specification Document for that feature
+- Database Design Document of the module
 
 **Process**:
 1. Identify all required screens based on the Feature Specification Document
@@ -47,7 +48,7 @@ Translate feature requirements into a precise technical blueprint that engineers
 - [UI Specification Documents](./process/design/ui-spec.mdx) for all screens of the feature
 
 :::note
-Each UI Specification Document defines a single screen. Like FSDs, they are organized into modules.
+Each UI Specification Document defines a single screen. Like Feature Specification Documents, they are organized into modules.
 :::
 
 ### API
@@ -65,7 +66,7 @@ Each UI Specification Document defines a single screen. Like FSDs, they are orga
 - [API Specification Documents](./process/design/api-spec.mdx) for all APIs of the feature
 
 :::note
-Each API Specification Document defines a single API. Like FSDs, they are organized into modules.
+Each API Specification Document defines a single API. Like Feature Specification Documents, they are organized into modules.
 :::
 
 ### Database
@@ -88,7 +89,7 @@ Each API Specification Document defines a single API. Like FSDs, they are organi
    - Specify storage details (partitioning, sharding, clustering) as needed.  
 
 **Outputs**:
-- [Database Design Document](./process/design/dbd.mdx)
+- [Database Design Document](./process/design/db-design.mdx)
 
 :::note
 Each module has one Database Design Document describing all its entities and their relationships.

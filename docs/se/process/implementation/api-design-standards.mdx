@@ -1,0 +1,170 @@
+# API Design Standards
+
+## Introduction
+
+This document outlines the standard conventions and rules for designing, developing, and consuming RESTful APIs.
+
+Following these standards ensures consistency, security, and developer efficiency across all internal and external services.
+
+## Endpoint Design
+
+| HTTP Method | URI Pattern                                            | Description                           |
+| ----------- | ------------------------------------------------------ | ------------------------------------- |
+| `GET`       | `/{version}/{module}/{resources}`                      | List all resources                    |
+| `POST`      | `/{version}/{module}/{resources}`                      | Create a new resource                 |
+| `GET`       | `/{version}/{module}/{resources}/{id}`                 | Retrieve a single resource            |
+| `PUT`       | `/{version}/{module}/{resources}/{id}`                 | Replace an entire resource            |
+| `PATCH`     | `/{version}/{module}/{resources}/{id}`                 | Partially update an existing resource |
+| `DELETE`    | `/{version}/{module}/{resources}/{id}`                 | Soft-delete or purge a resource       |
+| `GET`       | `/{version}/{module}/{resources}/{id}/{sub-resources}` | Retrieve sub-resources                |
+
+- `{version}`: API version, specified in URI (e.g., `v1`, `v2`).
+- `{module}`: Domain Grouping. Group related APIs (e.g., `auth`, `checkout`, `manage`).
+- `{resources}`: entity collection, use plural nouns (e.g., `users`, `orders`).
+
+When an action does not fit standard CRUD, append a clear verb as a sub-resource endpoint:
+
+- `POST /v1/checkout/orders/{orderId}/cancel`
+- `POST /v1/auth/users/{userId}/reset-password`
+
+### URI paths
+
+Use kebab-case (all lowercase letters separated by hyphens).
+
+Example: `/v1/order-management/purchase-orders`.
+
+### Query String Parameters
+
+Use camelCase (e.g., `?pageSize=20&sortBy=createdAt`).
+
+To pass multiple values for a single parameter, use repeated query parameters:
+
+```
+GET /v1/cms/posts?ids=1&ids=2&ids=3
+```
+
+## Data Format
+
+- **Timestamps**: Use **ISO 8601 UTC** format (`YYYY-MM-DDTHH:mm:ssZ`).
+- **Field naming**: Use **camelCase** for JSON fields
+
+```json
+{
+  "id": "cus_8f9a2b1c",
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe@example.com",
+  "createdAt": "2026-08-30T09:30:00Z"
+}
+```
+
+## Authentication
+
+The API doesn't perform authentication itself. To identify requester, pass user email via `User-Email` header: `User-Email: test@example.com`.
+
+Requests are authenticated by the API gateway, by passing a bearer token via the `Authorization` request header: `Authorization: Bearer <token>`.
+
+## Pagination
+
+Available strategies:
+
+- **Offset-based**: for management APIs, predictable datasets.
+- **Cursor-based**: for frequently updated data, large datasets, infinite scroll.
+
+### Offset-based
+
+Request:
+
+```
+GET /v1/cms/posts?offset=20&limit=10
+```
+
+Response:
+
+```json
+{
+  "total": 200,
+  "offset": 20,
+  "limit": 10,
+  "items": [
+    { "userId": "21", "title": "Alice" },
+    { "userId": "22", "title": "Bob" }
+  ]
+}
+```
+
+### Cursor-based
+
+Request:
+
+```
+GET /v1/cms/posts?cursor=abc123&limit=20
+```
+
+Response:
+
+```json
+{
+  "items": [
+    { "id": "101", "title": "Alice" },
+    { "id": "102", "title": "Bob" },
+    { "id": "103", "title": "Charlie" }
+  ],
+  "pagination": {
+    "nextCursor": "103",
+    "previousCursor": "101",
+    "hasNext": true,
+    "hasPrevious": false
+  }
+}
+```
+
+## Sorting
+
+Use `sort` query string parameter. Dash (`-`) denotes descending order.
+
+Example: `GET /v1/checkout/orders?sort=-created_at,status`.
+
+## Error Handling
+
+Use **HTTP status codes**:
+
+| Code  | Status         | Usage                                                        |
+| ----- | -------------- | ------------------------------------------------------------ |
+| `200` | OK             | Successful read, update, or action execution                 |
+| `201` | Created        | Successful creation (`POST`).                                |
+| `204` | No Content     | Successful request with empty response body (e.g., `DELETE`) |
+| `400` | Bad Request    | Validation failed, malformed JSON body                       |
+| `401` | Unauthorized   | Missing or invalid authentication credentials                |
+| `403` | Forbidden      | User authenticated but lacks authorization for this resource |
+| `404` | Not Found      | Resource or endpoint does not exist                          |
+| `409` | Conflict       | State collision (e.g., duplicate unique key)                 |
+| `500` | Internal Error | Unhandled server error                                       |
+
+All `4xx` and `5xx` must return a JSON response body follow the structure below:
+
+```json
+{
+  "code": "USER_NOT_FOUND",
+  "message": "The requested user does not exist.",
+  "details": "User ID 12345 not found in database."
+}
+```
+
+- `code`: a unique identifier for the error.
+- `message`: a human-readable description of the error.
+- `details` (optional): additional information for debugging purposes.
+
+
+## Versioning Strategy
+
+- **URL Path Versioning:** Major versions must appear in the URI path (`/v1/`, `/v2/`).
+- **Non-Breaking Changes:** do **not** require a new version (added optional fields, new query parameters, new fields in response).
+- **Breaking Changes:** require incrementing the major version number (removing fields, changing data types, changing URI parameters).
+- **Deprecation Notice:** Mark deprecated endpoints using HTTP headers:
+
+```http
+Deprecation: true
+Sunset: Sun, 01 Nov 2026 23:59:59 GMT
+
+```
