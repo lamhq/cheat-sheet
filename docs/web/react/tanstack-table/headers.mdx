@@ -1,0 +1,53 @@
+# Headers
+
+## Header Groups
+
+Header Groups are simply rows of headers. 
+
+Most tables have one header group, but nested column structures create multiple header rows (multiple header groups).
+
+### Access Header Groups
+
+Access header groups using table instance APIs. The most common is `table.getHeaderGroups()`, but features like column pinning provide specialized APIs:
+
+```js
+table.getHeaderGroups()          // All header groups
+table.getStartHeaderGroups()     // Left-pinned columns (with pinning feature)
+table.getCenterHeaderGroups()    // Center columns (with pinning feature)
+table.getEndHeaderGroups()       // Right-pinned columns (with pinning feature)
+```
+
+### Header Group Structure
+
+Header Group objects have three main properties:
+
+```js
+{
+  id: 'headerGroup-0',  // Unique ID generated from its depth (index)
+  depth: 0,             // Row index among all header rows, zero-indexed
+  headers: [...]        // Array of Header cell objects in this header group
+}
+```
+
+## Header Cells
+
+Map over the `headers` array to render header cells in a header group:
+
+```jsx
+<thead>
+  {table.getHeaderGroups().map((headerGroup) => (
+    <tr key={headerGroup.id}>
+      {headerGroup.headers.map((header) =>
+        header.rowSpan === 0 ? null : (
+          <th key={header.id} colSpan={header.colSpan} rowSpan={header.rowSpan}>
+            {flexRender(header.column.columnDef.header, header.getContext())}
+          </th>
+        ),
+      )}
+    </tr>
+  ))}
+</thead>
+```
+
+- The `colSpan` property on each header handles merged header cells from grouped columns.
+- For uneven column trees, use `rowSpan` to merge placeholder header cells vertically. Skip headers with `rowSpan === 0`.

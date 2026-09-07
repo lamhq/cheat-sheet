@@ -1,0 +1,132 @@
+# Features
+
+## Introduction
+
+TanStack Table uses a plugin-based architecture where you explicitly declare the features your table needs. 
+
+This keeps bundle sizes small and ensures only the APIs relevant to your chosen features appear in your table instance.
+
+
+## Built-in Features
+
+- Global Filtering: Filter rows based on search values for the entire table
+- Column Filtering: Filter rows based on search values for a column
+- Column Visibility: Hide/show columns
+- Row Selection: Select/deselect rows (checkboxes)
+- Row Sorting: Sort rows by column values
+- Row Pagination: Paginate rows
+- Faceting: List unique values or min/max values for a column or for the entire table
+- Column Resizing: Let users resize columns with drag handles
+- Column Ordering: Dynamically change the order of columns
+- Column Pinning: Pin (Freeze) columns to the left or right of the table
+- Column Sizing: Dynamically change the size of columns
+- Column Grouping: Group rows by one or more column values
+- Row Aggregation: Calculate summary values for grouped, root, or custom row sets
+- Row Expanding: Expand/collapse rows (sub-rows)
+- Row Pinning: Pin (Freeze) rows to the top or bottom of the table
+- Cell Selection: Select spreadsheet-style rectangular ranges of cells
+- Cell Spanning: Merge adjacent body cells across rows or columns
+
+
+## Specify Features
+
+You declare a table's static feature set using `tableFeatures()`, importing only the specific optional features your table needs.
+
+Minimal table (core features only):
+
+```ts
+import { tableFeatures, useTable } from '@tanstack/react-table'
+
+const features = tableFeatures({})
+
+function Table() {
+  const table = useTable({
+    features,
+    columns,
+    data,
+  })
+  // render the table...
+}
+```
+
+With optional features:
+
+```ts
+import {
+  columnFilteringFeature,
+  rowPaginationFeature,
+  rowSortingFeature,
+  tableFeatures,
+  useTable,
+} from '@tanstack/react-table'
+
+const features = tableFeatures({
+  columnFilteringFeature,
+  rowSortingFeature,
+  rowPaginationFeature,
+})
+```
+
+
+## How Features Work
+
+Features provide state and APIs, but don't perform client-side data processing. 
+
+You can use a feature for its state/APIs without adding a client-side row model if your server handles the processing instead.
+
+Example with client-side processing:
+```ts
+import {
+  columnFilteringFeature,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
+  filterFn_includesString,
+  rowPaginationFeature,
+  rowSortingFeature,
+  sortFn_alphanumeric,
+  tableFeatures,
+} from '@tanstack/react-table'
+
+const features = tableFeatures({
+  columnFilteringFeature,
+  rowSortingFeature,
+  rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns: { includesString: filterFn_includesString },
+  sortFns: { alphanumeric: sortFn_alphanumeric },
+})
+```
+
+## Stock Features
+
+`stockFeatures` is a convenient bundle of all optional features, useful for tables that genuinely use most features:
+
+```ts
+import { stockFeatures, tableFeatures } from '@tanstack/react-table'
+
+const features = tableFeatures({
+  ...stockFeatures,
+})
+```
+
+Stock Features includes 16 built-in optional features include:
+- `cellSelectionFeature`: Cell Selection adds cell-range selection state and APIs.
+- `cellSpanningFeature`: Cell Spanning lets cells span rows or columns.
+- `columnFacetingFeature`: Faceting derives unique values, ranges, and counts for filtering UIs.
+- `columnFilteringFeature`: Column Filtering filters individual columns and provides column-filter state.
+- `columnGroupingFeature`: Grouping groups rows by column values.
+- `columnOrderingFeature`: Column Ordering controls the order of columns.
+- `columnPinningFeature`: Column Pinning pins columns to the left or right side of a table.
+- `columnResizingFeature`: Column Resizing adds resize interactions and builds on column sizing.
+- `columnSizingFeature`: Column Sizing stores and exposes column width information.
+- `columnVisibilityFeature`: Column Visibility shows and hides columns.
+- `globalFilteringFeature`: Global Filtering filters rows across multiple columns and builds on column filtering.
+- `rowAggregationFeature`: Aggregation calculates totals and other aggregate values over row sets.
+- `rowExpandingFeature`: Expanding controls expanded rows and visible sub-rows.
+- `rowPaginationFeature`: Pagination provides page state, navigation APIs, and optional client-side pagination.
+- `rowPinningFeature`: Row Pinning pins rows to the top or bottom of the table.
+- `rowSelectionFeature`: Row Selection manages selected-row state and APIs.
+- `rowSortingFeature`: Sorting manages sort state and optional client-side row ordering.

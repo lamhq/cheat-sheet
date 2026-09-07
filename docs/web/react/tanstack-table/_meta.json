@@ -1,0 +1,16 @@
+[
+  "features",
+  "data",
+  "state",
+  "columns",
+  "rows",
+  "headers",
+  "meta",
+  "pagination",
+  "column-filtering",
+  "global-filtering",
+  "sorting",
+  "row-selection",
+  "column-visibility",
+  "devtools"
+]

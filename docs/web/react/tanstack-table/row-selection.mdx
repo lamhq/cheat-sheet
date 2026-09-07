@@ -1,0 +1,200 @@
+# Row Selection
+
+## Setup
+
+Add the row selection feature to enable selection APIs:
+
+```tsx
+import {
+  useTable,
+  tableFeatures,
+  rowSelectionFeature,
+} from '@tanstack/react-table'
+
+const features = tableFeatures({ rowSelectionFeature })
+
+const table = useTable({
+  features,
+  columns,
+  data,
+})
+```
+
+Set Row IDs to use database IDs:
+
+```ts
+const table = useTable({
+  features,
+  columns,
+  data,
+  getRowId: (row) => row.uuid, // use database UUID
+})
+```
+
+Now selection state reflects meaningful IDs:
+```json
+{
+  "13e79140-62a8-4f9c-b087-5da737903b76": true,
+  "f3e2a5c0-5b7a-4d8a-9a5c-9c9b8a8e5f7e": false
+}
+```
+
+
+## Access Row Selection State
+
+Read selection state reactively or as a snapshot:
+
+```ts
+table.state.rowSelection // reactive read: { '1': true, '2': false, ... }
+table.atoms.rowSelection.get() // snapshot read
+
+table.getSelectedRowModel().rows // all selected rows
+table.getFilteredSelectedRowModel().rows // selected rows after filtering
+table.getGroupedSelectedRowModel().rows // selected rows after grouping/sorting
+```
+
+## Manage Row Selection State
+
+**With Atom (v9 Recommended):**
+```tsx
+import { useCreateAtom, useSelector } from '@tanstack/react-store'
+import { type RowSelectionState } from '@tanstack/react-table'
+
+const rowSelectionAtom = useCreateAtom<RowSelectionState>({})
+const rowSelection = useSelector(rowSelectionAtom)
+
+const table = useTable({
+  features,
+  columns,
+  data,
+  atoms: { rowSelection: rowSelectionAtom },
+})
+```
+
+**With State Setter (v8 Style):**
+```tsx
+const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
+
+const table = useTable({
+  features,
+  columns,
+  data,
+  state: { rowSelection },
+  onRowSelectionChange: setRowSelection,
+})
+```
+
+## Disable Selection
+
+Disable selection globally or per-row:
+
+```ts
+const table = useTable({
+  features,
+  columns,
+  data,
+  enableRowSelection: (row) => row.original.age > 18, // only adults
+})
+
+// Check if row can be selected in UI
+row.getCanSelect()
+```
+
+## Disable multiple selection
+
+Allow only one selected row at a time (radio buttons instead of checkboxes):
+
+```ts
+const table = useTable({
+  features,
+  columns,
+  data,
+  enableMultiRowSelection: false, // only one row
+  // or conditionally:
+  // enableMultiRowSelection: row => row.original.age > 18,
+})
+```
+
+## Enable Range Selection
+
+Shift+click selects/deselects the range between the anchor and clicked row. Enabled by default:
+
+```ts
+const table = useTable({
+  features,
+  columns,
+  data,
+  enableRowRangeSelection: false, // disable range selection
+
+  // Or use platform modifier instead of Shift:
+  // isRowRangeSelectionEvent: (event) =>
+  //   Boolean((event as React.MouseEvent).metaKey),
+})
+```
+
+## Render Selection Cell
+
+Connect handler APIs to checkbox inputs:
+
+```tsx
+const columns = [
+  {
+    id: 'select-col',
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllRowsSelected()}
+        indeterminate={table.getIsSomeRowsSelected()}
+        onChange={table.getToggleAllRowsSelectedHandler()}
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={
+          row.getIsSelected() ||
+          (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected())
+        }
+        disabled={!row.getCanSelect()}
+        indeterminate={row.getIsSomeSelected()}
+        onChange={row.getToggleSelectedHandler()}
+      />
+    ),
+  },
+]
+```
+
+## Select Row without Checkboxes
+
+Hook click events to rows instead of checkboxes:
+
+```tsx
+<tbody>
+  {table.getRowModel().rows.map((row) => (
+    <tr
+      key={row.id}
+      className={row.getIsSelected() ? 'selected' : ''}
+      onClick={row.getToggleSelectedHandler()}
+    >
+      {row.getVisibleCells().map((cell) => (
+        <td key={cell.id}>{/* cell content */}</td>
+      ))}
+    </tr>
+  ))}
+</tbody>
+```
+
+
+## Row Selection APIs
+
+- `table.getIsAllRowsSelected()` - Check if all rows selected
+- `table.getIsSomeRowsSelected()` - Check if some rows selected
+- `table.toggleAllRowsSelected(value?)` - Toggle all rows
+- `table.toggleAllPageRowsSelected(value?)` - Toggle all page rows
+- `table.getToggleAllRowsSelectedHandler()` - Handler for "select all" checkbox
+- `table.getToggleAllPageRowsSelectedHandler()` - Handler for "select all page" checkbox
+- `row.getIsSelected()` - Check if row selected
+- `row.getIsSomeSelected()` - Check if some sub-rows selected
+- `row.getCanSelect()` - Check if row can be selected
+- `row.toggleSelected(value?, options?)` - Toggle row selection
+- `row.getToggleSelectedHandler(options?)` - Handler for row checkbox/click
+- `row.getCanSelectSubRows()` - Check if sub-row selection enabled
+- `row.getIsAllSubRowsSelected()` - Check if all sub-rows selected

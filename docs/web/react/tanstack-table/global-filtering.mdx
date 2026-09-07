@@ -1,0 +1,190 @@
+# Global Filtering
+
+Global Filtering lets you apply a single filter value across all columns in your table, instead of filtering each column individually.
+
+It's often used for a "search bar" that quickly narrows down rows based on any matching field.
+
+## Client-Side Filtering
+
+Global filtering depends on column filtering. Add both features and the filtered row model:
+
+```tsx
+import {
+  useTable,
+  tableFeatures,
+  columnFilteringFeature,
+  globalFilteringFeature,
+  createFilteredRowModel,
+  filterFn_includesString,
+} from '@tanstack/react-table'
+
+const features = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns: { includesString: filterFn_includesString },
+})
+
+const table = useTable({
+  features,
+  columns,
+  data,
+})
+```
+
+> Register only the filter functions you actually use to keep bundle size small.
+
+The client-side filtered row model also triggers page-index auto-reset when global filter input changes.
+
+
+## Manual Server-Side Filtering
+
+Set `manualFiltering: true`. Data should already be filtered:
+
+```tsx
+const features = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
+})
+
+const table = useTable({
+  features,
+  data, // must already be filtered
+  columns,
+  manualFiltering: true,
+})
+```
+
+## Global Filter Function
+
+Set which filter function to use globally. Can be a string referencing a registered function or passed directly:
+
+```tsx
+const table = useTable({
+  features,
+  data,
+  columns,
+  globalFilterFn: 'includesString', // built-in
+})
+```
+
+## Built-in Global Filter Functions
+
+12 functions available: `includesString`, `includesStringSensitive`, `equalsString`, `equals`, `weakEquals`, `arrIncludes`, `arrIncludesAll`, `arrIncludesSome`, `arrHas`, `inNumberRange`, `between`, `betweenInclusive`
+
+
+## Global Filter State
+
+The `globalFilter` state slice holds the current search value (typed as `any`). Read reactively or as a snapshot:
+
+```tsx
+table.state.globalFilter // reactive read
+table.atoms.globalFilter.get() // snapshot read
+```
+
+
+## Manage Global Filter State
+
+With Atom (v9 Recommended):
+
+```tsx
+import { useCreateAtom, useSelector } from '@tanstack/react-store'
+
+const globalFilterAtom = useCreateAtom<string>('')
+const globalFilter = useSelector(globalFilterAtom)
+
+const table = useTable({
+  features,
+  columns,
+  data,
+  atoms: { globalFilter: globalFilterAtom },
+})
+```
+
+With State Setter (v8 Style):
+
+```tsx
+const [globalFilter, setGlobalFilter] = useState<string>('')
+
+const table = useTable({
+  features,
+  columns,
+  data,
+  state: { globalFilter },
+  onGlobalFilterChange: setGlobalFilter,
+})
+```
+
+Set Initial global filter state (uncontrolled):
+
+```tsx
+const table = useTable({
+  features,
+  columns,
+  data,
+  initialState: {
+    globalFilter: 'search term',
+  },
+})
+```
+
+> Do NOT use both `initialState.globalFilter` and controlled state at the same time
+
+
+## Adding Global Filter Input to UI
+
+Read reactively and update with `table.setGlobalFilter`:
+
+```tsx
+<input
+  value={table.state.globalFilter ?? ''}
+  onChange={(e) => table.setGlobalFilter(String(e.target.value))}
+  placeholder="Search..."
+/>
+```
+
+
+## Custom Global Filter Function
+
+Define a custom function and pass it directly:
+
+```tsx
+const customFilterFn = (row, columnId, filterValue) => {
+  return // true if row should be included
+}
+
+const table = useTable({
+  features,
+  columns,
+  data,
+  globalFilterFn: customFilterFn,
+})
+```
+
+## Disable Global Filtering
+
+Disable globally or per-column:
+
+```tsx
+const columns = [
+  {
+    accessorKey: 'id',
+    enableGlobalFilter: false, // disable for this column
+  },
+]
+
+const table = useTable({
+  features,
+  columns,
+  data,
+  enableGlobalFilter: false, // disable for all columns
+})
+```
+
+## Global Filter APIs
+
+- `table.setGlobalFilter(value)` - Set the filter value (connect to input `onChange`)
+- `table.resetGlobalFilter()` - Reset to initial state, or clear with `table.resetGlobalFilter(true)`
+- `table.getGlobalFilterFn()` - Get current filter function
+- `table.getGlobalAutoFilterFn()` - Get default filter function (`includesString`)
+- `column.getCanGlobalFilter()` - Check if column participates in global filtering

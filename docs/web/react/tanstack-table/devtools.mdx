@@ -1,0 +1,68 @@
+import { PackageManagerTabs } from '@theme'
+
+# Devtools
+
+## Installation
+
+The table devtools let you:
+- inspect registered table instances
+- switch between multiple tables
+- inspect features, state, options, rows, and columns in real time
+
+<PackageManagerTabs command="i @tanstack/react-devtools @tanstack/react-table-devtools" />
+
+
+## Setup
+
+The React adapter has three setup steps:
+
+1. Add a unique `key` to each table.
+2. Register each table with `useTanStackTableDevtools` immediately after creating it.
+3. Mount `TanStackDevtools` with the table plugin at the app root.
+
+```tsx
+import { useTable } from '@tanstack/react-table'
+import { TanStackDevtools } from '@tanstack/react-devtools'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/react-table-devtools'
+
+function App() {
+  const table = useTable({
+    // [!code highlight]
+    key: 'users-table',
+    features,
+    columns,
+    data,
+  })
+
+  // [!code highlight]
+  useTanStackTableDevtools(table)
+
+  return <AppContent table={table} />
+}
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App />
+    {/* [!code highlight] */}
+    <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
+  </React.StrictMode>,
+)
+```
+
+To conditionally skip registration, pass `enabled: false`:
+
+```ts
+useTanStackTableDevtools(table, { enabled: false })
+```
+
+By default, the adapter includes live devtools only in development builds. To use live devtools in a production build, import the adapter from its `/production` entry point:
+
+```tsx
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/react-table-devtools/production'
+```

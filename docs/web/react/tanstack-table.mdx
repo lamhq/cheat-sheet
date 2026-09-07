@@ -1,0 +1,180 @@
+import { PackageManagerTabs } from '@theme'
+
+# TanStack Table
+
+## Introduction
+
+TanStack Table is a headless table library. It gives you full control over markup and styling while handling state and logic like sorting, filtering, and pagination.
+
+## Installation
+
+<PackageManagerTabs command="i @tanstack/react-table@^9" />
+
+
+## Basic Table
+
+```tsx
+import { tableFeatures, useTable } from '@tanstack/react-table'
+import type { ColumnDef } from '@tanstack/react-table'
+
+// 1. Define the shape of your data
+type Person = {
+  firstName: string
+  lastName: string
+  age: number
+}
+
+// 2. Give your data a stable reference (module scope, useState, useQuery, etc.)
+const data: Array<Person> = [
+  { firstName: 'tanner', lastName: 'linsley', age: 24 },
+  { firstName: 'tandy', lastName: 'miller', age: 40 },
+  { firstName: 'joe', lastName: 'dirte', age: 45 },
+]
+
+// 3. Declare which features this table uses (none yet, New in v9)
+const features = tableFeatures({})
+
+// 4. Define your columns
+const columns: Array<ColumnDef<typeof features, Person>> = [
+  {
+    accessorKey: 'firstName', // accessorKey shorthand
+    header: 'First Name',
+    cell: (info) => info.getValue(),
+  },
+  {
+    accessorFn: (row) => row.lastName, // accessorFn alternative with a custom id
+    id: 'lastName',
+    header: () => <span>Last Name</span>,
+    cell: (info) => <i>{info.getValue<string>()}</i>,
+  },
+  {
+    accessorKey: 'age',
+    header: () => 'Age',
+  },
+]
+
+export function PersonTable() {
+  // 5. Create the table instance
+  const table = useTable({
+    key: 'person-table', // needed for devtools, omit if you don't want to use the devtools
+    features,
+    columns,
+    data,
+  })
+
+  // 6. Render markup from the table instance APIs
+  return (
+    <table>
+      {/* Render headers */}
+      <thead>
+        {table.getHeaderGroups().map((headerGroup) => (
+          <tr key={headerGroup.id}>
+            {headerGroup.headers.map((header) => (
+              <th key={header.id}>
+                {header.isPlaceholder ? null : (
+                  <table.FlexRender header={header} />
+                )}
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+
+      {/* Render cells */}
+      <tbody>
+        {table.getRowModel().rows.map((row) => (
+          <tr key={row.id}>
+            {row.getAllCells().map((cell) => (
+              <td key={cell.id}>
+                <table.FlexRender cell={cell} />
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+
+      {/* Render footers */}
+      <tfoot>
+        {table.getFooterGroups().map((footerGroup) => (
+          <tr key={footerGroup.id}>
+            {footerGroup.headers.map((header) => (
+              <th key={header.id}>
+                <table.FlexRender footer={header} />
+              </th>
+            ))}
+          </tr>
+        ))}
+      </tfoot>
+    </table>
+  )
+}
+```
+
+A few things to note:
+
+- `tableFeatures({})` declares which features the table uses. Registering only what you need.
+- `table.FlexRender` renders the `header`, `cell`, and `footer` definitions from your columns.
+
+
+## Server-side processing
+
+Page-Index Pagination with TanStack Query:
+
+```tsx
+const features = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowPaginationFeature,
+  rowSortingFeature,
+  // Client-side filtering, sorting, and pagination row models are not
+  // required because those operations are handled manually on the server.
+  // Omitting the filtered and sorted row models also omits their page-reset
+  // hooks, so pagination is reset in the change handlers below.
+})
+
+export function PersonTable() {
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [globalFilter, setGlobalFilter] = useState('')
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  })
+
+  const serverResponse = useQuery({
+    queryKey: ['people', { sorting, globalFilter, pagination }],
+    queryFn: () => fetchPeople({ sorting, globalFilter, pagination }),
+    placeholderData: keepPreviousData,
+  })
+
+  const table = useTable(
+    {
+      features,
+      columns,
+      data: serverResponse.data?.rows ?? [],
+      rowCount: serverResponse.data?.rowCount,
+      state: { sorting, globalFilter, pagination },
+      onSortingChange: (updater) => {
+        setSorting(updater)
+        setPagination((previous) => ({ ...previous, pageIndex: 0 })) // reset page index when sorting changes
+      },
+      onGlobalFilterChange: (updater) => {
+        setGlobalFilter(updater)
+        setPagination((previous) => ({ ...previous, pageIndex: 0 })) // reset page index when global filter changes
+      },
+      onPaginationChange: setPagination,
+      manualFiltering: true,
+      manualSorting: true,
+      manualPagination: true,
+    },
+    (state) => state,
+  )
+  return (
+    ...
+  )
+}
+```
+
+
+## Examples
+
+- ShadCN (Base UI): [Basic Example](https://tanstack.com/table/latest/docs/framework/react/examples/lib-shadcn-base) | [Advanced Example](https://tanstack.com/table/latest/docs/framework/react/examples/kitchen-sink-shadcn-base)

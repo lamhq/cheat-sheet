@@ -1,0 +1,208 @@
+# Column Definitions
+
+## Introduction
+
+Column definitions build the data model, format data for display, create headers/footers, and enable display-only columns like action buttons.
+
+## Column Types
+
+Three categories:
+- **Accessor Columns**: Have a data model, so they can be sorted, filtered, grouped
+- **Display Columns**: No data model, used for display-only content (actions, checkboxes, expanders)
+- **Grouping Columns**: Group other columns together, no data model
+
+
+## Column Helpers
+
+Use `createColumnHelper` for type-safe column creation. It requires two type parameters: `TFeatures` and `TData`:
+
+```tsx
+type Person = {
+  firstName: string
+  lastName: string
+  age: number
+  visits: number
+  status: string
+  progress: number
+}
+
+const features = tableFeatures({})
+const columnHelper = createColumnHelper<typeof features, Person>()
+
+const defaultColumns = columnHelper.columns([
+  // Display Column
+  columnHelper.display({
+    id: 'actions',
+    cell: (props) => <RowActions row={props.row} />,
+  }),
+  // Grouping Column
+  columnHelper.group({
+    header: 'Name',
+    columns: [
+      // Accessor Column
+      columnHelper.accessor('firstName', {
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor((row) => row.lastName, {
+        id: 'lastName',
+        header: () => <span>Last Name</span>,
+      }),
+    ],
+  }),
+])
+```
+
+## Accessor Columns
+
+Ways to access data in accessor columns:
+
+### Object Keys
+
+Simple property access.
+
+```ts
+type Person = {
+  firstName: string
+  lastName: string
+  age: number
+  visits: number
+  status: string
+  progress: number
+}
+```
+
+```tsx
+columnHelper.accessor('firstName')
+// OR
+{ accessorKey: 'firstName' }
+```
+
+### Deep Keys
+
+Nested property access.
+
+```ts
+type Person = {
+  name: {
+    first: string
+    last: string
+  }
+  info: {
+    age: number
+    visits: number
+  }
+}
+```
+
+```tsx
+columnHelper.accessor('name.first', {
+  id: 'firstName',
+})
+// OR
+{ accessorKey: 'name.first', id: 'firstName' }
+```
+
+### Array Indices
+
+Array element access.
+
+```ts
+type Sales = [Date, number]
+```
+
+```tsx
+columnHelper.accessor(row => row[1], {
+  id: 'amount',
+})
+// OR
+{ accessorKey: '1' } // must be a string
+```
+
+### Accessor Functions
+
+Computed values.
+
+```ts
+type Person = {
+  firstName: string
+  lastName: string
+  age: number
+  visits: number
+  status: string
+  progress: number
+}
+```
+
+```tsx
+columnHelper.accessor(row => `${row.firstName} ${row.lastName}`, {
+  id: 'fullName',
+})
+// OR
+{
+  id: 'fullName',
+  accessorFn: row => `${row.firstName} ${row.lastName}`,
+}
+```
+
+
+## Column Formatting & Rendering
+
+Customize how data displays using formatters.
+
+There are a couple of formatters available to you:
+
+- `cell`: Used for formatting cells.
+- `aggregatedCell`: Used for formatting cells when aggregated.
+- `header`: Used for formatting headers.
+- `footer`: Used for formatting footers.
+
+```tsx
+// Cell formatting
+columnHelper.accessor('firstName', {
+  cell: (props) => <span>{props.getValue().toUpperCase()}</span>,
+})
+
+// Access row data in cell
+columnHelper.accessor('firstName', {
+  cell: (props) => (
+    <span>{`${props.row.original.id} - ${props.getValue()}`}</span>
+  ),
+})
+
+// Header & Footer formatting (no row data access)
+columnHelper.accessor('age', {
+  header: () => <span>Age</span>,
+  footer: (props) => props.column.id,
+})
+```
+
+
+## Specify features per column
+
+Per-column options for enabled features like sorting, filtering, and aggregation:
+
+```tsx
+columnHelper.accessor('age', {
+  sortFn: 'basic', // a name typed from the sortFns registry in tableFeatures
+  filterFn: 'inNumberRange', // a name typed from the filterFns registry
+  sortDescFirst: true,
+  enableSorting: true,
+  enableColumnFilter: true,
+})
+```
+
+The string names you can pass to these options are typed from the function registries you include in `tableFeatures` (e.g., `sortFns`, `filterFns`, `aggregationFns`).
+
+
+## Column Meta
+
+Column defs also accept a `meta` property for attaching your own data to a column:
+
+```tsx
+columnHelper.accessor('age', {
+  meta: {
+    filterVariant: 'range',
+    dataType: 'number',
+  },
+})
+```

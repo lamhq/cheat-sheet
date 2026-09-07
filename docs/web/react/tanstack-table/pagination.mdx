@@ -1,0 +1,224 @@
+# Pagination
+
+## Client-Side Pagination
+
+All data is fetched upfront and the table handles pagination in the browser. Use this when the complete dataset is small enough to fetch and store.
+
+Add the `rowPaginationFeature` and the `paginatedRowModel` factory to your features:
+
+```tsx
+import {
+  useTable,
+  tableFeatures,
+  rowPaginationFeature,
+  createPaginatedRowModel,
+} from '@tanstack/react-table'
+
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(), // client-side only
+})
+
+const table = useTable({
+  features,
+  columns,
+  data,
+})
+```
+
+
+## Server-Side Pagination
+
+Server handles pagination logic. Use server-side when the dataset is too large.
+
+Disable client-side pagination with `manualPagination: true` and tell the table how many rows/pages exist:
+
+```tsx
+const features = tableFeatures({ rowPaginationFeature })
+
+const table = useTable({
+  features,
+  columns,
+  data, // already paginated by server
+  manualPagination: true,
+  rowCount: dataQuery.data?.rowCount, // total rows on server
+  // OR
+  // pageCount: -1, // unknown total (for cursor-based APIs)
+})
+```
+
+### Page-Index Pagination
+
+Include pagination in the query key and pass back rows + total `rowCount`:
+
+```tsx
+const dataQuery = useQuery({
+  queryKey: ['people', 'offset-pagination', pagination, sorting, globalFilter],
+  queryFn: () => fetchPeople({ pagination, sorting, globalFilter }),
+  placeholderData: keepPreviousData,
+})
+
+const table = useTable({
+  features,
+  columns,
+  data: dataQuery.data?.rows ?? [],
+  rowCount: dataQuery.data?.rowCount,
+  state: { pagination, sorting, globalFilter },
+  onPaginationChange: setPagination,
+  onSortingChange: setSorting,
+  onGlobalFilterChange: setGlobalFilter,
+  manualPagination: true,
+  manualSorting: true,
+  manualFiltering: true,
+})
+```
+
+### Cursor-Based Pagination
+
+For cursor APIs, cache pages locally and use `pageCount: -1` (since total is unknown):
+
+```tsx
+const dataQuery = useInfiniteQuery({
+  queryKey: ['people', 'cursor', pagination.pageSize, sorting, globalFilter],
+  queryFn: ({ pageParam }) =>
+    fetchPeople({ cursor: pageParam, pageSize: pagination.pageSize, sorting, globalFilter }),
+  initialPageParam: null,
+  getNextPageParam: (lastPage) => lastPage.nextCursor,
+})
+
+const currentPage = dataQuery.data?.pages[pagination.pageIndex]
+const hasCachedNextPage = Boolean(dataQuery.data?.pages[pagination.pageIndex + 1])
+const canNextPage = hasCachedNextPage || Boolean(currentPage?.hasNextPage)
+
+const table = useTable({
+  features,
+  columns,
+  data: currentPage?.rows ?? [],
+  pageCount: -1,
+  state: { pagination, sorting, globalFilter },
+  onPaginationChange: setPagination,
+  manualPagination: true,
+  manualSorting: true,
+  manualFiltering: true,
+})
+
+async function goToNextPage() {
+  if (!dataQuery.data?.pages[pagination.pageIndex + 1]) {
+    await dataQuery.fetchNextPage()
+  }
+  table.nextPage()
+}
+```
+
+Use `canNextPage` for Next button (since `getCanNextPage()` can't detect end of `-1` pageCount). Reset `pageIndex` to `0` on filter/sort changes.
+
+
+## Pagination State
+
+Store pagination state externally with an atom (recommended) or classic `state`/`onStateChange` pattern:
+
+### With External Atom (v9)
+
+```tsx
+import { useCreateAtom, useSelector } from '@tanstack/react-store'
+import { type PaginationState } from '@tanstack/react-table'
+
+const paginationAtom = useCreateAtom<PaginationState>({
+  pageIndex: 0,
+  pageSize: 10,
+})
+
+const pagination = useSelector(paginationAtom)
+
+const table = useTable({
+  features,
+  columns,
+  data,
+  atoms: { pagination: paginationAtom },
+})
+```
+
+### With State Setter (v8 Style)
+
+```tsx
+const [pagination, setPagination] = useState<PaginationState>({
+  pageIndex: 0,
+  pageSize: 10,
+})
+
+const table = useTable({
+  features,
+  columns,
+  data,
+  state: { pagination },
+  onPaginationChange: setPagination,
+})
+```
+
+### With Initial State Only
+
+```tsx
+const table = useTable({
+  features,
+  columns,
+  data,
+  initialState: {
+    pagination: {
+      pageIndex: 2,
+      pageSize: 25,
+    },
+  },
+})
+```
+
+> Do NOT provide pagination in more than one of `atoms`, `state`, or `initialState`.
+
+
+## Auto Reset Page Index
+
+By default, `pageIndex` resets to `0` when data/filters/sorting change. Disable this with `autoResetPageIndex: false` for inline editing:
+
+```tsx
+const table = useTable({
+  features,
+  columns,
+  data,
+  autoResetPageIndex: false, // keep current page during edits
+  // autoResetAll: false,    // disable all auto-resets
+})
+```
+
+## Pagination APIs
+
+Navigation controls:
+
+```tsx
+<Button onClick={() => table.firstPage()} disabled={!table.getCanPreviousPage()}>
+  {'<<'}
+</Button>
+<Button onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
+  {'<'}
+</Button>
+<Button onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+  {'>'}
+</Button>
+<Button onClick={() => table.lastPage()} disabled={!table.getCanLastPage()}>
+  {'>>'}
+</Button>
+
+<select
+  value={table.state.pagination.pageSize}
+  onChange={(e) => table.setPageSize(Number(e.target.value))}
+>
+  {[10, 20, 30, 40, 50].map((pageSize) => (
+    <option key={pageSize} value={pageSize}>
+      {pageSize}
+    </option>
+  ))}
+</select>
+```
+
+Get pagination info:
+
+- `getPageCount()` - Total number of pages
+- `getRowCount()` - Total number of rows

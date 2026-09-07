@@ -2,9 +2,9 @@
 
 ## Introduction
 
-This document describes the database design of the **User Management Module**.
+This document describes the database schema, relationships, and implementation details of the **User Management Module**.
 
-## Logical Model
+## ER Diagram
 
 ```mermaid
 erDiagram
@@ -27,122 +27,104 @@ erDiagram
     Role ||--o{ Assignment : "defines"
 ```
 
-### User
+## `users` collection
 
-Represents an individual registered in the system.
+**Description**: Stores user account documents for individuals registered in the system.
 
-**Attributes:**
+**Schema Definition**:
 
-| Attribute Name | Type                     | Description                                  |
-| -------------- | ------------------------ | -------------------------------------------- |
-| UserId         | String                   | Unique identifier for the user (Primary Key) |
-| Username       | String                   | Login name chosen by the user (Unique)       |
-| Email          | String                   | User's email address                         |
-| Status         | String (Active/Inactive) | Current account status                       |
+| Field       | Description                | Data Type | Constraints                                       |
+| ----------- | -------------------------- | --------- | ------------------------------------------------- |
+| `_id`       | Unique document identifier | ObjectId  | Primary key, auto-generated                       |
+| `username`  | Login username             | String    | Unique, required                                  |
+| `email`     | User email address         | String    | Unique, required                                  |
+| `status`    | Account status             | String    | Allowed values: Active, Inactive; default: Active |
+| `createdAt` | Creation timestamp         | Date      | Required, default `new Date()`                    |
+| `updatedAt` | Last modification time     | Date      | Required, default `new Date()`                    |
 
-**Relationships:**
+**Relationships**:
 
-| Related Entity | Type        | Cardinality | Description                               |
-| -------------- | ----------- | ----------- | ----------------------------------------- |
-| Assignment     | One-to-Many | 1..\*       | A user can have multiple role assignments |
+| Related Collection | Type        | Cardinality | Description                               |
+| ------------------ | ----------- | ----------- | ----------------------------------------- |
+| `assignments`      | One-to-Many | 1..*        | A user can have multiple role assignments |
 
-### Role
+**Indexes**:
 
-Defines a set of permissions or responsibilities.
+| Fields     | Type   | Purpose                                    |
+| ---------- | ------ | ------------------------------------------ |
+| `email`    | UNIQUE | Fast lookup by email during authentication |
+| `username` | UNIQUE | Fast lookup by username                    |
 
-**Attributes:**
+**Storage Details**: 
+- Stored in MongoDB using the WiredTiger storage engine.
+- User documents use generated ObjectId values and support UTF-8/Unicode data.
 
-| Attribute Name | Type      | Description                                     |
-| -------------- | --------- | ----------------------------------------------- |
-| RoleId         | String    | Unique identifier for the role (Primary Key)    |
-| Name           | String    | Name of the role (e.g., Admin, Editor) (Unique) |
-| Description    | String    | Explanation of the role's purpose               |
-| CreatedAt      | Timestamp | Role creation timestamp                         |
+## `roles` collection
 
-**Relationships:**
+**Description**: Stores role definitions that represent permissions or responsibilities.
 
-| Related Entity | Type        | Cardinality | Description                                  |
-| -------------- | ----------- | ----------- | -------------------------------------------- |
-| Assignment     | One-to-Many | 1..\*       | A role can be linked to multiple assignments |
+**Schema Definition**:
 
-### Assignment
+| Field         | Description                 | Data Type | Constraints                    |
+| ------------- | --------------------------- | --------- | ------------------------------ |
+| `_id`         | Unique role identifier      | ObjectId  | Primary key, auto-generated    |
+| `name`        | Role name                   | String    | Unique, required               |
+| `description` | Role purpose or permissions | String    | Optional                       |
+| `createdAt`   | Role creation timestamp     | Date      | Required, default `new Date()` |
 
-Associative entity linking users and roles.
+**Relationships**:
 
-**Attributes:**
+| Related Collection | Type        | Cardinality | Description                                  |
+| ------------------ | ----------- | ----------- | -------------------------------------------- |
+| `assignments`      | One-to-Many | 1..*        | A role can be linked to multiple assignments |
 
-| Attribute Name | Type      | Description                                  |
-| -------------- | --------- | -------------------------------------------- |
-| UserId         | String    | Reference to User (Foreign Key, Primary Key) |
-| RoleId         | String    | Reference to Role (Foreign Key, Primary Key) |
-| AssignedAt     | Timestamp | Timestamp when the role was assigned         |
+**Indexes**:
 
-**Relationships:**
+| Fields | Type   | Purpose              |
+| ------ | ------ | -------------------- |
+| `name` | UNIQUE | Fast lookup by role name |
 
-| Related Entity | Type        | Cardinality | Description                         |
-| -------------- | ----------- | ----------- | ----------------------------------- |
-| User           | Many-to-One | \*..1       | Each assignment belongs to one user |
-| Role           | Many-to-One | \*..1       | Each assignment belongs to one role |
+**Storage Details**:
+- Stored in MongoDB using the WiredTiger storage engine.
+- Role documents use generated ObjectId values and support UTF-8/Unicode data.
 
-## Physical Model
+## `assignments` collection
 
-### `users` collection
+**Description**: Stores user-to-role membership records. Each assignment links one user to one role.
 
-Stores user account documents.
+**Schema Definition**:
 
-| Field     | Data Type | Constraints                                       | Description                 |
-| --------- | --------- | ------------------------------------------------- | --------------------------- |
-| \_id      | ObjectId  | Primary key, auto-generated                       | Unique document identifier  |
-| username  | String    | Unique, required                                  | Login username              |
-| email     | String    | Unique, required                                  | User email address          |
-| status    | String    | Allowed values: Active, Inactive; default: Active | Account status              |
-| createdAt | Date      | Required, default `new Date()`                    | Creation timestamp          |
-| updatedAt | Date      | Required, default `new Date()`                    | Last modification timestamp |
+| Field        | Description                  | Data Type | Constraints                    |
+| ------------ | ---------------------------- | --------- | ------------------------------ |
+| `_id`        | Unique assignment identifier | ObjectId  | Primary key, auto-generated    |
+| `userId`     | Reference to user document   | ObjectId  | Required, indexed              |
+| `roleId`     | Reference to role document   | ObjectId  | Required, indexed              |
+| `assignedAt` | Assignment timestamp         | Date      | Required, default `new Date()` |
 
-### `roles` collection
+**Relationships**:
 
-Stores role definitions.
+| Related Collection | Type        | Cardinality | Description                         |
+| ------------------ | ----------- | ----------- | ----------------------------------- |
+| `users`            | Many-to-One | *..1        | Each assignment belongs to one user |
+| `roles`            | Many-to-One | *..1        | Each assignment belongs to one role |
 
-| Field       | Data Type | Constraints                    | Description                 |
-| ----------- | --------- | ------------------------------ | --------------------------- |
-| \_id        | ObjectId  | Primary key, auto-generated    | Unique role identifier      |
-| name        | String    | Unique, required               | Role name                   |
-| description | String    | Optional                       | Role purpose or permissions |
-| createdAt   | Date      | Required, default `new Date()` | Role creation timestamp     |
+**Indexes**:
 
-### `assignments` collection
+| Fields               | Type         | Purpose                                          |
+| -------------------- | ------------ | ------------------------------------------------ |
+| `userId`             | INDEX        | Efficient queries for a user's role assignments |
+| `roleId`             | INDEX        | Efficient queries for a role's member list      |
+| (`userId`, `roleId`) | UNIQUE INDEX | Prevent duplicate assignments                    |
 
-Stores user-to-role membership records.
+**Storage Details**:
+- Stored in MongoDB using the WiredTiger storage engine.
+- Use a replica set for high availability and failover.
+- Sharding is not currently configured.
+- TTL indexes may be added for temporary assignment history or expired session data when needed.
 
-| Field      | Data Type | Constraints                    | Description                  |
-| ---------- | --------- | ------------------------------ | ---------------------------- |
-| \_id       | ObjectId  | Primary key, auto-generated    | Unique assignment identifier |
-| userId     | ObjectId  | Required, indexed              | Reference to user document   |
-| roleId     | ObjectId  | Required, indexed              | Reference to role document   |
-| assignedAt | Date      | Required, default `new Date()` | Assignment timestamp         |
+## Scripts
 
-### Indexes
-
-Performance optimization indexes:
-
-| Collection  | Fields           | Type         | Purpose                                         |
-| ----------- | ---------------- | ------------ | ----------------------------------------------- |
-| users       | email            | UNIQUE       | Fast lookup by email during authentication      |
-| users       | username         | UNIQUE       | Fast lookup by username                         |
-| assignments | userId           | INDEX        | Efficient queries for a user's role assignments |
-| assignments | roleId           | INDEX        | Efficient queries for a role's member list      |
-| assignments | (userId, roleId) | UNIQUE INDEX | Prevent duplicate assignments                   |
-
-### Storage Details
-
-- **DBMS**: MongoDB
-- **Storage Engine**: WiredTiger for efficient document storage and compression
-- **Consistency**: Use a replica set for high availability and failover
-- **Sharding**: none (for now)
-- **Charset**: UTF-8/Unicode is supported for multilingual data
-- **Retention**: Use TTL indexes for temporary assignment history or expired session data when needed
-
-### Sample DDL
+The following MongoDB scripts create the collections and indexes, validate user documents, and seed an initial user.
 
 ```javascript
 // users collection with schema validation

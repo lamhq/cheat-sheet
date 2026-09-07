@@ -1,0 +1,76 @@
+# Cells
+
+## Accessing Cells
+
+Cells come from rows. Access them using row instance APIs like `row.getAllCells()` or `row.getVisibleCells()` (when using column visibility):
+
+```js
+const allCells = row.getAllCells()
+const visibleCells = row.getVisibleCells()
+```
+
+## Cell IDs
+
+Every cell has a unique `id` constructed from its row and column IDs:
+```js
+{
+  id: `${row.id}_${column.id}`
+}
+```
+
+During grouping or aggregation, additional strings may be appended.
+
+
+## Cell Parent Objects
+
+Every cell stores references to its parent row and column:
+```js
+cell.row      // Parent row object
+cell.column   // Parent column object
+```
+
+
+## Access Cell Values
+
+Use `cell.getValue()` or `cell.renderValue()`. The second returns a fallback value if undefined:
+```js
+const value = cell.getValue()           // Raw cell value
+const renderedValue = cell.renderValue() // Value or renderFallbackValue
+```
+
+Both are cached for efficiency and are shortcuts for `row.getValue()` and `row.renderValue()`.
+
+
+## Access Other Row from Cell
+
+Use `cell.row.original` to access unmodified source data from the parent row:
+```js
+const firstName = cell.row.original.firstName
+```
+
+
+## Cell Rendering
+
+Use `flexRender` API to properly render cells with custom JSX from column definitions:
+
+```jsx
+import { flexRender } from '@tanstack/react-table'
+
+const columns = [
+  {
+    accessorKey: 'fullName',
+    cell: ({ cell, row }) => {
+      return <div><strong>{row.original.firstName}</strong> {row.original.lastName}</div>
+    }
+  }
+]
+
+// In your table render:
+<tr>
+  {row.getVisibleCells().map(cell => (
+    <td key={cell.id}>
+      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+    </td>
+  ))}
+</tr>
+```

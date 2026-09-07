@@ -1,0 +1,49 @@
+# Data
+
+## Deep Keyed Data
+
+```ts
+type User = {
+  name: {
+    first: string
+    last: string
+  }
+  info: {
+    age: number
+    visits: number
+  }
+}
+
+const columns = [
+  {
+    header: 'First Name',
+    accessorKey: 'name.first',
+  },
+  {
+    header: 'Age',
+    accessorFn: (row) => row.info.age,
+  },
+]
+```
+
+## Rules
+
+The `data` and `columns` arrays must have stable references to prevent unnecessary re-computation and rendering bugs. Store them outside the component or use `useState`/`useMemo`:
+
+```tsx
+const fallbackData: Array<User> = [] // ✅ GOOD
+const features = tableFeatures({}) // ✅ GOOD: define outside
+const columns = [...] // ✅ GOOD
+
+export default function MyComponent() {
+  const [data, setData] = useState<Array<User>>([]) // ✅ GOOD
+
+  const table = useTable({
+    features,
+    columns,
+    data,
+  })
+
+  return <table>...</table>
+}
+```

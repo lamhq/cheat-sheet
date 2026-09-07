@@ -1,0 +1,213 @@
+# State
+
+## Introduction
+
+TanStack Table is a state-management coordinator for table states.
+
+Most of the time you don't need to manage table state yourself, TanStack Table handles it internally.
+
+## Feature-based State
+
+State slices are only created for registered features.
+
+Pagination state is only available if `rowPaginationFeature` is registered:
+
+```tsx
+const features = tableFeatures({
+  rowPaginationFeature,
+  rowSortingFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+})
+
+const table = useTable({ features, columns, data })
+
+table.atoms.pagination.get() // ✅ Available
+table.atoms.sorting.get()     // ✅ Available
+// table.atoms.rowSelection  // ❌ TypeScript error (not registered)
+```
+
+
+## Reading state
+
+Direct atom/store reads for current values (no re-render on changes):
+
+```tsx
+const pagination = table.atoms.pagination.get()
+const sorting = table.atoms.sorting.get()
+const tableState = table.store.state
+```
+
+## Subscribing to state slices
+
+The second argument to `useTable` is a selector that controls which state changes trigger re-renders. Default selects all registered state:
+
+```tsx
+const table = useTable(
+  { features, columns, data },
+  (state) => ({
+    pagination: state.pagination,
+    sorting: state.sorting,
+  }),
+)
+
+table.state.pagination // Re-renders when pagination changes
+table.state.sorting    // Re-renders when sorting changes
+```
+
+### Optimizing Re-renders
+
+You can opt out of re-renders by returning `null` and subscribe to specific state slices at specific tree locations for fine-grained control:
+
+```tsx
+const table = useTable(
+  { features, columns, data },
+  () => null, // No re-renders in parent
+)
+
+return (
+  <table.Subscribe
+    selector={(state) => ({
+      columnFilters: state.columnFilters,
+      pagination: state.pagination,
+    })}
+  >
+    {() => (
+      <tbody>
+        {table.getRowModel().rows.map((row) => (
+          <tr key={row.id}>...</tr>
+        ))}
+      </tbody>
+    )}
+  </table.Subscribe>
+)
+```
+
+Without a `source` prop, `table.Subscribe` subscribes to `table.store` and requires a `selector`. 
+
+With a `source` prop, you can subscribe directly to a single atom and select one value from it:
+
+```tsx
+<table.Subscribe
+  source={table.atoms.rowSelection}
+  selector={(rowSelection) => rowSelection[row.id]}
+>
+  {(isSelected) => (
+    <input type="checkbox" checked={!!isSelected} />
+  )}
+</table.Subscribe>
+```
+
+
+## Setting State
+
+Use feature APIs to update the state:
+
+```tsx
+// ❌ Don't do this
+table.baseAtoms.pagination.set({ pageIndex: 0 })
+
+// ✅ Use these instead
+table.nextPage()
+table.previousPage()
+table.setPageIndex(0)
+table.setPageSize(25)
+table.setSorting(...)
+table.setColumnFilters(...)
+column.toggleVisibility()
+row.toggleSelected()
+```
+
+### Set initial state
+
+```tsx
+const table = useTable({
+  features,
+  columns,
+  data,
+  initialState: {
+    sorting: [{ id: 'age', desc: true }],
+    pagination: { pageIndex: 0, pageSize: 25 },
+  },
+})
+```
+
+### Reset to initial state
+
+```tsx
+table.resetSorting()           // Reset to initialState.sorting
+table.resetPagination()        // Reset to initialState.pagination
+table.resetPagination(true)    // Reset to blank pagination
+```
+
+
+## External State
+
+### useCreateAtom
+
+Use external atoms when your app should own state slices (especially for server-side data fetching):
+
+```tsx
+import { useCreateAtom, useSelector } from '@tanstack/react-store'
+
+const features = tableFeatures({ rowPaginationFeature })
+
+function App() {
+  const paginationAtom = useCreateAtom<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  })
+
+  const pagination = useSelector(paginationAtom)
+
+  const dataQuery = useQuery({
+    queryKey: ['data', pagination],
+    queryFn: () => fetchData(pagination),
+  })
+
+  const table = useTable({
+    features,
+    columns,
+    data: dataQuery.data?.rows ?? [],
+    rowCount: dataQuery.data?.rowCount,
+    atoms: { pagination: paginationAtom },
+    manualPagination: true,
+  })
+}
+```
+
+When using `atoms`, you don't need matching `on[State]Change` callbacks, table APIs update the atom directly.
+
+
+### setState (Classic Pattern)
+
+```tsx
+import {
+  useTable,
+  type PaginationState,
+  type RowSelectionState,
+  type SortingState,
+  type TableState,
+} from '@tanstack/react-table'
+
+type MyTableState = TableState<typeof features>
+
+const [pagination, setPagination] = React.useState<PaginationState>({
+  pageIndex: 0,
+  pageSize: 10,
+})
+
+const table = useTable({
+  features,
+  columns,
+  data,
+  state: { pagination },
+  onPaginationChange: (updater) => {
+    setPagination((old) => {
+      const next = updater instanceof Function ? updater(old) : updater
+      // Side effects or validation here
+      return next
+    })
+  },
+})
+```

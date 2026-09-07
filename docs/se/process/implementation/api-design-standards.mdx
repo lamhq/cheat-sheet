@@ -8,15 +8,15 @@ Following these standards ensures consistency, security, and developer efficienc
 
 ## Endpoint Design
 
-| HTTP Method | URI Pattern                                            | Description                           |
-| ----------- | ------------------------------------------------------ | ------------------------------------- |
-| `GET`       | `/{version}/{module}/{resources}`                      | List all resources                    |
-| `POST`      | `/{version}/{module}/{resources}`                      | Create a new resource                 |
-| `GET`       | `/{version}/{module}/{resources}/{id}`                 | Retrieve a single resource            |
-| `PUT`       | `/{version}/{module}/{resources}/{id}`                 | Replace an entire resource            |
-| `PATCH`     | `/{version}/{module}/{resources}/{id}`                 | Partially update an existing resource |
-| `DELETE`    | `/{version}/{module}/{resources}/{id}`                 | Soft-delete or purge a resource       |
-| `GET`       | `/{version}/{module}/{resources}/{id}/{sub-resources}` | Retrieve sub-resources                |
+| HTTP Method | URI Pattern                                            | Description                           | Response Status Code |
+| ----------- | ------------------------------------------------------ | ------------------------------------- | -------------------- |
+| `GET`       | `/{version}/{module}/{resources}`                      | List all resources                    | `200 (OK)`           |
+| `POST`      | `/{version}/{module}/{resources}`                      | Create a new resource                 | `201 (Created)`      |
+| `GET`       | `/{version}/{module}/{resources}/{id}`                 | Retrieve a single resource            | `200 (OK)`           |
+| `PUT`       | `/{version}/{module}/{resources}/{id}`                 | Replace an entire resource            | `200 (OK)`           |
+| `PATCH`     | `/{version}/{module}/{resources}/{id}`                 | Partially update an existing resource | `200 (OK)`           |
+| `DELETE`    | `/{version}/{module}/{resources}/{id}`                 | Soft-delete or purge a resource       | `204 (No Content)`   |
+| `GET`       | `/{version}/{module}/{resources}/{id}/{sub-resources}` | Retrieve sub-resources                | `200 (OK)`           |
 
 - `{version}`: API version, specified in URI (e.g., `v1`, `v2`).
 - `{module}`: Domain Grouping. Group related APIs (e.g., `auth`, `checkout`, `manage`).

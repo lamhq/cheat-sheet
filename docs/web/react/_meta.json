@@ -30,6 +30,11 @@
     "label": "Data Fetching & Mutation"
   },
   {
+    "name": "tanstack-table",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
     "name": "auth",
     "type": "dir",
     "collapsed": true,

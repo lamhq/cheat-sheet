@@ -1,0 +1,201 @@
+# Column Filtering
+
+## Introduction
+
+Column Filtering lets you apply filters on a per-column basis. 
+
+## Client-Side Filtering
+
+Use client-side when the browser has the complete dataset.
+
+The client-side filtered row model also triggers page-index auto-reset when filter inputs change.
+
+Add `columnFilteringFeature` and `filteredRowModel` with your choice of filter functions to enable client-side filtering:
+
+```tsx
+import {
+  useTable,
+  tableFeatures,
+  columnFilteringFeature,
+  createFilteredRowModel,
+  filterFn_includesString,
+  filterFn_inNumberRange,
+} from '@tanstack/react-table'
+
+const features = tableFeatures({
+  columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
+})
+
+const table = useTable({
+  features,
+  columns,
+  data,
+})
+```
+
+> Register only the filter functions you use to avoid bundling all built-in functions.
+
+
+## Manual Server-Side Filtering
+
+Use server-side when filtering a page or subset.
+
+Disable client-side filtering with `manualFiltering: true`. The data passed should already be filtered:
+
+```tsx
+const features = tableFeatures({ columnFilteringFeature })
+
+const table = useTable({
+  features,
+  data, // must already be filtered
+  columns,
+  manualFiltering: true,
+})
+```
+
+
+## Column Filter State
+
+Filter state is an array of `{ id: string, value: unknown }` objects:
+
+```ts
+interface ColumnFilter {
+  id: string
+  value: unknown
+}
+type ColumnFiltersState = ColumnFilter[]
+```
+
+Read filter state reactively or as a snapshot:
+
+```tsx
+table.state.columnFilters // reactive read
+table.atoms.columnFilters.get() // snapshot read
+```
+
+Manage Column Filter State with Atom (v9 Recommended):
+
+```tsx
+import { useCreateAtom, useSelector } from '@tanstack/react-store'
+import { type ColumnFiltersState } from '@tanstack/react-table'
+
+const columnFiltersAtom = useCreateAtom<ColumnFiltersState>([])
+const columnFilters = useSelector(columnFiltersAtom)
+
+const table = useTable({
+  features,
+  columns,
+  data,
+  atoms: { columnFilters: columnFiltersAtom },
+})
+```
+
+
+Manage Column Filter State with State Setter (v8 Style):
+
+```tsx
+const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+
+const table = useTable({
+  features,
+  columns,
+  data,
+  state: { columnFilters },
+  onColumnFiltersChange: setColumnFilters,
+})
+```
+
+Set Initial Column Filter State:
+```tsx
+const table = useTable({
+  features,
+  columns,
+  data,
+  initialState: {
+    columnFilters: [{ id: 'name', value: 'John' }],
+  },
+})
+```
+
+## Built-in Filter Functions
+
+18 built-in functions: `includesString`, `includesStringSensitive`, `startsWith`, `endsWith`, `equalsString`, `equalsStringSensitive`, `equals`, `weakEquals`, `empty`, `notEmpty`, `arrIncludes`, `arrIncludesAll`, `arrIncludesSome`, `arrHas`, `inNumberRange`, `inDateRange`, `between`, `betweenInclusive`
+
+
+## Custom Filter Functions
+
+Define custom filters inline or register by name:
+
+```tsx
+const myCustomFilterFn: FilterFn<typeof features, MyData> = (
+  row,
+  columnId,
+  filterValue,
+) => {
+  return // true or false based on logic
+}
+
+const features = tableFeatures({
+  columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns: {
+    includesString: filterFn_includesString,
+    myCustomFilterFn,
+  },
+})
+
+const columns = [
+  {
+    accessorKey: 'name',
+    filterFn: 'includesString',
+  },
+  {
+    accessorKey: 'birthday',
+    filterFn: 'myCustomFilterFn',
+  },
+  {
+    accessorKey: 'profile',
+    filterFn: (row, columnId, filterValue) => {
+      // inline function
+      return true
+    },
+  },
+]
+```
+
+## Disable Column Filtering
+
+Disable globally or per-column:
+
+```tsx
+const columns = [
+  {
+    accessorKey: 'id',
+    enableColumnFilter: false, // disable for this column
+  },
+]
+
+const table = useTable({
+  features,
+  columns,
+  data,
+  enableColumnFilters: false, // disable for all columns
+})
+```
+
+
+## Column Filter APIs
+
+- `table.setColumnFilters(filters)` - Overwrite all filters
+- `table.resetColumnFilters()` - Clear all filters
+- `column.getFilterValue()` - Get current filter value
+- `column.setFilterValue(value)` - Set filter value (connect to inputs)
+- `column.getCanFilter()` - Check if filtering is enabled
+- `column.getIsFiltered()` - Check if column is currently filtered
+- `column.getFilterIndex()` - Get filter application order
+- `column.getFilterFn()` - Get current filter function

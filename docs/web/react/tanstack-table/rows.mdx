@@ -1,0 +1,201 @@
+# Row Models 
+
+## Introduction
+
+Row models transform your original data for features like filtering, sorting, grouping, expanding, and pagination.
+
+The rendered rows aren't necessarily a 1:1 mapping of your input data—they're processed through various transformations.
+
+## Configuring Row Models
+
+Add only the row models you need to `tableFeatures()`. The core row model is always included automatically. You must also add the corresponding feature objects for each row model you use. 
+
+Example:
+
+```ts
+import {
+  tableFeatures,
+  useTable,
+  columnFilteringFeature,
+  rowSortingFeature,
+  rowPaginationFeature,
+  createFilteredRowModel,
+  createSortedRowModel,
+  createPaginatedRowModel,
+  filterFn_includesString,
+  sortFn_alphanumeric,
+  sortFn_text,
+} from '@tanstack/react-table'
+
+const features = tableFeatures({
+  // add corresponding feature objects
+  columnFilteringFeature,
+  rowSortingFeature,
+  rowPaginationFeature,
+  // add row models you need
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  // registere functions in their own named slots
+  filterFns: { includesString: filterFn_includesString },
+  sortFns: { alphanumeric: sortFn_alphanumeric, text: sortFn_text },
+})
+
+const table = useTable({
+  features,
+  columns,
+  data,
+})
+```
+
+| Slot Key | Factory Function | Purpose |
+|----------|------------------|---------|
+| `filteredRowModel` | `createFilteredRowModel()` | Filtering |
+| `sortedRowModel` | `createSortedRowModel()` | Sorting |
+| `paginatedRowModel` | `createPaginatedRowModel()` | Pagination |
+| `expandedRowModel` | `createExpandedRowModel()` | Row expanding |
+| `groupedRowModel` | `createGroupedRowModel()` | Grouping & aggregation |
+| `facetedRowModel` | `createFacetedRowModel()` | Faceted filtering |
+
+
+## Function Registries
+
+Function Registries contain reusable functions (for filter, sort, and aggregation) registered in their respective slots within `tableFeatures()` so they can be referenced consistently across your table configuration.
+
+```ts
+import {
+  tableFeatures,
+  columnFilteringFeature,
+  createFilteredRowModel,
+  FilterFn,
+} from '@tanstack/react-table'
+
+const myFuzzyFilter: FilterFn<typeof features, Person> = (
+  row,
+  columnId,
+  value,
+  addMeta,
+) => {
+  // ...
+  return true
+}
+
+const features = tableFeatures({
+  columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  // register the custom filter function
+  filterFns: { fuzzy: myFuzzyFilter },
+})
+
+// Now 'fuzzy' is a valid type-safe value:
+const columnHelper = createColumnHelper<typeof features, Person>()
+columnHelper.accessor('name', { filterFn: 'fuzzy' })
+```
+
+The same pattern applies for `sortFns` and `aggregationFns`.
+
+
+## Row IDs
+
+Every row has a unique `id`. By default it's the same as `row.index`, but you can override it with the `getRowId` table option:
+```js
+const table = useTable({
+  features,
+  columns,
+  data,
+  getRowId: (originalRow) => originalRow.uuid, // Use UUID as row ID
+})
+```
+
+## Using Row Models
+
+```ts
+const table = useTable({
+  features,
+  columns,
+  data,
+})
+
+// Main row model (accounts for all transformations)
+table.getRowModel()
+
+// Access underlying row models
+table.getCoreRowModel()
+table.getFilteredRowModel()
+table.getGroupedRowModel()
+table.getSortedRowModel()
+table.getExpandedRowModel()
+table.getPaginatedRowModel()
+```
+
+Use `table.getRowModel()` for final rendering:
+```jsx
+<tbody>
+  {table.getRowModel().rows.map((row) => (
+    <tr key={row.id}>{/* ... */}</tr>
+  ))}
+</tbody>
+```
+
+Access a specific row by ID:
+```js
+const row = table.getRow(rowId)
+```
+
+Get selected rows:
+```js
+const selectedRows = table.getSelectedRowModel().rows
+```
+
+Get row number for rendering:
+```js
+const rowNumberColumn = columnHelper.display({
+  id: 'rowNumber',
+  header: '#',
+  cell: ({ row }) => {
+    const displayIndex = row.getDisplayIndex()
+    return displayIndex === -1 ? '' : displayIndex + 1
+  },
+})
+```
+
+`row.getDisplayIndex()` returns a zero-based index (or `-1` if the row isn't visible), and is always up-to-date.
+
+Access original row data (data without accessor transformations):
+```js
+const firstName = row.original.firstName // { firstName: 'John', lastName: 'Doe' }
+```
+
+
+## Available Row Models
+
+Available Row Models on Table Instance:
+- `getRowModel` - Main row model with all transformations applied
+- `getCoreRowModel` - 1:1 mapping of original data
+- `getFilteredRowModel` / `getPreFilteredRowModel` - After/before filtering
+- `getGroupedRowModel` / `getPreGroupedRowModel` - After/before grouping
+- `getSortedRowModel` / `getPreSortedRowModel` - After/before sorting
+- `getExpandedRowModel` / `getPreExpandedRowModel` - After/before expanding
+- `getPaginatedRowModel` / `getPrePaginatedRowModel` - After/before pagination
+- `getSelectedRowModel` - All selected rows
+- `getGroupedSelectedRowModel` - Selected rows after grouping
+- `getFilteredSelectedRowModel` - Selected rows after filtering
+
+## Row Model Execution Order
+
+Row models are applied in this sequence:
+
+```
+getCoreRowModel → getFilteredRowModel → getGroupedRowModel → getSortedRowModel → getExpandedRowModel → getPaginatedRowModel → getRowModel
+```
+
+Data is filtered first, then grouped, then sorted, then expanded, and finally paginated.
+
+**Row Model Data Structure**
+Each row model provides rows in three formats:
+
+```ts
+table.getRowModel().rows          // Array of rows
+table.getRowModel().flatRows      // Flattened array (all sub-rows at top level)
+table.getRowModel().rowsById      // Object keyed by row ID for fast lookup
+```

@@ -1,0 +1,300 @@
+# Sorting
+
+## Client-Side Sorting
+
+Add the sorting feature and sorted row model with your choice of sort functions:
+
+```tsx
+import {
+  useTable,
+  tableFeatures,
+  rowSortingFeature,
+  createSortedRowModel,
+  sortFn_alphanumeric,
+  sortFn_text,
+  sortFn_datetime,
+} from '@tanstack/react-table'
+
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    text: sortFn_text,
+    datetime: sortFn_datetime,
+  },
+})
+
+const table = useTable({
+  features,
+  columns,
+  data,
+})
+```
+
+> Register only functions you use to keep bundle size small. The default `sortFn: 'auto'` resolves based on data type.
+
+## Server-Side Sorting
+
+Disable client-side sorting with `manualSorting: true`. Data should already be sorted:
+
+```tsx
+const features = tableFeatures({ rowSortingFeature })
+
+const table = useTable({
+  features,
+  columns,
+  data, // must already be sorted
+  manualSorting: true,
+})
+```
+
+## Sorting State
+
+Sorting state is an array of `{ id: string, desc: boolean }` objects, enabling multi-column sorting:
+
+```ts
+type ColumnSort = { id: string; desc: boolean }
+type SortingState = ColumnSort[]
+```
+
+### Accessing Sorting State
+
+Read reactively or as a snapshot:
+
+```tsx
+table.state.sorting // reactive read
+table.atoms.sorting.get() // snapshot read
+```
+
+### Manage Sorting State
+
+**With Atom (v9 Recommended):**
+
+```tsx
+import { useCreateAtom, useSelector } from '@tanstack/react-store'
+
+const sortingAtom = useCreateAtom<SortingState>([])
+const sorting = useSelector(sortingAtom)
+
+const table = useTable({
+  features,
+  columns,
+  data,
+  atoms: { sorting: sortingAtom },
+})
+```
+
+**With State Setter (v8 Style):**
+
+```tsx
+const [sorting, setSorting] = useState<SortingState>([])
+
+const table = useTable({
+  features,
+  columns,
+  data,
+  state: { sorting },
+  onSortingChange: setSorting,
+})
+```
+
+**Set Initial Sorting State (uncontrolled):**
+```tsx
+const table = useTable({
+  features,
+  columns,
+  data,
+  initialState: {
+    sorting: [{ id: 'name', desc: true }],
+  },
+})
+```
+
+## Built-in Sorting Functions
+
+6 functions: `alphanumeric`, `alphanumericCaseSensitive`, `text`, `textCaseSensitive`, `datetime`, `basic`
+
+
+## Custom Sort Functions
+
+Define custom sorts inline or register by name. Must return `-1`, `0`, or `1` (ascending order):
+
+```tsx
+const myCustomSortFn: SortFn<typeof features, MyData> = (
+  rowA,
+  rowB,
+  columnId,
+) =>
+  rowA.original[columnId] > rowB.original[columnId]
+    ? 1
+    : rowA.original[columnId] < rowB.original[columnId]
+      ? -1
+      : 0
+
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    myCustomSortFn,
+  },
+})
+
+const columns = [
+  { accessorKey: 'name', sortFn: 'alphanumeric' },
+  { accessorKey: 'age', sortFn: 'myCustomSortFn' },
+  {
+    accessorKey: 'profile',
+    sortFn: (rowA, rowB, columnId) =>
+      rowA.original.someProperty - rowB.original.someProperty,
+  },
+]
+```
+
+## Disable Sorting
+
+Disable globally or per-column:
+
+```tsx
+const columns = [
+  { accessorKey: 'id', enableSorting: false },
+]
+
+const table = useTable({
+  features,
+  columns,
+  data,
+  enableSorting: false,
+})
+```
+
+## Sorting Direction
+
+Change the first sort direction with `sortDescFirst`:
+
+```tsx
+const columns = [
+  { accessorKey: 'name', sortDescFirst: true },
+]
+
+const table = useTable({
+  features,
+  columns,
+  data,
+  sortDescFirst: true,
+})
+```
+
+## Invert Sorting
+
+Invert comparison (useful for ranks/golf scores where lower is better):
+
+```tsx
+const columns = [
+  { accessorKey: 'rank', invertSorting: true },
+]
+```
+
+## Sort Undefined Values
+
+Control where undefined values appear with `sortUndefined`:
+
+```tsx
+const columns = [
+  {
+    accessorKey: 'rank',
+    sortUndefined: 'first' | 'last' | -1 | 1 | false,
+  },
+]
+```
+
+## Sorting Removal
+
+Disable the ability to cycle back to unsorted with `enableSortingRemoval`:
+
+```tsx
+const table = useTable({
+  features,
+  columns,
+  data,
+  enableSortingRemoval: false, // always sorted
+})
+```
+
+Cycle becomes: `'none' -> 'asc' -> 'desc' -> 'asc' -> 'desc'`
+
+## Multi-Sorting
+
+Enabled by default. Shift+click adds column to sort. Customize with options:
+
+**Disable Multi-Sorting:**
+```tsx
+const columns = [
+  { accessorKey: 'createdAt', enableMultiSort: false },
+]
+
+const table = useTable({
+  features,
+  columns,
+  data,
+  enableMultiSort: false,
+})
+```
+
+**Customize Multi-Sort Trigger:**
+```tsx
+const table = useTable({
+  features,
+  columns,
+  data,
+  isMultiSortEvent: (e) => e.ctrlKey || e.shiftKey,
+})
+```
+
+**Multi-Sort Limit:**
+```tsx
+const table = useTable({
+  features,
+  columns,
+  data,
+  maxMultiSortColCount: 3,
+})
+```
+
+**Disable Multi-Sort Removal:**
+```tsx
+const table = useTable({
+  features,
+  columns,
+  data,
+  enableMultiRemove: false,
+})
+```
+
+## Reset Sorting When Data Changes
+
+Preserve sorting by default. Reset with `autoResetSorting: true`:
+
+```tsx
+const table = useTable({
+  features,
+  columns,
+  data,
+  autoResetSorting: true,
+})
+```
+
+## Sorting APIs
+
+- `table.setSorting(state)` - Set sorting directly
+- `table.resetSorting()` - Reset to initial state
+- `column.getCanSort()` - Check if column can be sorted
+- `column.getIsSorted()` - Get current sort direction (`'asc'` | `'desc'` | false)
+- `column.getToggleSortingHandler()` - Click handler for sort toggle
+- `column.toggleSorting(desc?, multi?)` - Manually toggle sorting
+- `column.clearSorting()` - Clear sorting for column
+- `column.getNextSortingOrder()` - Show next sort direction
+- `column.getFirstSortDir()` - Show first sort direction
+- `column.getSortIndex()` - Show sort order in multi-sort (1st, 2nd, etc.)
+- `column.getCanMultiSort()` - Check if multi-sort enabled
