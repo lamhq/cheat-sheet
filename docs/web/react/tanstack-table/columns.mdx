@@ -192,17 +192,3 @@ columnHelper.accessor('age', {
 ```
 
 The string names you can pass to these options are typed from the function registries you include in `tableFeatures` (e.g., `sortFns`, `filterFns`, `aggregationFns`).
-
-
-## Column Meta
-
-Column defs also accept a `meta` property for attaching your own data to a column:
-
-```tsx
-columnHelper.accessor('age', {
-  meta: {
-    filterVariant: 'range',
-    dataType: 'number',
-  },
-})
-```
