@@ -5,6 +5,7 @@
   "columns",
   "rows",
   "headers",
+  "cells",
   "meta",
   "pagination",
   "column-filtering",
@@ -12,5 +13,7 @@
   "sorting",
   "row-selection",
   "column-visibility",
+  "composable",
+  "context",
   "devtools"
 ]

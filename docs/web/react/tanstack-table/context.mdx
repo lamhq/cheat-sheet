@@ -1,0 +1,99 @@
+# Context
+
+## Provide Context
+
+TanStack Table wraps provide context for registered reusable components:
+
+```tsx
+<table.AppTable>         // provides table instance
+<table.AppCell>          // provides cell instance  
+<table.AppHeader>        // provides header instance
+<table.AppFooter>        // provides footer instance
+```
+
+## Read Context
+
+Components read context with matching hooks:
+
+```tsx
+function PaginationControls() {
+  const table = useTableContext() // from <table.AppTable>
+  return <button onClick={() => table.nextPage()}>Next</button>
+}
+
+function TextCell() {
+  const cell = useCellContext<string>() // from <table.AppCell>
+  return <span>{cell.getValue()}</span>
+}
+
+function SortIndicator() {
+  const header = useHeaderContext() // from <table.AppHeader>
+  return header.column.getIsSorted() ? '🔼' : null
+}
+```
+
+## The Table Context
+
+You can access table context from other context instances: `cell.table`, `cell.row`, `cell.column`, `header.column`, etc.
+
+Use `useTableContext()` when a component has no instance to start from, such as a standalone toolbar or pagination control.
+
+The `table` object returned by `useTable` is not a stable value. For stable handle to pass down, provide `table.store` or a specific atom such as `table.atoms.rowSelection`, then read updates with `Subscribe` or `useSelector`.
+
+## Import Hooks
+
+Import context hooks from the same module where you called `createTableHook` for type-safety:
+
+```tsx
+// hooks/table.ts
+export const {
+  useAppTable,
+  createAppColumnHelper,
+  useTableContext,    // typed with TFeatures + tableComponents
+  useCellContext,     // typed with TFeatures + cellComponents
+  useHeaderContext,   // typed with TFeatures + headerComponents
+} = createTableHook({
+  features,
+  tableComponents,
+  cellComponents,
+  headerComponents,
+})
+```
+
+## Custom Context
+
+`createTableHookContexts` creates typed contexts for avoiding prop drilling. Cell, row, header, and column instances are stable references that won't re-render when table state changes:
+
+```tsx
+// cell-slot-context.ts
+export const { cellContext, useCellContext } =
+  createTableHookContexts<typeof features>()
+
+// Provide stable cell once
+function CellSlot({ cell }: { cell: Cell<typeof features, Person, unknown> }) {
+  return (
+    <cellContext.Provider value={cell}>
+      <DeeplyNestedCellUI />
+    </cellContext.Provider>
+  )
+}
+
+// Read anywhere below without prop drilling
+function DeeplyNestedCellUI() {
+  const cell = useCellContext() // fully typed
+  return <span>{cell.getValue()}</span>
+}
+```
+
+**Warning on State-Dependent Reads**: Components reading state-dependent methods like `header.column.getIsSorted()` or `cell.getValue()` from context won't re-render on state changes. Wrap these in `Subscribe` or `useSelector`:
+
+```tsx
+function SortIndicator() {
+  const header = useHeaderContext()
+  return (
+    <header.Subscribe selector={(state) => state.sorting}>
+      {() => (header.column.getIsSorted() ? '🔼' : null)}
+    </header.Subscribe>
+  )
+}
+```
