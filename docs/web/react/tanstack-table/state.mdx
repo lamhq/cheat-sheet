@@ -1,10 +1,10 @@
 # State
 
-## Introduction
+Managing TanStack Table states.
 
-TanStack Table is a state-management coordinator for table states.
-
+:::tip
 Most of the time you don't need to manage table state yourself, TanStack Table handles it internally.
+:::
 
 ## Feature-based State
 
@@ -34,8 +34,8 @@ Direct atom/store reads for current values (no re-render on changes):
 
 ```tsx
 const pagination = table.atoms.pagination.get()
+const pagination = table.store.state.pagination
 const sorting = table.atoms.sorting.get()
-const tableState = table.store.state
 ```
 
 ## Subscribing to state slices
@@ -72,13 +72,15 @@ return (
       pagination: state.pagination,
     })}
   >
-    {() => (
-      <tbody>
-        {table.getRowModel().rows.map((row) => (
-          <tr key={row.id}>...</tr>
-        ))}
-      </tbody>
-    )}
+    {({ pagination }) => {
+      return (
+        <tbody>
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id}>...</tr>
+          ))}
+        </tbody>
+      )
+    }}
   </table.Subscribe>
 )
 ```
@@ -143,43 +145,7 @@ table.resetPagination(true)    // Reset to blank pagination
 
 ## External State
 
-### useCreateAtom
-
-Use external atoms when your app should own state slices (especially for server-side data fetching):
-
-```tsx
-import { useCreateAtom, useSelector } from '@tanstack/react-store'
-
-const features = tableFeatures({ rowPaginationFeature })
-
-function App() {
-  const paginationAtom = useCreateAtom<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  })
-
-  const pagination = useSelector(paginationAtom)
-
-  const dataQuery = useQuery({
-    queryKey: ['data', pagination],
-    queryFn: () => fetchData(pagination),
-  })
-
-  const table = useTable({
-    features,
-    columns,
-    data: dataQuery.data?.rows ?? [],
-    rowCount: dataQuery.data?.rowCount,
-    atoms: { pagination: paginationAtom },
-    manualPagination: true,
-  })
-}
-```
-
-When using `atoms`, you don't need matching `on[State]Change` callbacks, table APIs update the atom directly.
-
-
-### setState (Classic Pattern)
+Manual state management with `useState`:
 
 ```tsx
 import {
@@ -192,6 +158,7 @@ import {
 
 type MyTableState = TableState<typeof features>
 
+const [sorting, setSorting] = React.useState<SortingState>([]);
 const [pagination, setPagination] = React.useState<PaginationState>({
   pageIndex: 0,
   pageSize: 10,
@@ -201,13 +168,13 @@ const table = useTable({
   features,
   columns,
   data,
-  state: { pagination },
-  onPaginationChange: (updater) => {
-    setPagination((old) => {
-      const next = updater instanceof Function ? updater(old) : updater
-      // Side effects or validation here
-      return next
-    })
-  },
+  state: { pagination, sorting },
+  onPaginationChange: setPagination,
+  onSortingChange: (updater) => {
+    setSorting(updater);
+    setPagination((previous) => ({ ...previous, pageIndex: 0 }));
+  },  
 })
 ```
+
+For managing state with TanStack Store, see [External Atoms](https://tanstack.com/table/latest/docs/framework/react/guide/table-state#external-atoms).

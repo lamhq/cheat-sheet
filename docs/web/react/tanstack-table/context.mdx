@@ -1,6 +1,9 @@
 # Context
 
-## Provide Context
+Accessing table, cell, header instances in component tree without prop drilling.
+
+
+## Context Provider
 
 TanStack Table wraps provide context for registered reusable components:
 
@@ -32,17 +35,10 @@ function SortIndicator() {
 }
 ```
 
-## The Table Context
-
-You can access table context from other context instances: `cell.table`, `cell.row`, `cell.column`, `header.column`, etc.
-
-Use `useTableContext()` when a component has no instance to start from, such as a standalone toolbar or pagination control.
-
-The `table` object returned by `useTable` is not a stable value. For stable handle to pass down, provide `table.store` or a specific atom such as `table.atoms.rowSelection`, then read updates with `Subscribe` or `useSelector`.
 
 ## Import Hooks
 
-Import context hooks from the same module where you called `createTableHook` for type-safety:
+Hooks provide access to context are returned from `createTableHook` (type-safety guaranteed):
 
 ```tsx
 // hooks/table.ts
@@ -59,6 +55,16 @@ export const {
   headerComponents,
 })
 ```
+
+
+## The Table Context
+
+You can access table context from other context instances: `cell.table`, `cell.row`, `cell.column`, `header.column`, etc.
+
+Use `useTableContext()` when a component has no instance to start from, such as a standalone toolbar or pagination control.
+
+The `table` object returned by `useTable` is not a stable value. For stable handle to pass down, provide `table.store` or a specific atom such as `table.atoms.rowSelection`, then read updates with `Subscribe` or `useSelector`.
+
 
 ## Custom Context
 

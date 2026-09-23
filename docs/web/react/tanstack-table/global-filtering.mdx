@@ -1,5 +1,7 @@
 # Global Filtering
 
+## Introduction
+
 Global Filtering lets you apply a single filter value across all columns in your table, instead of filtering each column individually.
 
 It's often used for a "search bar" that quickly narrows down rows based on any matching field.
@@ -19,6 +21,7 @@ import {
 } from '@tanstack/react-table'
 
 const features = tableFeatures({
+  // [!code highlight:3]
   columnFilteringFeature,
   globalFilteringFeature,
   filteredRowModel: createFilteredRowModel(),
@@ -32,9 +35,11 @@ const table = useTable({
 })
 ```
 
-> Register only the filter functions you actually use to keep bundle size small.
-
 The client-side filtered row model also triggers page-index auto-reset when global filter input changes.
+
+:::caution
+Register only the filter functions you actually use to keep bundle size small.
+:::
 
 
 ## Manual Server-Side Filtering
@@ -55,6 +60,7 @@ const table = useTable({
 })
 ```
 
+
 ## Global Filter Function
 
 Set which filter function to use globally. Can be a string referencing a registered function or passed directly:
@@ -68,9 +74,40 @@ const table = useTable({
 })
 ```
 
+
+## Custom Global Filter Function
+
+Define a custom function and pass it directly:
+
+```tsx
+const customFilterFn = (row, columnId, filterValue) => {
+  return // true if row should be included
+}
+
+const table = useTable({
+  features,
+  columns,
+  data,
+  globalFilterFn: customFilterFn,
+})
+```
+
+
 ## Built-in Global Filter Functions
 
-12 functions available: `includesString`, `includesStringSensitive`, `equalsString`, `equals`, `weakEquals`, `arrIncludes`, `arrIncludesAll`, `arrIncludesSome`, `arrHas`, `inNumberRange`, `between`, `betweenInclusive`
+12 functions available:
+- `includesString`
+- `includesStringSensitive`
+- `equalsString`
+- `equals`
+- `weakEquals`
+- `arrIncludes`
+- `arrIncludesAll`
+- `arrIncludesSome`
+- `arrHas`
+- `inNumberRange`
+- `between`
+- `betweenInclusive`
 
 
 ## Global Filter State
@@ -84,22 +121,6 @@ table.atoms.globalFilter.get() // snapshot read
 
 
 ## Manage Global Filter State
-
-With Atom (v9 Recommended):
-
-```tsx
-import { useCreateAtom, useSelector } from '@tanstack/react-store'
-
-const globalFilterAtom = useCreateAtom<string>('')
-const globalFilter = useSelector(globalFilterAtom)
-
-const table = useTable({
-  features,
-  columns,
-  data,
-  atoms: { globalFilter: globalFilterAtom },
-})
-```
 
 With State Setter (v8 Style):
 
@@ -128,10 +149,12 @@ const table = useTable({
 })
 ```
 
-> Do NOT use both `initialState.globalFilter` and controlled state at the same time
+:::caution
+Do NOT use both `initialState.globalFilter` and controlled state at the same time
+:::
 
 
-## Adding Global Filter Input to UI
+## Render Global Filter Input
 
 Read reactively and update with `table.setGlobalFilter`:
 
@@ -143,23 +166,6 @@ Read reactively and update with `table.setGlobalFilter`:
 />
 ```
 
-
-## Custom Global Filter Function
-
-Define a custom function and pass it directly:
-
-```tsx
-const customFilterFn = (row, columnId, filterValue) => {
-  return // true if row should be included
-}
-
-const table = useTable({
-  features,
-  columns,
-  data,
-  globalFilterFn: customFilterFn,
-})
-```
 
 ## Disable Global Filtering
 
@@ -180,6 +186,7 @@ const table = useTable({
   enableGlobalFilter: false, // disable for all columns
 })
 ```
+
 
 ## Global Filter APIs
 

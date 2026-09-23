@@ -4,7 +4,7 @@
 
 When multiple tables in an app should share the same setup, use `createTableHook` to create a table factory that defines shared features, row models, and default options once.
 
-It optionally allows registering reusable table, cell, and header components.
+It optionally allows registering reusable components (table, cell, header, etc.).
 
 :::note
 Use standalone `useTable` hook for one-off tables where shared configuration would add unnecessary complexity.
@@ -13,7 +13,7 @@ Use standalone `useTable` hook for one-off tables where shared configuration wou
 
 ## Getting Started
 
-Create one app table hook with features and defaults that every table gets:
+Create a hook with features and default settings by calling `createTableHook`:
 
 ```tsx
 import {
@@ -52,7 +52,7 @@ export const { useAppTable, createAppColumnHelper } = createTableHook({
 
 ## Declare Columns
 
-Column helpers are already bound to your app's features:
+Use the returned column helper `createAppColumnHelper` to declare your table columns:
 
 ```tsx
 type Person = {
@@ -137,11 +137,11 @@ const table = useAppTable(
 
 ## Reusable Components
 
-See: https://tanstack.com/table/latest/docs/framework/react/examples/composable-tables
+Reference: [React Example: Composable Tables](https://tanstack.com/table/latest/docs/framework/react/examples/composable-tables).
 
 ### Registration
 
-Create a table and register reusable components (table, cell, and header):
+Create a table and register reusable components:
 
 ```tsx
 import {

@@ -54,8 +54,6 @@ const firstName = cell.row.original.firstName
 Use `flexRender` API to properly render cells with custom JSX from column definitions:
 
 ```jsx
-import { flexRender } from '@tanstack/react-table'
-
 const columns = [
   {
     accessorKey: 'fullName',
@@ -69,7 +67,7 @@ const columns = [
 <tr>
   {row.getVisibleCells().map(cell => (
     <td key={cell.id}>
-      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+      <table.FlexRender cell={cell} />
     </td>
   ))}
 </tr>

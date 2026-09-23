@@ -1,6 +1,6 @@
 # Column Visibility
 
-## Setup
+## Enable Column Visibility
 
 Add the column visibility feature to enable visibility APIs:
 
@@ -20,33 +20,20 @@ const table = useTable({
 })
 ```
 
-## Column Visibility State
+## State Structure
 
 The `columnVisibility` state is a map of column IDs to boolean values. A column is hidden if its ID is present and set to `false`:
 
-**With Atom (v9 Recommended):**
-
-```tsx
-import { useCreateAtom, useSelector } from '@tanstack/react-store'
-import { type ColumnVisibilityState } from '@tanstack/react-table'
-
-const columnVisibilityAtom = useCreateAtom<ColumnVisibilityState>({
+```ts
+const columnVisibility: ColumnVisibilityState = {
   columnId1: true,
-  columnId2: false, // hide this column by default
+  columnId2: false, // hidden
   columnId3: true,
-})
-
-const columnVisibility = useSelector(columnVisibilityAtom)
-
-const table = useTable({
-  features,
-  columns,
-  data,
-  atoms: {
-    columnVisibility: columnVisibilityAtom,
-  },
-})
+}
 ```
+
+
+## Manage State
 
 **With State Setter (v8 Style):**
 
@@ -83,7 +70,9 @@ const table = useTable({
 })
 ```
 
-> Do NOT provide `columnVisibility` to both `initialState` and `state` at the same time.
+:::caution
+Do NOT provide `columnVisibility` to both `initialState` and `state` at the same time.
+:::
 
 
 ## Disable Hiding Columns
@@ -103,6 +92,7 @@ const columns = [
   },
 ]
 ```
+
 
 ## Column Visibility APIs
 

@@ -2,11 +2,12 @@
 
 ## Introduction
 
-Column definitions build the data model, format data for display, create headers/footers, and enable display-only columns like action buttons.
+Define what columns exist in your table. You can format data for display, create headers/footers, and enable display-only columns (action buttons, ...).
+
 
 ## Column Types
 
-Three categories:
+Three kinds of columns:
 - **Accessor Columns**: Have a data model, so they can be sorted, filtered, grouped
 - **Display Columns**: No data model, used for display-only content (actions, checkboxes, expanders)
 - **Grouping Columns**: Group other columns together, no data model
@@ -14,7 +15,7 @@ Three categories:
 
 ## Column Helpers
 
-Use `createColumnHelper` for type-safe column creation. It requires two type parameters: `TFeatures` and `TData`:
+`createColumnHelper` is a helper function for defining columns.
 
 ```tsx
 type Person = {
@@ -27,6 +28,7 @@ type Person = {
 }
 
 const features = tableFeatures({})
+// [!code highlight]
 const columnHelper = createColumnHelper<typeof features, Person>()
 
 const defaultColumns = columnHelper.columns([
@@ -51,6 +53,7 @@ const defaultColumns = columnHelper.columns([
   }),
 ])
 ```
+
 
 ## Accessor Columns
 
@@ -120,7 +123,7 @@ columnHelper.accessor(row => row[1], {
 
 ### Accessor Functions
 
-Computed values.
+To define computed values with accessor functions:
 
 ```ts
 type Person = {
@@ -147,7 +150,7 @@ columnHelper.accessor(row => `${row.firstName} ${row.lastName}`, {
 
 ## Column Formatting & Rendering
 
-Customize how data displays using formatters.
+Customize how data is displayed in cell, header, and footer.
 
 There are a couple of formatters available to you:
 

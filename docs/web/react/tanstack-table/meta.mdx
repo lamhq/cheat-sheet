@@ -5,38 +5,47 @@
 TanStack Table provides `meta` options for attaching arbitrary data/functions to table and column.
 
 
-## Table & Column Meta
+## Table Meta
 
-Define interfaces and register them with `metaHelper` on your `features` object for per-table type safety:
+Define a table meta interface and register it with `metaHelper` on your `features` object for per-table type safety:
 
 ```ts
 interface MyTableMeta {
   updateData: (rowIndex: number, columnId: string, value: unknown) => void
 }
 
-interface MyColumnMeta {
-  filterVariant?: 'text' | 'range' | 'select'
-}
-
 const features = tableFeatures({
   rowSortingFeature,
   tableMeta: metaHelper<MyTableMeta>(),
-  columnMeta: metaHelper<MyColumnMeta>(),
-})
-
-const columnHelper = createColumnHelper<typeof features, Person>()
-
-// Now fully typed:
-columnHelper.accessor('age', {
-  meta: {
-    filterVariant: 'range', // ✅ type-checked
-  },
 })
 
 table.options.meta?.updateData // ✅ fully typed
 ```
 
 This is scoped **per-table**, not global. Different tables can use different `features` objects with different meta shapes.
+
+
+## Column Meta
+
+Define a column meta interface and register it with `metaHelper` on your `features` object:
+
+```ts
+interface MyColumnMeta {
+  filterVariant?: 'text' | 'range' | 'select'
+}
+
+const features = tableFeatures({
+  columnMeta: metaHelper<MyColumnMeta>(),
+})
+
+const columnHelper = createColumnHelper<typeof features, Person>()
+
+columnHelper.accessor('age', {
+  meta: {
+    filterVariant: 'range', // ✅ type-checked
+  },
+})
+```
 
 
 ## Filter Meta

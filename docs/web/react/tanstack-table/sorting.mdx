@@ -32,7 +32,10 @@ const table = useTable({
 })
 ```
 
-> Register only functions you use to keep bundle size small. The default `sortFn: 'auto'` resolves based on data type.
+:::caution
+Register only functions you use to keep bundle size small. The default `sortFn: 'auto'` resolves based on data type.
+:::
+
 
 ## Server-Side Sorting
 
@@ -49,16 +52,18 @@ const table = useTable({
 })
 ```
 
-## Sorting State
 
-Sorting state is an array of `{ id: string, desc: boolean }` objects, enabling multi-column sorting:
+## State Structure
+
+Sorting state is an array of `{ id: string, desc: boolean }` objects, supporting multi-column sorting:
 
 ```ts
 type ColumnSort = { id: string; desc: boolean }
 type SortingState = ColumnSort[]
 ```
 
-### Accessing Sorting State
+
+## Accessing State
 
 Read reactively or as a snapshot:
 
@@ -67,25 +72,10 @@ table.state.sorting // reactive read
 table.atoms.sorting.get() // snapshot read
 ```
 
-### Manage Sorting State
 
-**With Atom (v9 Recommended):**
+## Manage Sorting State
 
-```tsx
-import { useCreateAtom, useSelector } from '@tanstack/react-store'
-
-const sortingAtom = useCreateAtom<SortingState>([])
-const sorting = useSelector(sortingAtom)
-
-const table = useTable({
-  features,
-  columns,
-  data,
-  atoms: { sorting: sortingAtom },
-})
-```
-
-**With State Setter (v8 Style):**
+With State Setter (v8 Style):
 
 ```tsx
 const [sorting, setSorting] = useState<SortingState>([])
@@ -99,7 +89,8 @@ const table = useTable({
 })
 ```
 
-**Set Initial Sorting State (uncontrolled):**
+Set Initial Sorting State (uncontrolled):
+
 ```tsx
 const table = useTable({
   features,
@@ -111,9 +102,16 @@ const table = useTable({
 })
 ```
 
+
 ## Built-in Sorting Functions
 
-6 functions: `alphanumeric`, `alphanumericCaseSensitive`, `text`, `textCaseSensitive`, `datetime`, `basic`
+6 functions:
+- `alphanumeric`
+- `alphanumericCaseSensitive`
+- `text`
+- `textCaseSensitive`
+- `datetime`
+- `basic`
 
 
 ## Custom Sort Functions
@@ -152,6 +150,7 @@ const columns = [
 ]
 ```
 
+
 ## Disable Sorting
 
 Disable globally or per-column:
@@ -168,6 +167,7 @@ const table = useTable({
   enableSorting: false,
 })
 ```
+
 
 ## Sorting Direction
 
@@ -186,6 +186,7 @@ const table = useTable({
 })
 ```
 
+
 ## Invert Sorting
 
 Invert comparison (useful for ranks/golf scores where lower is better):
@@ -195,6 +196,7 @@ const columns = [
   { accessorKey: 'rank', invertSorting: true },
 ]
 ```
+
 
 ## Sort Undefined Values
 
@@ -208,6 +210,7 @@ const columns = [
   },
 ]
 ```
+
 
 ## Sorting Removal
 
@@ -224,9 +227,10 @@ const table = useTable({
 
 Cycle becomes: `'none' -> 'asc' -> 'desc' -> 'asc' -> 'desc'`
 
+
 ## Multi-Sorting
 
-Enabled by default. Shift+click adds column to sort. Customize with options:
+Enabled by default. `Shift`+click adds column to sort. Customize with options:
 
 **Disable Multi-Sorting:**
 ```tsx
@@ -272,7 +276,8 @@ const table = useTable({
 })
 ```
 
-## Reset Sorting When Data Changes
+
+## Reset Sorting
 
 Preserve sorting by default. Reset with `autoResetSorting: true`:
 
@@ -284,6 +289,7 @@ const table = useTable({
   autoResetSorting: true,
 })
 ```
+
 
 ## Sorting APIs
 

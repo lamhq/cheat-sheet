@@ -8,7 +8,7 @@ The rendered rows aren't necessarily a 1:1 mapping of your input data—they're 
 
 ## Configuring Row Models
 
-Add only the row models you need to `tableFeatures()`. The core row model is always included automatically. You must also add the corresponding feature objects for each row model you use. 
+Add row models for the features you used to `tableFeatures()`. The core row model is always included automatically.
 
 Example:
 
@@ -33,6 +33,7 @@ const features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
   // add row models you need
+  // [!code highlight:3]
   filteredRowModel: createFilteredRowModel(),
   sortedRowModel: createSortedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
@@ -84,6 +85,7 @@ const features = tableFeatures({
   columnFilteringFeature,
   filteredRowModel: createFilteredRowModel(),
   // register the custom filter function
+  // [!code highlight]
   filterFns: { fuzzy: myFuzzyFilter },
 })
 
@@ -107,7 +109,7 @@ const table = useTable({
 })
 ```
 
-## Using Row Models
+## Accessing Row Models
 
 ```ts
 const table = useTable({

@@ -2,6 +2,7 @@
   "features",
   "data",
   "state",
+  "context",
   "columns",
   "rows",
   "headers",
@@ -14,6 +15,5 @@
   "row-selection",
   "column-visibility",
   "composable",
-  "context",
   "devtools"
 ]

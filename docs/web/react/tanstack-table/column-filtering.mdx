@@ -2,7 +2,8 @@
 
 ## Introduction
 
-Column Filtering lets you apply filters on a per-column basis. 
+Column Filtering lets you apply filters per column.
+
 
 ## Client-Side Filtering
 
@@ -23,6 +24,7 @@ import {
 } from '@tanstack/react-table'
 
 const features = tableFeatures({
+  // [!code highlight:2]
   columnFilteringFeature,
   filteredRowModel: createFilteredRowModel(),
   filterFns: {
@@ -59,7 +61,7 @@ const table = useTable({
 ```
 
 
-## Column Filter State
+## State Structure
 
 Filter state is an array of `{ id: string, value: unknown }` objects:
 
@@ -71,6 +73,8 @@ interface ColumnFilter {
 type ColumnFiltersState = ColumnFilter[]
 ```
 
+## Accessing Filter State
+
 Read filter state reactively or as a snapshot:
 
 ```tsx
@@ -78,23 +82,7 @@ table.state.columnFilters // reactive read
 table.atoms.columnFilters.get() // snapshot read
 ```
 
-Manage Column Filter State with Atom (v9 Recommended):
-
-```tsx
-import { useCreateAtom, useSelector } from '@tanstack/react-store'
-import { type ColumnFiltersState } from '@tanstack/react-table'
-
-const columnFiltersAtom = useCreateAtom<ColumnFiltersState>([])
-const columnFilters = useSelector(columnFiltersAtom)
-
-const table = useTable({
-  features,
-  columns,
-  data,
-  atoms: { columnFilters: columnFiltersAtom },
-})
-```
-
+## Managing State
 
 Manage Column Filter State with State Setter (v8 Style):
 
@@ -122,9 +110,28 @@ const table = useTable({
 })
 ```
 
+
 ## Built-in Filter Functions
 
-18 built-in functions: `includesString`, `includesStringSensitive`, `startsWith`, `endsWith`, `equalsString`, `equalsStringSensitive`, `equals`, `weakEquals`, `empty`, `notEmpty`, `arrIncludes`, `arrIncludesAll`, `arrIncludesSome`, `arrHas`, `inNumberRange`, `inDateRange`, `between`, `betweenInclusive`
+18 built-in functions:
+- `includesString`
+- `includesStringSensitive`
+- `startsWith`
+- `endsWith`
+- `equalsString`
+- `equalsStringSensitive`
+- `equals`
+- `weakEquals`
+- `empty`
+- `notEmpty`
+- `arrIncludes`
+- `arrIncludesAll`
+- `arrIncludesSome`
+- `arrHas`
+- `inNumberRange`
+- `inDateRange`
+- `between`
+- `betweenInclusive`
 
 
 ## Custom Filter Functions
@@ -167,6 +174,7 @@ const columns = [
   },
 ]
 ```
+
 
 ## Disable Column Filtering
 

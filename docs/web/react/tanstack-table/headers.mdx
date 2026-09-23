@@ -40,7 +40,7 @@ Map over the `headers` array to render header cells in a header group:
       {headerGroup.headers.map((header) =>
         header.rowSpan === 0 ? null : (
           <th key={header.id} colSpan={header.colSpan} rowSpan={header.rowSpan}>
-            {flexRender(header.column.columnDef.header, header.getContext())}
+            <table.FlexRender header={header} />
           </th>
         ),
       )}

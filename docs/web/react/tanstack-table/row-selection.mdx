@@ -1,6 +1,6 @@
 # Row Selection
 
-## Setup
+## Enable Row Selection
 
 Add the row selection feature to enable selection APIs:
 
@@ -53,25 +53,11 @@ table.getFilteredSelectedRowModel().rows // selected rows after filtering
 table.getGroupedSelectedRowModel().rows // selected rows after grouping/sorting
 ```
 
+
 ## Manage Row Selection State
 
-**With Atom (v9 Recommended):**
-```tsx
-import { useCreateAtom, useSelector } from '@tanstack/react-store'
-import { type RowSelectionState } from '@tanstack/react-table'
+With State Setter (v8 Style):
 
-const rowSelectionAtom = useCreateAtom<RowSelectionState>({})
-const rowSelection = useSelector(rowSelectionAtom)
-
-const table = useTable({
-  features,
-  columns,
-  data,
-  atoms: { rowSelection: rowSelectionAtom },
-})
-```
-
-**With State Setter (v8 Style):**
 ```tsx
 const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
 
@@ -83,6 +69,7 @@ const table = useTable({
   onRowSelectionChange: setRowSelection,
 })
 ```
+
 
 ## Disable Selection
 
@@ -100,9 +87,10 @@ const table = useTable({
 row.getCanSelect()
 ```
 
+
 ## Disable multiple selection
 
-Allow only one selected row at a time (radio buttons instead of checkboxes):
+Allow only one selected row at a time (should render radio buttons instead of checkboxes):
 
 ```ts
 const table = useTable({
@@ -114,6 +102,7 @@ const table = useTable({
   // enableMultiRowSelection: row => row.original.age > 18,
 })
 ```
+
 
 ## Enable Range Selection
 
@@ -132,30 +121,29 @@ const table = useTable({
 })
 ```
 
+
 ## Render Selection Cell
 
 Connect handler APIs to checkbox inputs:
 
 ```tsx
+import { Checkbox } from '@/components/ui/checkbox';
+
 const columns = [
   {
     id: 'select-col',
     header: ({ table }) => (
       <Checkbox
         checked={table.getIsAllRowsSelected()}
-        indeterminate={table.getIsSomeRowsSelected()}
-        onChange={table.getToggleAllRowsSelectedHandler()}
+        indeterminate={table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()}
+        onCheckedChange={(checked) => table.toggleAllRowsSelected(checked === true)}
       />
     ),
     cell: ({ row }) => (
       <Checkbox
-        checked={
-          row.getIsSelected() ||
-          (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected())
-        }
         disabled={!row.getCanSelect()}
-        indeterminate={row.getIsSomeSelected()}
-        onChange={row.getToggleSelectedHandler()}
+        checked={row.getIsSelected()}
+        onCheckedChange={(checked) => row.toggleSelected(checked === true)}
       />
     ),
   },
@@ -164,7 +152,7 @@ const columns = [
 
 ## Select Row without Checkboxes
 
-Hook click events to rows instead of checkboxes:
+Select rows by clicking on the row instead of checkboxes:
 
 ```tsx
 <tbody>
