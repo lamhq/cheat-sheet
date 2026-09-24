@@ -6,12 +6,15 @@ import { PackageManagerTabs } from '@theme'
 
 TanStack Table is a headless table library. It gives you full control over markup and styling while handling state and logic like sorting, filtering, and pagination.
 
+
 ## Installation
 
 <PackageManagerTabs command="i @tanstack/react-table@^9" />
 
 
-## Basic Table
+## Getting Started
+
+Create a basic table:
 
 ```tsx title="basic-table.tsx" file="./tanstack-table/_basic-table.tsx"
 ```
@@ -20,65 +23,6 @@ A few things to note:
 
 - `tableFeatures({})` declares which features the table uses. Registering only what you need.
 - `table.FlexRender` renders the `header`, `cell`, and `footer` definitions from your columns.
-
-
-## Server-side processing
-
-Page-Index Pagination with TanStack Query:
-
-```tsx
-const features = tableFeatures({
-  columnFilteringFeature,
-  globalFilteringFeature,
-  rowPaginationFeature,
-  rowSortingFeature,
-  // Client-side filtering, sorting, and pagination row models are not
-  // required because those operations are handled manually on the server.
-  // Omitting the filtered and sorted row models also omits their page-reset
-  // hooks, so pagination is reset in the change handlers below.
-})
-
-export function PersonTable() {
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [globalFilter, setGlobalFilter] = useState('')
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  })
-
-  const serverResponse = useQuery({
-    queryKey: ['people', { sorting, globalFilter, pagination }],
-    queryFn: () => fetchPeople({ sorting, globalFilter, pagination }),
-    placeholderData: keepPreviousData,
-  })
-
-  const table = useTable(
-    {
-      features,
-      columns,
-      data: serverResponse.data?.rows ?? [],
-      rowCount: serverResponse.data?.rowCount,
-      state: { sorting, globalFilter, pagination },
-      onSortingChange: (updater) => {
-        setSorting(updater)
-        setPagination((previous) => ({ ...previous, pageIndex: 0 })) // reset page index when sorting changes
-      },
-      onGlobalFilterChange: (updater) => {
-        setGlobalFilter(updater)
-        setPagination((previous) => ({ ...previous, pageIndex: 0 })) // reset page index when global filter changes
-      },
-      onPaginationChange: setPagination,
-      manualFiltering: true,
-      manualSorting: true,
-      manualPagination: true,
-    },
-    (state) => state,
-  )
-  return (
-    ...
-  )
-}
-```
 
 
 ## Examples
