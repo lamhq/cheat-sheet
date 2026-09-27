@@ -1,9 +1,10 @@
 [
+  "repo-setup",
   {
-    "name": "language",
+    "name": "javascript",
     "type": "dir",
     "collapsed": true,
-    "label": "Language",
+    "label": "JavaScript",
     "collapsible": true
   },
   {
@@ -48,5 +49,36 @@
     "collapsible": true,
     "collapsed": true
   },
-  "testcontainers"
+  "testcontainers",
+  "npm",
+  {
+    "name": "pnpm",
+    "type": "dir",
+    "collapsed": true
+  },
+  "prettier",
+  "lint-staged",
+  "commitlint",
+  "git-branch-is",
+  "husky",
+  {
+    "name": "eslint",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "jest",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "vitest",
+    "type": "dir",
+    "collapsed": true
+  },
+  {
+    "name": "turborepo",
+    "type": "dir",
+    "collapsed": true
+  }
 ]

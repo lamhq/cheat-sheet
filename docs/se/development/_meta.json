@@ -1,23 +1,10 @@
 [
+  "dev-workflow",
   "branching-models",
   "conv-commit",
   "semver",
   "repo-organization",
-  "repo-setup",
-  {
-    "name": "tools",
-    "type": "dir",
-    "collapsed": true,
-    "label": "Tools"
-  },
   "language",
-  {
-    "name": "documentation",
-    "label": "Documentation",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  },
   "vcs",
   "ide"
 ]

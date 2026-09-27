@@ -7,18 +7,6 @@
     "collapsed": true
   },
   {
-    "name": "system-design",
-    "type": "dir",
-    "collapsed": true,
-    "collapsible": true
-  },
-  {
-    "name": "architecture",
-    "type": "dir",
-    "collapsed": true,
-    "collapsible": true
-  },
-  {
     "name": "process",
     "type": "dir",
     "collapsed": true,
@@ -30,43 +18,5 @@
     "collapsed": true,
     "label": "Software Development",
     "collapsible": true
-  },
-  {
-    "name": "modeling",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  },
-  {
-    "name": "management",
-    "label": "Management",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  },
-  "intro",
-  {
-    "name": "project-management",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  },
-  {
-    "name": "software-architecture",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  },
-  {
-    "name": "software-design",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  },
-  {
-    "name": "software-development",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
   }
 ]
