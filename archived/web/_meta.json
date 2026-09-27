@@ -42,5 +42,12 @@
     "collapsible": true
   },
   "emotion",
-  "mui-system"
+  "mui-system",
+  {
+    "name": "boardgameio",
+    "label": "Board Game IO",
+    "collapsed": true,
+    "type": "dir",
+    "collapsible": true
+  }
 ]

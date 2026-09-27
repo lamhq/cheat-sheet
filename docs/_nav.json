@@ -25,18 +25,6 @@
       {
         "text": "Tools",
         "link": "/tools"
-      },
-      {
-        "text": "Data Engineering",
-        "link": "/de"
-      },
-      {
-        "text": "Game",
-        "link": "/game"
-      },
-      {
-        "text": "Finance",
-        "link": "/finance"
       }
     ]
   }
