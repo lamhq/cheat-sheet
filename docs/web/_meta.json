@@ -21,17 +21,6 @@
     "collapsible": true
   },
   {
-    "name": "nextjs",
-    "type": "dir",
-    "collapsed": true,
-    "label": "Next.js"
-  },
-  {
-    "name": "shadcn-ui",
-    "type": "dir",
-    "collapsed": true
-  },
-  {
     "name": "rspress",
     "type": "dir",
     "collapsible": true,
@@ -39,19 +28,6 @@
   },
   {
     "name": "pwa",
-    "type": "dir",
-    "collapsed": true,
-    "collapsible": true
-  },
-  {
-    "name": "build-tools",
-    "type": "dir",
-    "label": "Build Tools",
-    "collapsed": true,
-    "collapsible": true
-  },
-  {
-    "name": "storybook",
     "type": "dir",
     "collapsed": true,
     "collapsible": true
@@ -70,21 +46,8 @@
     "collapsible": true
   },
   {
-    "name": "patterns",
-    "type": "dir",
-    "label": "Architectures & Patterns",
-    "collapsed": true
-  },
-  {
     "name": "a11y",
     "label": "Accessibility",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  },
-  {
-    "name": "canvas",
-    "label": "Canvas",
     "type": "dir",
     "collapsible": true,
     "collapsed": true
@@ -96,32 +59,11 @@
     "collapsible": true,
     "collapsed": true
   },
+  "mono-fe",
   {
-    "name": "svg",
-    "label": "SVG",
+    "name": "micro-fe",
     "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  },
-  {
-    "name": "puppeteer",
-    "label": "Puppeteer",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  },
-  {
-    "name": "styled-components",
-    "label": "Styled Components",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  },
-  {
-    "name": "styled-system",
-    "label": "Styled System",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
+    "collapsed": true,
+    "collapsible": true
   }
 ]

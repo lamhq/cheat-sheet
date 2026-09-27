@@ -1,9 +1,4 @@
 [
-  {
-    "name": "git",
-    "type": "dir",
-    "collapsed": true
-  },
   "npm",
   {
     "name": "pnpm",

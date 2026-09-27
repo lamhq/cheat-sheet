@@ -1,0 +1,16 @@
+[
+  {
+    "name": "java",
+    "label": "Java",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "elasticsearch",
+    "label": "Elasticsearch",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  }
+]

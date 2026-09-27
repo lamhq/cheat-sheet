@@ -26,10 +26,8 @@
     "collapsed": true
   },
   {
-    "name": "java",
-    "label": "Java",
+    "name": "git",
     "type": "dir",
-    "collapsible": true,
     "collapsed": true
   },
   "rest",
@@ -81,13 +79,6 @@
   {
     "name": "redis",
     "label": "Redis",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  },
-  {
-    "name": "elasticsearch",
-    "label": "Elasticsearch",
     "type": "dir",
     "collapsible": true,
     "collapsed": true

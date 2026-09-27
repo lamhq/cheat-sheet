@@ -1,0 +1,46 @@
+[
+  {
+    "name": "canvas",
+    "label": "Canvas",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "svg",
+    "label": "SVG",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "puppeteer",
+    "label": "Puppeteer",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "styled-components",
+    "label": "Styled Components",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "styled-system",
+    "label": "Styled System",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "name": "rsbuild",
+    "label": "Rsbuild",
+    "type": "dir",
+    "collapsed": true,
+    "collapsible": true
+  },
+  "emotion",
+  "mui-system"
+]

@@ -1,4 +1,0 @@
-[
-  { "name": "rsbuild", "label": "Rsbuild", "type": "dir", "collapsed": true, "collapsible": true },
-  { "name": "vite", "type": "file", "collapsed": true }
-]
