@@ -5,8 +5,7 @@
   "throttling",
   "debouncing",
   {
-    "name": "bg-rendering",
-    "label": "Background Rendering",
+    "name": "bg-render",
     "type": "dir",
     "collapsed": true,
     "collapsible": true
