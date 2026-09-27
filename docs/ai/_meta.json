@@ -7,14 +7,10 @@
     "collapsed": true
   },
   "llm",
+  "llm-apps",
+  "agents",
   {
     "name": "prompt",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  },
-  {
-    "name": "rag",
     "type": "dir",
     "collapsible": true,
     "collapsed": true
@@ -26,14 +22,14 @@
     "label": "MCP",
     "collapsible": true
   },
-  "flow",
-  "llm-apps",
+  "agent-skills",
   {
-    "name": "agents",
+    "name": "rag",
     "type": "dir",
     "collapsible": true,
     "collapsed": true
   },
+  "flow",
   {
     "name": "langchain",
     "type": "dir",

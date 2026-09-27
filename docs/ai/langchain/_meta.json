@@ -1,9 +1,9 @@
 [
-  "trace",
-  "prompt-template",
-  "lcel",
-  "tools",
-  "agent",
-  "structured-output",
-  "rag"
+  {
+    "name": "python",
+    "type": "dir",
+    "collapsible": true,
+    "collapsed": true
+  },
+  "ts"
 ]

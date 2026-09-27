@@ -1,0 +1,287 @@
+# Reuse Table
+
+## Overview
+
+When multiple tables in an app should share the same setup, use `createTableHook` to create a table factory that defines shared features, row models, and default options once.
+
+It optionally allows registering reusable components (table, cell, header, etc.).
+
+:::note
+Use standalone `useTable` hook for one-off tables where shared configuration would add unnecessary complexity.
+:::
+
+
+## Getting Started
+
+Create a hook with features and default settings by calling `createTableHook`:
+
+```tsx
+import {
+  createSortedRowModel,
+  createTableHook,
+  rowSortingFeature,
+  sortFns,
+  tableFeatures,
+} from '@tanstack/react-table'
+
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
+
+export const { useAppTable, createAppColumnHelper } = createTableHook({
+  features,
+  debugTable: true,
+  enableSortingRemoval: false,
+})
+```
+
+- `useAppTable` hook contains the shared setup for all tables
+- `createAppColumnHelper` is pre-bound to your features.
+
+**Returned values of `createTableHook`**:
+
+| Helper | Purpose |
+|--------|---------|
+| `useAppTable` | Creates table with shared features, defaults, and components |
+| `createAppColumnHelper` | Column helper pre-bound to your features and components |
+| `useTableContext` | Read current table in table components |
+| `useCellContext` | Read current cell in cell components |
+| `useHeaderContext` | Read current header in header/footer components |
+
+## Declare Columns
+
+Use the returned column helper `createAppColumnHelper` to declare your table columns:
+
+```tsx
+type Person = {
+  firstName: string
+  lastName: string
+  age: number
+}
+
+const columnHelper = createAppColumnHelper<Person>()
+
+const columns = columnHelper.columns([
+  columnHelper.accessor('firstName', {
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor('age', {
+    header: 'Age',
+  }),
+])
+```
+
+## Create Table
+
+Call `useAppTable` with table-specific columns and data. Shared features come from the hook:
+
+```tsx
+function UsersTable({ data }: { data: Person[] }) {
+  const table = useAppTable(
+    {
+      key: 'users-table',
+      columns,
+      data,
+    },
+    (state) => ({ sorting: state.sorting }),
+  )
+
+  return (
+    <table>
+      <thead>
+        {table.getHeaderGroups().map((headerGroup) => (
+          <tr key={headerGroup.id}>
+            {headerGroup.headers.map((header) => (
+              <th key={header.id}>
+                {header.isPlaceholder ? null : (
+                  <table.FlexRender header={header} />
+                )}
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody>
+        {table.getRowModel().rows.map((row) => (
+          <tr key={row.id}>
+            {row.getAllCells().map((cell) => (
+              <td key={cell.id}>
+                <table.FlexRender cell={cell} />
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+}
+```
+
+## Override per Table
+
+Options to `useAppTable` override `createTableHook` defaults:
+
+```tsx
+const table = useAppTable(
+  {
+    key: 'sortable-users-table',
+    columns,
+    data,
+    enableSortingRemoval: true, // override default
+  },
+  (state) => ({ sorting: state.sorting }),
+)
+```
+
+## Reusable Components
+
+Reference: [React Example: Composable Tables](https://tanstack.com/table/latest/docs/framework/react/examples/composable-tables).
+
+### Registration
+
+Create a table and register reusable components:
+
+```tsx
+import {
+  columnFilteringFeature,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
+  createTableHook,
+  tableFeatures,
+} from '@tanstack/react-table'
+import {
+  PaginationControls,
+  RowCount,
+  TableToolbar,
+} from '../components/table-components'
+import {
+  TextCell,
+  NumberCell,
+  StatusCell,
+} from '../components/cell-components'
+import {
+  SortIndicator,
+  ColumnFilter,
+  FooterSum,
+} from '../components/header-components'
+
+const features = tableFeatures({
+  columnFilteringFeature,
+  rowPaginationFeature,
+  rowSortingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+})
+
+export const {
+  createAppColumnHelper,
+  useAppTable,
+  useTableContext,
+  useCellContext,
+  useHeaderContext,
+} = createTableHook({
+  features,
+  getRowId: (row) => row.id,
+  tableComponents: {
+    PaginationControls,
+    RowCount,
+    TableToolbar,
+  },
+  cellComponents: {
+    TextCell,
+    NumberCell,
+    StatusCell,
+  },
+  headerComponents: {
+    SortIndicator,
+    ColumnFilter,
+    FooterSum,
+  },
+})
+```
+
+### Render Cell
+
+```tsx
+const personColumnHelper = createAppColumnHelper<Person>()
+
+const columns = useMemo(
+  () =>
+    personColumnHelper.columns([
+      personColumnHelper.accessor('firstName', {
+        header: 'First Name',
+        footer: (props) => props.column.id,
+        cell: ({ cell }) => <cell.TextCell />,
+      }),
+      personColumnHelper.accessor('age', {
+        header: 'Age',
+        footer: (props) => props.column.id,
+        cell: ({ cell }) => <cell.NumberCell />,
+      }),
+      personColumnHelper.display({
+        id: 'actions',
+        header: 'Actions',
+        cell: ({ cell }) => <cell.RowActionsCell />,
+      }),
+    ]),
+  [],
+)
+```
+
+
+### Render Table
+
+Use `AppTable`, `AppHeader`, `AppCell`, `AppFooter` wrappers to provide context:
+
+```tsx
+const table = useAppTable(
+  { key: 'users-table', columns, data },
+  (state) => ({ pagination: state.pagination, sorting: state.sorting }),
+)
+
+<table.AppTable
+  selector={(state) => ({
+    pagination: state.pagination,
+    sorting: state.sorting,
+  })}
+>
+  {({ sorting }) => (
+    <table>
+      <thead>
+        {table.getHeaderGroups().map((headerGroup) => (
+          <tr key={headerGroup.id}>
+            {headerGroup.headers.map((h) => (
+              <table.AppHeader header={h} key={h.id}>
+                {(header) => (
+                  <th>
+                    <header.FlexRender />
+                    <header.SortIndicator />
+                  </th>
+                )}
+              </table.AppHeader>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody>
+        {table.getRowModel().rows.map((row) => (
+          <tr key={row.id}>
+            {row.getAllCells().map((c) => (
+              <table.AppCell cell={c} key={c.id}>
+                {(cell) => <td><cell.FlexRender /></td>}
+              </table.AppCell>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )}
+</table.AppTable>
+
+<table.PaginationControls />
+<table.RowCount />
+```

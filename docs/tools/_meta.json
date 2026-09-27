@@ -4,42 +4,14 @@
     "type": "file",
     "label": "Tools"
   },
-  {
-    "name": "vscode",
-    "type": "dir",
-    "collapsed": true,
-    "label": "Visual Studio Code",
-    "collapsible": true
-  },
-  {
-    "name": "macos",
-    "type": "dir",
-    "collapsed": true,
-    "label": "macOS",
-    "collapsible": true
-  },
-  {
-    "name": "windows",
-    "type": "dir",
-    "collapsed": true,
-    "label": "Windows",
-    "collapsible": true
-  },
-  {
-    "name": "android",
-    "type": "dir",
-    "collapsed": true,
-    "label": "Android",
-    "collapsible": true
-  },
-  {
-    "name": "ngrok",
-    "type": "dir",
-    "collapsed": true,
-    "label": "ngrok",
-    "collapsible": true
-  },
   "postman",
   "udemy",
-  "pdf"
+  "pdf",
+  "windows",
+  "macos",
+  "homebrew",
+  "calibre",
+  "youtube",
+  "google",
+  "facebook"
 ]

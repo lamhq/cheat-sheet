@@ -1,0 +1,148 @@
+# Software Process
+
+Process used in software industry to design, develop, test, and deliver software.
+
+## Requirements Analysis
+
+**Inputs**:
+- Meeting notes, stakeholder input documents (stakeholder interviews, user research)
+- Requirements specifications, backlog items (workshops, brainstorming)
+- Market research reports, customer insights (market research)
+- Prioritized backlog, feature breakdowns (backlog grooming)
+- ...
+
+**Process**:
+- Create a Project Overview Document to capture scope, objectives, and context 
+- For each proposed feature, create a detailed Feature Specification Document
+
+**Outputs**:
+- [Project Overview Document](./process/project-overview.mdx)
+- [Feature Specification Document](./process/requirements/feature-spec.mdx)
+
+:::note
+Each Feature Specification Document defines a single feature. They are grouped into modules.
+:::
+
+:::info
+A **module** (e.g., user management, payment processing) represents a collection of related features.  
+A **feature** is the smallest unit of work that can be implemented and delivered independently.
+:::
+
+
+## Design
+
+Translate feature requirements into a precise technical blueprint that engineers can implement.
+
+### User Interface
+
+**Inputs**:
+- The feature to be implemented
+- The Feature Specification Document for that feature
+- Database Design Document of the module
+
+**Process**:
+1. Identify all required screens based on the Feature Specification Document
+2. For each screen, create a dedicated UI Design Document
+
+**Outputs**:
+- [UI Specification Documents](./process/design/ui-spec.mdx) for all screens of the feature
+
+:::note
+Each UI Specification Document defines a single screen. Like Feature Specification Documents, they are organized into modules.
+:::
+
+### API
+
+**Inputs**:
+- The feature to be implemented  
+- UI Specification Documents for the feature
+- API Design Standards
+
+**Process**:
+1. From each UI Specification Document, identify required APIs  
+2. For each API, create an API Specification Document
+
+**Outputs**:
+- [API Specification Documents](./process/design/api-spec.mdx) for all APIs of the feature
+
+:::note
+Each API Specification Document defines a single API. Like Feature Specification Documents, they are organized into modules.
+:::
+
+### Database
+
+**Inputs**:
+- API Specification Documents of a module
+- Database Design Standards
+
+**Process**:
+1. **Design the Logical Model**  
+   - Identify entities and relationships based on API contract.
+   - Define attributes, primary keys, foreign keys
+   - Apply normalization rules (e.g., 1NF, 2NF, 3NF) to reduce redundancy and ensure integrity.  
+
+2. **Define the Physical Schema**  
+   - Translate logical entities into physical structures (tables in SQL, collections in NoSQL).  
+   - Assign appropriate data types to each attribute based on DBMS capabilities.  
+   - Implement constraints (primary keys, foreign keys, unique, check).  
+   - Design indexes for query optimization and performance.  
+   - Specify storage details (partitioning, sharding, clustering) as needed.  
+
+**Outputs**:
+- [Database Design Document](./process/design/db-design.mdx)
+
+:::note
+Each module has one Database Design Document describing all its entities and their relationships.
+:::
+
+### System Architecture
+
+**Inputs**:
+- The feature to be implemented  
+- Feature Specification Document
+- API Specification Documents for the feature
+
+**Process**: see [System Design Process](#) section.
+
+**Outputs**:
+- [Architecture Overview Document](./process/design/arch-overview.mdx)
+- [Component Design Documents](./process/design/comp-design.mdx)
+
+
+## Implementation
+
+**Inputs**:
+- Feature Specification Document
+- Frontend: 
+  - UI Specification Documents
+- Backend:
+  - API Specification Documents
+  - Database Design Document
+  - Architecture Overview Document
+  - Component Design Documents
+- Coding standards (rules for writing code)
+- Coding recipes (code snippets for common tasks)
+- Project Structure Document (how the code base is organized)
+
+**Outputs**:
+- Application's source code
+
+
+## Testing
+
+**Outputs**:
+- Test Suite document
+- Test code (Unit tests, Integration tests, End-to-end tests, etc.)
+
+
+## Deployment
+
+**Outputs**:
+- Runtime environments: staging, production, etc.
+- Deployment Guides
+- Infrastructure code (IaC) or Deployment scripts
+- CI/CD pipelines configuration
+
+## Monitoring & Troubleshooting
+
+TBC.

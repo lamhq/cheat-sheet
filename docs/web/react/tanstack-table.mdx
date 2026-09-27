@@ -1,0 +1,30 @@
+import { PackageManagerTabs } from '@theme'
+
+# TanStack Table
+
+## Introduction
+
+TanStack Table is a headless table library. It gives you full control over markup and styling while handling state and logic like sorting, filtering, and pagination.
+
+
+## Installation
+
+<PackageManagerTabs command="i @tanstack/react-table@^9" />
+
+
+## Getting Started
+
+Create a basic table:
+
+```tsx title="basic-table.tsx" file="./tanstack-table/_basic-table.tsx"
+```
+
+A few things to note:
+
+- `tableFeatures({})` declares which features the table uses. Registering only what you need.
+- `table.FlexRender` renders the `header`, `cell`, and `footer` definitions from your columns.
+
+
+## Examples
+
+- ShadCN (Base UI): [Basic Example](https://tanstack.com/table/latest/docs/framework/react/examples/lib-shadcn-base) | [Advanced Example](https://tanstack.com/table/latest/docs/framework/react/examples/kitchen-sink-shadcn-base)

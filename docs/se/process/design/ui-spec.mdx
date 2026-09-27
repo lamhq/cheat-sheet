@@ -1,0 +1,89 @@
+# UI Specification Document
+
+Guide for writing UI Specification Documents.
+
+## Introduction
+
+A UI Specification Document describes a single screen of a software application.
+
+It guides developers in implementing the screen according to the feature requirements.
+
+
+## Document Structure
+
+A UI Specification Document typically includes the following sections (but not all):
+
+### Introduction
+- Purpose of the screen (e.g., collecting billing information).
+- Context: where this screen fits in the user journey.
+- Key goals: what the user should accomplish here.
+
+### Wireframes & Mockups
+- Attach low-fidelity wireframes.
+- Provide design references (Figma, Sketch).
+- Annotate with notes for developers.
+
+### Displayed Information
+- List all data elements shown (labels, values, images, charts).
+- Define source of data (API, database, static).
+
+### User Interactions
+- Describe possible actions: click, tap, swipe, drag, hover.
+- Define expected behavior for each action (e.g., clicking "Save" triggers validation).
+
+### Error Handling
+- Define error messages (clear, user-friendly).
+- Differentiate between system errors (server down) and user errors (invalid input).
+- Specify recovery options (retry, contact support).
+
+### Validation Rules
+- Input constraints (length, format, allowed characters).
+- Cross-field validation (e.g., password confirmation).
+- Real-time vs post-submit validation.
+
+### Dependencies & Integration
+- APIs or services required.
+- Third-party libraries.
+- External system interactions.
+
+### Authentication & Authorization
+- Specify if login is required.
+- Define role-based access (e.g., admin vs regular user).
+
+### Accessibility Requirements
+- Compliance standards (WCAG 2.1 AA).
+- Screen reader compatibility.
+- Keyboard navigation, color contrast, alt text for images.
+
+### Responsiveness
+- Define breakpoints (mobile, tablet, desktop).
+- Specify layout adjustments (stacking, resizing).
+- Touch vs mouse interactions.
+
+### Performance Requirements
+- Expected load time.
+- Caching strategies.
+- Handling large datasets (pagination, lazy loading).
+
+### Security Considerations
+- Input sanitization.
+- Protection against XSS/CSRF.
+- Secure storage of credentials.
+
+### Internationalization
+- Language support.
+- Date/time formats.
+- Currency and number formatting.
+
+### Analytics & Tracking
+- Define events to track (clicks, form submissions).
+- Specify tools (Google Analytics, custom logging).
+- Privacy compliance (GDPR, CCPA).
+
+
+## Examples
+
+### Login Screen
+
+```md file="../examples/ui-spec.mdx"
+```

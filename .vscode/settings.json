@@ -25,5 +25,6 @@
     {
       "file": ".github/instructions/commit-message.md"
     }
-  ]
+  ],
+  "chat.permissions.default": "autoApprove"
 }

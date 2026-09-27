@@ -1,99 +1,368 @@
+import { PackageManagerTabs } from '@theme';
+
 # Mongo
 
 ## Installation
 
-```sh
-yarn add @nestjs/typeorm typeorm mongodb
+<PackageManagerTabs command="install @nestjs/mongoose mongoose" />
+
+```ts title="app.module.ts"
+import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+
+@Module({
+  imports: [MongooseModule.forRoot('mongodb://localhost/nest')],
+})
+export class AppModule {}
 ```
 
-## Defining entities
+Async initialization:
 
-```ts
-import {
-  Entity,
-  CreateDateColumn,
-  UpdateDateColumn,
-  DeleteDateColumn,
-  ObjectIdColumn,
-  Column,
-} from 'typeorm';
-import { ObjectId } from 'mongodb';
+```ts title="app.module.ts"
+MongooseModule.forRootAsync({
+  imports: [ConfigModule],
+  useFactory: async (configService: ConfigService) => ({
+    uri: configService.get<string>('MONGODB_URI'),
+  }),
+  inject: [ConfigService],
+});
+```
 
-@Entity({ name: 'administrators' })
-export class Admin {
-  @ObjectIdColumn()
-  id: ObjectId;
+## Schema Definition
 
-  @Column()
+User schema:
+
+```typescript title="user.schema.ts"
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
+
+import { Profile, ProfileSchema } from './profile.schema';
+
+export type UserDocument = HydratedDocument<User>;
+
+@Schema({ timestamps: true, collection: 'mongo_demo_users' })
+export class User {
+  @Prop({ required: true })
+  name: string;
+
+  @Prop({ required: true, unique: true })
   email: string;
 
-  @Column()
-  password: string;
+  @Prop({ default: false })
+  isActive: boolean;
 
-  @Column()
-  avatar?: string;
+  @Prop({ type: [String], default: [] })
+  tags: string[];
 
-  @Column()
-  displayName?: string;
+  @Prop({ type: ProfileSchema, default: null })
+  profile: Profile;
 
-  @CreateDateColumn()
-  createdAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 
-  @UpdateDateColumn()
-  updatedAt: Date;
+export const UserSchema = SchemaFactory.createForClass(User);
+```
 
-  @DeleteDateColumn()
-  deletedAt?: Date;
+Profile schema:
+
+```typescript title="profile.schema.ts"
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+
+@Schema({ _id: false })
+export class Profile {
+  @Prop()
+  bio?: string;
+
+  @Prop()
+  age?: number;
+}
+
+export const ProfileSchema = SchemaFactory.createForClass(Profile);
+```
+
+**Common @Schema options**:
+
+| Option | Purpose | Example Usage |
+| --- | --- | --- |
+| `timestamps` | Automatically adds `createdAt` and `updatedAt` fields | `@Schema({ timestamps: true })` |
+| `collection` | Specifies the MongoDB collection name | `@Schema({ collection: 'cats' })` |
+| `versionKey` | Enables/disables the `__v` version field | `@Schema({ versionKey: false })` |
+| `strict` | Controls whether values not in schema are saved | `@Schema({ strict: true })` |
+| `autoCreate` | Automatically creates the collection if missing | `@Schema({ autoCreate: true })` |
+| `id` | Adds a virtual `id` getter (string form of `_id`) | `@Schema({ id: true })` |
+
+**Common @Prop options**:
+
+| Option | Description |
+|--------|-------------|
+| `required: true` | Field is required |
+| `unique: true` | Field must be unique |
+| `default: value` | Default value if not provided |
+| `trim: true` | Remove whitespace |
+| `maxlength: 200` | Max character length |
+| `type: String` | Explicit type definition |
+| `enum: ['value1', 'value2']` | Restrict to enum values |
+| `lowercase: true` | Convert to lowercase |
+| `match: /regex/` | Validate with regex |
+
+
+## Register Schemas
+
+```typescript
+import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+import { User, UserSchema } from './schemas/user.schema';
+
+@Module({
+  imports: [
+    MongooseModule.forFeature([
+      { name: User.name, schema: UserSchema }
+    ])
+  ],
+  controllers: [UserController],
+  providers: [UserService],
+})
+export class UserModule {}
+```
+
+## Using Service
+
+```typescript
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { User } from './schemas/user.schema';
+
+@Injectable()
+export class UserService {
+  constructor(
+    @InjectModel(User.name) private readonly userModel: Model<User>
+  ) {}
+
+  // CREATE
+  create(createUserDto: CreateUserDto) {
+    return this.userModel.create(createUserDto);
+  }
+
+  // READ - Find All
+  findAll() {
+    return this.userModel
+      .find({
+        $and: [
+          { name: { $regex: 'john', $options: 'i' } },
+          { isActive: true },
+          { 'profile.age': { $gte: 20 } }
+        ]
+      })
+      .select('name email profile.age isActive')
+      .limit(limit)
+      .skip(skip)
+      .sort(sort)
+      .exec();
+  }
+
+  // READ - Find One
+  findById(id: string) {
+    return this.userModel.findById(id).exec();
+  }
+
+  findOne(filter: object) {
+    return this.userModel.findOne(filter).exec();
+  }
+
+  // UPDATE
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const updated = await this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true, runValidators: true }).exec();
+    if (!updated) {
+      throw new Error(`User with id ${id} not found`);
+    }
+
+    return updated;
+  }
+
+  // DELETE
+  async remove(id: string) {
+    const removed = await this.userModel.findByIdAndDelete(id).exec();
+
+    if (!removed) {
+      throw new Error(`User with id ${id} not found`);
+    }
+
+    return removed;
+  }
+
+  // COUNT
+  count(filter: object = {}) {
+    return this.userModel.countDocuments(filter).exec();
+  }
+}
+```
+
+## Relationships
+
+### One-to-Many
+
+```typescript title="post.schema.ts"
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument, Types } from 'mongoose';
+
+import { User } from './user.schema';
+
+export type PostDocument = HydratedDocument<Post>;
+
+@Schema({ timestamps: true, collection: 'mongo_demo_posts' })
+export class Post {
+  @Prop({ required: true })
+  title: string;
+
+  @Prop({ required: true })
+  content: string;
+
+  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  author: Types.ObjectId | User;
+}
+
+export const PostSchema = SchemaFactory.createForClass(Post);
+```
+
+### Populate References
+
+```typescript
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Post } from './schemas/post.schema';
+
+@Injectable()
+export class PostService {
+  constructor(
+    @InjectModel(Post.name) private readonly postModel: Model<Post>,
+  ) {}
+
+  // In service
+  findPostWithAuthor(id: string) {
+    return this.postModel.findById(id).populate('author').exec();
+  }
+
+  // Selective populate
+  findPostWithAuthorFields(id: string) {
+    return this.postModel
+      .findById(id)
+      .populate({ path: 'author', select: 'name email profile.bio' })
+      .exec();
+  }
+
+  // Multiple populates
+  findPostWithDetails(id: string) {
+    return this.postModel
+      .findById(id)
+      .populate('author')
+      .populate('comments')
+      .exec();
+  }
+
+  // Deep populate
+  findPostWithAuthorPosts(id: string) {
+    return this.postModel
+      .findById(id)
+      .populate({
+        path: 'author',
+        populate: { path: 'posts' }
+      })
+      .exec();
+  }
 }
 ```
 
 
-## Register Entity Repository
+## Aggregation Pipeline
 
-```ts
-// admin.module.ts
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { AdminService } from './admin.service';
-import { Admin } from './admin.entity';
-
-@Module({
-  // allow injecting AdminRepository into the AdminService
-  imports: [TypeOrmModule.forFeature([Admin])],
-  providers: [AdminService],
-})
-export class AdminModule {}
+```typescript
+async getStatistics() {
+  return this.userModel
+    .aggregate([
+      { $match: { isActive: true } },
+      {
+        $group: {
+          _id: '$isActive',
+          count: { $sum: 1 },
+          averageAge: { $avg: '$profile.age' },
+          minAge: { $min: '$profile.age' },
+          maxAge: { $max: '$profile.age' },
+        },
+      },
+      { $sort: { count: -1 } },
+      { $limit: 10 },
+      {
+        $project: {
+          _id: 0,
+          isActive: '$_id',
+          count: 1,
+          averageAge: 1,
+          minAge: 1,
+          maxAge: 1,
+        },
+      },
+    ])
+    .exec();
+}
 ```
 
+**Common Aggregation stages**:
 
-## Using Entity Repository
+| Stage | Purpose |
+|-------|---------|
+| `$match` | Filter documents |
+| `$group` | Group and aggregate |
+| `$sort` | Sort results |
+| `$limit` | Limit number of docs |
+| `$skip` | Skip documents |
+| `$project` | Reshape documents |
+| `$lookup` | Join with other collections |
+| `$unwind` | Deconstruct arrays |
+| `$facet` | Multiple pipelines |
 
-```ts
-// admin.service.ts
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { MongoRepository } from 'typeorm';
-import { Admin } from './admin.entity';
 
+## Transactions
+
+```typescript
 @Injectable()
-export class AdminService {
+export class UserService {
   constructor(
-    @InjectRepository(Admin) private adminRepository: MongoRepository<Admin>
+    @InjectConnection() private connection: Connection,
+    @InjectModel(User.name) private userModel: Model<UserDocument>
   ) {}
 
-  async findOneByEmail(email: string): Promise<Admin | undefined> {
-    return this.adminRepository.findOne({ email });
+  async transferCredits(fromUserId: string, toUserId: string, amount: number) {
+    const session = await this.connection.startSession();
+    session.startTransaction();
+
+    try {
+      const fromUser = await this.userModel.findById(fromUserId).session(session);
+      const toUser = await this.userModel.findById(toUserId).session(session);
+      if (!fromUser || !toUser) {
+        throw new NotFoundException('Both users must exist for the age transfer');
+      }
+
+      await this.userModel.updateOne(
+        { _id: fromUserId },
+        { $inc: { credits: -amount } },
+        { session },
+      );
+      await this.userModel.updateOne(
+        { _id: toUserId },
+        { $inc: { credits: amount } },
+        { session },
+      );     
+
+      await session.commitTransaction();
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      await session.endSession();
+    }
   }
-
-  async addAdmin(dto: CreateAdminDto): Promise<Admin> {
-    const saved = await this.adminRepository.save(adminDto);
-    return saved;
-  }    
-
-  async findAll(query: AdminQuery): Promise<Admin[]> {
-    const stages = [];
-    stages.push({ $skip: query.offset });
-    stages.push({ $limit: query.limit });    
-    return this.adminRepository.aggregateEntity(stages).toArray();
-  }    
+}
 ```

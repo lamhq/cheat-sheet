@@ -1,103 +1,107 @@
-# Render
+# Render Logic
 
 ## Logic inside a component
 
-There're two types of logic inside a component:
+There are two kinds of logic in a component:
 
 ### Rendering code
 
-This is where you take the props and state, transform them, and return the JSX you want to see on the screen.
+This is where props and state are transformed into JSX.
 
-Rendering code must be pure.
+It must be pure:
+- no mutation of existing variables or objects 
+- same input, same output (JSX)
 
 ### Event handlers
 
-They are nested functions inside your components that do things rather than just calculate them:
+These are functions that do actions instead of just calculating values:
 
 - update an input field
-- submit an HTTP POST request to buy a product
-- navigate the user to another screen
+- send an HTTP request
+- navigate to another screen
 
 Event handlers contain **[side effects](./effect.mdx)**.
 
 
 ## UI tree
 
-The UI tree represents the structure of your React components as they are nested and rendered.
+React organizes components into a tree of parent-child relationships. 
 
-It models the hierarchy of components—how parent and child components relate to each other.
-
-It helps React understand how to render the interface and manage component relationships.
-
-For example, if your app has `<App>` → `<Header>` → `<Nav>`, React builds a tree showing this nesting.
+This helps React know what to render and how updates flow through the app.
 
 
 ## Virtual DOM
 
-The Virtual DOM is an **in-memory representation** of the actual DOM, built using lightweight JavaScript objects.
+The virtual DOM is a lightweight in-memory version of the real DOM.
 
-React compares the current Virtual DOM with a new one after state changes (using a diffing algorithm), then updates only the changed parts in the real DOM.
-
-It allows React to **efficiently update** the real DOM by minimizing direct manipulations, reduces unnecessary re-renders and improves speed by batching updates and avoiding full DOM repaints.
+React compares the previous and next versions, then updates only the changed parts in the browser DOM.
 
 
-## Render Process
+## Render process
 
-Before your components are displayed on the screen, they must be rendered by React. 
+React renders in three steps:
 
-The process of rendering UI has three steps:
-
-1. Triggering a render
-2. Rendering the component
-3. Committing to the DOM
-
+1. Trigger a render
+2. Render the component
+3. Commit to the DOM
 
 ### Trigger a render
 
-There are two reasons for a component to render:
+A render happens when:
 
-**1. It's component's initial render**:
-
-It's done by calling `render`on the React root:
+- the component first mounts
+- state or props change and cause an update
 
 ```js
 import Image from './Image.js';
 import { createRoot } from 'react-dom/client';
 
-const root = createRoot(document.getElementById('root'))
+const root = createRoot(document.getElementById('root'));
+// first render
 root.render(<Image />);
 ```
 
-**2. State has been updated**
+### Render components
 
-State updates (happening inside the component, its ancestors, hooks) trigger a re-render.
+React calls your component function to produce JSX.
 
+- On the initial render, it starts at the root component.
+- On updates, it re-runs the relevant component(s) and produces a new JSX snapshot.
 
-### React renders your components
+### Commit changes to the DOM
 
-Rendering means that React is calling your component, which is a function:
+After rendering, React updates the real DOM. Then the browser repaints the screen.
 
-- On initial render, React will call the root component.
-- For subsequent renders, React will call the function component whose state update triggered the render and get the new JSX snapshot.
-
-
-### React commits changes to the DOM 
-
-After rendering (calling) your components, React will modify the DOM.
-
-- For the **initial render**, React will use the `appendChild()` DOM API to put all the DOM nodes it has created on screen.
-- For **re-renders**, React will apply the minimal necessary operations (calculated while rendering!) to make the DOM match the latest rendering output.
-
-React only changes the DOM nodes if there's a difference between renders.
-
-After React updated the DOM, the browser will repaint the screen.
+- On the initial render, it inserts the created DOM nodes into the page.
+- On re-renders, it applies only the minimal changes needed (to the DOM) to match the latest output.
 
 
 ## Component lifecycle
 
-1. A component **mounts** when it's added to the screen.
-2. A component **updates** when it receives new props or state, usually in response to an interaction.
-3. A component **unmounts** when it's removed from the screen.
+1. **Mount** — added to the screen
+2. **Update** — receives new props or state
+3. **Unmount** — removed from the screen
+
+
+## Rendering Lists
+
+When rendering arrays, give each item a unique `key`.
+
+- keys must be unique among siblings
+- keys must stay stable; avoid generating keys like `key={Math.random()}`
+
+```jsx
+const listItems = people.map(person => (
+  <li key={person.id}>
+    <img src={getImageUrl(person)} alt={person.name} />
+    <p>{person.name}: {person.profession}</p>
+  </li>
+));
+```
+
+:::note
+Keys help React match items across updates, especially when items are reordered or removed.
+:::
 
 
 ## References

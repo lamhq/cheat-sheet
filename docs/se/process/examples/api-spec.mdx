@@ -1,0 +1,75 @@
+# Get Orders API
+
+## Introduction
+
+Retrieve a list of orders with optional filters for status and pagination.
+
+## Contract
+
+- **Type:** REST
+- **Signatures:** `GET /orders`
+- **Base URL:** `https://api.shopverse.com/v1`  
+- **Authentication:** OAuth2 Bearer Token  
+- **Versioning Strategy:** URI versioning (`/v1/`)
+
+### Request Headers
+| **Name**      | **Value**          |
+|---------------|--------------------|
+| Authorization | Bearer `<token>` |
+| Accept        | application/json   |
+
+### Query Parameters
+| **Name** | **Type** | **Description**                                                   |
+|----------|----------|-------------------------------------------------------------------|
+| status   | string   | Filter by order status (`pending`, `shipped`, `delivered`). |
+| limit    | integer  | Number of results per page.                                       |
+| offset   | integer  | Pagination offset.                                                |
+
+
+### Response
+
+**Success (200 OK):**
+```json
+{
+  "orders": [
+    {
+      "orderId": "12345",
+      "status": "pending",
+      "createdAt": "2026-08-12T10:00:00Z",
+      "items": [
+        {
+          "productId": "A100",
+          "quantity": 2
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Error (401 Unauthorized):**
+```json
+{
+  "error": "Invalid or missing authentication token"
+}
+```
+
+## Functional Requirements
+- **Order Retrieval:** Provide a paginated list of orders with optional filtering by status.  
+- **Security Enforcement:** Only authenticated clients can access order data.
+
+## Non-Functional Requirements
+- **Performance:** Average response time < 150ms for standard queries.  
+- **Security:** OAuth2 required; all traffic encrypted via HTTPS.  
+- **Reliability:** 99.9% uptime SLA.  
+- **Scalability:** Support up to 5,000 concurrent requests.  
+- **Maintainability:** Endpoint remains backward compatible for at least one major version.  
+- **Compliance:** PCI DSS compliance for any order data linked to payments.
+
+## Changelog
+
+| **Date**       | **Version** | **Changes**                                      |
+|----------------|-------------|--------------------------------------------------|
+| 2026-08-01     | v1.0        | Initial release with `GET /orders` endpoint.     |
+| 2026-08-10     | v1.1        | Added query parameter `status` for filtering.    |
+| 2026-08-12     | v1.2        | Introduced pagination parameters `limit` & `offset`. |

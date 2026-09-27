@@ -1,23 +1,17 @@
 [
+  "dev-workflow",
   "branching-models",
   "conv-commit",
   "semver",
   "repo-organization",
-  "repo-setup",
+  "language",
+  "vcs",
+  "ide",
   {
-    "name": "tools",
+    "name": "vscode",
     "type": "dir",
     "collapsed": true,
-    "label": "Tools"
-  },
-  "language",
-  {
-    "name": "documentation",
-    "label": "Documentation",
-    "type": "dir",
-    "collapsible": true,
-    "collapsed": true
-  },
-  "vcs",
-  "ide"
+    "label": "Visual Studio Code",
+    "collapsible": true
+  }
 ]

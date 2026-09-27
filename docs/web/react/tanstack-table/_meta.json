@@ -1,0 +1,20 @@
+[
+  "server-side",
+  "features",
+  "data",
+  "state",
+  "context",
+  "columns",
+  "rows",
+  "headers",
+  "cells",
+  "meta",
+  "pagination",
+  "column-filtering",
+  "global-filtering",
+  "sorting",
+  "row-selection",
+  "column-visibility",
+  "composable",
+  "devtools"
+]

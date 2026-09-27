@@ -1,0 +1,67 @@
+# Component Design Document
+
+Guide for writing Component Design documents.
+
+## Introduction
+
+A Component Design Document provides detailed specifications of a single service or module's internal architecture, detailing how it is structured, what it does, and how it interfaces with other components.
+
+It serves as the technical reference for engineers working within or integrating with this specific service, enabling them to understand internal architecture and make localized design decisions.
+
+
+## Document Structure
+
+A Component Design Document typically includes the following sections:
+
+### Overview
+
+Provides readers with a concise understanding of the component's purpose and scope within the broader system.
+
+- **Core Purpose:** What business or technical capability does this module isolate?
+- **Design Scope:** Briefly define the boundaries of what code logic is owned by this module versus what is explicitly delegated to other modules.
+
+### Structural Architecture (C4 Level 3)
+
+Visualizes the internal structural components that make up this module and how they interact internally and across boundaries.
+
+Use a **Component Diagram** (C4 Level 3) to show internal layers such as interface/handler layers, core domain/business logic, and infrastructure adapters.
+
+Include **Component Catalog & Responsibilities**: A table defining each component's explicit responsibility and structural constraints.
+
+### Interfaces & Boundaries
+
+Defines how this module exposes its capabilities and interacts with adjacent layers.
+
+**Provided Interfaces (Inbound):**
+- How do other components or containers interact with this module?
+- What interaction models are used? (e.g., Synchronous in-process calls, gRPC, event-driven)
+- Which internal component acts as the entry point?
+
+**Required Interfaces (Outbound Dependencies):**
+- What upstream or downstream systems/modules does this component depend on?
+- Is the coupling loose (asynchronous) or tight (synchronous)?
+
+### Key Design Decisions & Internal Patterns
+
+Explains the structural patterns and strategies used inside the module for maintainability and clarity.
+
+- **Architectural Pattern:** (e.g., Hexagonal/Ports-and-Adapters, Clean Architecture, Onion Layout)
+- **State & Execution Management:** (e.g., Stateless execution, worker pools, saga coordinators)
+- **Dependency Injection Strategy:** How are internal components wired together at runtime?
+
+
+## Best Practices
+
+- **Single Responsibility:** Each component layer should have one reason to change.
+- **Clear Boundaries:** Use visual diagrams to make module boundaries obvious.
+- **Decoupling:** Infrastructure concerns should not leak into domain logic.
+- **Consistency:** Follow the same structural patterns across all components in the system.
+- **Documentation:** Keep this document in sync with code changes.
+
+
+## Examples
+
+### Payment Service
+
+```md file="../examples/comp-design.mdx"
+```

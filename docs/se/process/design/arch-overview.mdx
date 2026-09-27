@@ -1,0 +1,74 @@
+# Architecture Overview Document
+
+Guide for writing Architecture Overview documents.
+
+## Introduction
+
+An Architecture Overview Document provides the "big picture" of a system, detailing its purpose, scope, and major components.
+
+It serves as the definitive entry point for engineers and stakeholders to quickly grasp how the entire system operates.
+
+
+## Document Structure
+
+An Architecture Overview Document typically includes the following sections:
+
+### Introduction
+
+Provides readers with a quick understanding of why this system exists from both business and technical perspectives.
+
+- **Purpose:** What problem does this system solve?
+- **Scope:** What the system will do (**In-scope**) and, what it will **not** do (**Out-of-scope**).
+- **Key Drivers & Constraints:** Core factors shaping the architecture (e.g., tight timelines, budget constraints, regulatory compliance, or mandatory corporate technical standards).
+
+### Quality Attributes
+
+Defines the non-functional requirements (NFRs) that drove the architectural choices.
+
+### System Context (The Big Picture)
+
+Positions the system within its environment. Who and what interacts with it?
+
+Use **System Context Diagram** (C4 Level 1) to show the system as a "black box", along with the primary user personas (Actors) and external third-party integrations.
+
+### High-Level Architecture (The Topology)
+
+Peeks inside the system boundary to show how the major internal building blocks interact.
+
+Use a **Container Diagram** (C4 Level 2) to break the system down into concrete, deployable units (like web apps, mobile apps, separate API backend services, and databases).
+
+Include **Container Catalog**: A table defining each container's responsibility, tech stack, and deployment nature.
+
+Use **Communication Patterns** to explicitly map out internal interaction types, split into Synchronous (HTTP/gRPC) and Asynchronous (Event-Driven/Queues) paths.
+
+### Deployment Architecture
+
+Outlines how the system is deployed onto physical or cloud infrastructure.
+
+Use **Deployment Diagram** to show how software components are distributed across infrastructure components (e.g., Load Balancers, Servers, VPC subnets, etc.).
+
+### Architecture Decision Records (ADR)
+
+Preserves the history of major architectural choices so newcomers understand the "why" behind the design.
+
+A typical ADR includes:
+- **Context:** What is the current problem or technical requirement?
+- **Decision:** The chosen solution (e.g., using Kafka instead of RabbitMQ).
+- **Status:** The state of the decision (Proposed, Accepted, Superseded).
+- **Consequences:** The trade-offs or impacts resulting from that decision.
+
+
+## Best Practices
+
+- **Prioritize Visuals**: A single well-crafted diagram is often more valuable than ten pages of text.
+- **Consistency:** Follow standard notation (UML, C4 model).
+- **Avoid Detailed Logic:** If necessary, provide hyperlinks to a separate Low-Level Design (LLD) document.
+- **Living Document:** Update regularly as architecture evolves.
+- **Balance:** Include both high-level views and critical technical details.
+
+
+## Examples
+
+### Global Retail System
+```md file="../examples/arch-overview.mdx"
+```

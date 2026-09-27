@@ -6,7 +6,6 @@ import { PackageManagerTabs } from '@theme'
 
 This document is for version `7.52.1` (2024).
 
-
 ## Overview
 
 React Hook Form is a library designed to simplify form handling in React applications.
@@ -76,27 +75,7 @@ export default function App() {
 ```
 
 
-## Field Validation
-
-List of validation rules supported:
-- required
-- min
-- max
-- minLength
-- maxLength
-- pattern
-- validate
-
-```tsx
-<input {...register("firstName", { required: true, maxLength: 20 })} />
-<input {...register("lastName", { pattern: /^[A-Za-z]+$/i })} />
-<input type="number" {...register("age", { min: 18, max: 99 })} />
-```
-
-You can read more detail on each rule in the [register section](https://react-hook-form.com/api#register).
-
-
-## Schema Validation
+## Validation
 
 You can pass your schema to validate input data against the schema and return with either `errors` or a valid result.
 
