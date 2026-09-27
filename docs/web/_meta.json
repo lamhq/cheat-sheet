@@ -65,5 +65,11 @@
     "type": "dir",
     "collapsed": true,
     "collapsible": true
+  },
+  {
+    "name": "ngrok",
+    "type": "dir",
+    "collapsed": true,
+    "collapsible": true
   }
 ]

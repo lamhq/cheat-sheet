@@ -6,5 +6,12 @@
   "repo-organization",
   "language",
   "vcs",
-  "ide"
+  "ide",
+  {
+    "name": "vscode",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Visual Studio Code",
+    "collapsible": true
+  }
 ]
