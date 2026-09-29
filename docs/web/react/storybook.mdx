@@ -7,7 +7,7 @@ import { PackageManagerTabs } from '@theme'
 This document is for version `9.0.14` (2025).
 
 
-## Install Storybook
+## Installation
 
 <PackageManagerTabs command="create storybook@latest" />
 
@@ -16,27 +16,99 @@ This document is for version `9.0.14` (2025).
 
 <PackageManagerTabs command="run storybook" />
 
-Then, enable [network request mocking](./storybook/mocking.mdx#network-requests).
 
+## Configuration
 
-## Opt out of telemetry
-
-Stop sharing any information with Storybook.
+Configuration for Storybook in a Vite project:
 
 ```ts title=".storybook/main.ts"
-// Replace your-framework with the framework you are using, e.g. react-vite, nextjs, vue3-vite, etc.
-import type { StorybookConfig } from '@storybook/your-framework';
+import type { StorybookConfig } from '@storybook/react-vite';
+
+import { dirname } from 'path';
+
+import { fileURLToPath } from 'url';
+
+/**
+ * Resolve the absolute path of a package, needed for monorepo projects
+ */
+function getAbsolutePath(value: string) {
+  return dirname(fileURLToPath(import.meta.resolve(`${value}/package.json`)));
+}
 
 const config: StorybookConfig = {
-  framework: '@storybook/your-framework',
-  stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  framework: getAbsolutePath('@storybook/react-vite'),
+  stories: ['../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
   core: {
-    disableTelemetry: true, // 👈 Disables telemetry
-  },
+    disableTelemetry: true, // stop sharing information with Storybook.
+  },  
 };
 
 export default config;
 ```
+
+```tsx title=".storybook/preview.tsx"
+import '../src/global.css';   // add global styles
+import type { Preview } from '@storybook/react-vite';
+import MockProvider from './MockProvider';
+
+const preview: Preview = {
+  parameters: {
+    // layout: 'fullscreen',  // use the full preview area
+    controls: {
+      matchers: {
+        // detects matching controls based on component prop names
+        color: /(background|color)$/i,
+        date: /Date$/i,
+      },
+    },
+  },
+  decorators: [
+    // wraps every story with additional UI or providers.
+    (Story) => (
+      <MockProvider>
+        <Story />
+      </MockProvider>
+    ),
+  ],
+};
+
+export default preview;
+```
+
+```tsx title=".storybook/MockProvider.tsx"
+import type { ReactNode } from 'react';
+import { MemoryRouter } from 'react-router';
+
+export interface MockProviderProps {
+  children: ReactNode;
+}
+
+export default function MockProvider({ children }: MockProviderProps) {
+  return (
+    <MemoryRouter>
+      {/* Add necessary providers required by the stories */}
+      {children}
+    </MemoryRouter>
+  );
+}
+```
+
+## Mock API Requests
+
+See [Mock network requests](./storybook/mocking.mdx#mock-network-requests).
+
+## Add a story
+
+To create a new story:
+1. Run Storybook
+2. Click the ➕ button in the sidebar to search for your component
+3. Add a basic story created for the component
+
+Create from an existing story:
+1. Open the existing story
+2. Use the Controls panel to adjust the value of a control
+3. Save those changes as a new story.
+
 
 ## References
 

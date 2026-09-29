@@ -1,10 +1,54 @@
-# Loading State
+import { PackageManagerTabs } from '@theme'
 
-## Introduction
+# TanStack Query
 
-How to show loading states while data is fetched or processed.
+How to perform asynchronous operations in React.
+
+## Installation
+
+<PackageManagerTabs command="i @tanstack/react-query@^5" />
+
+Provider setup:
+
+```tsx title="main.tsx"
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
+
+<QueryClientProvider client={queryClient}>
+  <App />
+</QueryClientProvider>
+```
+
 
 ## Data Fetching
+
+### Fetch data
+
+Fetch data asynchronously using `useQuery`:
+
+```tsx
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
+import { fetchTask } from './api';
+
+const {
+  data,  // successful query result
+  error, // error thrown by queryFn
+  isFetching, // true while a fetch is running
+} = useQuery({
+  queryKey: ['tasks', pagination, filters, sorting],
+  queryFn: () => fetchTask(pagination, filters, sorting),
+  placeholderData: keepPreviousData,
+  staleTime: 1000 * 60 * 5,
+});
+```
+
+- `queryKey` identifies the query and its cached result. When a value changes, the query runs again.
+- `queryFn` is the asynchronous function that fetches data. It must return a promise and throw when the request fails.
+- `placeholderData: keepPreviousData` keeps the previous result visible while the next result loads.
+- `staleTime: 1000 * 60 * 5` keeps the result fresh for five minutes.
+
+### Show Loading State
 
 **On first load**:
 1. Display a loading bar at the top of the page
@@ -19,10 +63,46 @@ How to show loading states while data is fetched or processed.
 4. Fetch the data from the server
 5. Replace the previous content with the new data when it loads
 
-**Error handling**: If fetching fails, throw an error for an error boundary to handle. It should display an user-friendly error message and allow retrying.
+```tsx
+import { cn } from '@/lib/utils';
+import { Layout, TopLoadingBar, Table, TableSkeleton, Pagination } from '@/components';
+
+const {
+  data,
+  error,
+  isFetching,
+} = useQuery(options);
+
+return (
+  <Layout>
+    <TopLoadingBar open={isFetching} />
+
+    {isFetching && !data && <TableSkeleton />}
+
+    {(!isFetching || data) && (
+      <>
+        <Table
+          className={cn({
+            'pointer-events-none opacity-50': isFetching && data,
+          })}
+        />
+        <Pagination />
+      </>
+    )}
+  </Layout>
+);
+```
+
+### Error Handling
+
+If fetching fails, throw an error for an error boundary to handle
+
+```tsx
+if (error) throw error;
+```
 
 
-## Data Processing
+## Data Mutation
 
 **Generic flow** (form submission, async actions):
 1. Show an inline spinner in the action button while processing
@@ -32,6 +112,51 @@ How to show loading states while data is fetched or processed.
 5. Show a success toast on successful completion.
 
 **Error handling**: If submission fails, show an error toast with a user-friendly message.
+
+
+```tsx title="AddTodo.tsx"
+import React, { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+
+const addTodo = async (newTodo: Todo): Promise<Todo> => {
+  const response = await axios.post('https://jsonplaceholder.typicode.com/todos', newTodo);
+  return response.data;
+};
+
+export default function AddTodo() {
+  const [title, setTitle] = useState('');
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: addTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['todos'] });
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    mutation.mutate({ title, completed: false });
+    setTitle('');
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Enter todo title"
+      />
+      <button type="submit">Add Todo</button>
+      {mutation.isPending && <p>Adding...</p>}
+      {mutation.isError && <p>Error: {(mutation.error as Error).message}</p>}
+      {mutation.isSuccess && <p>Todo added ✅</p>}
+    </form>
+  );
+};
+```
 
 
 ## Code Snippets
@@ -106,64 +231,6 @@ export default function TopLoadingBar({ open }: TopLoadingBarProps) {
       shadow={true}
       color="var(--muted-foreground)"
     />
-  );
-}
-```
-
-
-### TableSkeleton
-
-The component displays a skeleton placeholder for a table while data is being fetched.
-
-```tsx title="TableSkeleton.tsx"
-import {
-  Table as TanstackTable,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Skeleton } from '@/components/ui/skeleton';
-
-type TableSkeletonProps = {
-  columnCount?: number;
-  rowCount?: number;
-};
-
-export default function TableSkeleton({
-  columnCount = 6,
-  rowCount = 5,
-}: TableSkeletonProps) {
-  const columns = Array.from({ length: columnCount });
-  const rows = Array.from({ length: rowCount });
-
-  return (
-    <div className="overflow-hidden border">
-      <TanstackTable>
-        <TableHeader>
-          <TableRow>
-            {columns.map((_, columnIndex) => (
-              <TableHead key={columnIndex} className="bg-background">
-                <Skeleton className="h-4 w-16" />
-              </TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-
-        <TableBody>
-          {rows.map((_, rowIndex) => (
-            <TableRow key={rowIndex}>
-              {columns.map((_, columnIndex) => (
-                <TableCell key={columnIndex} className="bg-background">
-                  <Skeleton className="h-4 w-full" />
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </TanstackTable>
-    </div>
   );
 }
 ```
