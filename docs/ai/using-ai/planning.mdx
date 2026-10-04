@@ -3,10 +3,20 @@ import createDailyTodo from './_daily-schedule.txt?raw';
 
 # Planning
 
-## Create daily todo
+## Create a daily to-do list
 
 <Prompt
-  title="Create Daily Todo"
-  description="Send this prompt to AI, enter a weekday, and get the todo list"
+  title="Create a Daily To-Do List"
+  description="Send this prompt to AI to generate your to-do list"
   prompt={createDailyTodo}
+/>
+
+## Track weekly AI usage
+
+Set a weekly AI usage target and track your progress toward it.
+
+<Prompt
+  title="Track Weekly AI Usage"
+  description="Adjust the month and send this prompt to AI"
+  prompt="Return a table (two columns) listing every Sunday and the last day of October 2026, along with the target percentage for each date. Last day is 100%. Use short names for weekdays."
 />
