@@ -1,6 +1,7 @@
 [
   "ui-spec",
   "api-spec",
+  "api-design-standards",
   "db-design",
   "arch-overview",
   "comp-design"
