@@ -1,0 +1,110 @@
+# Login Screen
+
+## Introduction
+**Purpose**: Allow users to securely authenticate and access protected features.
+
+**Pre-conditions**:
+
+- The user has launched the application or navigated to a protected route.
+- The user is not currently authenticated.
+
+**Post-conditions**:
+
+- A successful login creates an authenticated session and redirects the user to the requested protected screen, or to the dashboard when no requested screen exists.
+- A failed login keeps the user on this screen and displays an actionable error.
+
+## Screen Layout
+
+![](https://img.magnific.com/free-vector/space-login-landing-page-template_23-2148260289.jpg?semt=ais_test_b&w=740&q=80)
+
+- A centered login form is displayed on a single-column layout.
+- The form contains the application logo or title, email/username input, password input, primary Login button, and Forgot Password link.
+- On mobile, the form uses the available width with consistent horizontal padding. On tablet and desktop, it is centered with a maximum width of 400px.
+
+## Components
+
+### Email/Username Input
+
+- Text input with a visible label and appropriate autocomplete hint.
+- Default state: empty and ready for input.
+- Focus state: displays a visible focus indicator.
+- Error state: displays an inline validation message and error styling.
+
+### Password Input
+
+- Masked text input with a visible label and an optional show/hide control.
+- Default state: empty and masked.
+- Focus state: displays a visible focus indicator.
+- Error state: displays an inline validation message and error styling.
+
+### Login Button
+
+- Primary action that submits the form.
+- Disabled while required fields are empty or while authentication is in progress.
+- Loading state displays progress feedback and prevents duplicate submissions.
+
+### Forgot Password Link
+
+- Secondary link that navigates to the password recovery screen.
+- Remains available unless the application is displaying a blocking system error.
+
+### Status Messages
+
+- Validation and authentication errors are displayed near the relevant field or form.
+- Success is communicated through the redirect rather than exposing sensitive authentication details.
+
+## Interactions & Behavior
+
+- Selecting Login validates the fields before making an authentication request.
+- Pressing Enter while focused within the form submits the login form.
+- Selecting Forgot Password navigates to the password recovery screen.
+- Email format is validated as the user leaves the field or submits the form. Credentials are validated after submission.
+- During authentication, inputs and the Login button are disabled and the button shows a loading indicator.
+- On success, the screen transitions to the destination route without exposing tokens or credentials.
+- Hover and focus states provide visual feedback; transitions should be brief and must not delay form submission.
+
+### Validation Rules
+
+- Email/username is required. When an email is used, it must match a valid email format such as `example@domain.com`.
+- Password is required and must contain at least 8 characters, one uppercase letter, and one number.
+- Empty fields display: “Please enter your email and password.”
+- Invalid credentials display: “Incorrect email or password.”
+
+### Error Handling
+
+- A server or network failure displays: “Service temporarily unavailable. Please try again later.”
+- The user can retry the request without re-entering valid field values.
+- Errors must not reveal whether a particular account exists.
+
+## Technical & Integration Requirements
+
+### API and Data Requirements
+
+- Submit credentials to the authentication service at `/api/login`.
+- Handle success, validation, authentication, timeout, and service-unavailable responses.
+- Never log or persist credentials or authentication tokens.
+
+### Authentication & Authorization
+
+- Available to unauthenticated users; successful authentication grants access to protected features.
+- The server determines roles and permissions. Enforce HTTPS and CSRF protection.
+
+### Internationalization
+
+- Support English, Spanish, and French, including localized labels and messages.
+- Accommodate translated strings without clipping or overlap; date, time, and currency formatting are not applicable.
+
+### Accessibility
+
+- Meet WCAG 2.1 AA, including 4.5:1 contrast for normal text.
+- Provide accessible labels, descriptions, keyboard navigation, visible focus, Enter-key submission, and screen-reader announcements.
+
+### Analytics & Tracking
+
+- Track attempts, successes, failures, and password-recovery navigation without sensitive data.
+- Comply with applicable privacy requirements, including GDPR.
+
+### Performance
+
+- Target screen load under 2 seconds and authentication responses under 500ms.
+- Cache static assets and show loading feedback while authentication is pending.

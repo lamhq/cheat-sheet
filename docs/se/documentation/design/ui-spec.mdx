@@ -1,0 +1,53 @@
+# UI Specification Document
+
+Guide for writing UI Specification Documents.
+
+## Introduction
+
+A UI Specification Document describes a single screen of a software application.
+
+It guides developers in implementing the screen according to the feature requirements.
+
+
+## Document Structure
+
+A UI Specification Document typically includes the following sections (but not all):
+
+### Introduction
+- Purpose: What the user accomplishes on this screen (e.g., "Allows users to update personal information, change password, and manage notification preferences").
+- Pre-conditions: How the user reaches this screen (e.g., "Accessed via Navigation Menu > Profile, or deep-linked from onboarding email").
+- Post-conditions: Primary success criteria (e.g., "Saves profile updates to backend and redirects to Dashboard").
+
+### Screen Layout
+- Visual wireframe or layout diagram
+- Component placement and hierarchy
+
+### Components
+- Detailed description of each UI component
+- State variations (default, hover, active, disabled, error, loading, empty)
+
+### Interactions & Behavior
+- User actions and system responses
+- Animations and transitions
+- Error handling
+- Loading states and timing
+
+### Technical & Integration Requirements
+- **API/data requirements**: APIs or data sources required for this screen
+- **Authentication & Authorization**: User roles, permissions, access controls
+- **Internationalization**: Language support, date/time formats, currency, number formatting, RTL considerations
+-**Accessibility**: Screen reader support, keyboard navigation, color contrast ratios, ARIA labels, focus management
+-  **Analytics & Tracking**: Events to track, metrics to capture, tracking tools, privacy compliance requirements
+- **Performance**: Load time targets, image optimization, lazy loading, list virtualization, ...
+
+## Related Documents
+Link to:
+- Feature Specification related to the UI
+- API designs for this UI
+
+## Examples
+
+### Login Screen
+
+```md file="../examples/ui-spec.mdx"
+```

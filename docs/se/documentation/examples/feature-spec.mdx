@@ -23,14 +23,6 @@
 - Integration with database storage.
 
 ## User Flow
-1. User logs into their account.  
-2. User navigates to a product detail page.  
-3. User clicks "Add to Wishlist" button.  
-4. System confirms item is added (toast notification).  
-5. User can access wishlist via profile menu.  
-6. Wishlist displays all saved items with product details.  
-7. User can remove items by clicking "Remove" next to each product.  
-
 ```mermaid
 flowchart TD
     A[User logs in] --> B[Navigate to Product Detail Page]
@@ -52,8 +44,6 @@ flowchart TD
 - **Guest User:** If not logged in, system prompts user to sign in before saving.  
 - **Out-of-Stock Item:** If item becomes unavailable, wishlist shows "Out of Stock" label.  
 - **Deleted Product:** If product is removed from catalog, wishlist entry disappears with notification.  
-
-## Edge Cases
-- Duplicate entries: Prevent adding the same product twice.  
-- Invalid product ID: System shows error message.  
-- Network timeout: System retries request or shows "Unable to add item" message.  
+- **Duplicate entries**: Prevent adding the same product twice.  
+- **Invalid product ID**: System shows error message.  
+- **Network timeout**: System retries request or shows "Unable to add item" message.  

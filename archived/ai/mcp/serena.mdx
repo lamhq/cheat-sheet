@@ -1,0 +1,97 @@
+# Serena
+
+:::caution
+After installation and integration with VS Code, AI Agent did not use Serena at all. This doc will be archived and removed in the future.
+:::
+
+## Installation
+
+```bash
+uv tool install -p 3.13 serena-agent
+```
+
+Upon completion, the command `serena` should be available in your terminal.
+
+Init Serena:
+
+```bash
+serena init
+```
+
+
+## Running Serena
+
+Serena MCP Server can be run in two modes:
+- Standard I/O Mode: let the client (e.g. Claude Code, Codex or Cursor) run the MCP server and use the process stdin/stdout streams to communicate with it.
+- Streamable HTTP Mode: you start the server and provide the client with the URL to connect to it.
+
+
+## Connecting Client
+
+client needs to be provided with the command to run the MCP server, it needs to be configured with a launch command
+
+To connect Serena to client (e.g. Claude Code, Codex or Cursor):
+1. Install a custom MCP server to your client
+2. Specify the command that allows the client to start the MCP server (stdio mode), or the URL of the HTTP/SSE endpoint (start the server yourself).
+
+### VS Code
+
+1. Run the `MCP: Add Server` command
+2. Select the `Command (stdio)` option
+3. To install Serena in the current workspace, enter command below
+4. Enter `Serena` as the name, then select `workspace`
+5. Set up hooks for optimal performance of Serena in VSCode
+
+```bash
+serena start-mcp-server --context=vscode --project ${workspaceFolder}
+```
+
+Hooks:
+
+```json title="~/.copilot/hooks/serena-hooks.json"
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "type": "command",
+        "command": "serena-hooks remind --client=vscode"
+      }
+    ],
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "serena-hooks activate --client=vscode"
+      }
+    ],
+    "Stop": [
+      {
+        "type": "command",
+        "command": "serena-hooks cleanup --client=vscode"
+      }
+    ]
+  }
+}
+```
+
+**Verification**: you should be able to see Serena in the tools overview in the AI Chat window.
+
+
+## Customization
+
+You can customize Serena’s behaviour by:
+1. adding command-line arguments
+2. adjusting configuration.
+
+
+## Upgrade
+
+```bash
+uv tool upgrade serena-agent
+```
+
+
+## Uninstalling
+
+```bash
+uv tool uninstall serena-agent
+```

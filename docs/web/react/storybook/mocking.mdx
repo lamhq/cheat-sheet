@@ -2,7 +2,7 @@ import { PackageManagerTabs } from '@theme'
 
 # Mocking
 
-## Modules
+## Mock modules
 
 There are **two** approaches to mocking modules, they both require creating a mock file to replace the original module. The difference is how you import the mock file into your component.
 
@@ -13,15 +13,13 @@ Limitations:
 Conclusion: the cost for mocking modules like this is not acceptable. So i choose to avoid mocking in Storybook.
 
 
-## Network requests
-
-Mock Rest and GraphQL requests right inside your story.
+## Mock network requests
 
 Install MSW and the MSW addon:
 
 <PackageManagerTabs command="install -D msw msw-storybook-addon" />
 
-Generate the service worker file necessary for MSW to work:
+Generate service worker file for MSW to work:
 
 ```sh
 npx msw init public/
@@ -30,41 +28,59 @@ npx msw init public/
 Include the generated service worker file in your Storybook configuration:
 
 ```ts title=".storybook/main.ts"
-// Replace your-framework with the framework you are using, e.g. react-vite, nextjs, vue3-vite, etc.
-import type { StorybookConfig } from '@storybook/react-vite';
+// ...
 
 const config: StorybookConfig = {
-  framework: '@storybook/react-vite',
-  stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
-  staticDirs: ['../public', '../static'],
+  // ...
+  staticDirs: ['../public'],
 };
 
 export default config;
 ```
 
-Initialize the addon and apply it to all stories with a project-level loader:
+Initialize the addon and apply it to all stories:
 
-```ts title=".storybook/preview.ts"
-// Replace your-framework with the framework you are using, e.g. react-vite, nextjs, vue3-vite, etc.
-import type { Preview } from '@storybook/your-framework';
+```ts title=".storybook/preview.tsx"
+// ...
+import { initialize, mswDecorator } from 'msw-storybook-addon';
+import { handlers } from '../src/msw/handlers';
 
-import { initialize, mswLoader } from 'msw-storybook-addon';
-
-/*
- * Initializes MSW
- * See https://github.com/mswjs/msw-storybook-addon#configuring-msw
- * to learn how to customize it
- */
-initialize();
+// Initialize Mock Service Worker
+initialize({
+  onUnhandledRequest: 'bypass', // or 'warn' or 'error'
+});
 
 const preview: Preview = {
-  loaders: [mswLoader], // 👈 Add the MSW loader to all stories
+  // ...
+  parameters: {
+    // ...
+    msw: { handlers },
+  },
+  loaders: [mswLoader],
 };
 
 export default preview;
 ```
 
-To mock REST requests in stories:
+The global `msw` handlers:
+
+```ts title="src/msw/handlers.ts"
+import { http, HttpResponse } from 'msw';
+
+export const handlers = [
+  http.get('/api/posts/:id', async ({ params }) => {
+    const { id } = params;
+    return HttpResponse.json({
+      id: id,
+      title: 'Demo Post',
+      content: 'Lorem ipsum dolor sit amet consectetur adipiscing',
+      tags: ['play', 'gog'],
+    });
+  }),
+];
+```
+
+To mock HTTP requests in stories:
 
 ```ts
 import { http, HttpResponse, delay } from 'msw';
@@ -88,7 +104,7 @@ export const MockedSuccess: Story = {
 Instead of defining `parameters.msw` in each story, it can also be configured at the `component` or even `project` level, allowing you to share the same mock server configuration across multiple stories.
 
 
-## Providers
+## Mock context value
 
 For components that receive data from context defined in higher component tree, you can wrap your component in a `decorator` that includes the necessary context.
 
