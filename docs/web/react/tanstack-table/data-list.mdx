@@ -34,6 +34,8 @@ Add the required shadcn/ui components:
 
 ## Create Data Table Module
 
+Copy the following files into your project to create a reusable data-table module:
+
 ### Row and column types
 
 Define the shared row constraint, table-feature type, and optional column CSS
@@ -1135,9 +1137,9 @@ export default function MultiSelectForm({
 }
 ```
 
-## Implement Data List Component
+## Implement Data List
 
-To implement a data list:
+To implement a data list component that fetch data from a server and display it in a table:
 
 1. Define its row type and columns first.
 2. Provide a function that follows the `QueryFn<Row>` contract.
@@ -1145,7 +1147,7 @@ To implement a data list:
 4. Define actions for selected rows inside `<table.BulkActions />`.
 5. Render the data list by composing components `<table.* />`.
 
-The task list example below demonstrates how to implement a data list component using the shared data table module.
+Here we demonstrate how to implement a task data list component using the shared data table module.
 
 ### Define the row shape
 

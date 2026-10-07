@@ -1,8 +1,7 @@
 [
-  "project-overview",
   {
     "type": "dir",
-    "name": "requirements",
+    "name": "requirement-analysis",
     "label": "Requirements Analysis",
     "collapsed": true,
     "collapsible": true
