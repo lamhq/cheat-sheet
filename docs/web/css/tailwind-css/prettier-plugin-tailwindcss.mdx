@@ -1,0 +1,47 @@
+import { PackageManagerTabs } from '@theme';
+
+# prettier-plugin-tailwindcss
+
+Prettier plugin that sorts classes in Tailwind's recommended order.
+
+## Installation
+
+<PackageManagerTabs command="install -D prettier-plugin-tailwindcss" />
+
+## Update Prettier config
+
+Add these lines to Prettier settings:
+
+```js title="prettier.config.mjs"
+/** @type {import('prettier').Config & import('prettier-plugin-tailwindcss').PluginOptions} */
+const config = {
+  // Existing Prettier options...
+  plugins: ['prettier-plugin-tailwindcss'],
+  tailwindStylesheet: './src/styles.css',
+  tailwindFunctions: ['cn', 'clsx'],
+};
+
+export default config;
+```
+
+Explanation:
+
+- `plugins`: Loads `prettier-plugin-tailwindcss`. If other plugins exist, list this one last.
+- `tailwindStylesheet`: Required for Tailwind CSS v4+. Points to the CSS entry point with Tailwind imports, theme, and custom utilities. Path is relative to Prettier config.
+- `tailwindFunctions`: Optional function names whose string arguments contain Tailwind classes. Enables sorting in helpers such as `cn()` and `clsx()`.
+
+Run Prettier to sort classes in a file:
+
+<PackageManagerTabs
+  command={{
+    npm: 'npm exec prettier --write src/components/Button.tsx',
+    yarn: 'yarn exec prettier --write src/components/Button.tsx',
+    pnpm: 'pnpm exec prettier --write src/components/Button.tsx',
+    bun: 'bunx prettier --write src/components/Button.tsx',
+    deno: 'deno x prettier --write src/components/Button.tsx',
+  }}
+/>
+
+## References
+
+https://github.com/tailwindlabs/prettier-plugin-tailwindcss

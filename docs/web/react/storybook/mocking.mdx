@@ -17,13 +17,24 @@ Conclusion: the cost for mocking modules like this is not acceptable. So i choos
 
 Install MSW and the MSW addon:
 
-<PackageManagerTabs command="install -D msw msw-storybook-addon" />
+<PackageManagerTabs
+  command={{
+    npm: 'npm install msw@^2.15 msw-storybook-addon@^3.0 --save-dev',
+    yarn: 'yarn add msw@^2.15 msw-storybook-addon@^3.0 --save-dev',
+    pnpm: 'pnpm add msw@^2.15 msw-storybook-addon@^3.0 --save-dev',
+  }}
+/>
 
 Generate service worker file for MSW to work:
 
-```sh
-npx msw init public/
-```
+<PackageManagerTabs
+  command={{
+    npm: 'npx msw init ./public --save',
+    yarn: 'yarn dlx msw init ./public --save',
+    pnpm: 'pnpm dlx msw init ./public --save',
+  }}
+/>
+
 
 Include the generated service worker file in your Storybook configuration:
 
@@ -41,43 +52,19 @@ export default config;
 Initialize the addon and apply it to all stories:
 
 ```ts title=".storybook/preview.tsx"
-// ...
-import { initialize, mswDecorator } from 'msw-storybook-addon';
-import { handlers } from '../src/msw/handlers';
-
-// Initialize Mock Service Worker
-initialize({
-  onUnhandledRequest: 'bypass', // or 'warn' or 'error'
-});
+import type { Preview } from '@storybook/react-vite';
+import { mswLoader } from 'msw-storybook-addon/csf3';
 
 const preview: Preview = {
-  // ...
-  parameters: {
-    // ...
-    msw: { handlers },
-  },
-  loaders: [mswLoader],
+  /*
+   * Register the MSW loader for all stories
+   * See https://github.com/mswjs/msw-storybook-addon#csf-30
+   * to learn how to customize it
+   */
+  loaders: [mswLoader()],
 };
 
 export default preview;
-```
-
-The global `msw` handlers:
-
-```ts title="src/msw/handlers.ts"
-import { http, HttpResponse } from 'msw';
-
-export const handlers = [
-  http.get('/api/posts/:id', async ({ params }) => {
-    const { id } = params;
-    return HttpResponse.json({
-      id: id,
-      title: 'Demo Post',
-      content: 'Lorem ipsum dolor sit amet consectetur adipiscing',
-      tags: ['play', 'gog'],
-    });
-  }),
-];
 ```
 
 To mock HTTP requests in stories:
@@ -86,22 +73,15 @@ To mock HTTP requests in stories:
 import { http, HttpResponse, delay } from 'msw';
 
 export const MockedSuccess: Story = {
-  parameters: {
-    msw: {
-      handlers: [
-        http.get('https://your-restful-endpoint', async () => {
-          await delay(800);
-          return new HttpResponse(null, {
-            status: 403,
-          });
-        }),
-      ],
-    },
+  beforeEach({ msw }) {
+    msw.use(
+      http.get('https://your-restful-endpoint/', () => {
+        return HttpResponse.json(TestData);
+      }),
+    );
   },
 };
 ```
-
-Instead of defining `parameters.msw` in each story, it can also be configured at the `component` or even `project` level, allowing you to share the same mock server configuration across multiple stories.
 
 
 ## Mock context value

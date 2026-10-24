@@ -1,0 +1,84 @@
+# Login Test Suite
+
+## Introduction
+
+This document provides a collection of test cases for the login functionality of a web application.
+
+## TC_LOGIN_01 - Verify login with valid credentials
+
+### Description
+
+Verify that a user can successfully log in with valid credentials.
+
+### Pre-conditions
+
+- User account exists with username "testuser" and password "SecurePass123"
+- User is on the login page
+
+### Test Data
+
+- Username: testuser
+- Password: SecurePass123
+
+### Test Steps
+
+1. Navigate to the login page
+2. Enter "testuser" in the username field
+3. Enter "SecurePass123" in the password field
+4. Click the "Login" button
+5. Wait for the login request to complete
+
+### Expected Result
+
+- User is authenticated.
+- Dashboard/home page is displayed.
+- Welcome message or profile info appears.
+
+### Postconditions
+
+- A valid session or authentication token is created.
+- User has access rights to the system.
+- Login attempt is logged as successful.
+
+## TC_LOGIN_02 - Verify login with an invalid password
+
+### Description
+
+Verify that the system rejects login attempts with incorrect password and displays appropriate error message.
+
+### Pre-conditions
+
+- Application is accessible
+- User account exists with username "testuser"
+- User is on the login page
+- User has not exceeded maximum login attempts
+
+### Test Data
+
+- Username: testuser
+- Password: WrongPassword123
+
+### Test Steps
+
+1. Navigate to the login page
+2. Enter "testuser" in the username field
+3. Enter "WrongPassword123" in the password field
+4. Click the "Login" button
+5. Wait for the login request to complete
+
+### Expected Result
+
+- System denies access.
+- Error message shown (e.g., "Invalid username or password").
+- Login page remains visible for retry.
+
+### Postconditions
+
+- User remains unauthenticated.
+- No session or token is created.
+- Failed login attempt is logged.
+
+## Cleanup
+
+- Log out if a test leaves the user authenticated.
+- Clear session data and cookies before ending the test run.

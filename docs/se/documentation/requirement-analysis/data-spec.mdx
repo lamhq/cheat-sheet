@@ -1,1 +1,72 @@
 # Data Specification
+
+Guide for writing Data Specification Documents.
+
+## Introduction
+
+A Data Specification Document is a single source of truth that defines the business semantics, data structure, and validation rules of a [Module/System] before technical design begins.
+
+It serves as the blueprint for engineers, database architects, and QA teams use to build schemas, APIs, and test suites.
+
+## Document Structure
+
+A Data Specification Document typically includes the following sections:
+
+### Introduction
+- **Overview**: Provide a brief overview of the [Module/System] this document governs (e.g., E-Commerce Website, Loan Application).
+- **Purpose:** Define the business semantics, data attributes, allowed values, and cross-field validation rules required for [Module/System].
+
+### Assumptions
+List system-wide constraints and assumptions that apply across entities. For example:
+1. Store timestamps in UTC.
+2. Use two decimal places for monetary values unless specified otherwise.
+3. Use soft-delete for business records unless they are designated for permanent deletion.
+
+### Entity-Relationship Diagram
+Include a logical ER diagram showing business entities, their attributes, primary business keys, relationships and cardinality.
+
+#### [Entity Name] (list all entities in the system)
+- Brief explanation of what this entity represents in the domain
+- List its fields in a table:
+  - **Name**: business name of the field (e.g., Customer ID, Order Date).
+  - **ID**: field's identifier (e.g., `customer_id`, `order_date`).
+  - **Type**: business data type (e.g., Identifier, Text, Monetary, Date, Enumeration).
+  - **Constraints**: IDs of the rules that apply to the field (e.g., `Required`, `Unique`).
+  - **Default**: value used when none is provided, if applicable.
+  - **Description**: brief explanation of the field's meaning.
+
+### Enumerations
+List each enumeration used in the data model and its allowed values.
+
+#### [Enumeration Name]
+List all allowed values for the enumeration in a table with:
+- **Value**: The code or identifier used by the system.
+- **Label**: The human-readable name.
+- **Description**: What the value represents.
+
+### Constraints
+List every referenced constraint in a table with:
+- **Rule ID**: A unique identifier (e.g., "Required", "Unique", "StartDate-EndDate").
+- **Trigger**: When the rule is enforced (e.g., "Always", "When StartDate is set").
+- **Business Rule**: The condition to enforce (e.g., "End Date must be after Start Date").
+- **Violation**: The outcome when the rule is broken (e.g., an error message stating that End Date must be after Start Date).
+
+### Revision History
+Include a table with these info:
+- **Version**: version number of the document.
+- **Date**: date when the revision was made.
+- **Author**: person who made the revision.
+- **Changes**: brief description of what was changed in this revision.
+
+## Best Practices
+
+- **Keep it tech-agnostic:** Focus on business semantics (*Monetary Amount, Text, Date*) rather than physical database types (`DECIMAL`, `VARCHAR`).
+- **Separate terms from keys:** List human-readable names alongside standardized code keys (e.g., *Customer Order ID* vs. `customer_order_id`).
+- **Tag rules with unique IDs:** Attach fields with rule IDs for easy testing and tracing.
+
+## Examples
+
+### Order Management Data
+
+```md title="data-spec.mdx" file="../examples/data-spec.mdx"
+```
