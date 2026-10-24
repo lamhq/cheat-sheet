@@ -6,7 +6,7 @@ Guide for writing API Specification Documents.
 
 An API Specification Document describes an API in detail so developers can implement and integrate it correctly.
 
-It focuses on protocol, endpoints, request/response formats, authentication, expected behavior, and side effects.
+It focuses on API contract, authentication, validation, expected behavior, and side effects.
 
 ## Document Structure
 
@@ -27,7 +27,7 @@ An API Specification Document typically includes the following sections:
 - **Response:** Specifies status codes, headers, and the format of returned data, including success and error cases.
 
 ### Functional Requirements
-- Define the expected behavior of the API (e.g., saving an order, sending notifications, logging actions).
+- Define the expected behavior of the API (e.g., validation, saving an order, sending notifications, logging actions).
 
 ### Non-Functional Requirements
 - **Performance**. Defines expected speed and efficiency of API responses.  
@@ -37,22 +37,24 @@ An API Specification Document typically includes the following sections:
 - **Maintainability**. Focuses on ease of updating, debugging, and extending the API.  
 - **Compliance**. Requires adherence to legal, regulatory, and industry standards.
 
-### Changelog
-- Version history of the API.
-- Notes on added, deprecated, or removed endpoints.
+### Revision History
+Include a table with these info:
+- **Version**: version number of the document.
+- **Date**: date when the revision was made.
+- **Author**: person who made the revision.
+- **Changes**: brief description of what was changed in this revision.
+
+### Related Documents
+Link to:
+- Feature Specification Document that describes the feature this API supports
+- UI Specification Document for the UI that consumes this API
+- API Specification Documents for related APIs
+- Data Specification Documents for entities involved in the feature
 
 ## Best Practices
-- **Consumer-centered:** Write from the perspective of API clients and their needs.
-- **Clarity:** Use consistent naming, examples, and schemas.
-- **Completeness:** Document main flows, alternate flows, and edge cases.
-- **Specificity:** Define behavior, side effects, and error handling precisely.
-- **Traceability:** Link endpoints to business requirements and user stories.
-- **Conciseness:** Keep the document focused on a single API or service.
-
-## Related Documents
-Link to:
-- UI Specification for this API
-- Feature Specification related to the API
+- **Consumer-centered:** Focus on the contract and examples for API consumers.
+- **Guide implementation:** Give clear instructions on what the API does so developers can implement it correctly.
+- **No business logic:** Do not embed business rules; place them in Feature Specification Documents.
 
 ## Examples
 

@@ -45,21 +45,18 @@ A Feature Specification Document typically includes the following sections:
 - Unusual scenarios that need to be handled (duplicate entries, invalid inputs, or system timeouts, etc.).
 
 ### Related Documents
-Link to:
-- Related requirements documents
-- UI specifications for the feature
-- API designs for those UIs
-- Data specifications of entities involved in the feature
+Link to the following documents:
+- Related Feature Specification Document(s) that this feature depends on or interacts with
+- UI Specification Document(s) that implement this feature's user interface
+- API Specification Document(s) that the UI(s) for this feature use
+- Data Specification Document(s) for the entities involved in this feature
 
 
 ## Best Practices
 
 - **User-centered:** Write for end users. Include only what matters to them, and explain why the feature exists and how it benefits them.
-- **Clear and jargon-free:** Describe what the system does from the user's point of view, not how it is implemented. Avoid technical terms unless the readers need them.
+- **Clear and jargon-free:** Describe what the system does from the user's point of view. Avoid solution design (UI, API, data, architecture) and implementation details (technical terms, technology stack, code).
 - **Testable:** Phrase each acceptance criterion as an observable outcome that QA can verify without reading the code.
-- **Complete:** Cover alternate flows and error conditions, not just the happy path.
-- **Explicit scope:** State exclusions clearly so readers do not assume behavior that was never planned.
-- **Traceable:** Link to related Feature Specification Documents, Design Documents, and requirements so readers can follow the chain from user need to implementation.
 
 
 ## Examples

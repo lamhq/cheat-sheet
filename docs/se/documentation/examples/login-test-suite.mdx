@@ -2,9 +2,9 @@
 
 ## Introduction
 
-This document provides a collection of test cases for the login functionality of a web application.
+**Purpose**: This document provides a collection of test cases for the login functionality of a web application.
 
-## TC_LOGIN_01 - Verify login with valid credentials
+## Verify login with valid credentials (TC_LOGIN_01)
 
 ### Description
 
@@ -31,8 +31,7 @@ Verify that a user can successfully log in with valid credentials.
 ### Expected Result
 
 - User is authenticated.
-- Dashboard/home page is displayed.
-- Welcome message or profile info appears.
+- User is redirected to the dashboard.
 
 ### Postconditions
 
@@ -40,7 +39,7 @@ Verify that a user can successfully log in with valid credentials.
 - User has access rights to the system.
 - Login attempt is logged as successful.
 
-## TC_LOGIN_02 - Verify login with an invalid password
+## Verify login with an invalid password (TC_LOGIN_02)
 
 ### Description
 
@@ -69,7 +68,7 @@ Verify that the system rejects login attempts with incorrect password and displa
 ### Expected Result
 
 - System denies access.
-- Error message shown (e.g., "Invalid username or password").
+- Error message shown: "Incorrect email or password."
 - Login page remains visible for retry.
 
 ### Postconditions
@@ -82,3 +81,9 @@ Verify that the system rejects login attempts with incorrect password and displa
 
 - Log out if a test leaves the user authenticated.
 - Clear session data and cookies before ending the test run.
+
+## Related Documents
+
+- Login Feature Specification: not included in this example set
+- Login UI Specification: [ui-spec.mdx](./ui-spec.mdx)
+- Login API Specification: not included in this example set

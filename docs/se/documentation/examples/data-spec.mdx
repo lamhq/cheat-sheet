@@ -2,9 +2,9 @@
 
 ## Introduction
 
-The order management module supports the e-commerce purchase lifecycle: customers place orders for products, and the system records each order's items, total, and fulfillment status so the purchase can be tracked through delivery or cancellation.
+**Overview:** The order management module supports the e-commerce purchase lifecycle: customers place orders for products, and the system records each order's items, total, and fulfillment status so the purchase can be tracked through delivery or cancellation.
 
-This document defines the business data the module uses. It establishes the meaning, allowed values, and validation rules for customer orders and their items.
+**Purpose:** This document defines the business data the module uses. It establishes the meaning, allowed values, and validation rules for customer orders and their items.
 
 ## Assumptions
 
@@ -19,6 +19,31 @@ erDiagram
     Customer ||--o{ Order : places
     Order ||--|{ OrderItem : contains
     Product ||--o{ OrderItem : references
+    Customer {
+        Identifier customer_id PK
+        Text email_address UK
+        Text full_name
+    }
+    Order {
+        Identifier order_id PK
+        Identifier customer_id FK
+        Date order_date
+        Enumeration status
+        Text currency
+        Monetary total_amount
+    }
+    OrderItem {
+        Identifier order_item_id PK
+        Identifier order_id FK
+        Identifier product_id FK
+        Text product_name
+        Quantity quantity
+        Monetary unit_price
+    }
+    Product {
+        Identifier product_id PK
+        Text product_name
+    }
 ```
 
 ### Customer
@@ -39,7 +64,7 @@ Represents a purchase placed by a customer.
 | --- | --- | --- | --- | --- | --- |
 | Order ID | `order_id` | Identifier | Required, Unique | — | Stable identifier for the order. |
 | Customer ID | `customer_id` | Identifier | Required | — | Customer who placed the order. |
-| Order Date | `order_date` | Timestamp | Required | — | Date and time the order was placed, in UTC. |
+| Order Date | `order_date` | Date | Required | — | Date and time the order was placed, in UTC. |
 | Status | `status` | Enumeration (`Order Status`) | Required | `pending` | Current fulfillment state of the order. |
 | Currency | `currency` | Text | Required | — | Currency code used for the order's monetary amounts. |
 | Total Amount | `total_amount` | Monetary Amount | Required, NonNegative, OrderTotal | — | Total amount payable for the order. |
@@ -54,7 +79,7 @@ Represents one product and quantity included in an order.
 | Order ID | `order_id` | Identifier | Required | — | Order that contains this item. |
 | Product ID | `product_id` | Identifier | Required | — | Product selected for this item. |
 | Product Name | `product_name` | Text | Required | — | Product name captured when the order was placed. |
-| Quantity | `quantity` | Integer | Required, Positive | — | Number of units ordered. |
+| Quantity | `quantity` | Quantity | Required, Positive | — | Number of units ordered. |
 | Unit Price | `unit_price` | Monetary Amount | Required, NonNegative, OrderItemCurrency | — | Price per unit in the order's currency at purchase time. |
 
 ### Product

@@ -4,9 +4,7 @@ Guide for writing UI Specification Documents.
 
 ## Introduction
 
-A UI Specification Document describes a single screen of a software application.
-
-It guides developers in implementing the screen according to the feature requirements.
+A UI Specification Document describes a single user interface (e.g., web page, mobile screen) of a software application. It guides developers in implementing the UI according to the feature requirements.
 
 
 ## Document Structure
@@ -14,36 +12,52 @@ It guides developers in implementing the screen according to the feature require
 A UI Specification Document typically includes the following sections (but not all):
 
 ### Introduction
-- Purpose: What the user accomplishes on this screen (e.g., "Allows users to update personal information, change password, and manage notification preferences").
-- Pre-conditions: How the user reaches this screen (e.g., "Accessed via Navigation Menu > Profile, or deep-linked from onboarding email").
-- Post-conditions: Primary success criteria (e.g., "Saves profile updates to backend and redirects to Dashboard").
+Describe the screen's purpose, target users, and role in the application.
 
-### Screen Layout
-- Visual wireframe or layout diagram
-- Component placement and hierarchy
+### User Flow and Navigation
+Explain how users reach the screen, interact with it, and navigate to other screens.
+
+### Layout
+Define the screen hierarchy, regions, component placement, and layout rules.
 
 ### Components
-- Detailed description of each UI component
-- State variations (default, hover, active, disabled, error, loading, empty)
+Detail each component, including its type, label, purpose, properties, and behavior.
+
+### Data Specification
+Define displayed data, data sources, field formats, defaults, validation rules, and empty values.
 
 ### Interactions & Behavior
-- User actions and system responses
-- Animations and transitions
-- Error handling
-- Loading states and timing
+Describe user actions, event handling, state transitions, conditional visibility, and expected outcomes.
 
-### Technical & Integration Requirements
-- **API/data requirements**: APIs or data sources required for this screen
-- **Authentication & Authorization**: User roles, permissions, access controls
-- **Internationalization**: Language support, date/time formats, currency, number formatting, RTL considerations
--**Accessibility**: Screen reader support, keyboard navigation, color contrast ratios, ARIA labels, focus management
--  **Analytics & Tracking**: Events to track, metrics to capture, tracking tools, privacy compliance requirements
-- **Performance**: Load time targets, image optimization, lazy loading, list virtualization, ...
+### UI States
+Define default, loading, empty, success, error, disabled, selected, and other relevant states.
 
-## Related Documents
+### Validation and Error Handling
+Specify input validation, error messages, error placement, recovery actions, and submission rules.
+
+### Responsive Design
+Describe behavior across supported screen sizes, orientations, and device types.
+
+### API and Integration
+Document required API endpoints, request and response fields, loading behavior, and integration dependencies, if applicable.
+
+### Security
+Define authentication requirements, authorization rules, sensitive-data handling, and permission-dependent UI behavior.
+
+### Acceptance Criteria
+Provide verifiable conditions and test scenarios for confirming that the UI meets requirements.
+
+### Revision History
+Include a table with these info:
+- **Version**: version number of the document.
+- **Date**: date when the revision was made.
+- **Author**: person who made the revision.
+- **Changes**: brief description of what was changed in this revision.
+
+### Related Documents
 Link to:
-- Feature Specification related to the UI
-- API designs for this UI
+- Feature Specification Document for the feature this UI implements
+- API Specification Document(s) this UI depends on
 
 ## Examples
 
