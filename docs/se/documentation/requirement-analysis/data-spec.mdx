@@ -4,7 +4,7 @@ Guide for writing Data Specification Documents.
 
 ## Introduction
 
-A Data Specification Document is a single source of truth that defines the business semantics, data structure, and validation rules of a [Module/System] before technical design begins.
+A Data Specification Document is a single source of truth that defines the data model, business semantics, and constraints of a [Module/System] before technical design begins.
 
 It serves as the blueprint for engineers, database architects, and QA teams use to build schemas, APIs, and test suites.
 
@@ -13,14 +13,15 @@ It serves as the blueprint for engineers, database architects, and QA teams use 
 A Data Specification Document typically includes the following sections:
 
 ### Introduction
-- **Overview**: Provide a brief overview of the [Module/System] this document governs (e.g., E-Commerce Website, Loan Application).
-- **Purpose:** Define the business semantics, data attributes, allowed values, and cross-field validation rules required for [Module/System].
+- **Overview**: brief introduction of the [Module/System] this document governs (e.g., E-Commerce Website, Loan Application).
+- **Purpose:** the document defines the data model, business semantics, and constraints of a [Module/System].
 
 ### Assumptions
 List system-wide constraints and assumptions that apply across entities. For example:
 1. Store timestamps in UTC.
 2. Use two decimal places for monetary values unless specified otherwise.
 3. Use soft-delete for business records unless they are designated for permanent deletion.
+4. Fields without the `Required` constraint are optional and may be omitted from a record.
 
 ### Entity-Relationship Diagram
 Include a logical ER diagram showing business entities, their attributes, primary business keys, relationships and cardinality.
@@ -58,11 +59,12 @@ Include a table with these info:
 - **Author**: person who made the revision.
 - **Changes**: brief description of what was changed in this revision.
 
+
 ## Best Practices
 
 - **Keep it tech-agnostic:** Focus on business semantics (*Monetary Amount, Text, Date*) rather than physical database types (`DECIMAL`, `VARCHAR`).
 - **Separate terms from keys:** List human-readable names alongside standardized code keys (e.g., *Customer Order ID* vs. `customer_order_id`).
-- **Tag rules with unique IDs:** Attach fields with rule IDs for easy testing and tracing.
+
 
 ## Examples
 

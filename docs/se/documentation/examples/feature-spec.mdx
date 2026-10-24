@@ -1,49 +1,57 @@
 # Wishlist
 
 ## Introduction
-- **Description:** The Wishlist feature allows users to save products they are interested in for future reference.  
-- **User Goal:** Helps users track items they may want to purchase later without adding them to the cart immediately.  
-- **Related Features:** Shopping cart, product detail page, user account management.
+- **Description:** Lets users to save products they are interested in for future reference.  
+- **User Goal:** Track items to buy later without adding them to the cart.  
+- **Related Features:** Shopping cart, product detail page, user account.
 
 ## User Story
 - *As a registered shopper, I want to add products to my wishlist so that I can easily find and purchase them later.*
 
 ## Scope
 - **Inclusions:**  
-  - Add/remove items to/from wishlist.  
-  - View wishlist items in a dedicated section.  
-  - Persist wishlist across sessions (requires login).  
+  - Add and remove items.  
+  - View saved items.  
+  - Keep items across sessions (requires login).  
 - **Exclusions:**  
-  - Sharing wishlist with other users.  
-  - Price alerts or notifications for wishlist items.  
+  - Sharing wishlists with other users.  
+  - Price alerts.  
 
 ## Dependencies
-- Requires user authentication system.  
-- Relies on product catalog API.  
-- Integration with database storage.
+- Requires user login to tie items to an account.
+- Requires product catalog data (name, price, image, stock status).
+- Saved items must persist per user across sessions.
 
 ## User Flow
+1. User signs in.
+2. User clicks "Add to Wishlist" on a product. System shows "Added to Wishlist".
+3. User opens the Wishlist from the Profile Menu. System lists saved items.
+4. User clicks "Remove" on an item. System removes it.
+
 ```mermaid
 flowchart TD
-    A[User logs in] --> B[Navigate to Product Detail Page]
-    B --> C["Click 'Add to Wishlist'"]
-    C --> D[System confirms item added]
-    D --> E[Open Wishlist via Profile Menu]
-    E --> F[Wishlist displays saved items]
-    F --> G["Click 'Remove' on an item"]
-    G --> H[System updates Wishlist]
+    A[User signs in] --> B["Click 'Add to Wishlist'"]
+    B --> C[System shows success notification]
+    C --> D[Open Wishlist via Profile Menu]
+    D --> E[Wishlist lists saved items]
+    E --> F["Click 'Remove' on an item"]
+    F --> G[System removes item]
 ```
 
 ## Acceptance Criteria
 - Wishlist items persist after logout/login.  
-- User can add/remove items with immediate feedback.  
-- Wishlist displays accurate product details (name, price, image).  
-- Maximum of 100 items can be stored per user.  
+- A success notification appears only after adding an item.  
+- Wishlist shows each item's name, price, and image.  
+- Items of deleted products are removed automatically, and an alert shows how many were removed.  
 
 ## Alternate Flows
-- **Guest User:** If not logged in, system prompts user to sign in before saving.  
-- **Out-of-Stock Item:** If item becomes unavailable, wishlist shows "Out of Stock" label.  
-- **Deleted Product:** If product is removed from catalog, wishlist entry disappears with notification.  
-- **Duplicate entries**: Prevent adding the same product twice.  
-- **Invalid product ID**: System shows error message.  
-- **Network timeout**: System retries request or shows "Unable to add item" message.  
+- **Guest User:** If not logged in, system asks the user to sign in before saving.  
+- **Out-of-Stock Item:** If an item becomes unavailable, the Wishlist shows an "Out of Stock" label.  
+- **Deleted Product:** The item is removed automatically, and an alert shows how many items are no longer available.  
+- **Duplicate Entry:** System shows the success notification and does not add a second entry.  
+- **Error:** If the product is not found or the connection fails, system shows "Unable to add item. Please try again."  
+
+## Related Documents
+- [Project Overview](./project-overview.mdx)
+- [UI Specification](./ui-spec.mdx)
+- [API Specification](./api-spec.mdx)
