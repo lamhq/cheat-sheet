@@ -1,0 +1,100 @@
+# Test Suite
+
+Guide for writing Test Suite documents.
+
+## Introduction
+
+A Test Suite document defines the collection of test cases for a specific feature or API. It guides testing and ensures all scenarios are covered.
+
+
+## Document Structure
+
+A Test Suite document typically includes the following sections:
+
+### Introduction
+
+**Purpose**: the document provides a comprehensive collection of test cases for the [feature/API].
+
+### [Test Name] ([Test case ID])
+
+- `[Test Name]`: A concise summary describing what is being tested. (e.g., "Verify login with valid credentials").
+- `[Test Case ID]`: A unique alphanumeric identifier for tracking and traceability (e.g., `TC_LOGIN_01`).
+
+#### Description
+
+A short explanation of the test goal or scenario covered.
+
+Examples: *Ensure a registered user can log into the dashboard with a valid username and password.*
+
+#### Pre-conditions
+
+Prerequisites that must be satisfied before starting the execution.
+
+Examples:
+- *user account is created*
+- *user is on the login page.*
+
+#### Test Data
+
+Specific inputs or datasets used to execute the test steps.
+
+Examples:
+- Username: *testuser*
+- Password: *SecurePass123*
+
+#### Test Steps
+
+Sequential, numbered instructions detailing the exact actions to perform.
+
+Examples:
+1. Enter user@example.com in Email.
+2. Enter Pass123! in Password.
+3. Click "Log In".
+
+#### Expected Result
+
+The anticipated system behavior or output if the feature works correctly.
+
+Examples:
+- User is redirected to the dashboard.
+- A "Welcome back" banner is displayed.
+- API response status code is 200 and payload contains the expected data.
+
+#### Postconditions
+
+The required system state after test completion.
+
+Examples (for the "Place Order" test case):
+- Order status in DB updates to "PAID".
+- Product stock count decreases by 1.
+- Cart is emptied.
+
+### Cleanup
+
+Actions taken to restore the environment back to its initial state.
+
+Examples:
+- Delete test user accounts created during the tests.
+- Clear session data and cookies.
+
+### Related Documents
+Link to the following documents:
+- Feature Specification Document for the feature being tested
+- UI Specification Document(s) for the UI being tested
+- API Specification Document(s) for the API being tested
+
+
+## Best Practices
+
+- Write concise test case descriptions, with a maximum of 120 characters.
+- Include only the most relevant test cases, maximum 10 test cases per suite.
+- Include both positive (first) and negative test scenarios.
+- Ensure test cases are independent and can be executed in isolation.
+- Keep test data realistic and relevant to the test scenario.
+
+## Examples
+
+### Login Test Suite
+
+```md title="login-test-suite.mdx" file="../examples/login-test-suite.mdx"
+```

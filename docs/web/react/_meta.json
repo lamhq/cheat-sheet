@@ -5,17 +5,18 @@
     "collapsed": true
   },
   {
-    "name": "nextjs",
-    "type": "dir",
-    "collapsed": true,
-    "label": "Next.js"
-  },
-  {
     "name": "typescript",
     "label": "TypeScript",
     "type": "dir",
     "collapsed": true,
     "collapsible": true
+  },
+  "vite",
+  {
+    "name": "nextjs",
+    "type": "dir",
+    "collapsed": true,
+    "label": "Next.js"
   },
   {
     "name": "shadcn-ui",
@@ -25,22 +26,16 @@
   {
     "name": "react-router",
     "type": "dir",
-    "collapsed": true,
-    "label": "Routing"
+    "collapsed": true
   },
   "react-hook-form",
-  "react-query",
+  "tanstack-query",
   {
     "name": "tanstack-table",
     "type": "dir",
     "collapsed": true
   },
-  {
-    "name": "auth",
-    "type": "dir",
-    "collapsed": true,
-    "label": "Authentication"
-  },
+  "react-oidc-context",
   "react-testing-library",
   {
     "name": "storybook",
@@ -48,17 +43,10 @@
     "collapsed": true,
     "collapsible": true
   },
-  "vite",
   {
     "name": "techniques",
     "type": "dir",
     "collapsed": true,
     "label": "Techniques"
-  },
-  {
-    "name": "recipes",
-    "type": "dir",
-    "collapsed": true,
-    "label": "Recipes"
   }
 ]

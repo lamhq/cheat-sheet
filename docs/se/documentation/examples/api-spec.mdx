@@ -1,0 +1,93 @@
+# Get Orders API
+
+## Introduction
+
+Retrieve a list of orders with optional filters for status and pagination.
+
+## Contract
+
+- **Type:** REST
+- **Signatures:** `GET /orders`
+- **Base URL:** `https://api.shopverse.com/v1`  
+- **Authentication:** OAuth2 (Bearer access token)
+- **Versioning Strategy:** URI versioning (`/v1/`)
+
+### Request Headers
+| **Name**      | **Value**          |
+|---------------|--------------------|
+| Authorization | Bearer `<token>` |
+| Accept        | application/json   |
+
+### Request Body
+
+None. This endpoint does not accept a request body.
+
+### Query Parameters
+| **Name** | **Type** | **Description**                                                   |
+|----------|----------|-------------------------------------------------------------------|
+| status   | string   | Optional. Filter by order status (`pending`, `shipped`, `delivered`, `cancelled`). |
+| limit    | integer  | Optional. Number of results per page. Must be a positive integer.                                       |
+| offset   | integer  | Optional. Number of orders to skip before the first result. Must be zero or greater.                                                |
+
+
+### Response
+
+**Success (200 OK):** Response header: `Content-Type: application/json`.
+```json
+{
+  "orders": [
+    {
+      "orderId": "12345",
+      "status": "pending",
+      "createdAt": "2026-08-12T10:00:00Z",
+      "items": [
+        {
+          "productId": "A100",
+          "quantity": 2
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Error (400 Bad Request):**
+```json
+{
+  "error": "Invalid status value. Allowed values: pending, shipped, delivered, cancelled"
+}
+```
+
+**Error (401 Unauthorized):**
+```json
+{
+  "error": "Invalid or missing authentication token"
+}
+```
+
+## Functional Requirements
+- **Order Retrieval:** Provide a paginated list of orders with optional filtering by status.  
+- **Security Enforcement:** Only authenticated clients can access order data.
+- **Validation:** `status` must be one of the allowed order statuses, and `limit` and `offset` must be integers. Invalid values return `400 Bad Request`.
+- **Default Offset:** When `offset` is omitted, the response starts from the first order.
+
+## Non-Functional Requirements
+- **Performance:** Average response time < 150ms for standard queries.  
+- **Security:** OAuth2 required; all traffic encrypted via HTTPS.  
+- **Reliability:** 99.9% uptime SLA.  
+- **Scalability:** Support up to 5,000 concurrent requests.  
+- **Maintainability:** Endpoint remains backward compatible for at least one major version.  
+- **Compliance:** PCI DSS compliance for any order data linked to payments.
+
+## Revision History
+
+| **Version** | **Date**   | **Author**         | **Changes**                                          |
+|-------------|------------|--------------------|------------------------------------------------------|
+| v1.0        | 2026-08-01 | Documentation Team | Initial release with `GET /orders` endpoint.         |
+| v1.1        | 2026-08-10 | Documentation Team | Added query parameter `status` for filtering.        |
+| v1.2        | 2026-08-12 | Documentation Team | Introduced pagination parameters `limit` & `offset`. |
+
+## Related Documents
+- Feature Specification: Order management feature (not included in this example set).
+- UI Specification: Order history screen that consumes this API (not included in this example set).
+- [Order Management Data Specification](./data-spec.mdx)

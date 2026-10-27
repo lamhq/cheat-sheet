@@ -1,0 +1,23 @@
+[
+  {
+    "type": "dir",
+    "name": "requirement-analysis",
+    "label": "Requirements Analysis",
+    "collapsed": true,
+    "collapsible": true
+  },
+  {
+    "type": "dir",
+    "name": "design",
+    "label": "Design",
+    "collapsed": true,
+    "collapsible": true
+  },
+  {
+    "type": "dir",
+    "name": "implementation",
+    "label": "Implementation",
+    "collapsed": true,
+    "collapsible": true
+  }
+]

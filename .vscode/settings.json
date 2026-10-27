@@ -21,10 +21,5 @@
   "[markdown]": {
     "files.trimTrailingWhitespace": false
   },
-  "github.copilot.chat.commitMessageGeneration.instructions": [
-    {
-      "file": ".github/instructions/commit-message.md"
-    }
-  ],
   "chat.permissions.default": "autoApprove"
 }

@@ -1,0 +1,134 @@
+# Login Screen
+
+## Introduction
+**Purpose**: Allow users to securely authenticate and access protected features.
+
+**Target Users**: Unauthenticated users of the application.
+
+**Role in the Application**: The entry point to all protected features.
+
+**Pre-conditions**:
+
+- The user has launched the application or navigated to a protected route.
+- The user is not currently authenticated.
+
+**Post-conditions**:
+
+- A successful login creates an authenticated session and redirects the user to the requested protected screen, or to the dashboard when no requested screen exists.
+- A failed login keeps the user on this screen and displays an actionable error.
+
+## User Flow and Navigation
+
+1. The user opens the login screen directly or is redirected to it from a protected route.
+2. The user enters credentials and selects Login.
+3. On success, the user is redirected to the requested protected screen, or to the dashboard when none was requested.
+4. On failure, the user remains on this screen with an actionable error, or selects Forgot Password to go to the recovery screen.
+
+## Layout
+
+- A centered login form is displayed on a single-column layout.
+- The form contains the application logo or title, email/username input, password input, primary Login button, and Forgot Password link.
+## Components
+
+### Email/Username Input
+
+- Text input with a visible label and appropriate autocomplete hint.
+- Default state: empty and ready for input.
+- Focus state: displays a visible focus indicator.
+- Error state: displays an inline validation message and error styling.
+
+### Password Input
+
+- Masked text input with a visible label and an optional show/hide control.
+- Default state: empty and masked.
+- Focus state: displays a visible focus indicator.
+- Error state: displays an inline validation message and error styling.
+
+### Login Button
+
+- Primary action that submits the form.
+- Disabled while required fields are empty or while authentication is in progress.
+- Loading state displays progress feedback and prevents duplicate submissions.
+
+### Forgot Password Link
+
+- Secondary link that navigates to the password recovery screen.
+- Remains available unless the application is displaying a blocking system error.
+
+### Status Messages
+
+- Validation and authentication errors are displayed near the relevant field or form.
+- Success is communicated through the redirect rather than exposing sensitive authentication details.
+
+## Data Specification
+
+| Field | Type | Required | Validation |
+|---|---|---|---|
+| Email/Username | Text | Yes | Must be a valid email when an email is used |
+| Password | Text (masked) | Yes | At least 8 characters, one uppercase letter, one number |
+
+## Interactions & Behavior
+
+- Selecting Login validates the fields before making an authentication request.
+- Pressing Enter while focused within the form submits the login form.
+- Selecting Forgot Password navigates to the password recovery screen.
+- Email format is validated as the user leaves the field or submits the form. Credentials are validated after submission.
+- During authentication, inputs and the Login button are disabled and the button shows a loading indicator.
+- On success, the screen transitions to the destination route without exposing tokens or credentials.
+- Hover and focus states provide visual feedback; transitions should be brief and must not delay form submission.
+
+## UI States
+
+- Default: fields are empty and the Login button is disabled.
+- Loading: inputs and the Login button are disabled and a progress indicator is shown.
+- Error: inline messages appear near the relevant field or form.
+- Success: the screen transitions to the destination route.
+
+## Validation and Error Handling
+
+### Validation Rules
+
+- Email/username is required. When an email is used, it must match a valid email format such as `example@domain.com`.
+- Password is required and must contain at least 8 characters, one uppercase letter, and one number.
+- Empty fields display: “Please enter your email and password.”
+- Invalid credentials display: “Incorrect email or password.”
+
+### Error Handling
+
+- A server or network failure displays: “Service temporarily unavailable. Please try again later.”
+- The user can retry the request without re-entering valid field values.
+- Errors must not reveal whether a particular account exists.
+
+## Responsive Design
+
+- On mobile, the form uses the available width with consistent horizontal padding. On tablet and desktop, it is centered with a maximum width of 400px.
+
+## API and Integration
+
+- Submit the email/username and password to the authentication service at `/api/login`. The response indicates success or failure; on success the client navigates to the destination route.
+- Handle success, validation, authentication, timeout, and service-unavailable responses.
+- Never log or persist credentials or authentication tokens.
+
+## Security
+
+- Available to unauthenticated users; successful authentication grants access to protected features.
+- The server determines roles and permissions. Enforce HTTPS and CSRF protection.
+
+## Acceptance Criteria
+
+- Valid credentials redirect the user to the requested screen or the dashboard.
+- An incorrect password shows "Incorrect email or password." and keeps the user on this screen.
+- Submitting empty fields shows "Please enter your email and password."
+- The Login button and inputs are disabled while authentication is in progress.
+
+## Revision History
+
+| Version | Date | Description |
+|---|---|---|
+| 1.0 | 2026-10-07 | Initial version |
+
+## Related Documents
+
+- Login Feature Specification: not included in this example set
+- Login Test Suite: [login-test-suite.mdx](./login-test-suite.mdx)
+- Login API Specification: not included in this example set

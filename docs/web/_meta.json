@@ -15,7 +15,6 @@
   },
   {
     "name": "react",
-    "label": "React",
     "type": "dir",
     "collapsed": true,
     "collapsible": true
