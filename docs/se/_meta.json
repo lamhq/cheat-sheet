@@ -1,22 +1,28 @@
 [
   {
     "name": "index",
-    "label": "Software Engineering",
     "type": "file",
     "collapsible": true,
     "collapsed": true
   },
   {
-    "name": "documentation",
+    "name": "architecture",
+    "type": "dir",
+    "collapsed": true,
+    "collapsible": true
+  },
+  "system-design",
+  "software-design",
+  {
+    "name": "development",
     "type": "dir",
     "collapsed": true,
     "collapsible": true
   },
   {
-    "name": "development",
+    "name": "documentation",
     "type": "dir",
     "collapsed": true,
-    "label": "Software Development",
     "collapsible": true
   }
 ]
