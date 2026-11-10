@@ -32,7 +32,7 @@ Skills use progressive disclosure to manage context efficiently:
 - `name`: A unique identifier for the skill. Max 64 characters. Lowercase letters, numbers, and hyphens only. Must not start or end with a hyphen.
 - `description`: Max 1024 characters. Non-empty. Describes what the skill does and when to use it.
 
-```md title="skills/pdf-processing/SKILL.md"
+```md title=".agents/skills/pdf-processing/SKILL.md"
 ---
 name: pdf-processing
 description: Extract PDF text, fill forms, merge files. Use when handling PDFs.
@@ -57,7 +57,7 @@ Contains the instructions, guidelines, and examples that Copilot should follow w
 
 When referencing other files in your skill, use relative paths from the skill root:
 
-```md title=SKILL.md"
+```md title=".agents/skills/pdf-processing/SKILL.md"
 See [the reference guide](references/REFERENCE.md) for details.
 
 Run the extraction script:

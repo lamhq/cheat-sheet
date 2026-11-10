@@ -1,1 +1,0 @@
-Read the `README.md` file in the root of the repository for instructions on how to run, build, and preview the project.

@@ -1,0 +1,166 @@
+# Design Principles
+
+## Introduction
+
+Design principles are general guidelines for arranging code into structures that are easy to change, easy to understand, and reusable. They work at the module/class level, just above individual lines of code.
+
+The Clean Architecture is built around five object-oriented design principles (SOLID):
+
+| Principle | Meaning                         | Main objective                              |
+| --------- | ------------------------------- | ------------------------------------------- |
+| SRP       | Single Responsibility Principle | One reason to change                        |
+| OCP       | Open-Closed Principle           | Open for extension, closed for modification |
+| LSP       | Liskov Substitution Principle   | Subtypes should be substitutable            |
+| ISP       | Interface Segregation Principle | Prefer small, focused interfaces            |
+| DIP       | Dependency Inversion Principle  | Depend on abstractions                      |
+
+
+## Single Responsibility Principle (SRP)
+
+**A module should be responsible to one, and only one, actor**.
+
+**Bad** example:
+
+```java
+class Employee {
+    void calculateSalary() {}
+    void generateReport() {}
+    void saveToDatabase() {}
+}
+```
+
+This class combines responsibilities associated with different actors.
+
+**Better**:
+
+```java
+class SalaryCalculator {
+    void calculateSalary() {}
+}
+
+class EmployeeReport {
+    void generateReport() {}
+}
+
+class EmployeeRepository {
+    void save() {}
+}
+```
+
+**Key idea**: Separate responsibilities that change for different reasons.
+
+## Open-Closed Principle (OCP)
+
+Software entities should be open for extension but closed for modification.
+
+**Bad** example:
+
+```java
+class PaymentService {
+
+    void pay(String type) {
+        if (type.equals("CREDIT_CARD")) {
+            // Credit card payment
+        } else if (type.equals("PAYPAL")) {
+            // PayPal payment
+        }
+    }
+}
+```
+
+Every new payment method requires modifying the existing class.
+
+**Better**:
+
+```java
+interface PaymentMethod {
+    void pay(double amount);
+}
+
+class CreditCardPayment implements PaymentMethod {
+    public void pay(double amount) {}
+}
+
+class PaypalPayment implements PaymentMethod {
+    public void pay(double amount) {}
+}
+```
+
+Now new payment methods can be added without changing the core payment service.
+
+## Liskov Substitution Principle (LSP)
+
+Objects of a subtype should be usable wherever objects of their base type are expected without breaking correctness.
+
+For example, if a function expects a `PaymentMethod`, every implementation must honor the expected payment contract.
+
+A subtype should not:
+
+- Unexpectedly reject valid inputs.
+- Weaken guarantees.
+- Introduce unexpected behavior.
+
+## Interface Segregation Principle (ISP)
+
+Clients should not depend on methods they do not use.
+
+**Bad**:
+
+```java
+interface Machine {
+    void print();
+    void scan();
+    void fax();
+}
+```
+
+A printer that cannot scan or fax is forced to implement irrelevant methods.
+
+**Better**:
+
+```java
+interface Printer {
+    void print();
+}
+
+interface Scanner {
+    void scan();
+}
+
+interface Fax {
+    void fax();
+}
+```
+
+## Dependency Inversion Principle (DIP)
+
+High-level modules should not depend on low-level modules. Both should depend on abstractions.
+
+**Bad**:
+
+```java
+class OrderService {
+    private MySQLOrderRepository repository =
+        new MySQLOrderRepository();
+}
+```
+
+The business logic directly depends on MySQL implementation.
+
+**Better**:
+
+```java
+interface OrderRepository {
+    void save(Order order);
+}
+
+class OrderService {
+    private final OrderRepository repository;
+
+    OrderService(OrderRepository repository) {
+        this.repository = repository;
+    }
+}
+```
+
+Now the application can use MySQL, PostgreSQL, MongoDB, or an in-memory implementation without changing `OrderService`.
