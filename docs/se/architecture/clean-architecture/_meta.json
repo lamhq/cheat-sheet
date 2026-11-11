@@ -1,4 +1,8 @@
 [
   "design-principles",
-  "component-principles"
+  "component-principles",
+  "frameworks-drivers",
+  "interface-adapters",
+  "use-cases",
+  "entities"
 ]

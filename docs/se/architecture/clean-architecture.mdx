@@ -26,368 +26,37 @@ The four major layers are:
 3. **Interface Adapters**: Convert data between use cases and external systems.
 4. **Frameworks and Drivers**: Databases, web frameworks, UI, and external tools.
 
-Dependency rule: **Source code dependencies must point inward, toward higher-level policies**.
 
+## Dependency rule
 
-## Interface Adapters
-
-This layer converts data between external systems and the inner layers.
-
-Common components:
-
-| Component                 | Responsibility               |
-| ------------------------- | ---------------------------- |
-| Controller                | Receives HTTP requests       |
-| Presenter                 | Formats output               |
-| Repository implementation | Persists and retrieves data  |
-| DTO                       | Transfers data               |
-| Mapper                    | Converts between data models |
-
-Example:
-
-```java
-@RestController
-public class OrderController {
-
-    private final CreateOrderUseCase useCase;
-
-    public OrderController(
-        CreateOrderUseCase useCase
-    ) {
-        this.useCase = useCase;
-    }
-
-    @PostMapping("/orders")
-    public ResponseEntity<?> create(
-        @RequestBody CreateOrderRequest request
-    ) {
-        Order order = useCase.execute(request);
-
-        return ResponseEntity.ok(order);
-    }
-}
-```
-
-
-## Use Cases
-
-Use Cases contain application-specific business rules.
-
-Example use cases:
-
-- CreateOrder
-- CancelOrder
-- CalculateOrderTotal
-- ProcessPayment
-
-Characteristics:
-
-- Orchestrates business operations.
-- Defines application workflows.
-- Does not depend on HTTP, SQL, or frameworks.
-- Uses abstractions to communicate with external systems.
-
-For example, placing an order involves:
-1. Receiving an order request.
-2. Validating the customer.
-3. Checking product availability.
-4. Calculating the total.
-5. Saving the order.
-6. Returning the result.
-
-Example:
-
-```java
-public class CreateOrderUseCase {
-
-    private final OrderRepository repository;
-
-    public CreateOrderUseCase(
-        OrderRepository repository
-    ) {
-        this.repository = repository;
-    }
-
-    public Order execute(CreateOrderRequest request) {
-        Order order = new Order(request.items());
-
-        repository.save(order);
-
-        return order;
-    }
-}
-```
-
-
-## Entities
-
-Entities contain core business concepts and rules
-
-Characteristics:
-
-- Represent core business concepts.
-- Enforce business invariants.
-- Contain business behavior.
-- Avoid dependencies on databases and frameworks.
-
-Examples:
-
-- Customer
-- Order
-- Product
-- Pricing rules
-
-```java
-public class Order {
-    private List<OrderItem> items;
-
-    public double calculateTotal() {
-        return items.stream()
-            .mapToDouble(OrderItem::getSubtotal)
-            .sum();
-    }
-}
-```
-
-
-## Frameworks & Drivers
-
-This is where implementation-specific technologies live.
-
-Examples:
-
-- Spring Boot
-- Hibernate
-- PostgreSQL
-- Redis
-- RabbitMQ
-- REST infrastructure
-- External payment providers
-
-These technologies are replaceable details, not the foundation of your business logic.
-
-
-
-
-## 5. Boundaries and the Dependency Rule
-
-This is arguably the most important architectural concept in the book.
-
-The Dependency Rule states:
-
-> Source code dependencies must point inward.
-
-Consider this example:
-
-```
-                 Infrastructure
-                       |
-                       v
-                  Repository
-                       |
-                       v
-                 Use Case
-                       |
-                       v
-                    Entity
-```
+Source code dependencies must point inward, toward higher-level policies.
 
 The outer layers can depend on inner layers, but inner layers must not depend on outer layers.
 
-For example:
 
-- Entity must not import Spring Boot.
-- Use Case must not import Hibernate.
-- Use Case must not depend on a REST controller.
-- Repository interfaces can live in the inner application layer.
-- Repository implementations can live in the outer infrastructure layer.
+## Example: Create a user
 
-### How does this work with a database?
+```mermaid
+flowchart TD
+    A["<b>HTTP Request</b><br/><small>Frameworks & Drivers</small><br/><code>POST /users</code>"]
+    B["<b>CreateUserController</b><br/><small>Interface Adapters</small><br/>Converts HTTP input into a request model."]
+    C["<b>CreateUserUseCase</b><br/><small>Application Business Rules</small><br/>Executes the user creation logic."]
+    D["<b>UserPresenter</b><br/><small>Interface Adapters</small><br/>Converts the output into a response View Model."]
+    E["<b>HTTP Response</b><br/><small>Frameworks & Drivers</small><br/>Returns JSON to the client."]
 
-Consider two interfaces/classes:
+    A --> B --> C --> D --> E
 
-```
-// Inner layer
-public interface OrderRepository {
-    void save(Order order);
-}
-```
+    classDef framework fill:#e8eef9,stroke:#8aa4d6,color:#000
+    classDef adapter fill:#e6f5ef,stroke:#7fbf9f,color:#000
+    classDef usecase fill:#f1ebfa,stroke:#a88fd6,color:#000
 
-```
-// Outer layer
-@Repository
-public class MySqlOrderRepository
-        implements OrderRepository {
-
-    @Override
-    public void save(Order order) {
-        // Save using MySQL
-    }
-}
+    class A,E framework
+    class B,D adapter
+    class C usecase
 ```
 
-The dependency relationship is:
 
-```
-MySqlOrderRepository
-          |
-          v
-    OrderRepository
-          ^
-          |
-    CreateOrderUseCase
-```
-
-Both the use case and the repository implementation depend on the abstraction.
-
-This is Dependency Inversion applied to architectural boundaries.
-
-## 6. Screaming Architecture
-
-One interesting concept in Chapter 21 is Screaming Architecture.
-
-Robert Martin argues that your architecture should communicate the purpose of your application.
-
-For example, imagine you are building an e-commerce application.
-
-A typical framework-oriented structure:
-
-```
-src/
- ├── controllers/
- ├── services/
- ├── repositories/
- ├── entities/
- └── configurations/
-```
-
-This structure communicates the technologies and technical patterns being used.
-
-But it does not clearly communicate what the application does.
-
-An alternative:
-
-```
-src/
- ├── orders/
- │    ├── CreateOrderUseCase.java
- │    ├── CancelOrderUseCase.java
- │    └── OrderRepository.java
- │
- ├── payments/
- │    ├── ProcessPaymentUseCase.java
- │    └── PaymentGateway.java
- │
- ├── customers/
- │    ├── RegisterCustomerUseCase.java
- │    └── CustomerRepository.java
- │
- └── infrastructure/
-      ├── database/
-      ├── web/
-      └── messaging/
-```
-
-This structure communicates the business capabilities of the system.
-
-Key idea: Your architecture should describe what your system does, not merely which framework it uses.
-
-## 7. The database, web, and frameworks are details
-
-Chapters 30–32 explain three important architectural decisions.
-
-| Chapter                      | Main concept                                                  |
-| ---------------------------- | ------------------------------------------------------------- |
-| 30. The Database Is a Detail | Business rules should not depend on database technology.      |
-| 31. The Web Is a Detail      | Application business rules should not depend on web delivery. |
-| 32. Frameworks Are Details   | Frameworks should serve your architecture, not dictate it.    |
-
-For example, imagine your application currently uses:
-
-- Spring Boot
-- PostgreSQL
-- React
-- REST API
-
-Later, you decide to:
-
-- Replace PostgreSQL with MongoDB.
-- Replace REST with GraphQL.
-- Replace React with Angular.
-
-A well-designed architecture should allow these changes without rewriting the core business rules.
-
-This does not mean changing infrastructure is free. It means the impact of change is isolated.
-
-## 8. Practical example: Clean Architecture with Spring Boot
-
-Here is a possible project structure for an e-commerce backend.
-
-```
-src/main/java/com/example/shop/
-│
-├── domain/
-│   ├── entity/
-│   │   ├── Order.java
-│   │   ├── Product.java
-│   │   └── Customer.java
-│   │
-│   └── exception/
-│
-├── application/
-│   ├── usecase/
-│   │   ├── CreateOrderUseCase.java
-│   │   ├── CancelOrderUseCase.java
-│   │   └── GetOrderUseCase.java
-│   │
-│   ├── port/
-│   │   ├── input/
-│   │   └── output/
-│   │       └── OrderRepository.java
-│   │
-│   └── dto/
-│
-├── infrastructure/
-│   ├── persistence/
-│   │   ├── entity/
-│   │   ├── repository/
-│   │   └── mapper/
-│   │
-│   ├── web/
-│   │   └── OrderController.java
-│   │
-│   └── payment/
-│       └── StripePaymentAdapter.java
-│
-└── ShopApplication.java
-```
-
-### Example execution flow
-
-Suppose a customer places an order.
-
-1. OrderController
-
-   Receives HTTP POST `/orders`.
-2. CreateOrderUseCase
-
-   Executes the application workflow.
-3. Order Entity
-
-   Applies business rules and calculates the order total.
-4. OrderRepository interface
-
-   Defines the persistence contract.
-5. MySqlOrderRepository
-
-   Implements persistence using MySQL.
-6. PostgreSQL / MySQL database
-
-   Stores the order.
-
-Note that this is a simplified example. A real application may also need transaction management, authorization, inventory handling, payment processing, and error handling.
-
-## 9. Advantages and disadvantages
+## Advantages & disadvantages
 
 | Advantages                     | Disadvantages                           |
 | ------------------------------ | --------------------------------------- |
@@ -397,7 +66,3 @@ Note that this is a simplified example. A real application may also need transac
 | Easier technology replacement  | Can introduce unnecessary complexity    |
 | Clear separation of concerns   | May be excessive for small applications |
 | Easier independent development | Requires careful boundary design        |
-
-One important point: Clean Architecture does not mean creating an interface for every class.
-
-Use abstractions where they establish meaningful boundaries or protect important business policies.

@@ -1,0 +1,12 @@
+# Interface Adapters
+
+This layer **converts data between the format used by the outer world (UI, database, external services) and the format expected by the inner layers (Use Cases and Entities)**.
+
+It contains:
+
+| Component | Responsibility |
+|-------|----------------|
+| Controllers | Receive input from the delivery mechanism (such as HTTP requests) and pass it to the appropriate Use Case |
+| Presenters | Convert Use Case output into a format suitable for displaying to the user or returning through an API |
+| Gateways | Abstract communication with external systems, such as databases or external services |
+| View Models | Hold data in a format specifically designed for presentation |
