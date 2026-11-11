@@ -1,17 +1,25 @@
 # Entities
 
-Entities contain core business concepts and rules
+## Introduction
 
-Characteristics:
+This layer holds the enterprise-wide business rules:
 
-- Represent core business concepts.
-- Enforce business invariants.
-- Contain business behavior.
-- Avoid dependencies on databases and frameworks.
+- These rules describe what the business does
+- They remain relevant even if no software existed
+- They are least likely to change when application changes
 
-Examples:
+:::info
+For example, a bank that charges a fixed interest rate on a loan applies that rule even if a clerk does the arithmetic by hand.
+:::
 
-- Customer
-- Order
-- Product
-- Pricing rules
+An **entity** is an object that encapsulates critical business data with the core rules that operate on it.
+
+Examples: Customer, Order, Product, Pricing rules
+
+
+## Characteristics
+
+- Entities have no knowledge of databases, user interfaces, or frameworks.
+- They can be reused across different applications within the same business domain.
+- Their shape follows the business concept.
+- Entities may be stored in a database, but should not know about the database.

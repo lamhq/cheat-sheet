@@ -1,13 +1,14 @@
 # Use Cases
 
-Use Cases contain application-specific business rules.
+## Introduction
 
-**Characteristics**:
+This layer contains application-specific business rules (rules that exist because this software exists).
 
-- Orchestrates business operations.
-- Defines application workflows.
-- Does not depend on HTTP, SQL, or frameworks.
-- Uses abstractions to communicate with external systems.
+A Use Case represents an individual operation or workflow that the application supports. It describes three things:
+
+1. the input the user supplies
+2. the output the system returns
+3. processing steps, including invoking entities.
 
 For example, placing an order involves:
 1. Receiving an order request.
@@ -16,3 +17,15 @@ For example, placing an order involves:
 4. Calculating the total.
 5. Saving the order.
 6. Returning the result.
+
+
+## Characteristics
+
+- Defines application workflows.
+- Orchestrates business operations and entities.
+- Does not perform the core business calculations (entities handle that)
+- Does not depend on UI, transport, database, or frameworks.
+- Uses abstractions to communicate with external systems.
+
+
+## Request and Response Models
