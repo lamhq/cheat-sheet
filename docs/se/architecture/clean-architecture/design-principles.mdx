@@ -21,11 +21,11 @@ The Clean Architecture is built around five object-oriented design principles (S
 
 **Bad** example:
 
-```java
+```ts
 class Employee {
-    void calculateSalary() {}
-    void generateReport() {}
-    void saveToDatabase() {}
+  calculateSalary(): void {}
+  generateReport(): void {}
+  saveToDatabase(): void {}
 }
 ```
 
@@ -33,17 +33,17 @@ This class combines responsibilities associated with different actors.
 
 **Better**:
 
-```java
+```ts
 class SalaryCalculator {
-    void calculateSalary() {}
+  calculateSalary(): void {}
 }
 
 class EmployeeReport {
-    void generateReport() {}
+  generateReport(): void {}
 }
 
 class EmployeeRepository {
-    void save() {}
+  save(): void {}
 }
 ```
 
@@ -55,16 +55,15 @@ Software entities should be open for extension but closed for modification.
 
 **Bad** example:
 
-```java
+```ts
 class PaymentService {
-
-    void pay(String type) {
-        if (type.equals("CREDIT_CARD")) {
-            // Credit card payment
-        } else if (type.equals("PAYPAL")) {
-            // PayPal payment
-        }
+  pay(type: string, amount: number): void {
+    if (type === "CREDIT_CARD") {
+      // Credit card payment
+    } else if (type === "PAYPAL") {
+      // PayPal payment
     }
+  }
 }
 ```
 
@@ -72,17 +71,17 @@ Every new payment method requires modifying the existing class.
 
 **Better**:
 
-```java
+```ts
 interface PaymentMethod {
-    void pay(double amount);
+  pay(amount: number): void;
 }
 
 class CreditCardPayment implements PaymentMethod {
-    public void pay(double amount) {}
+  pay(amount: number): void {}
 }
 
 class PaypalPayment implements PaymentMethod {
-    public void pay(double amount) {}
+  pay(amount: number): void {}
 }
 ```
 
@@ -106,11 +105,11 @@ Clients should not depend on methods they do not use.
 
 **Bad**:
 
-```java
+```ts
 interface Machine {
-    void print();
-    void scan();
-    void fax();
+  print(): void;
+  scan(): void;
+  fax(): void;
 }
 ```
 
@@ -118,17 +117,17 @@ A printer that cannot scan or fax is forced to implement irrelevant methods.
 
 **Better**:
 
-```java
+```ts
 interface Printer {
-    void print();
+  print(): void;
 }
 
 interface Scanner {
-    void scan();
+  scan(): void;
 }
 
 interface Fax {
-    void fax();
+  fax(): void;
 }
 ```
 
@@ -138,10 +137,10 @@ High-level modules should not depend on low-level modules. Both should depend on
 
 **Bad**:
 
-```java
+```ts
 class OrderService {
-    private MySQLOrderRepository repository =
-        new MySQLOrderRepository();
+  private readonly repository: MySQLOrderRepository =
+    new MySQLOrderRepository();
 }
 ```
 
@@ -149,17 +148,13 @@ The business logic directly depends on MySQL implementation.
 
 **Better**:
 
-```java
+```ts
 interface OrderRepository {
-    void save(Order order);
+  save(order: Order): void;
 }
 
 class OrderService {
-    private final OrderRepository repository;
-
-    OrderService(OrderRepository repository) {
-        this.repository = repository;
-    }
+  constructor(private readonly repository: OrderRepository) {}
 }
 ```
 

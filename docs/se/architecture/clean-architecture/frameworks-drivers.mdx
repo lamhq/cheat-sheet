@@ -1,13 +1,82 @@
 # Frameworks & Drivers
 
-This layer provides concrete implementations of the abstractions defined in the use case layer.
+## Introduction
 
-Examples:
+This is the outermost layer. It connects the application to the outside world.
 
-- I/O Services that access external resources
-- Database repositories
-- ORM entities/Schemas
-- Messages/events publishers
-- Email services
-- File storage services
-- External payment providers
+It provides mechanisms for the inner layers to interact with external technologies without making the business logic dependent on those technologies.
+
+
+## Content
+
+Can contain:
+
+- **Frameworks**: Express app, Express Route configuration, Middlewares, Dependency injection initialization, ...
+- **Database**: database connections, migrations, ORM entities, Prisma schema, ...
+- **Infrastructure**: application config, logging implementations, monitoring tools, authentication infrastructure, deployment configurations
+
+
+## Characteristics
+
+- **Outermost layer**: Contains external implementation details
+- **Low-level mechanisms**: Provides technical capabilities
+- **Replaceable**: Frameworks and tools can be replaced
+- **Depends inward**: Can depend on inner-layer abstractions
+- **Not business-focused**: Should not contain business rules
+
+
+## Dependencies
+
+Can depend on:
+- Interface Adapters layer.
+- Other external frameworks and libraries.
+- Operating systems and runtime environments.
+- External infrastructure and services.
+
+They should not:
+- Force inner layers to depend on framework-specific APIs.
+- Put enterprise business rules inside framework configuration or infrastructure code.
+- Allow technical implementation details to leak inward.
+- Change because business rules or application workflows change.
+
+
+## Databases
+
+- The database is a detail, a mechanism for storing data, not a core architectural element
+- Business rules should not depend on tables, rows, or query semantics.
+- Do not pass database-specific objects (rows, ORM records, etc.) to the Use Cases layer.
+
+
+## Web
+
+- The web is a delivery mechanism, changes in them should not affect the underlying business rules.
+- Keep HTTP requests, cookies, sessions, and HTML templates out of the inner layers.
+- Convert web-specific data into application-specific data at the edge of the system.
+
+
+## Frameworks
+
+- Do not derive business objects from framework base classes. Use proxies or adapters in the outer components instead.
+- Confine framework usage to adapters and the outermost layer, and prefer wrappers that your own code defines.
+- Keep annotations and framework-specific types/errors out of entities and use cases.
+- Place framework configuration in the outermost component, where wiring happens.
+- Some frameworks are so embedded in a language's ecosystem that avoiding them is impractical. Accept them consciously, knowing you'll live with them for the application's life.
+
+
+## The Main Component
+
+`Main` is the application's entry point and composition root.
+
+Its responsibility is to assemble the application before the actual business operations begin.
+
+It is the place where the most concrete choices are made:
+- which database, network client, or UI implementation to use,
+- which configuration, resources to load.
+- Which factories and global services to create.
+- Which high-level application component should start running.
+
+It should be the only part that knows about the framework.
+
+Dependency injection frameworks wire dependencies there, then pass them to inner components who require them.
+
+The application core should define and depend on abstractions, while `Main` supplies their implementations. `Main` contains no business rules.

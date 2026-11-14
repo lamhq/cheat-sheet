@@ -1,8 +1,9 @@
 [
   "design-principles",
   "component-principles",
-  "frameworks-drivers",
-  "interface-adapters",
+  "entities",
   "use-cases",
-  "entities"
+  "interface-adapters",
+  "frameworks-drivers",
+  "review-checklist"
 ]

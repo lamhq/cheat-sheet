@@ -17,9 +17,28 @@ An **entity** is an object that encapsulates critical business data with the cor
 Examples: Customer, Order, Product, Pricing rules
 
 
+## Content
+
+Can contain:
+- Domain entities.
+- Enterprise business rules.
+- Business invariants.
+- Domain behavior.
+- Business policies.
+- Relationships between core business concepts.
+- Fundamental calculations and validations.
+
+
 ## Characteristics
 
-- Entities have no knowledge of databases, user interfaces, or frameworks.
-- They can be reused across different applications within the same business domain.
 - Their shape follows the business concept.
-- Entities may be stored in a database, but should not know about the database.
+- Can be reused across multiple applications within the same business domain.
+- Highly stable compared to other layers.
+- Independent of any particular application, infrastructure and technical implementation.
+- May be stored in a database, but should not know about the database.
+
+
+## Dependencies
+
+- Can depend on other entities.
+- Should not depend on application-specific workflows, interface adapters, frameworks, databases, or external services.

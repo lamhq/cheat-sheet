@@ -29,31 +29,9 @@ The four major layers are:
 
 ## Dependency rule
 
-Source code dependencies must point inward, toward higher-level policies.
+**Source code dependencies must point inward, toward higher-level policies**, while data may travel in both directions (they are different things).
 
 The outer layers can depend on inner layers, but inner layers must not depend on outer layers.
-
-
-## Example: Create a user
-
-```mermaid
-flowchart TD
-    A["<b>HTTP Request</b><br/><small>Frameworks & Drivers</small><br/><code>POST /users</code>"]
-    B["<b>CreateUserController</b><br/><small>Interface Adapters</small><br/>Converts HTTP input into a request model."]
-    C["<b>CreateUserUseCase</b><br/><small>Application Business Rules</small><br/>Executes the user creation logic."]
-    D["<b>UserPresenter</b><br/><small>Interface Adapters</small><br/>Converts the output into a response View Model."]
-    E["<b>HTTP Response</b><br/><small>Frameworks & Drivers</small><br/>Returns JSON to the client."]
-
-    A --> B --> C --> D --> E
-
-    classDef framework fill:#e8eef9,stroke:#8aa4d6,color:#000
-    classDef adapter fill:#e6f5ef,stroke:#7fbf9f,color:#000
-    classDef usecase fill:#f1ebfa,stroke:#a88fd6,color:#000
-
-    class A,E framework
-    class B,D adapter
-    class C usecase
-```
 
 
 ## Advantages & disadvantages
