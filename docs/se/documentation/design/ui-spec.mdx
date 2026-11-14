@@ -1,0 +1,75 @@
+# UI Specification Document
+
+Guide for writing UI Specification Documents.
+
+## Introduction
+
+A UI Specification Document describes a single user interface (e.g., web page, mobile screen) of a software application. It guides developers in implementing the UI according to the feature requirements.
+
+
+## Document Structure
+
+A UI Specification Document typically includes the following sections (but not all):
+
+### Introduction
+Describe the screen's purpose, target users, and role in the application.
+
+### User Flow and Navigation
+Explain how users reach the screen, interact with it, and navigate to other screens.
+
+### Layout
+Define the screen hierarchy, regions, component placement, and layout rules.
+
+### Components
+Detail each component, including its type, label, purpose, properties, and behavior.
+
+### Data Specification
+Define displayed data, data sources, field formats, defaults, validation rules, and empty values.
+
+### Interactions & Behavior
+Describe user actions, event handling, state transitions, conditional visibility, and expected outcomes.
+
+### UI States
+Define default, loading, empty, success, error, disabled, selected, and other relevant states.
+
+### Validation and Error Handling
+Specify input validation, error messages, error placement, recovery actions, and submission rules.
+
+### Responsive Design
+Describe behavior across supported screen sizes, orientations, and device types.
+
+### API and Integration
+Document required API endpoints, request and response fields, loading behavior, and integration dependencies, if applicable.
+
+### Security
+Define authentication requirements, authorization rules, sensitive-data handling, and permission-dependent UI behavior.
+
+### Acceptance Criteria
+Provide verifiable conditions and test scenarios for confirming that the UI meets requirements.
+
+### Revision History
+Include a table with these info:
+- **Version**: version number of the document.
+- **Date**: date when the revision was made.
+- **Author**: person who made the revision.
+- **Changes**: brief description of what was changed in this revision.
+
+### Related Documents
+Link to:
+- Feature Specification Document for the feature this UI implements
+- API Specification Document(s) this UI depends on
+
+## Best Practices
+
+- **Screen-named title:** Title the document with the screen name as it appears in the product (e.g., `Exercise List Screen`, `Create Exercise Dialog`).
+- **Matching file name:** Name the file using lowercase kebab-case of the title in (e.g., `exercise-list-screen.md`, `create-exercise-dialog.md`).
+- **No business rules:** Do not state business rules (e.g., eligibility, limits, statuses, or permissions) in the document, reference them from related Feature Specification Document instead.
+- **Specific and testable:** Describe each element, state, and interaction with an observable outcome that QA can verify. Quote user-facing text exactly as it appears.
+- **Implementation-neutral:** Describe what the user sees and does. Avoid framework names, hooks, CSS classes, and code.
+
+## Examples
+
+### Login Screen
+
+```md file="../examples/ui-spec.mdx"
+```

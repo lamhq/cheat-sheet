@@ -30,7 +30,7 @@ pnpm install
 ```
 
 
-## Running the Project
+## Run the Project
 
 ### Using command line
 
@@ -46,6 +46,21 @@ Then open the URL output in the terminal to view the website in your browser.
 
 To quickly view the documentation in the browser, you can install the [Cheat Sheet Utils](https://github.com/lamhq/cheat-sheet-utils) extension. It will start the dev server and open the correct url for the current opening markdown file.
 
+## Build
+
+To build the project for production, run:
+
+```bash
+npm run build
+```
+
+## Preview
+
+To preview the built project locally, run:
+
+```bash
+npm run preview
+```
 
 ## Deployment
 

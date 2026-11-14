@@ -1,0 +1,158 @@
+import { PackageManagerTabs } from '@theme'
+
+# TanStack Query
+
+How to perform asynchronous operations in React.
+
+## Installation
+
+<PackageManagerTabs command="i @tanstack/react-query@^5" />
+
+Provider setup:
+
+```tsx title="main.tsx"
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
+
+<QueryClientProvider client={queryClient}>
+  <App />
+</QueryClientProvider>
+```
+
+
+## Data Fetching
+
+### Fetch data
+
+Fetch data asynchronously using `useQuery`:
+
+```tsx
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
+import { fetchTask } from './api';
+
+const {
+  data,  // successful query result
+  error, // error thrown by queryFn
+  isFetching, // true while a fetch is running
+} = useQuery({
+  queryKey: ['tasks', pagination, filters, sorting],
+  queryFn: () => fetchTask(pagination, filters, sorting),
+  placeholderData: keepPreviousData,
+  staleTime: 1000 * 60 * 5,
+});
+```
+
+- `queryKey` identifies the query and its cached result. When a value changes, the query runs again.
+- `queryFn` is the asynchronous function that fetches data. It must return a promise and throw when the request fails.
+- `placeholderData: keepPreviousData` keeps the previous result visible while the next result loads.
+- `staleTime: 1000 * 60 * 5` keeps the result fresh for five minutes.
+
+### Show Loading State
+
+**On first load**:
+1. Display a loading bar at the top of the page
+2. Show a skeleton that matches the main content layout
+3. Fetch the data from the server
+4. Replace the skeleton with the content when the data loads
+
+**On subsequent loads**:
+1. Display a loading bar at the top of the page
+2. Keep the previous content visible until the new data loads to avoid layout shifts
+3. Dim the content and disable interactions while loading
+4. Fetch the data from the server
+5. Replace the previous content with the new data when it loads
+
+```tsx
+import { cn } from '@/lib/utils';
+import { Layout, TopLoadingBar, Table, TableSkeleton, Pagination } from '@/components';
+
+const {
+  data,
+  error,
+  isFetching,
+} = useQuery(options);
+
+return (
+  <Layout>
+    <TopLoadingBar open={isFetching} />
+
+    {isFetching && !data && <TableSkeleton />}
+
+    {(!isFetching || data) && (
+      <>
+        <Table
+          className={cn({
+            'pointer-events-none opacity-50': isFetching && data,
+          })}
+        />
+        <Pagination />
+      </>
+    )}
+  </Layout>
+);
+```
+
+### Error Handling
+
+If fetching fails, throw an error for an error boundary to handle
+
+```tsx
+if (error) throw error;
+```
+
+
+## Data Mutation
+
+**Generic flow** (form submission, async actions):
+1. Show an inline spinner in the action button while processing
+2. Disable the button to prevent multiple submissions
+3. Send the request to the server
+4. When processing is complete, hide the spinner and re-enable the button
+5. Show a success toast on successful completion.
+
+**Error handling**: If submission fails, show an error toast with a user-friendly message.
+
+```tsx title="AddTodo.tsx"
+import React, { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+
+const addTodo = async (newTodo: Todo): Promise<Todo> => {
+  const response = await axios.post('https://jsonplaceholder.typicode.com/todos', newTodo);
+  return response.data;
+};
+
+export default function AddTodo() {
+  const [title, setTitle] = useState('');
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: addTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['todos'] });
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    mutation.mutate({ title, completed: false });
+    setTitle('');
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Enter todo title"
+      />
+      <button type="submit">Add Todo</button>
+      {mutation.isPending && <p>Adding...</p>}
+      {mutation.isError && <p>Error: {(mutation.error as Error).message}</p>}
+      {mutation.isSuccess && <p>Todo added ✅</p>}
+    </form>
+  );
+};
+```

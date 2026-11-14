@@ -1,0 +1,89 @@
+# Interface Adapters
+
+## Introduction
+
+This layer converts data between the inner layers' format and the format external systems require.
+
+
+## Content
+
+Can contain:
+
+- Controllers
+- Presenters
+- Request and response models
+- Data transfer objects
+- View models
+- Database mappers
+- API adapters
+- View models
+- Data serializers and deserializers
+
+
+## Characteristics
+
+- **Data Transformation:** Converts data between the formats used by inner layers and external systems.
+- **Boundary Management:** Acts as an intermediary between Use Cases and external systems.
+- **Replaceability:** Allows external technologies, such as databases and web frameworks, to be replaced with minimal impact on inner layers.
+- **No Business Rules:** Does not contain application-specific or enterprise business logic.
+
+
+## Dependencies
+
+Interface Adapters depend on Use Cases's Input/Output boundaries.
+
+
+## Controllers
+
+Controllers handle incoming requests from the delivery mechanism (e.g., HTTP).
+
+**Responsibilities**:
+- Receive external requests.
+- Extract and validate request data.
+- Convert request data into input data.
+- Passs input data to [Input Boundaries](./use-cases.mdx#input-boundary).
+
+
+## Presenters
+
+Presenters convert the output of a Use Case into a format suitable for the delivery mechanism.
+
+**Responsibilities**:
+- Receive output data from the Use Case.
+- Format the data for presentation.
+- Convert application results into View Models.
+- Handle presentation-specific concerns.
+
+**When to Use?**
+- Different delivery mechanisms require different representations of the same use case output (e.g., REST, GraphQL, CLI, or HTML).
+- Presentation logic involves transforming, formatting, or restructuring application output.
+
+**When not to Use?**
+- **Use-case composition**: Another Interactor consumes the Output Data.
+- **Framework support:** The framework/library already supports transformation.
+
+
+## Gateway Implementations
+
+Gateway Implementations convert data between the Use Case's data models and the formats required by external systems, such as databases or APIs.
+
+**Responsibilities**:
+- Implement Gateway interfaces owned by Use Cases.
+- Translate between application data structures and external data structures.
+- Provide access to persistence and external services.
+
+
+## Humble Object Pattern
+
+The key idea of the Humble Object pattern is to separate the hard-to-test parts of the code from the logic that can be easily tested.
+
+- **Humble Object**: Contains minimal logic, mainly handling technical details such as UI, database communication, or framework interactions.
+- **Testable Object**: the actual business logic and behavior, making it easy to test independently.
+
+The Interface Adapters layer contains several examples of this:
+
+- **Presenter:** testable. It turns application data into display-ready values (view model), such as formatted currency, flags for negative amounts, and enabled or disabled states.
+- **View:** humble. It copies values from a view model onto the screen and does no processing of its own.
+- **Gateway implementation:** humble. It handles database communication, while Use Case and Entity are testable.
+- **Data mapper:** testable. It moves database rows into plain data structures before they cross into inner layers.
+- **Service listener:** testable. It receives external messages and converts them into plain structures for Use Cases.

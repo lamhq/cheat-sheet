@@ -1,0 +1,93 @@
+# Review Checklist
+
+Use this checklist to review whether a backend project follows **Clean Architecture principles**.
+
+## Dependency rule
+
+- [ ] Source code dependencies point inward only. Entities and use cases do not import from interface adapters, frameworks, databases, or external services.
+- [ ] Entities and use cases do not import framework, ORM, HTTP, or UI libraries.
+- [ ] Data crossing a boundary is a plain data structure. No ORM records, database rows, or request/response objects leak into inner layers.
+
+## Entities
+
+- [ ] Entities hold business data together with the rules that operate on it, and enforce their invariants. Invalid state cannot be constructed or mutated from outside.
+- [ ] Entities contain no application workflow, persistence, or presentation logic.
+
+## Use cases
+
+- [ ] Each use case is an interactor that implements an [input boundary](./use-cases.mdx#input-boundary) and coordinates entities and gateways.
+- [ ] Business rules live in entities and interactors, not in controllers, presenters, or repositories.
+- [ ] Use cases depend on gateway interfaces owned by the use case layer, not on concrete database or API clients.
+- [ ] If output boundary is used, use cases send results to it. Otherwise, use cases return result to caller.
+- [ ] Input and output data contain only the fields the use case needs. Domain entities are not passed across boundaries.
+
+## Interface adapters
+
+- [ ] Controllers only extract and validate request data, convert it into input data, and call input boundaries. They contain no business rules.
+- [ ] Presenters and view models handle formatting and presentation concerns. Views only display values they receive.
+- [ ] Gateway implementations translate between domain models and external formats (table rows, documents, API payloads), and implement interfaces owned by use cases.
+
+## Frameworks and drivers
+
+- [ ] Framework-specific code (annotations, base classes, SDK types) stays in the outermost layer and in adapters. Business classes do not extend framework base classes.
+- [ ] Concrete implementations are chosen and wired in one composition root (`Main`), and passed to inner components through constructors or parameters.
+
+## Design principles
+
+- [ ] Each class or module has one reason to change. Persistence, business rules, and presentation are not mixed in the same class (SRP).
+- [ ] New variants are added by implementing an existing interface, not by editing `if`/`switch` chains on type (OCP).
+- [ ] Interfaces are small and client-specific (ISP). High-level classes do not instantiate low-level implementations such as `new MySQLOrderRepository()` (DIP).
+- [ ] The dependency graph between modules or packages has no cycles (ADP).
+
+## Project structure (TypeScript)
+
+- [ ] The module/source root contains flat `entities/`, `use-cases/`, `adapters/`, and `infrastructure/` folders, with no nested sub-folders per layer.
+
+Example layout:
+
+```text
+src/
+├── entities/
+│   ├── user.entity.ts
+│   └── user-created.event.ts
+├── use-cases/
+│   ├── create-user.use-case.ts
+│   ├── create-user.input.ts
+│   ├── create-user.output.ts
+│   ├── user.repository.ts
+│   └── payment.service.ts
+├── adapters/
+│   ├── user.controller.ts
+│   ├── create-user.request.ts
+│   ├── create-user.response.ts
+│   ├── mysql-user.repository.ts
+│   ├── paypal.service.ts
+│   └── user-created.event-handler.ts
+├── infrastructure/
+│   ├── main.ts
+│   └── config.ts
+```
+
+## Naming conventions (TypeScript)
+
+- [ ] Each file and class name follows the patterns from the table below. Implementations are named after the technology or provider they use.
+
+| Artifact | File name | Class name | Example file | Example class |
+| --- | --- | --- | --- | --- |
+| Entity | `*.entity.ts` | `*Entity` | `user.entity.ts` | `UserEntity` |
+| Use case | `*.use-case.ts` | `*UseCase` | `create-user.use-case.ts` | `CreateUserUseCase` |
+| Controller | `*.controller.ts` | `*Controller` | `user.controller.ts` | `UserController` |
+| Repository interface | `*.repository.ts` | `*Repository` | `user.repository.ts` | `UserRepository` |
+| Repository implementation | `<technology>-*.repository.ts` | `<Technology>*Repository` | `mysql-user.repository.ts` | `MySQLUserRepository` |
+| Request DTO | `*.request.ts` | `*Request` | `create-user.request.ts` | `CreateUserRequest` |
+| Response DTO | `*.response.ts` | `*Response` | `create-user.response.ts` | `CreateUserResponse` |
+| Service interface | `*.service.ts` | `*Service` | `payment.service.ts` | `PaymentService` |
+| Service implementation | `<provider>.service.ts` | `<Provider>Service` | `paypal.service.ts` | `PaypalService` |
+| Event | `*.event.ts` | `*Event` | `user-created.event.ts` | `UserCreatedEvent` |
+| Event handler | `*.event-handler.ts` | `*EventHandler` | `user-created.event-handler.ts` | `UserCreatedEventHandler` |
+| Input data | `*.input.ts` | `*Input` | `create-user.input.ts` | `CreateUserInput` |
+| Output data | `*.output.ts` | `*Output` | `create-user.output.ts` | `CreateUserOutput` |
+
+## Testability
+
+- [ ] Entity and use case tests run with fake or stub gateways, without a database, network, or framework.

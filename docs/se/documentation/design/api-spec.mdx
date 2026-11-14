@@ -1,0 +1,66 @@
+# API Specification Document
+
+Guide for writing API Specification Documents.
+
+## Introduction
+
+An API Specification Document describes an API in detail so developers can implement and integrate it correctly.
+
+It focuses on API contract, authentication, validation, expected behavior, and side effects.
+
+## Document Structure
+
+An API Specification Document typically includes the following sections:
+
+### Introduction
+- Brief description of the API and its purpose.
+
+### Contract
+- **Type:** REST, GraphQL, gRPC, etc.
+- **Signatures:** e.g., `GET /users`, `POST /orders/{id}`.
+- **Base URL:** e.g., `https://api.example.com/v1`.
+- **Authentication:** API keys, OAuth2, JWT, etc.
+- **Versioning strategy:** e.g., `/v1/`, headers, or semantic versioning.
+- **Request Headers:** Metadata about the request (e.g., `Accept`, `Content-Type`, `Authorization`).
+- **Request Body:** structure of data sent in requests, including fields, types, and descriptions.
+- **Query Parameters:** parameters used to filter or modify requests, with types and descriptions.
+- **Response:** Specifies status codes, headers, and the format of returned data, including success and error cases.
+
+### Functional Requirements
+- Define the expected behavior of the API (e.g., validation, saving an order, sending notifications, logging actions).
+
+### Non-Functional Requirements
+- **Performance**. Defines expected speed and efficiency of API responses.  
+- **Security**. Covers protection of data and access through authentication, authorization, and encryption.  
+- **Reliability**. Ensures consistent availability and fault tolerance of the API.  
+- **Scalability**. Describes the ability to handle growth in traffic or data without performance loss.  
+- **Maintainability**. Focuses on ease of updating, debugging, and extending the API.  
+- **Compliance**. Requires adherence to legal, regulatory, and industry standards.
+
+### Revision History
+Include a table with these info:
+- **Version**: version number of the document.
+- **Date**: date when the revision was made.
+- **Author**: person who made the revision.
+- **Changes**: brief description of what was changed in this revision.
+
+### Related Documents
+Link to:
+- Feature Specification Document that describes the feature this API supports
+- UI Specification Document for the UI that consumes this API
+- API Specification Documents for related APIs
+- Data Specification Documents for entities involved in the feature
+
+- ## Best Practices
+- **Consumer-centered:** Focus on the contract and examples for API consumers.
+- **Guide implementation:** Give clear instructions on what the API does so developers can implement it correctly.
+- **No business logic:** Do not embed business rules; place them in Feature Specification Documents.
+- **Title matches API name:** The document title must be the API name used in the code (e.g., `Find Exercises API`, `Create Exercise API`).
+- **File naming:** Name the file after the API in lowercase kebab-case (e.g., `find-exercises.md`).
+
+## Examples
+
+### Get Orders API
+
+```md file="../examples/api-spec.mdx"
+```
