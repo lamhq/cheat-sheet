@@ -12,7 +12,12 @@
     "collapsible": true
   },
   "system-design",
-  "software-design",
+  {
+    "name": "software-design",
+    "type": "dir",
+    "collapsed": true,
+    "collapsible": true
+  },
   {
     "name": "development",
     "type": "dir",
