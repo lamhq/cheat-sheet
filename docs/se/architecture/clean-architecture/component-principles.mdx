@@ -1,0 +1,63 @@
+# Component Principles
+
+## Introduction
+
+If the SOLID principles tell us how to arrange the bricks into walls and rooms, then the component principles tell us how to arrange the rooms into buildings.
+
+Large software systems, like large buildings, are built out of smaller components.
+
+
+## Components
+
+A component is the smallest deployable unit.
+
+Its exact form depends on the platform:
+- **Java**: a JAR file
+- **Ruby**: a gem
+- **.NET**: a DLL
+- **Compiled languages**: an aggregate of binary files
+- **Interpreted languages**: an aggregate of source files
+
+Components can be linked, archived, or loaded as plugins, but should remain independently deployable.
+
+
+## Component cohesion
+
+Three principles determine which classes belong together.
+
+### REP – Reuse/Release Equivalence
+
+To reuse a group of classes, those classes should be packaged, versioned, and released together as one component.
+
+### CCP – Common Closure
+
+Classes that change for the same reasons should be grouped together.
+
+**CCP** is the Single Responsibility Principle applied to components.
+
+### CRP – Common Reuse
+
+Classes which are reused together belong to same component. Classes that are not tightly bound should live in different components.
+
+**CRP** is the generic form of the Interface Segregation Principle (clients should not depend on methods they do not use).
+
+
+## Component coupling
+
+Three principles control dependencies between components.
+
+### ADP – Acyclic Dependencies
+
+Dependency graphs should not contain cycles.
+
+### SDP – Stable Dependencies
+
+Components that change often should not be depended on by stable components.
+
+Otherwise, a component designed to be easy to change becomes difficult to change (because someone else added a dependency on it).
+
+### SAP – Stable Abstractions
+
+Stable components should contain interfaces and abstract classes so that they can be extended without modification.
+
+Unstable components can be concrete, since their volatility is what makes them easy to change.

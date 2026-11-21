@@ -1,17 +1,5 @@
 [
   {
-    "name": "system-design",
-    "type": "dir",
-    "collapsed": true,
-    "collapsible": true
-  },
-  {
-    "name": "architecture",
-    "type": "dir",
-    "collapsed": true,
-    "collapsible": true
-  },
-  {
     "name": "modeling",
     "type": "dir",
     "collapsible": true,

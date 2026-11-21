@@ -40,14 +40,12 @@ Todo items must be in the following order, scheduled based on the following rule
 | Buy breakfast        | Everyday | 08:00 | —          |
 | Working              | Mon–Fri  | 08:30 | —          |
 | Have lunch           | Everyday | 11:00 | 1 hour     |
-| Cooking              | Everyday | 11:30 | 15 minutes |
 | Take a nap           | Everyday | 12:30 | 40 minutes |
 | Eat fruit & protein  | Everyday | 13:15 | —          |
 | Working              | Everyday | 13:20 | —          |
-| Core & neck training | Everyday | 14:50 | 10 minutes |
-| Gym                  | Mon–Thu  | 15:00 | 1 hour     |
+| Gym                  | Mon–Thu  | 16:15 | 1 hour     |
 | Running              | Sat–Sun  | 16:00 | —          |
-| Cooking              | Mon–Fri  | 17:00 | 20 minutes |
+| Cooking              | Everyday | 17:30 | 15 minutes |
 | Take a shower        | Everyday | 17:45 | 15 minutes |
 | Have dinner          | Everyday | 18:00 | 30 minutes |
 | Practicing English   | Mon–Fri  | 19:00 | —          |

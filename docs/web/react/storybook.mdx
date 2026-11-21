@@ -4,39 +4,215 @@ import { PackageManagerTabs } from '@theme'
 
 ## Version
 
-This document is for version `9.0.14` (2025).
+This document is for version `10.4.6` (2026).
 
 
-## Install Storybook
+## Installation
 
-<PackageManagerTabs command="create storybook@latest" />
+<PackageManagerTabs command="create storybook@^10" />
 
 
 ## Start storybook
 
 <PackageManagerTabs command="run storybook" />
 
-Then, enable [network request mocking](./storybook/mocking.mdx#network-requests).
 
+## Configuration
 
-## Opt out of telemetry
-
-Stop sharing any information with Storybook.
+Configuration for Storybook in a Vite project:
 
 ```ts title=".storybook/main.ts"
-// Replace your-framework with the framework you are using, e.g. react-vite, nextjs, vue3-vite, etc.
-import type { StorybookConfig } from '@storybook/your-framework';
+import type { StorybookConfig } from '@storybook/react-vite';
+
+import { dirname } from 'path';
+
+import { fileURLToPath } from 'url';
+
+/**
+ * Resolve the absolute path of a package, needed for monorepo projects
+ */
+function getAbsolutePath(value: string) {
+  return dirname(fileURLToPath(import.meta.resolve(`${value}/package.json`)));
+}
 
 const config: StorybookConfig = {
-  framework: '@storybook/your-framework',
-  stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  framework: getAbsolutePath('@storybook/react-vite'),
+  stories: ['../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
   core: {
-    disableTelemetry: true, // 👈 Disables telemetry
-  },
+    disableTelemetry: true, // stop sharing information with Storybook.
+  },  
 };
 
 export default config;
 ```
+
+```tsx title=".storybook/preview.tsx"
+import '../src/global.css';   // add global styles
+import type { Preview } from '@storybook/react-vite';
+import MockProvider from './MockProvider';
+
+const preview: Preview = {
+  parameters: {
+    // layout: 'fullscreen',  // use the full preview area
+    controls: {
+      matchers: {
+        // detects matching controls based on component prop names
+        color: /(background|color)$/i,
+        date: /Date$/i,
+      },
+    },
+  },
+  decorators: [
+    // wraps every story with additional UI or providers.
+    (Story) => (
+      <MockProvider>
+        <Story />
+      </MockProvider>
+    ),
+  ],
+};
+
+export default preview;
+```
+
+```tsx title=".storybook/MockProvider.tsx"
+import type { ReactNode } from 'react';
+import { MemoryRouter } from 'react-router';
+
+export interface MockProviderProps {
+  children: ReactNode;
+}
+
+export default function MockProvider({ children }: MockProviderProps) {
+  return (
+    <MemoryRouter>
+      {/* Add necessary providers required by the stories */}
+      {children}
+    </MemoryRouter>
+  );
+}
+```
+
+Update `tsconfig.app.json` to include the `.storybook` directory:
+
+```json title="tsconfig.app.json"
+{
+  "include": ["src", ".storybook/*"]
+}
+```
+
+## Mock API Requests
+
+See [Mock network requests](./storybook/mocking.mdx#mock-network-requests).
+
+
+## Add a story
+
+To create a new story:
+1. Run Storybook
+2. Click the ➕ button in the sidebar to search for your component
+3. Add a basic story created for the component
+
+Create from an existing story:
+1. Open the existing story
+2. Use the Controls panel to adjust the value of a control
+3. Save those changes as a new story.
+
+## Story Example
+
+```tsx title="Button.tsx"
+export interface ButtonProps {
+  /** Is this the principal call to action on the page? */
+  primary?: boolean;
+  /** What background color to use */
+  backgroundColor?: string;
+  /** How large should the button be? */
+  size?: 'small' | 'medium' | 'large';
+  /** Button contents */
+  label: string;
+  /** Optional click handler */
+  onClick?: () => void;
+}
+
+/** Primary UI component for user interaction */
+export const Button = ({
+  primary = false,
+  size = 'medium',
+  backgroundColor,
+  label,
+  ...props
+}: ButtonProps) => {
+  const mode = primary ? 'storybook-button--primary' : 'storybook-button--secondary';
+  return (
+    <button
+      type="button"
+      className={['storybook-button', `storybook-button--${size}`, mode].join(' ')}
+      style={{ backgroundColor }}
+      {...props}
+    >
+      {label}
+    </button>
+  );
+};
+```
+
+```tsx title="Button.stories.ts"
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
+import { fn } from 'storybook/test';
+
+import { Button } from './Button';
+
+// More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
+const meta = {
+  title: 'Example/Button',
+  component: Button,
+  parameters: {
+    // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
+    layout: 'centered',
+  },
+  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
+  tags: ['autodocs'],
+  // More on argTypes: https://storybook.js.org/docs/api/arg-types
+  argTypes: {
+    backgroundColor: { control: 'color' },
+  },
+  // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#story-args
+  args: { onClick: fn() },
+} satisfies Meta<typeof Button>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+// More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
+export const Primary: Story = {
+  args: {
+    primary: true,
+    label: 'Button',
+  },
+};
+
+export const Secondary: Story = {
+  args: {
+    label: 'Button',
+  },
+};
+
+export const Large: Story = {
+  args: {
+    size: 'large',
+    label: 'Button',
+  },
+};
+
+export const Small: Story = {
+  args: {
+    size: 'small',
+    label: 'Button',
+  },
+};
+```
+
 
 ## References
 

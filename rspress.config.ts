@@ -25,4 +25,5 @@ export default defineConfig({
   },
   // enable math syntax
   plugins: [katex(), mermaid()],
+  globalStyles: path.join(__dirname, 'styles/global.css'),
 });

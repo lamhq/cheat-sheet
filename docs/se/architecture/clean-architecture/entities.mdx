@@ -1,0 +1,44 @@
+# Entities
+
+## Introduction
+
+This layer holds the enterprise-wide business rules:
+
+- These rules describe what the business does
+- They remain relevant even if no software existed
+- They are least likely to change when application changes
+
+:::info
+For example, a bank that charges a fixed interest rate on a loan applies that rule even if a clerk does the arithmetic by hand.
+:::
+
+An **entity** is an object that encapsulates critical business data with the core rules that operate on it.
+
+Examples: Customer, Order, Product, Pricing rules
+
+
+## Content
+
+Can contain:
+- Domain entities.
+- Enterprise business rules.
+- Business invariants.
+- Domain behavior.
+- Business policies.
+- Relationships between core business concepts.
+- Fundamental calculations and validations.
+
+
+## Characteristics
+
+- Their shape follows the business concept.
+- Can be reused across multiple applications within the same business domain.
+- Highly stable compared to other layers.
+- Independent of any particular application, infrastructure and technical implementation.
+- May be stored in a database, but should not know about the database.
+
+
+## Dependencies
+
+- Can depend on other entities.
+- Should not depend on application-specific workflows, interface adapters, frameworks, databases, or external services.

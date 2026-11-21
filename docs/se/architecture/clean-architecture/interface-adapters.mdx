@@ -1,0 +1,139 @@
+# Interface Adapters
+
+## Introduction
+
+This layer converts data between the inner layers' format and the format external systems require.
+
+
+## Content
+
+Can contain:
+
+- Controllers
+- Presenters
+- Request and response models
+- Data transfer objects
+- View models
+- Database mappers
+- API adapters
+- View models
+- Data serializers and deserializers
+
+
+## Characteristics
+
+- **Data Transformation:** Converts data between the formats used by inner layers and external systems.
+- **Boundary Management:** Acts as an intermediary between Use Cases and external systems.
+- **Replaceability:** Allows external technologies, such as databases and web frameworks, to be replaced with minimal impact on inner layers.
+- **No Business Rules:** Does not contain application-specific or enterprise business logic.
+
+
+## Dependencies
+
+Interface Adapters depend on Use Case boundary.
+
+
+## Controllers
+
+Controllers handle incoming requests from the delivery mechanism (e.g., HTTP).
+
+**Responsibilities**:
+- Receive external requests.
+- Extract and validate request data.
+- Convert request data into input data.
+- Pass input data to the [Use Case boundary](./use-cases.mdx#use-case-boundary).
+- Pass the returned output data to a Presenter.
+
+Example:
+
+```ts
+interface CreateUserRequest {
+  name?: string;
+}
+
+class CreateUserController {
+  constructor(
+    private readonly createUserUseCase: CreateUserUseCase,
+    private readonly presenter: CreateUserPresenter,
+  ) {}
+
+  handle(request: CreateUserRequest): CreateUserViewModel {
+    if (!request.name?.trim()) {
+      throw new Error("name is required");
+    }
+
+    const inputData: CreateUserInputData = { name: request.name.trim() };
+    const outputData = this.createUserUseCase.execute(inputData);
+    return this.presenter.present(outputData);
+  }
+}
+```
+
+The Controller:
+
+1. Reads the request from the delivery mechanism.
+2. Validates the request and builds `CreateUserInputData`.
+3. Calls the Use Case Interactor through Use Case boundary.
+4. Passes the returned output data to the Presenter.
+
+
+## Presenters
+
+Presenters convert the output of a Use Case into a format suitable for the delivery mechanism.
+
+**Responsibilities**:
+- Receive output data from the Use Case.
+- Format the data for presentation (e.g., formatting currency, dates).
+- Constructs the ViewModel or ResponseModel.
+
+Example:
+
+```ts
+interface CreateUserViewModel {
+  message: string;
+  userId: string;
+  isSuccess: boolean;
+}
+
+class CreateUserPresenter {
+  present(outputData: CreateUserOutputData): CreateUserViewModel {
+    return {
+      userId: outputData.userId,
+      message: `User created successfully (ID: ${outputData.userId})`,
+      isSuccess: true,
+    };
+  }
+}
+```
+
+:::info
+In Robert C. Martin's *Clean Architecture*, the Presenter implements an Output Boundary defined in the Use Case layer, and the Interactor calls it to control how output is presented.
+
+This guide takes a simpler approach: the Presenter just transform Use Case output data into a view model. No output boundary is defined in the Use Case layer.
+:::
+
+
+## Gateway Implementations
+
+Gateway Implementations convert data between the Use Case's data models and the formats required by external systems, such as databases or APIs.
+
+**Responsibilities**:
+- Implement Gateway interfaces owned by Use Cases.
+- Translate between application data structures and external data structures.
+- Provide access to persistence and external services.
+
+
+## Humble Object Pattern
+
+The key idea of the Humble Object pattern is to separate the hard-to-test parts of the code from the logic that can be easily tested.
+
+- **Humble Object**: Contains minimal logic, mainly handling technical details such as UI, database communication, or framework interactions.
+- **Testable Object**: the actual business logic and behavior, making it easy to test independently.
+
+The Interface Adapters layer contains several examples of this:
+
+- **Presenter:** testable. It turns application data into display-ready values (view model), such as formatted currency, flags for negative amounts, and enabled or disabled states.
+- **View:** humble. It copies values from a view model onto the screen and does no processing of its own.
+- **Gateway implementation:** humble. It handles database communication, while Use Case and Entity are testable.
+- **Data mapper:** testable. It moves database rows into plain data structures before they cross into inner layers.
+- **Service listener:** testable. It receives external messages and converts them into plain structures for Use Cases.
