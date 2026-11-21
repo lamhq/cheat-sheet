@@ -30,7 +30,7 @@ Can contain:
 
 ## Dependencies
 
-Interface Adapters depend on Use Cases's Input/Output boundaries.
+Interface Adapters depend on Use Case boundary.
 
 
 ## Controllers
@@ -41,7 +41,40 @@ Controllers handle incoming requests from the delivery mechanism (e.g., HTTP).
 - Receive external requests.
 - Extract and validate request data.
 - Convert request data into input data.
-- Passs input data to [Input Boundaries](./use-cases.mdx#input-boundary).
+- Pass input data to the [Use Case boundary](./use-cases.mdx#use-case-boundary).
+- Pass the returned output data to a Presenter.
+
+Example:
+
+```ts
+interface CreateUserRequest {
+  name?: string;
+}
+
+class CreateUserController {
+  constructor(
+    private readonly createUserUseCase: CreateUserUseCase,
+    private readonly presenter: CreateUserPresenter,
+  ) {}
+
+  handle(request: CreateUserRequest): CreateUserViewModel {
+    if (!request.name?.trim()) {
+      throw new Error("name is required");
+    }
+
+    const inputData: CreateUserInputData = { name: request.name.trim() };
+    const outputData = this.createUserUseCase.execute(inputData);
+    return this.presenter.present(outputData);
+  }
+}
+```
+
+The Controller:
+
+1. Reads the request from the delivery mechanism.
+2. Validates the request and builds `CreateUserInputData`.
+3. Calls the Use Case Interactor through Use Case boundary.
+4. Passes the returned output data to the Presenter.
 
 
 ## Presenters
@@ -50,17 +83,34 @@ Presenters convert the output of a Use Case into a format suitable for the deliv
 
 **Responsibilities**:
 - Receive output data from the Use Case.
-- Format the data for presentation.
-- Convert application results into View Models.
-- Handle presentation-specific concerns.
+- Format the data for presentation (e.g., formatting currency, dates).
+- Constructs the ViewModel or ResponseModel.
 
-**When to Use?**
-- Different delivery mechanisms require different representations of the same use case output (e.g., REST, GraphQL, CLI, or HTML).
-- Presentation logic involves transforming, formatting, or restructuring application output.
+Example:
 
-**When not to Use?**
-- **Use-case composition**: Another Interactor consumes the Output Data.
-- **Framework support:** The framework/library already supports transformation.
+```ts
+interface CreateUserViewModel {
+  message: string;
+  userId: string;
+  isSuccess: boolean;
+}
+
+class CreateUserPresenter {
+  present(outputData: CreateUserOutputData): CreateUserViewModel {
+    return {
+      userId: outputData.userId,
+      message: `User created successfully (ID: ${outputData.userId})`,
+      isSuccess: true,
+    };
+  }
+}
+```
+
+:::info
+In Robert C. Martin's *Clean Architecture*, the Presenter implements an Output Boundary defined in the Use Case layer, and the Interactor calls it to control how output is presented.
+
+This guide takes a simpler approach: the Presenter just transform Use Case output data into a view model. No output boundary is defined in the Use Case layer.
+:::
 
 
 ## Gateway Implementations

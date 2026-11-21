@@ -15,16 +15,17 @@ Use this checklist to review whether a backend project follows **Clean Architect
 
 ## Use cases
 
-- [ ] Each use case is an interactor that implements an [input boundary](./use-cases.mdx#input-boundary) and coordinates entities and gateways.
-- [ ] Use cases depend on gateway interfaces (defined in the use case layer), not on concrete database or API clients.
-- [ ] No output boundaries are defined. Use cases return their result to the caller directly (this makes them reusable in other use cases).
-- [ ] Input and output data contain only the fields the use case needs. Domain entities are not passed across boundaries.
+- [ ] [Use Case boundaries](./use-cases.mdx#use-case-boundary) are defined as interfaces
+- [ ] Interactors implement Use Case boundaries and coordinate entities and gateways.
+- [ ] Code in Use Case layer depend on gateway interfaces (defined in the use case layer), not on concrete database or API clients.
+- [ ] Use cases return output data to the caller. They do not define output boundaries or call presenters.
+- [ ] Input and output data of Use Case boundaries are plain data structures and include only the necessary data.
 
 ## Interface adapters
 
 - [ ] No business rules are defined in any files within this layer.
-- [ ] Controllers extract and validate request shape, convert it into input data and pass it to input boundaries.
-- [ ] No presenters are defined. Controllers build the response from output data returned by Use cases.
+- [ ] Controllers extract and validate request shape, convert it into input data, pass it to use cases, and pass the returned output data to presenters.
+- [ ] Presenters format output data into view or response models. Controllers pass output data from use cases to presenters and return the presenter's result.
 - [ ] Gateway implementations translate between domain models and external formats (table rows, documents, API payloads), and implement interfaces owned by use cases.
 
 ## Frameworks and drivers
@@ -59,6 +60,7 @@ src/
 │   └── payment.service.ts
 ├── adapters/
 │   ├── user.controller.ts
+│   ├── create-user.presenter.ts
 │   ├── create-user.request.ts
 │   ├── create-user.response.ts
 │   ├── mysql-user.repository.ts
@@ -76,9 +78,10 @@ src/
 | Artifact | File name | Class name | Example file | Example class |
 | --- | --- | --- | --- | --- |
 | Entity | `*.entity.ts` | `*Entity` | `user.entity.ts` | `UserEntity` |
-| Use case (input boundary) | `*.use-case.ts` | `*UseCase` | `create-user.use-case.ts` | `CreateUserUseCase` |
+| Use case (input and output boundary) | `*.use-case.ts` | `*UseCase` | `create-user.use-case.ts` | `CreateUserUseCase` |
 | Interactor (Use case implementation) | `*.interactor.ts` | `*Interactor` | `create-user.interactor.ts` | `CreateUserInteractor` |
 | Controller | `*.controller.ts` | `*Controller` | `user.controller.ts` | `UserController` |
+| Presenter | `*.presenter.ts` | `*Presenter` | `create-user.presenter.ts` | `CreateUserPresenter` |
 | Repository interface | `*.repository.ts` | `*Repository` | `user.repository.ts` | `UserRepository` |
 | Repository implementation | `<technology>-*.repository.ts` | `<Technology>*Repository` | `mysql-user.repository.ts` | `MySQLUserRepository` |
 | Request DTO | `*.request.ts` | `*Request` | `create-user.request.ts` | `CreateUserRequest` |

@@ -10,11 +10,10 @@ This layer implements application-specific business rules. It defines what the a
 Can contain:
 
 1. **Use Cases (Interactors):** Implement application-specific business rules.
-2. **Input Boundaries:** Define interfaces for incoming requests to use cases.
-3. **Output Boundaries:** Define interfaces for presenting use case results.
-4. **Input Data (Request Models):** Carry data required to execute use cases.
-5. **Output Data (Response Models):** Carry results produced by use cases.
-6. **Gateway Interfaces:** Define contracts for accessing external systems (databases, APIs, etc.).
+2. **Use Case Boundary (Input and Output Boundary):** Define how a use case is invoked and how its output.
+3. **Input Data (Request Models):** Carry data required to execute use cases.
+4. **Output Data (Response Models):** Carry results produced by use cases.
+5. **Gateway Interfaces:** Define contracts for accessing external systems (databases, APIs, etc.).
 
 ## Characteristics
 
@@ -52,80 +51,53 @@ These steps describe the application-specific business rules.
 
 ## Use Case Interactor
 
-The actual implementation of the application-specific business rules.
+The actual implementation of the use case.
 
-Its responsibilities are to:
-1. Receive input data through an input boundary.
+**Responsibilities**:
+1. Receive input data defined in the use case boundary.
 2. Execute the application-specific business rules.
 3. Coordinate entities and external dependencies.
-4. Produce output data.
-5. Return the result through an output boundary.
+4. Produce output data (excludes fields that the caller should not receive).
+5. Return the output data to the caller.
 
 Example:
 
 ```ts
-class CreateUserInteractor implements CreateUserInputBoundary {
-  constructor(
-    private readonly userRepository: UserRepository,
-    private readonly presenter: CreateUserOutputBoundary,
-  ) {}
+class CreateUserInteractor implements CreateUserUseCase {
+  constructor(private readonly userRepository: UserRepository) {}
 
-  execute(inputData: CreateUserInputData): void {
+  execute(inputData: CreateUserInputData): CreateUserOutputData {
     const user = new User(inputData.name);
     this.userRepository.save(user);
 
-    const outputData: CreateUserOutputData = { userId: user.id };
-    this.presenter.present(outputData);
+    return { userId: user.id };
   }
 }
 ```
-
-The Interactor:
-
-1. Receives input data.
-2. Executes application-specific business rules.
-3. Communicates with entities.
-4. Uses repository interfaces to access data.
-5. Sends output data to the Presenter.
-
 
 ## Boundary
 
 A boundary is an interface that separates the Use Cases layer from the outer layers.
 
-It can be:
-- Input Boundary: Defines how an external layer invokes a use case.
-- Output Boundary: Defines how a use case communicates its results to an external layer.
-- Gateway Boundary: Defines how a use case interacts with external systems (databases, APIs, etc.).
+### Use Case Boundary
 
-
-### Input Boundary
-
-An interface defining how an external layer invokes a use case.
-
-Example:
+An interface defining how an external layer invokes a use case and receives its output data. It serves as both the input boundary and the output boundary.
 
 ```ts
-interface CreateUserInputBoundary {
-  execute(inputData: CreateUserInputData): void;
+interface CreateUserUseCase {
+  execute(inputData: CreateUserInputData): CreateUserOutputData;
 }
 ```
 
-The Controller communicates with this interface rather than directly accessing the use case implementation.
+The Controller communicates with this interface rather than directly depending on the Interactor.
 
+:::info
+Robert C. Martin's book defines an Output Boundary in the Use Case layer, implemented by the Presenter. The Interactor calls it, so the use case controls how output is presented.
 
-### Output Boundary
+This guide has no Output Boundary. The Interactor returns output data to the Controller, which calls the Presenter.
 
-An interface defining how the use case communicates its results to the outer (presentation) layer.
-
-```ts
-interface CreateUserOutputBoundary {
-  present(outputData: CreateUserOutputData): void;
-}
-```
-
-The Interactor does not know whether the result will be displayed in a web page, mobile application, or command-line interface.
-
+The trade-off: a simpler interactor and fewer interfaces, but the use case no longer controls output flow. Output data must stay independent of the presentation layer.
+:::
 
 ### Gateway interfaces
 
@@ -147,8 +119,8 @@ interface UserRepository {
 
 Input and output data are data structures that cross architectural boundaries:
 
-- **Input Data**: Information required by Use Cases to execute. Controllers create Input Data and pass it to Input Boundaries.
-- **Output Data**: Results produced by Use Cases. Interactors create Output Data and pass it through Output Boundaries to Presenters.
+- **Input Data**: Information required by Use Cases to execute. Controllers create Input Data and pass it to Use Cases.
+- **Output Data**: Results produced by Use Cases. Interactors create Output Data and return it to the Controller, which passes it to a Presenter.
 - **Gateway Arguments & Return Values**: Data exchanged between Interactors and external systems through Gateway Interfaces. Interactors pass arguments to Gateways and receive return values.
 
 **Rules for input and output data**:
@@ -168,20 +140,19 @@ interface CreateUserInputData {
 ```mermaid
 flowchart TD
     Controller["<b>Controller</b><br/><small>Outer layer</small>"]
-    InputBoundary["<b>Input Boundary</b>"]
+    UseCase["<b>Use Case Boundary</b>"]
     Interactor["<b>Interactor</b><br/><small>Use case</small>"]
-    OutputBoundary["<b>Output Boundary</b>"]
     GatewayInterface["<b>Gateway Interface</b>"]
     Presenter["<b>Presenter</b><br/><small>Outer layer</small>"]
     DatabaseGateway["<b>Database Gateway</b><br/><small>Outer layer</small>"]
     View["<b>View</b><br/><small>Outer layer</small>"]
     Database["<b>Database</b><br/><small>Outer layer</small>"]
 
-    Controller -- calls --> InputBoundary
-    InputBoundary --> Interactor
-    Interactor --> OutputBoundary
+    Controller -- calls --> UseCase
+    UseCase --> Interactor
+    Interactor -- returns output data --> Controller
+    Controller -- passes output data to --> Presenter
     Interactor --> GatewayInterface
-    OutputBoundary --> Presenter
     Presenter --> View
     GatewayInterface --> DatabaseGateway
     DatabaseGateway --> Database
@@ -192,7 +163,7 @@ flowchart TD
 
     class Controller,Presenter,View,DatabaseGateway,Database outer
     class Interactor usecase
-    class InputBoundary,OutputBoundary,GatewayInterface boundary
+    class UseCase,GatewayInterface boundary
 ```
 
 
